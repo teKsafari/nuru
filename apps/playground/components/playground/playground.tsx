@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { LessonPanel } from "./lesson-panel";
 import { CodePanel } from "./code-panel";
-import { SimulationPanel } from "./simulation-panel";
 import {
 	ResizableHandle,
 	ResizablePanel,
@@ -23,11 +22,11 @@ export function Playground({
 	nodeTypes,
 }: PlaygroundProps) {
 	const isMobile = useIsMobile();
-	const [activeTab, setActiveTab] = useState<"lesson" | "code" | "simulation">(
-		"lesson",
-	);
+	const [activeTab, setActiveTab] = useState<"lesson" | "code">("lesson");
 	const [code, setCode] = useState(lesson.initialCode);
 	const [output, setOutput] = useState("");
+
+	const hasSimulation = !!simulation || (nodes && nodes.length > 0);
 
 	const handleRun = async () => {
 		if (executor.onBeforeRun) {
@@ -58,7 +57,20 @@ export function Playground({
 		}
 	};
 
-	const hasSimulation = simulation || (nodes && nodes.length > 0);
+	const codePanelProps = {
+		code,
+		output,
+		onCodeChange: setCode,
+		onRun: handleRun,
+		onSubmit: handleSubmit,
+		onShowSolution: handleShowSolution,
+		hasSimulation,
+		nodes,
+		edges,
+		onNodesChange,
+		nodeTypes,
+		simulationContent: simulation,
+	};
 
 	if (isMobile) {
 		return (
@@ -67,27 +79,8 @@ export function Playground({
 				<div className="flex-1 overflow-hidden">
 					{activeTab === "lesson" ? (
 						<LessonPanel lesson={lesson} />
-					) : activeTab === "code" ? (
-						<CodePanel
-							code={code}
-							output={output}
-							onCodeChange={setCode}
-							onRun={handleRun}
-							onSubmit={handleSubmit}
-							onShowSolution={handleShowSolution}
-						/>
-					) : hasSimulation ? (
-						<SimulationPanel
-							nodes={nodes}
-							edges={edges}
-							onNodesChange={onNodesChange}
-							nodeTypes={nodeTypes}
-							content={simulation}
-						/>
 					) : (
-						<div className="flex h-full w-full items-center justify-center">
-							<p className="text-green-500">No simulation available</p>
-						</div>
+						<CodePanel {...codePanelProps} />
 					)}
 				</div>
 			</div>
@@ -101,25 +94,8 @@ export function Playground({
 					<LessonPanel lesson={lesson} />
 				</ResizablePanel>
 				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={40} minSize={25}>
-					<CodePanel
-						code={code}
-						output={output}
-						onCodeChange={setCode}
-						onRun={handleRun}
-						onSubmit={handleSubmit}
-						onShowSolution={handleShowSolution}
-					/>
-				</ResizablePanel>
-				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={25} minSize={15}>
-					<SimulationPanel
-						nodes={nodes}
-						edges={edges}
-						onNodesChange={onNodesChange}
-						nodeTypes={nodeTypes}
-						content={simulation}
-					/>
+				<ResizablePanel defaultSize={65} minSize={30}>
+					<CodePanel {...codePanelProps} />
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>
