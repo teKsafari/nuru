@@ -20,14 +20,15 @@ export function Playground({
 	nodes = [],
 	edges = [],
 	onNodesChange,
+	onResetSimulation,
 	nodeTypes,
 }: PlaygroundProps) {
 	const isMobile = useIsMobile();
-	const [activeTab, setActiveTab] = useState<"lesson" | "code" | "simulation">(
-		"lesson",
-	);
+	const [activeTab, setActiveTab] = useState<"lesson" | "code">("lesson");
 	const [code, setCode] = useState(lesson.initialCode);
 	const [output, setOutput] = useState("");
+
+	const hasSimulation = !!simulation || (nodes && nodes.length > 0);
 
 	const handleRun = async () => {
 		if (executor.onBeforeRun) {
@@ -58,8 +59,6 @@ export function Playground({
 		}
 	};
 
-	const hasSimulation = simulation || (nodes && nodes.length > 0);
-
 	if (isMobile) {
 		return (
 			<div className="flex max-h-full flex-1 flex-col bg-background">
@@ -67,7 +66,7 @@ export function Playground({
 				<div className="flex-1 overflow-hidden">
 					{activeTab === "lesson" ? (
 						<LessonPanel lesson={lesson} />
-					) : activeTab === "code" ? (
+					) : (
 						<CodePanel
 							code={code}
 							output={output}
@@ -75,19 +74,15 @@ export function Playground({
 							onRun={handleRun}
 							onSubmit={handleSubmit}
 							onShowSolution={handleShowSolution}
-						/>
-					) : hasSimulation ? (
-						<SimulationPanel
+							isMobile
+							hasSimulation={hasSimulation}
 							nodes={nodes}
 							edges={edges}
 							onNodesChange={onNodesChange}
+							onResetSimulation={onResetSimulation}
 							nodeTypes={nodeTypes}
-							content={simulation}
+							simulationContent={simulation}
 						/>
-					) : (
-						<div className="flex h-full w-full items-center justify-center">
-							<p className="text-green-500">No simulation available</p>
-						</div>
 					)}
 				</div>
 			</div>
@@ -117,6 +112,7 @@ export function Playground({
 						nodes={nodes}
 						edges={edges}
 						onNodesChange={onNodesChange}
+						onReset={onResetSimulation}
 						nodeTypes={nodeTypes}
 						content={simulation}
 					/>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useNodesState, Node } from "@xyflow/react";
 import { Playground } from "@/components/playground/playground";
 import { useElectronicsExecutor } from "@/hooks/useElectronicsExecutor";
@@ -54,6 +54,10 @@ const initialNodes: Node[] = [
 export default function IntegratedElectronicsPage() {
 	const { executor, components } = useElectronicsExecutor();
 	const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+
+	const handleResetSimulation = useCallback(() => {
+		setNodes(initialNodes.map((node) => ({ ...node })));
+	}, [setNodes]);
 
 	// Sync executor state to nodes
 	useEffect(() => {
@@ -138,6 +142,7 @@ export default function IntegratedElectronicsPage() {
 			executor={executor}
 			nodes={nodes}
 			onNodesChange={onNodesChange}
+			onResetSimulation={handleResetSimulation}
 			nodeTypes={nodeTypes}
 		/>
 	);

@@ -1,11 +1,11 @@
 "use client"
 
-import { BookOpen, Code2, Workflow } from "lucide-react"
+import { BookOpen, Code2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface MobileNavProps {
-  activeTab: "lesson" | "code" | "simulation"
-  onTabChange: (tab: "lesson" | "code" | "simulation") => void
+  activeTab: "lesson" | "code"
+  onTabChange: (tab: "lesson" | "code") => void
 }
 
 export function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
@@ -34,18 +34,6 @@ export function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
       >
         <Code2 className="w-4 h-4" />
         Code
-      </button>
-      <button
-        onClick={() => onTabChange("simulation")}
-        className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex-1 justify-center",
-          activeTab === "simulation"
-            ? "bg-primary text-primary-foreground"
-            : "text-muted-foreground hover:text-foreground hover:bg-secondary",
-        )}
-      >
-        <Workflow className="w-4 h-4" />
-        Simulation
       </button>
     </nav>
   )
