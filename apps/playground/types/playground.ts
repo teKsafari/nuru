@@ -29,5 +29,6 @@ export interface PlaygroundProps {
 	nodes?: Node[];
 	edges?: Edge[];
 	onNodesChange?: OnNodesChange;
+	onResetSimulation?: () => void;
 	nodeTypes?: NodeTypes;
 }

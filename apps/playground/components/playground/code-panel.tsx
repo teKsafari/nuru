@@ -15,10 +15,12 @@ interface CodePanelProps {
   onRun: () => void
   onSubmit: () => void
   onShowSolution: () => void
+  isMobile?: boolean
   hasSimulation?: boolean
   nodes?: Node[]
   edges?: Edge[]
   onNodesChange?: OnNodesChange
+  onResetSimulation?: () => void
   nodeTypes?: NodeTypes
   simulationContent?: React.ReactNode
 }
@@ -30,21 +32,46 @@ export function CodePanel({
   onRun,
   onSubmit,
   onShowSolution,
+  isMobile,
   hasSimulation,
   nodes = [],
   edges = [],
   onNodesChange,
+  onResetSimulation,
   nodeTypes,
   simulationContent,
 }: CodePanelProps) {
+  // Desktop: editor + output (output has its own toolbar)
+  if (!isMobile) {
+    return (
+      <div className="flex flex-col h-full bg-code-bg">
+        <ResizablePanelGroup direction="vertical" className="flex-1">
+          <ResizablePanel defaultSize={70} minSize={30}>
+            <CodeEditor code={code} onChange={onCodeChange} />
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel defaultSize={30} minSize={15}>
+            <OutputPanel
+              output={output}
+              onRun={onRun}
+              onSubmit={onSubmit}
+              onShowSolution={onShowSolution}
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+    )
+  }
+
+  // Mobile: editor + shared toolbar + output/simulation horizontal split
   return (
     <div className="flex flex-col h-full bg-code-bg">
       <ResizablePanelGroup direction="vertical" className="flex-1">
-        <ResizablePanel defaultSize={60} minSize={30}>
+        <ResizablePanel defaultSize={50} minSize={25}>
           <CodeEditor code={code} onChange={onCodeChange} />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={40} minSize={15}>
+        <ResizablePanel defaultSize={50} minSize={20}>
           <div className="flex flex-col h-full">
             <div className="flex items-center gap-2 px-4 py-2 border-b border-border bg-card">
               <Button onClick={onSubmit} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground h-7 px-3 text-xs">
@@ -64,7 +91,7 @@ export function CodePanel({
               {hasSimulation ? (
                 <ResizablePanelGroup direction="horizontal" className="h-full">
                   <ResizablePanel defaultSize={50} minSize={20} collapsible collapsedSize={0}>
-                    <OutputPanel output={output} />
+                    <OutputPanel output={output} showToolbar={false} />
                   </ResizablePanel>
                   <ResizableHandle withHandle />
                   <ResizablePanel defaultSize={50} minSize={20} collapsible collapsedSize={0}>
@@ -72,13 +99,14 @@ export function CodePanel({
                       nodes={nodes}
                       edges={edges}
                       onNodesChange={onNodesChange}
+                      onReset={onResetSimulation}
                       nodeTypes={nodeTypes}
                       content={simulationContent}
                     />
                   </ResizablePanel>
                 </ResizablePanelGroup>
               ) : (
-                <OutputPanel output={output} />
+                <OutputPanel output={output} showToolbar={false} />
               )}
             </div>
           </div>

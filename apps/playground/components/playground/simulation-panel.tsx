@@ -1,10 +1,13 @@
 "use client";
 
+import { Paintbrush } from "lucide-react";
 import {
 	ReactFlow,
 	Background,
 	Controls,
+	ControlButton,
 	BackgroundVariant,
+	useReactFlow,
 	Node,
 	Edge,
 	NodeTypes,
@@ -16,14 +19,31 @@ interface SimulationPanelProps {
 	nodes: Node[];
 	edges: Edge[];
 	onNodesChange?: OnNodesChange;
+	onReset?: () => void;
 	nodeTypes?: NodeTypes;
 	content?: React.ReactNode;
+}
+
+function ResetButton({ onReset }: { onReset: () => void }) {
+	const { fitView } = useReactFlow();
+	return (
+		<ControlButton
+			onClick={() => {
+				onReset();
+				setTimeout(() => fitView({ duration: 300 }), 0);
+			}}
+			title="Reset positions"
+		>
+			<Paintbrush />
+		</ControlButton>
+	);
 }
 
 export function SimulationPanel({
 	nodes,
 	edges,
 	onNodesChange,
+	onReset,
 	nodeTypes,
 	content,
 }: SimulationPanelProps) {
@@ -46,7 +66,13 @@ export function SimulationPanel({
 					gap={20}
 					size={1}
 				/>
-				<Controls className="border-slate-700 bg-slate-800 text-slate-300 [&>button:hover]:bg-slate-700 [&>button]:border-slate-700 [&>button]:bg-slate-800 [&>button]:text-slate-300" />
+				<Controls
+					position="top-right"
+					orientation="horizontal"
+					className="border-0 bg-slate-800 text-slate-300 [&>button:hover]:bg-slate-700 [&>button]:border-0 [&>button]:bg-slate-800 [&>button]:text-slate-300 [&>button]:w-6 [&>button]:h-6 md:[&>button]:w-7 md:[&>button]:h-7"
+				>
+					{onReset && <ResetButton onReset={onReset} />}
+				</Controls>
 				{content}
 			</ReactFlow>
 		</div>

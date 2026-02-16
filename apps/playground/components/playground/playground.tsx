@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { LessonPanel } from "./lesson-panel";
 import { CodePanel } from "./code-panel";
+import { SimulationPanel } from "./simulation-panel";
 import {
 	ResizableHandle,
 	ResizablePanel,
@@ -19,6 +20,7 @@ export function Playground({
 	nodes = [],
 	edges = [],
 	onNodesChange,
+	onResetSimulation,
 	nodeTypes,
 }: PlaygroundProps) {
 	const isMobile = useIsMobile();
@@ -57,21 +59,6 @@ export function Playground({
 		}
 	};
 
-	const codePanelProps = {
-		code,
-		output,
-		onCodeChange: setCode,
-		onRun: handleRun,
-		onSubmit: handleSubmit,
-		onShowSolution: handleShowSolution,
-		hasSimulation,
-		nodes,
-		edges,
-		onNodesChange,
-		nodeTypes,
-		simulationContent: simulation,
-	};
-
 	if (isMobile) {
 		return (
 			<div className="flex max-h-full flex-1 flex-col bg-background">
@@ -80,7 +67,22 @@ export function Playground({
 					{activeTab === "lesson" ? (
 						<LessonPanel lesson={lesson} />
 					) : (
-						<CodePanel {...codePanelProps} />
+						<CodePanel
+							code={code}
+							output={output}
+							onCodeChange={setCode}
+							onRun={handleRun}
+							onSubmit={handleSubmit}
+							onShowSolution={handleShowSolution}
+							isMobile
+							hasSimulation={hasSimulation}
+							nodes={nodes}
+							edges={edges}
+							onNodesChange={onNodesChange}
+							onResetSimulation={onResetSimulation}
+							nodeTypes={nodeTypes}
+							simulationContent={simulation}
+						/>
 					)}
 				</div>
 			</div>
@@ -94,8 +96,26 @@ export function Playground({
 					<LessonPanel lesson={lesson} />
 				</ResizablePanel>
 				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={65} minSize={30}>
-					<CodePanel {...codePanelProps} />
+				<ResizablePanel defaultSize={40} minSize={25}>
+					<CodePanel
+						code={code}
+						output={output}
+						onCodeChange={setCode}
+						onRun={handleRun}
+						onSubmit={handleSubmit}
+						onShowSolution={handleShowSolution}
+					/>
+				</ResizablePanel>
+				<ResizableHandle withHandle />
+				<ResizablePanel defaultSize={25} minSize={15}>
+					<SimulationPanel
+						nodes={nodes}
+						edges={edges}
+						onNodesChange={onNodesChange}
+						onReset={onResetSimulation}
+						nodeTypes={nodeTypes}
+						content={simulation}
+					/>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>
