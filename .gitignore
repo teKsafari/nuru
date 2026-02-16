@@ -27,6 +27,9 @@ out/
 build
 dist
 
+# symlinks
+next-forge
+
 
 # Debug
 npm-debug.log*
