@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 interface Contributor {
@@ -22,16 +22,6 @@ function Avatar({ contributor }: { contributor: Contributor }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Glow ring */}
-      <div
-        className="absolute -inset-1.5 rounded-2xl transition-opacity duration-500"
-        style={{
-          opacity: hovered ? 1 : 0,
-          background:
-            "conic-gradient(from 0deg, rgba(0,180,216,0.5), transparent, rgba(0,180,216,0.5))",
-          animation: hovered ? "spin 3s linear infinite" : "none",
-        }}
-      />
       {/* Outer glow */}
       <div
         className="absolute -inset-3 rounded-2xl transition-opacity duration-500 pointer-events-none"
@@ -83,19 +73,11 @@ function MarqueeRow({
   direction: "left" | "right";
   speed: number;
 }) {
-  // Duplicate list for seamless loop
-  const items = [...contributors, ...contributors];
+  // Repeat 3x — animation shifts by 1/3 (33.333%) for seamless circular loop
+  const items = [...contributors, ...contributors, ...contributors];
 
   return (
     <div className="relative w-full overflow-hidden py-4">
-      {/* Edge fades */}
-      <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-32 z-10 pointer-events-none"
-        style={{ background: "linear-gradient(90deg, hsl(222.2, 84%, 4.9%), transparent)" }}
-      />
-      <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-32 z-10 pointer-events-none"
-        style={{ background: "linear-gradient(270deg, hsl(222.2, 84%, 4.9%), transparent)" }}
-      />
-
       <div
         className="flex items-start gap-6 sm:gap-10 w-max"
         style={{
@@ -110,53 +92,10 @@ function MarqueeRow({
   );
 }
 
-// ─── Particle dots ───────────────────────────────────────────────────────────
-function Particles() {
-  const [dots, setDots] = useState<
-    { id: number; x: number; y: number; size: number; dur: number; delay: number; opacity: number }[]
-  >([]);
-
-  useEffect(() => {
-    setDots(
-      Array.from({ length: 40 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 2 + 0.5,
-        dur: Math.random() * 30 + 20,
-        delay: Math.random() * 10,
-        opacity: Math.random() * 0.4 + 0.05,
-      }))
-    );
-  }, []);
-
-  return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      {dots.map((d) => (
-        <div
-          key={d.id}
-          className="absolute rounded-full"
-          style={{
-            left: `${d.x}%`,
-            top: `${d.y}%`,
-            width: d.size,
-            height: d.size,
-            background: `rgba(0, 180, 216, ${d.opacity})`,
-            boxShadow: `0 0 ${d.size * 3}px rgba(0, 180, 216, ${d.opacity * 0.5})`,
-            animation: `floatUp ${d.dur}s linear infinite`,
-            animationDelay: `${d.delay}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 // ─── Main Page ───────────────────────────────────────────────────────────────
 export default function ContributorsPage() {
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [loaded, setLoaded] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
 
   useEffect(() => {
     fetch("/contributors.json")
@@ -167,57 +106,30 @@ export default function ContributorsPage() {
       });
   }, []);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    setMousePos({
-      x: (e.clientX / window.innerWidth) * 100,
-      y: (e.clientY / window.innerHeight) * 100,
-    });
-  }, []);
+  // Shuffle a copy of the array using a seeded approach
+  // Each row gets a differently shuffled version of the full list
+  const shuffle = (arr: Contributor[], seed: number): Contributor[] => {
+    const shuffled = [...arr];
+    let s = seed;
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      s = (s * 16807 + 0) % 2147483647;
+      const j = s % (i + 1);
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
 
-  // Split contributors into three rows
-  const third = Math.ceil(contributors.length / 3);
-  const row1 = contributors.slice(0, third);
-  const row2 = contributors.slice(third, third * 2);
-  const row3 = contributors.slice(third * 2);
+  const row1 = shuffle(contributors, 1);
+  const row2 = shuffle(contributors, 2);
+  const row3 = shuffle(contributors, 3);
 
   return (
     <div
-      onMouseMove={handleMouseMove}
       className="relative h-[100dvh] w-full overflow-hidden flex items-center justify-center"
       style={{
-        background: `
-          radial-gradient(ellipse at ${mousePos.x}% ${mousePos.y}%, rgba(0,180,216,0.05) 0%, transparent 50%),
-          radial-gradient(ellipse at 20% 0%, rgba(0,180,216,0.03) 0%, transparent 50%),
-          radial-gradient(ellipse at 80% 100%, rgba(0,90,108,0.03) 0%, transparent 50%),
-          hsl(222.2, 84%, 4.9%)
-        `,
+        background: "hsl(222.2, 84%, 4.9%)",
       }}
     >
-      <Particles />
-
-      {/* Subtle grid */}
-      <div
-        className="fixed inset-0 pointer-events-none z-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(0,180,216,1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,180,216,1) 1px, transparent 1px)
-          `,
-          backgroundSize: "80px 80px",
-        }}
-      />
-
-      {/* Cursor glow */}
-      <div
-        className="fixed pointer-events-none z-50 w-[400px] h-[400px] rounded-full"
-        style={{
-          left: `calc(${mousePos.x}% - 200px)`,
-          top: `calc(${mousePos.y}% - 200px)`,
-          background:
-            "radial-gradient(circle, rgba(0,180,216,0.04) 0%, transparent 70%)",
-          transition: "left 0.15s ease-out, top 0.15s ease-out",
-        }}
-      />
 
       {/* Slideshow */}
       <div
@@ -228,13 +140,13 @@ export default function ContributorsPage() {
         }}
       >
         {row1.length > 0 && (
-          <MarqueeRow contributors={row1} direction="left" speed={30} />
+          <MarqueeRow contributors={row1} direction="left" speed={79} />
         )}
         {row2.length > 0 && (
-          <MarqueeRow contributors={row2} direction="right" speed={36} />
+          <MarqueeRow contributors={row2} direction="right" speed={66} />
         )}
         {row3.length > 0 && (
-          <MarqueeRow contributors={row3} direction="left" speed={33} />
+          <MarqueeRow contributors={row3} direction="left" speed={28} />
         )}
       </div>
 
@@ -245,44 +157,20 @@ export default function ContributorsPage() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(-33.333%);
           }
         }
 
         @keyframes marquee-right {
           0% {
-            transform: translateX(-50%);
+            transform: translateX(-33.333%);
           }
           100% {
             transform: translateX(0);
           }
         }
 
-        @keyframes floatUp {
-          0% {
-            transform: translateY(0) translateX(0);
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          90% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(-100vh) translateX(15px);
-            opacity: 0;
-          }
-        }
 
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
       `}</style>
     </div>
   );
