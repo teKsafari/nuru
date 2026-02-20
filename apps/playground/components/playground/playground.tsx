@@ -123,9 +123,7 @@ export function Playground({
 								>
 									<OutputPanel
 										output={output}
-										onRun={handleRun}
-										onSubmit={handleSubmit}
-										onShowSolution={handleShowSolution}
+										showToolbar={false}
 									/>
 								</ResizablePanel>
 								<ResizableHandle withHandle />
@@ -148,9 +146,7 @@ export function Playground({
 						) : (
 							<OutputPanel
 								output={output}
-								onRun={handleRun}
-								onSubmit={handleSubmit}
-								onShowSolution={handleShowSolution}
+								showToolbar={false}
 							/>
 						)}
 					</ResizablePanel>
@@ -162,11 +158,11 @@ export function Playground({
 	return (
 		<div className="h-screen bg-background">
 			<ResizablePanelGroup direction="horizontal" className="h-full">
-				<ResizablePanel defaultSize={35} minSize={20}>
+				<ResizablePanel defaultSize={hasSimulation ? 35 : 40} minSize={20}>
 					<LessonPanel lesson={lesson} />
 				</ResizablePanel>
 				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={40} minSize={25}>
+				<ResizablePanel defaultSize={hasSimulation ? 40 : 60} minSize={25}>
 					<CodePanel
 						code={code}
 						output={output}
@@ -176,17 +172,21 @@ export function Playground({
 						onShowSolution={handleShowSolution}
 					/>
 				</ResizablePanel>
-				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={25} minSize={15}>
-					<SimulationPanel
-						nodes={nodes}
-						edges={edges}
-						onNodesChange={onNodesChange}
-						onReset={onResetSimulation}
-						nodeTypes={nodeTypes}
-						content={simulation}
-					/>
-				</ResizablePanel>
+				{hasSimulation && (
+					<>
+						<ResizableHandle withHandle />
+						<ResizablePanel defaultSize={25} minSize={15}>
+							<SimulationPanel
+								nodes={nodes}
+								edges={edges}
+								onNodesChange={onNodesChange}
+								onReset={onResetSimulation}
+								nodeTypes={nodeTypes}
+								content={simulation}
+							/>
+						</ResizablePanel>
+					</>
+				)}
 			</ResizablePanelGroup>
 		</div>
 	);
