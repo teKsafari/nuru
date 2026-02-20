@@ -37,10 +37,21 @@ export function Playground({
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
 	const handleLessonToggle = () => {
+		const lesson = lessonPanelRef.current;
+		const code = codePanelRef.current;
+		const bottom = bottomPanelRef.current;
+		if (!lesson) return;
 		if (lessonExpanded) {
-			setLessonExpanded(false);
+			lesson.collapse();
+			// Redistribute: lesson's 25% goes to code(40%) + bottom(60%)
+			code?.resize(40);
+			bottom?.resize(60);
 		} else {
-			setLessonExpanded(true);
+			// Take from both panes to give lesson 25%
+			lesson.expand();
+			lesson.resize(25);
+			code?.resize(35);
+			bottom?.resize(40);
 		}
 	};
 
@@ -118,29 +129,27 @@ export function Playground({
 				</button>
 
 				<ResizablePanelGroup direction="vertical" className="flex-1">
-					{/* Lesson Content Pane - only in group when expanded */}
-					{lessonExpanded && (
-						<>
-							<ResizablePanel
-								ref={lessonPanelRef}
-								defaultSize={25}
-								minSize={10}
-								collapsible
-								collapsedSize={0}
-								onCollapse={() => setLessonExpanded(false)}
-							>
-								<div className="h-full bg-card overflow-auto">
-									<div className="px-4 pb-4 text-sm w-full min-w-0">
-										{lesson.description}
-									</div>
-								</div>
-							</ResizablePanel>
-							<ResizableHandle withHandle />
-						</>
-					)}
+					{/* Lesson Content Pane */}
+					<ResizablePanel
+						ref={lessonPanelRef}
+						defaultSize={isMobile ? 0 : 25}
+						minSize={0}
+						collapsible
+						collapsedSize={0}
+						onCollapse={() => setLessonExpanded(false)}
+						onExpand={() => setLessonExpanded(true)}
+						style={{ overflow: "hidden" }}
+					>
+						<div className="h-full bg-card overflow-auto">
+							<div className="px-4 pb-4 text-sm w-full min-w-0">
+								{lesson.description}
+							</div>
+						</div>
+					</ResizablePanel>
+					<ResizableHandle withHandle />
 
 					{/* Code Pane */}
-					<ResizablePanel ref={codePanelRef} defaultSize={40} minSize={15}>
+					<ResizablePanel ref={codePanelRef} defaultSize={isMobile ? 40 : 35} minSize={15}>
 						<CodePanel
 							code={code}
 							output={output}
@@ -169,7 +178,7 @@ export function Playground({
 					<ResizableHandle withHandle />
 
 					{/* Output / Simulation Pane */}
-					<ResizablePanel ref={bottomPanelRef} defaultSize={60} minSize={10}>
+					<ResizablePanel ref={bottomPanelRef} defaultSize={isMobile ? 60 : 40} minSize={10}>
 						{hasSimulation ? (
 							bottomPaneMode === "output" ? (
 								<OutputPanel output={output} showToolbar={false} />
