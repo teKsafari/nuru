@@ -31,16 +31,25 @@ export function Playground({
 	const isMobile = useIsMobile();
 	const [code, setCode] = useState(lesson.initialCode);
 	const [output, setOutput] = useState("");
-	const [lessonExpanded, setLessonExpanded] = useState(true);
+	const [lessonExpanded, setLessonExpanded] = useState(!isMobile);
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
+	const codePanelRef = useRef<ImperativePanelHandle>(null);
+	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
 	const handleLessonToggle = () => {
-		const panel = lessonPanelRef.current;
-		if (!panel) return;
+		const lesson = lessonPanelRef.current;
+		const code = codePanelRef.current;
+		const bottom = bottomPanelRef.current;
+		if (!lesson) return;
 		if (lessonExpanded) {
-			panel.collapse();
+			lesson.collapse();
+			code?.resize(40);
+			bottom?.resize(60);
 		} else {
-			panel.expand();
+			lesson.resize(25);
+			code?.resize(35);
+			bottom?.resize(40);
+			setLessonExpanded(true);
 		}
 	};
 
@@ -95,28 +104,50 @@ export function Playground({
 	if (isMobile) {
 		return (
 			<div className="flex max-h-full flex-1 flex-col bg-background overflow-hidden">
+				{/* Lesson Header (always visible) */}
+				<button
+					onClick={handleLessonToggle}
+					className="flex items-center justify-between w-full px-4 py-2.5 text-left shrink-0 border-b border-border bg-card"
+				>
+					<h1 className="text-sm font-semibold text-foreground truncate pr-2">
+						{lesson.title}
+					</h1>
+					<svg
+						className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${lessonExpanded ? "rotate-180" : ""}`}
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path d="m6 9 6 6 6-6" />
+					</svg>
+				</button>
+
 				<ResizablePanelGroup direction="vertical" className="flex-1">
-					{/* Lesson Pane */}
+					{/* Lesson Content Pane */}
 					<ResizablePanel
 						ref={lessonPanelRef}
-						defaultSize={30}
-						minSize={5}
+						defaultSize={0}
+						minSize={0}
 						collapsible
-						collapsedSize={5}
+						collapsedSize={0}
 						onCollapse={() => setLessonExpanded(false)}
-						onExpand={() => setLessonExpanded(true)}
 					>
-						<LessonPanel
-							lesson={lesson}
-							collapsible
-							expanded={lessonExpanded}
-							onToggle={handleLessonToggle}
-						/>
+						{lessonExpanded && (
+							<div className="h-full bg-card overflow-auto">
+								<div className="px-4 pb-4 text-sm w-full min-w-0">
+									{lesson.description}
+								</div>
+							</div>
+						)}
 					</ResizablePanel>
-					<ResizableHandle withHandle />
+					{lessonExpanded && <ResizableHandle withHandle />}
 
 					{/* Code Pane */}
-					<ResizablePanel defaultSize={40} minSize={15}>
+					<ResizablePanel ref={codePanelRef} defaultSize={40} minSize={15}>
 						<CodePanel
 							code={code}
 							output={output}
@@ -145,7 +176,7 @@ export function Playground({
 					<ResizableHandle withHandle />
 
 					{/* Output / Simulation Pane */}
-					<ResizablePanel defaultSize={30} minSize={10}>
+					<ResizablePanel ref={bottomPanelRef} defaultSize={60} minSize={10}>
 						{hasSimulation ? (
 							bottomPaneMode === "output" ? (
 								<OutputPanel output={output} showToolbar={false} />
