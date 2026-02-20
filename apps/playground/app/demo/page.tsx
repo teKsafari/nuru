@@ -43,7 +43,7 @@ const nuruExecutor: LanguageExecutor = {
 };
 
 const nuruLesson: LessonContent = {
-	title: "Nuru - jifunze programu kwa Kiswahili",
+	title: "Nuru – Code in Swahili",
 	initialCode: `// Programu ya kwanza - Salamu!
 
 jina = jaza("Ingiza jina lako")
@@ -53,18 +53,28 @@ andika("Habari " + jina + "!")
 	description: (
 		<div className="space-y-6 leading-relaxed text-muted-foreground">
 			<p>
-				Nuru ni lugha ya programu na mfumo wa kujifunzia ulioundwa mahsusi kwa
-				ajili ya wazungumzaji wa Kiswahili. Lengo letu kuu ni kuwawezesha vijana
-				kujifunza, kuunda, na kujaribu mambo mapya katika lugha wanayoizungumza
-				nyumbani.
+				Nuru is a Swahili programming language that lets you write real code in your own language.
 			</p>
+			<div className="space-y-3">
+				<h3 className="font-semibold text-foreground">Key functions:</h3>
+				<ul className="list-inside list-disc space-y-2">
+					<li>
+						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">andika(x)</code>{" "}
+						– Print x to the console
+					</li>
+					<li>
+						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">jaza("prompt")</code>{" "}
+						– Read user input
+					</li>
+				</ul>
+			</div>
 			<div className="mt-6 rounded-lg border border-border bg-secondary/50 p-4">
 				<p className="break-words text-sm text-muted-foreground">
-					<span className="font-semibold text-foreground">Kidokezo:</span> Tumia{" "}
+					<span className="font-semibold text-foreground">Tip:</span> Use{" "}
 					<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
 						andika()
 					</code>{" "}
-					kuona matokeo.
+					to see output.
 				</p>
 			</div>
 		</div>
@@ -78,39 +88,38 @@ function SoftwareDemo() {
 // ─── HW (hardware / electronics) playground ──────────────────────────────────
 
 const hwLesson: LessonContent = {
-	title: "Elektroniki - Jifunze kudhibiti vifaa kwa Kiswahili",
+	title: "Electronics playground",
 	initialCode: EXAMPLE_CODE,
 	description: (
 		<div className="space-y-6 leading-relaxed text-muted-foreground">
 			<p>
-				Jifunze kudhibiti vifaa vya elektroniki kama LED, buzzer, na motor kwa
-				kutumia amri rahisi za Kiswahili.
+				Control LEDs, buzzers, and motors using simple Swahili commands.
 			</p>
 			<div className="space-y-3">
-				<h3 className="font-semibold text-foreground">Amri zinazopatikana:</h3>
+				<h3 className="font-semibold text-foreground">Available functions:</h3>
 				<ul className="list-inside list-disc space-y-2">
 					<li>
 						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">washa(n)</code>{" "}
-						- Washa kifaa nambari n
+						– Turn on device n
 					</li>
 					<li>
 						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">zima(n)</code>{" "}
-						- Zima kifaa nambari n
+						– Turn off device n
 					</li>
 					<li>
 						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">subiri(ms)</code>{" "}
-						- Subiri kwa millisekunde
+						– Wait for ms milliseconds
 					</li>
 					<li>
 						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">{"rudia(n) { ... }"}</code>{" "}
-						- Rudia amri mara n
+						– Repeat commands n times
 					</li>
 				</ul>
 			</div>
 			<div className="mt-6 rounded-lg border border-border bg-secondary/50 p-4">
 				<p className="break-words text-sm text-muted-foreground">
-					<span className="font-semibold text-foreground">Kidokezo:</span>{" "}
-					Jaribu kuburuta vifaa hivi kupanga muundo wako!
+					<span className="font-semibold text-foreground">Tip:</span>{" "}
+					Drag the components around to arrange your layout!
 				</p>
 			</div>
 		</div>
