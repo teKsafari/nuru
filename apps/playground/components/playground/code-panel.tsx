@@ -1,7 +1,10 @@
 "use client"
 
+import React from "react"
+import { Play } from "lucide-react"
 import { CodeEditor } from "./code-editor"
 import { OutputPanel } from "./output-panel"
+import { Button } from "@/components/ui/button"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/playground/resizable"
 
 interface CodePanelProps {
@@ -12,6 +15,7 @@ interface CodePanelProps {
   onSubmit: () => void
   onShowSolution: () => void
   isMobile?: boolean
+  mobileExtra?: React.ReactNode
 }
 
 export function CodePanel({
@@ -22,30 +26,49 @@ export function CodePanel({
   onSubmit,
   onShowSolution,
   isMobile,
+  mobileExtra,
 }: CodePanelProps) {
-  // Mobile: just the editor (output is handled by parent)
+  const runButton = (
+    <Button
+      onClick={onRun}
+      size="sm"
+      className="bg-primary hover:bg-primary/90 text-primary-foreground h-8 px-3 text-xs shadow-md"
+    >
+      <Play className="w-3 h-3 mr-1.5" />
+      Run
+    </Button>
+  )
+
+  // Mobile: editor with floating action group (output is handled by parent)
   if (isMobile) {
     return (
-      <div className="flex flex-col h-full bg-code-bg">
+      <div className="relative flex flex-col h-full bg-code-bg">
         <CodeEditor code={code} onChange={onCodeChange} />
+        <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2">
+          {mobileExtra}
+          {runButton}
+        </div>
       </div>
     )
   }
 
-  // Desktop: editor + output (output has its own toolbar)
+  // Desktop: editor with floating run button + output
   return (
     <div className="flex flex-col h-full bg-code-bg">
       <ResizablePanelGroup direction="vertical" className="flex-1">
-        <ResizablePanel defaultSize={70} minSize={30}>
-          <CodeEditor code={code} onChange={onCodeChange} />
+        <ResizablePanel defaultSize={60} minSize={30}>
+          <div className="relative h-full">
+            <CodeEditor code={code} onChange={onCodeChange} />
+            <div className="absolute bottom-3 right-3 z-10">
+              {runButton}
+            </div>
+          </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={30} minSize={15}>
+        <ResizablePanel defaultSize={40} minSize={15}>
           <OutputPanel
             output={output}
-            onRun={onRun}
-            onSubmit={onSubmit}
-            onShowSolution={onShowSolution}
+            showToolbar={false}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

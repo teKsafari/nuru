@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
+import { Terminal, Cpu, Columns2 } from "lucide-react";
 import { LessonPanel } from "./lesson-panel";
 import { CodePanel } from "./code-panel";
 import { SimulationPanel } from "./simulation-panel";
@@ -13,6 +14,9 @@ import {
 } from "@/components/playground/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps } from "@/types/playground";
+import { Button } from "@/components/ui/button";
+
+type BottomPaneMode = "output" | "simulation" | "split";
 
 export function Playground({
 	lesson,
@@ -27,20 +31,48 @@ export function Playground({
 	const isMobile = useIsMobile();
 	const [code, setCode] = useState(lesson.initialCode);
 	const [output, setOutput] = useState("");
-	const [lessonExpanded, setLessonExpanded] = useState(true);
+	const [lessonExpanded, setLessonExpanded] = useState(!isMobile);
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
+	const codePanelRef = useRef<ImperativePanelHandle>(null);
+	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
 	const handleLessonToggle = () => {
-		const panel = lessonPanelRef.current;
-		if (!panel) return;
+		const lesson = lessonPanelRef.current;
+		const code = codePanelRef.current;
+		const bottom = bottomPanelRef.current;
+		if (!lesson) return;
 		if (lessonExpanded) {
-			panel.collapse();
+			lesson.collapse();
+			// Redistribute: lesson's 25% goes to code(40%) + bottom(60%)
+			code?.resize(40);
+			bottom?.resize(60);
 		} else {
-			panel.expand();
+			// Take from both panes to give lesson 25%
+			lesson.expand();
+			lesson.resize(25);
+			code?.resize(35);
+			bottom?.resize(40);
 		}
 	};
 
 	const hasSimulation = !!simulation || (nodes && nodes.length > 0);
+
+	const [bottomPaneMode, setBottomPaneMode] = useState<BottomPaneMode>("simulation");
+
+	const cycleBottomPane = () => {
+		if (!hasSimulation) return;
+		setBottomPaneMode((prev) => {
+			if (prev === "output") return "simulation";
+			if (prev === "simulation") return "split";
+			return "output";
+		});
+	};
+
+	const bottomPaneIcon = bottomPaneMode === "output"
+		? Cpu
+		: bottomPaneMode === "simulation"
+			? Columns2
+			: Terminal;
 
 	const handleRun = async () => {
 		if (executor.onBeforeRun) {
@@ -74,28 +106,50 @@ export function Playground({
 	if (isMobile) {
 		return (
 			<div className="flex max-h-full flex-1 flex-col bg-background overflow-hidden">
+				{/* Lesson Header (always visible) */}
+				<button
+					onClick={handleLessonToggle}
+					className="flex items-center justify-between w-full px-4 py-2.5 text-left shrink-0 border-b border-border bg-card"
+				>
+					<h1 className="text-sm font-semibold text-foreground truncate pr-2">
+						{lesson.title}
+					</h1>
+					<svg
+						className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${lessonExpanded ? "rotate-180" : ""}`}
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path d="m6 9 6 6 6-6" />
+					</svg>
+				</button>
+
 				<ResizablePanelGroup direction="vertical" className="flex-1">
-					{/* Lesson Pane */}
+					{/* Lesson Content Pane */}
 					<ResizablePanel
 						ref={lessonPanelRef}
-						defaultSize={30}
-						minSize={5}
+						defaultSize={isMobile ? 0 : 25}
+						minSize={0}
 						collapsible
-						collapsedSize={5}
+						collapsedSize={0}
 						onCollapse={() => setLessonExpanded(false)}
 						onExpand={() => setLessonExpanded(true)}
+						style={{ overflow: "hidden" }}
 					>
-						<LessonPanel
-							lesson={lesson}
-							collapsible
-							expanded={lessonExpanded}
-							onToggle={handleLessonToggle}
-						/>
+						<div className="h-full bg-card overflow-auto">
+							<div className="px-4 pb-4 text-sm w-full min-w-0">
+								{lesson.description}
+							</div>
+						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 
 					{/* Code Pane */}
-					<ResizablePanel defaultSize={40} minSize={15}>
+					<ResizablePanel ref={codePanelRef} defaultSize={isMobile ? 40 : 35} minSize={15}>
 						<CodePanel
 							code={code}
 							output={output}
@@ -104,54 +158,68 @@ export function Playground({
 							onSubmit={handleSubmit}
 							onShowSolution={handleShowSolution}
 							isMobile
+							mobileExtra={
+								hasSimulation ? (
+									<Button
+										variant="secondary"
+										size="sm"
+										onClick={cycleBottomPane}
+										className="h-8 w-8 p-0 shadow-md"
+									>
+										{(() => {
+											const Icon = bottomPaneIcon;
+											return <Icon className="w-3.5 h-3.5" />;
+										})()}
+									</Button>
+								) : undefined
+							}
 						/>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 
 					{/* Output / Simulation Pane */}
-					<ResizablePanel defaultSize={30} minSize={10}>
+					<ResizablePanel ref={bottomPanelRef} defaultSize={isMobile ? 60 : 40} minSize={10}>
 						{hasSimulation ? (
-							<ResizablePanelGroup
-								direction="horizontal"
-								className="h-full"
-							>
-								<ResizablePanel
-									defaultSize={50}
-									minSize={20}
-									collapsible
-									collapsedSize={0}
+							bottomPaneMode === "output" ? (
+								<OutputPanel output={output} showToolbar={false} />
+							) : bottomPaneMode === "simulation" ? (
+								<SimulationPanel
+									nodes={nodes}
+									edges={edges}
+									onNodesChange={onNodesChange}
+									onReset={onResetSimulation}
+									nodeTypes={nodeTypes}
+									content={simulation}
+								/>
+							) : (
+								<ResizablePanelGroup
+									direction="horizontal"
+									className="h-full"
 								>
-									<OutputPanel
-										output={output}
-										onRun={handleRun}
-										onSubmit={handleSubmit}
-										onShowSolution={handleShowSolution}
-									/>
-								</ResizablePanel>
-								<ResizableHandle withHandle />
-								<ResizablePanel
-									defaultSize={50}
-									minSize={20}
-									collapsible
-									collapsedSize={0}
-								>
-									<SimulationPanel
-										nodes={nodes}
-										edges={edges}
-										onNodesChange={onNodesChange}
-										onReset={onResetSimulation}
-										nodeTypes={nodeTypes}
-										content={simulation}
-									/>
-								</ResizablePanel>
-							</ResizablePanelGroup>
+									<ResizablePanel
+										defaultSize={50}
+										minSize={20}
+									>
+										<OutputPanel output={output} showToolbar={false} />
+									</ResizablePanel>
+									<ResizableHandle withHandle />
+									<ResizablePanel
+										defaultSize={50}
+										minSize={20}
+									>
+										<SimulationPanel
+											nodes={nodes}
+											edges={edges}
+											onNodesChange={onNodesChange}
+											onReset={onResetSimulation}
+											nodeTypes={nodeTypes}
+											content={simulation}
+										/>
+									</ResizablePanel>
+								</ResizablePanelGroup>
+							)
 						) : (
-							<OutputPanel
-								output={output}
-								onRun={handleRun}
-								onSubmit={handleSubmit}
-								onShowSolution={handleShowSolution}
-							/>
+							<OutputPanel output={output} showToolbar={false} />
 						)}
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -162,11 +230,11 @@ export function Playground({
 	return (
 		<div className="h-screen bg-background">
 			<ResizablePanelGroup direction="horizontal" className="h-full">
-				<ResizablePanel defaultSize={35} minSize={20}>
+				<ResizablePanel defaultSize={hasSimulation ? 30 : 40} minSize={20}>
 					<LessonPanel lesson={lesson} />
 				</ResizablePanel>
 				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={40} minSize={25}>
+				<ResizablePanel defaultSize={hasSimulation ? 30 : 60} minSize={25}>
 					<CodePanel
 						code={code}
 						output={output}
@@ -176,17 +244,21 @@ export function Playground({
 						onShowSolution={handleShowSolution}
 					/>
 				</ResizablePanel>
-				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={25} minSize={15}>
-					<SimulationPanel
-						nodes={nodes}
-						edges={edges}
-						onNodesChange={onNodesChange}
-						onReset={onResetSimulation}
-						nodeTypes={nodeTypes}
-						content={simulation}
-					/>
-				</ResizablePanel>
+				{hasSimulation && (
+					<>
+						<ResizableHandle withHandle />
+						<ResizablePanel defaultSize={40} minSize={15}>
+							<SimulationPanel
+								nodes={nodes}
+								edges={edges}
+								onNodesChange={onNodesChange}
+								onReset={onResetSimulation}
+								nodeTypes={nodeTypes}
+								content={simulation}
+							/>
+						</ResizablePanel>
+					</>
+				)}
 			</ResizablePanelGroup>
 		</div>
 	);
