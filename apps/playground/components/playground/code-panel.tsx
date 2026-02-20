@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { Play } from "lucide-react"
 import { CodeEditor } from "./code-editor"
 import { OutputPanel } from "./output-panel"
@@ -14,6 +15,7 @@ interface CodePanelProps {
   onSubmit: () => void
   onShowSolution: () => void
   isMobile?: boolean
+  mobileExtra?: React.ReactNode
 }
 
 export function CodePanel({
@@ -24,24 +26,28 @@ export function CodePanel({
   onSubmit,
   onShowSolution,
   isMobile,
+  mobileExtra,
 }: CodePanelProps) {
   const runButton = (
     <Button
       onClick={onRun}
       size="sm"
-      className="absolute bottom-3 right-3 z-10 bg-primary hover:bg-primary/90 text-primary-foreground h-8 px-3 text-xs shadow-md"
+      className="bg-primary hover:bg-primary/90 text-primary-foreground h-8 px-3 text-xs shadow-md"
     >
       <Play className="w-3 h-3 mr-1.5" />
       Run
     </Button>
   )
 
-  // Mobile: editor with floating run button (output is handled by parent)
+  // Mobile: editor with floating action group (output is handled by parent)
   if (isMobile) {
     return (
       <div className="relative flex flex-col h-full bg-code-bg">
         <CodeEditor code={code} onChange={onCodeChange} />
-        {runButton}
+        <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2">
+          {mobileExtra}
+          {runButton}
+        </div>
       </div>
     )
   }
@@ -53,7 +59,9 @@ export function CodePanel({
         <ResizablePanel defaultSize={60} minSize={30}>
           <div className="relative h-full">
             <CodeEditor code={code} onChange={onCodeChange} />
-            {runButton}
+            <div className="absolute bottom-3 right-3 z-10">
+              {runButton}
+            </div>
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
+import { Terminal, Cpu, Columns2 } from "lucide-react";
 import { LessonPanel } from "./lesson-panel";
 import { CodePanel } from "./code-panel";
 import { SimulationPanel } from "./simulation-panel";
@@ -13,6 +14,9 @@ import {
 } from "@/components/playground/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps } from "@/types/playground";
+import { Button } from "@/components/ui/button";
+
+type BottomPaneMode = "output" | "simulation" | "split";
 
 export function Playground({
 	lesson,
@@ -41,6 +45,23 @@ export function Playground({
 	};
 
 	const hasSimulation = !!simulation || (nodes && nodes.length > 0);
+
+	const [bottomPaneMode, setBottomPaneMode] = useState<BottomPaneMode>("simulation");
+
+	const cycleBottomPane = () => {
+		if (!hasSimulation) return;
+		setBottomPaneMode((prev) => {
+			if (prev === "output") return "simulation";
+			if (prev === "simulation") return "split";
+			return "output";
+		});
+	};
+
+	const bottomPaneIcon = bottomPaneMode === "output"
+		? Cpu
+		: bottomPaneMode === "simulation"
+			? Columns2
+			: Terminal;
 
 	const handleRun = async () => {
 		if (executor.onBeforeRun) {
@@ -104,6 +125,21 @@ export function Playground({
 							onSubmit={handleSubmit}
 							onShowSolution={handleShowSolution}
 							isMobile
+							mobileExtra={
+								hasSimulation ? (
+									<Button
+										variant="secondary"
+										size="sm"
+										onClick={cycleBottomPane}
+										className="h-8 w-8 p-0 shadow-md"
+									>
+										{(() => {
+											const Icon = bottomPaneIcon;
+											return <Icon className="w-3.5 h-3.5" />;
+										})()}
+									</Button>
+								) : undefined
+							}
 						/>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
@@ -111,43 +147,46 @@ export function Playground({
 					{/* Output / Simulation Pane */}
 					<ResizablePanel defaultSize={30} minSize={10}>
 						{hasSimulation ? (
-							<ResizablePanelGroup
-								direction="horizontal"
-								className="h-full"
-							>
-								<ResizablePanel
-									defaultSize={50}
-									minSize={20}
-									collapsible
-									collapsedSize={0}
+							bottomPaneMode === "output" ? (
+								<OutputPanel output={output} showToolbar={false} />
+							) : bottomPaneMode === "simulation" ? (
+								<SimulationPanel
+									nodes={nodes}
+									edges={edges}
+									onNodesChange={onNodesChange}
+									onReset={onResetSimulation}
+									nodeTypes={nodeTypes}
+									content={simulation}
+								/>
+							) : (
+								<ResizablePanelGroup
+									direction="horizontal"
+									className="h-full"
 								>
-									<OutputPanel
-										output={output}
-										showToolbar={false}
-									/>
-								</ResizablePanel>
-								<ResizableHandle withHandle />
-								<ResizablePanel
-									defaultSize={50}
-									minSize={20}
-									collapsible
-									collapsedSize={0}
-								>
-									<SimulationPanel
-										nodes={nodes}
-										edges={edges}
-										onNodesChange={onNodesChange}
-										onReset={onResetSimulation}
-										nodeTypes={nodeTypes}
-										content={simulation}
-									/>
-								</ResizablePanel>
-							</ResizablePanelGroup>
+									<ResizablePanel
+										defaultSize={50}
+										minSize={20}
+									>
+										<OutputPanel output={output} showToolbar={false} />
+									</ResizablePanel>
+									<ResizableHandle withHandle />
+									<ResizablePanel
+										defaultSize={50}
+										minSize={20}
+									>
+										<SimulationPanel
+											nodes={nodes}
+											edges={edges}
+											onNodesChange={onNodesChange}
+											onReset={onResetSimulation}
+											nodeTypes={nodeTypes}
+											content={simulation}
+										/>
+									</ResizablePanel>
+								</ResizablePanelGroup>
+							)
 						) : (
-							<OutputPanel
-								output={output}
-								showToolbar={false}
-							/>
+							<OutputPanel output={output} showToolbar={false} />
 						)}
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -158,11 +197,11 @@ export function Playground({
 	return (
 		<div className="h-screen bg-background">
 			<ResizablePanelGroup direction="horizontal" className="h-full">
-				<ResizablePanel defaultSize={hasSimulation ? 35 : 40} minSize={20}>
+				<ResizablePanel defaultSize={hasSimulation ? 30 : 40} minSize={20}>
 					<LessonPanel lesson={lesson} />
 				</ResizablePanel>
 				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={hasSimulation ? 40 : 60} minSize={25}>
+				<ResizablePanel defaultSize={hasSimulation ? 30 : 60} minSize={25}>
 					<CodePanel
 						code={code}
 						output={output}
@@ -175,7 +214,7 @@ export function Playground({
 				{hasSimulation && (
 					<>
 						<ResizableHandle withHandle />
-						<ResizablePanel defaultSize={25} minSize={15}>
+						<ResizablePanel defaultSize={40} minSize={15}>
 							<SimulationPanel
 								nodes={nodes}
 								edges={edges}
