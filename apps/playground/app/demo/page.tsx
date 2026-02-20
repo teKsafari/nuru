@@ -63,7 +63,7 @@ andika("Habari " + jina + "!")
 						– Print x to the console
 					</li>
 					<li>
-						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">jaza("prompt")</code>{" "}
+						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">jaza(&quot;prompt&quot;)</code>{" "}
 						– Read user input
 					</li>
 				</ul>
