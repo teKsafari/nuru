@@ -37,18 +37,9 @@ export function Playground({
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
 	const handleLessonToggle = () => {
-		const lesson = lessonPanelRef.current;
-		const code = codePanelRef.current;
-		const bottom = bottomPanelRef.current;
-		if (!lesson) return;
 		if (lessonExpanded) {
-			lesson.collapse();
-			code?.resize(40);
-			bottom?.resize(60);
+			setLessonExpanded(false);
 		} else {
-			lesson.resize(25);
-			code?.resize(35);
-			bottom?.resize(40);
 			setLessonExpanded(true);
 		}
 	};
@@ -127,24 +118,26 @@ export function Playground({
 				</button>
 
 				<ResizablePanelGroup direction="vertical" className="flex-1">
-					{/* Lesson Content Pane */}
-					<ResizablePanel
-						ref={lessonPanelRef}
-						defaultSize={0}
-						minSize={0}
-						collapsible
-						collapsedSize={0}
-						onCollapse={() => setLessonExpanded(false)}
-					>
-						{lessonExpanded && (
-							<div className="h-full bg-card overflow-auto">
-								<div className="px-4 pb-4 text-sm w-full min-w-0">
-									{lesson.description}
+					{/* Lesson Content Pane - only in group when expanded */}
+					{lessonExpanded && (
+						<>
+							<ResizablePanel
+								ref={lessonPanelRef}
+								defaultSize={25}
+								minSize={10}
+								collapsible
+								collapsedSize={0}
+								onCollapse={() => setLessonExpanded(false)}
+							>
+								<div className="h-full bg-card overflow-auto">
+									<div className="px-4 pb-4 text-sm w-full min-w-0">
+										{lesson.description}
+									</div>
 								</div>
-							</div>
-						)}
-					</ResizablePanel>
-					{lessonExpanded && <ResizableHandle withHandle />}
+							</ResizablePanel>
+							<ResizableHandle withHandle />
+						</>
+					)}
 
 					{/* Code Pane */}
 					<ResizablePanel ref={codePanelRef} defaultSize={40} minSize={15}>
