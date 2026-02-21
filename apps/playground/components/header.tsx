@@ -66,7 +66,7 @@ export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
 								href={item.href}
 								className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
 									item.active
-										? "bg-accent text-accent-foreground shadow-sm"
+										? "bg-foreground text-background shadow-sm"
 										: "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
 								}`}
 							>
