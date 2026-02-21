@@ -31,4 +31,5 @@ export interface PlaygroundProps {
 	onNodesChange?: OnNodesChange;
 	onResetSimulation?: () => void;
 	nodeTypes?: NodeTypes;
+	theme?: "light" | "dark";
 }
