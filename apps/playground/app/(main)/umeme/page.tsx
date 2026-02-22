@@ -8,6 +8,8 @@ import { EXAMPLE_CODE } from "@/lib/electronicsExecutor";
 import type { LessonContent } from "@/types/playground";
 import { LEDNode, BuzzerNode, MotorNode } from "@/components/electronics/nodes";
 
+import { useTheme } from "next-themes";
+
 // Define node types outside component to avoid re-creation
 const nodeTypes = {
 	led: LEDNode,
@@ -52,6 +54,8 @@ const initialNodes: Node[] = [
 ];
 
 export default function IntegratedElectronicsPage() {
+	const { theme, forcedTheme } = useTheme();
+
 	const { executor, components } = useElectronicsExecutor();
 	const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
 
@@ -138,6 +142,9 @@ export default function IntegratedElectronicsPage() {
 
 	return (
 		<Playground
+			theme={ (forcedTheme || theme) as "light" | "dark"} // I hate this, too brittle. Too much prop drilling too
+			// TODO: look into using a provider for playground props that need to reach deeply nested componets
+			// like 'theme' and code-mirror
 			lesson={lesson}
 			executor={executor}
 			nodes={nodes}

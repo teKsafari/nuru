@@ -1,14 +1,15 @@
-"use client"
+"use client";
 
-import { Playground } from "@/components/playground/playground"
+import { Playground } from "@/components/playground/playground";
 import { LanguageExecutor, LessonContent } from "@/types/playground";
 import { executeNuru } from "@/lib/nuru";
 
+import { useTheme } from "next-themes";
+
 export default function Home() {
-  return <Playground lesson={nuruDemo} executor={nuruExecutor} />
+	const { theme, forcedTheme } = useTheme();
+	return <Playground theme={(forcedTheme || theme) as "light" | "dark"} lesson={nuruDemo} executor={nuruExecutor} />;
 }
-
-
 
 const nuruExecutor: LanguageExecutor = {
 	language: "Nuru",
@@ -22,7 +23,7 @@ const nuruExecutor: LanguageExecutor = {
 		} catch (e) {
 			return `X Kosa: ${e}`;
 		}
-	}
+	},
 };
 
 const nuruDemo: LessonContent = {

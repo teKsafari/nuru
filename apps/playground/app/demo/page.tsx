@@ -209,9 +209,6 @@ function DemoContent() {
 
 	theme = theme === "dark" || theme === "light" ? theme : "dark";
 
-	console.log({theme})
-
-
 	return (
 		<>
 			{type == "hw" ? (
