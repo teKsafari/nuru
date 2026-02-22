@@ -92,7 +92,7 @@ export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
 								href="https://teksafari.org"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-[#00b4d8]/10 hover:text-[#00b4d8]"
+								className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 								title="teKsafari"
 							>
 								<Sprout className="h-5 w-5" />

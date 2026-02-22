@@ -23,6 +23,12 @@ importers:
       '@emotion/is-prop-valid':
         specifier: latest
         version: 1.4.0
+      '@fsegurai/codemirror-theme-github-dark':
+        specifier: ^6.2.3
+        version: 6.2.3(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.39.8)(@lezer/highlight@1.2.3)
+      '@fsegurai/codemirror-theme-github-light':
+        specifier: ^6.2.3
+        version: 6.2.3(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.39.8)(@lezer/highlight@1.2.3)
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.69.0(react@19.2.3))
@@ -860,6 +866,22 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@fsegurai/codemirror-theme-github-dark@6.2.3':
+    resolution: {integrity: sha512-EBBbSK0iZn4w3T5fNx9ZV5ur1X7N+RVfTdWzrPmz1LJ90UQshTFpalm9oYMJ/5/98zwP9p99bsLrKE1r2x6A6w==}
+    peerDependencies:
+      '@codemirror/language': ^6.0.0
+      '@codemirror/state': ^6.0.0
+      '@codemirror/view': ^6.0.0
+      '@lezer/highlight': ^1.0.0
+
+  '@fsegurai/codemirror-theme-github-light@6.2.3':
+    resolution: {integrity: sha512-vbwyznBoTrLQdWvQ6/vjIpoDojd7VIMK+sQnMXkKOjXbm5cGul6A3mqM2RSt9Z5NhIRikmxKkApflvWOJrDuWA==}
+    peerDependencies:
+      '@codemirror/language': ^6.0.0
+      '@codemirror/state': ^6.0.0
+      '@codemirror/view': ^6.0.0
+      '@lezer/highlight': ^1.0.0
 
   '@hookform/resolvers@3.10.0':
     resolution: {integrity: sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==}
@@ -4763,6 +4785,20 @@ snapshots:
       react-dom: 19.2.3(react@19.2.3)
 
   '@floating-ui/utils@0.2.10': {}
+
+  '@fsegurai/codemirror-theme-github-dark@6.2.3(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.39.8)(@lezer/highlight@1.2.3)':
+    dependencies:
+      '@codemirror/language': 6.11.3
+      '@codemirror/state': 6.5.2
+      '@codemirror/view': 6.39.8
+      '@lezer/highlight': 1.2.3
+
+  '@fsegurai/codemirror-theme-github-light@6.2.3(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.39.8)(@lezer/highlight@1.2.3)':
+    dependencies:
+      '@codemirror/language': 6.11.3
+      '@codemirror/state': 6.5.2
+      '@codemirror/view': 6.39.8
+      '@lezer/highlight': 1.2.3
 
   '@hookform/resolvers@3.10.0(react-hook-form@7.69.0(react@19.2.3))':
     dependencies:

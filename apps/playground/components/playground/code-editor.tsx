@@ -6,6 +6,8 @@ import { EditorView } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
 import { createTheme } from "@uiw/codemirror-themes";
 import type { CreateThemeOptions } from "@uiw/codemirror-themes";
+import { githubDark } from "@fsegurai/codemirror-theme-github-dark";
+import { githubLight } from "@fsegurai/codemirror-theme-github-light";
 
 interface CodeEditorProps {
 	code: string;
@@ -71,9 +73,9 @@ const defaultLightTheme = createTheme({
 
 function getTheme(theme: "dark" | "light" | CreateThemeOptions) {
 	if (theme === "dark") {
-		return defaultDarkTheme;
+		return githubDark;
 	} else if (theme == "light") {
-		return defaultLightTheme;
+		return githubLight;
 	}
 	return createTheme(theme);
 }
@@ -84,20 +86,17 @@ const editorBaseTheme = EditorView.baseTheme({
 		height: "100%",
 		fontSize: "14px",
 	},
-	
-	
-	".cm-lineNumbers .cm-gutterElement": {
-		padding: "0 8px 0 10px",
-  	},
+
+	// ".cm-lineNumbers .cm-gutterElement": {
+	// 	padding: "0 8px 0 10px",
+	// },
 	".cm-content": {
 		// padding: "0 16px 0 0",
 	},
-	".cm-activeLineGutter": {
-		backgroundColor: "transparent !important",
-	},
-	"&.cm-focused": {
-		outline: "none",
-	},
+	
+	// "&.cm-focused": {
+	// 	outline: "none",
+	// },
 });
 
 export function CodeEditor({

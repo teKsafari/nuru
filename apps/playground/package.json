@@ -19,6 +19,8 @@
 		"@codemirror/lang-go": "^6.0.1",
 		"@codemirror/view": "^6.39.8",
 		"@emotion/is-prop-valid": "latest",
+		"@fsegurai/codemirror-theme-github-dark": "^6.2.3",
+		"@fsegurai/codemirror-theme-github-light": "^6.2.3",
 		"@hookform/resolvers": "^3.9.1",
 		"@lezer/highlight": "^1.2.3",
 		"@radix-ui/react-accordion": "^1.2.11",

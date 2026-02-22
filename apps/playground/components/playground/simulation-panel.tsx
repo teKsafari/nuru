@@ -69,7 +69,7 @@ export function SimulationPanel({
 				<Controls
 					position="top-right"
 					orientation="vertical"
-					className="!right-0.5 !top-0.5 border-0 bg-secondary text-secondary-foreground dark:bg-slate-800 dark:text-slate-300 md:!right-1 md:!top-1 [&>button:hover]:bg-accent dark:[&>button:hover]:bg-slate-700 [&>button]:h-6 [&>button]:w-6 [&>button]:border-0 [&>button]:bg-secondary [&>button]:text-secondary-foreground dark:[&>button]:bg-slate-800 dark:[&>button]:text-slate-300 md:[&>button]:h-6 md:[&>button]:w-6"
+					className="!right-0.5 !top-0.5 border-0 bg-secondary text-secondary-foreground dark:bg-secondary dark:text-secondary-foreground md:!right-1 md:!top-1 [&>button:hover]:bg-accent dark:[&>button:hover]:bg-accent [&>button]:h-6 [&>button]:w-6 [&>button]:border-0 [&>button]:bg-secondary [&>button]:text-secondary-foreground dark:[&>button]:bg-secondary dark:[&>button]:text-secondary-foreground md:[&>button]:h-6 md:[&>button]:w-6"
 				>
 					{onReset && <ResetButton onReset={onReset} />}
 				</Controls>

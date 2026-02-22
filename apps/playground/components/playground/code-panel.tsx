@@ -49,7 +49,7 @@ export function CodePanel({
 	// Mobile: editor with floating action group (output is handled by parent)
 	if (isMobile) {
 		return (
-			<div className="bg-code-bg relative flex h-full flex-col">
+			<div className="bg-background relative flex h-full flex-col">
 				<CodeEditor code={code} onChange={onCodeChange} theme={theme}/>
 				<div className="absolute bottom-3 right-3 z-10 flex items-center gap-2">
 					{mobileExtra}
@@ -61,7 +61,7 @@ export function CodePanel({
 
 	// Desktop: editor with floating run button + output
 	return (
-		<div className="bg-code-bg flex h-full flex-col">
+		<div className="bg-background flex h-full flex-col">
 			<ResizablePanelGroup direction="vertical" className="flex-1">
 				<ResizablePanel defaultSize={60} minSize={30}>
 					<div className="relative h-full">
