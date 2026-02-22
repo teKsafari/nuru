@@ -24,11 +24,11 @@ export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
 			href: "/umeme",
 			active: pathname === "/umeme",
 		},
-		{
-			label: "Submissions",
-			href: "/submissions",
-			active: pathname === "/submissions",
-		},
+		// {
+		// 	label: "Submissions",
+		// 	href: "/submissions",
+		// 	active: pathname === "/submissions",
+		// },
 	];
 
 	return (
