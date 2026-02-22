@@ -73,7 +73,7 @@ const defaultLightTheme = createTheme({
 
 function getTheme(theme: "dark" | "light" | CreateThemeOptions) {
 	if (theme === "dark") {
-		return githubDark;
+		return defaultDarkTheme;
 	} else if (theme == "light") {
 		return githubLight;
 	}
