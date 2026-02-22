@@ -24,7 +24,7 @@ export type NuruInstance = {
 let initialized = false;
 let outputReceiverRegistered = false;
 
-let defaultConfig: Required<Omit<interpreterConfig, "outputReceiver">> = { // Ugly type shenanigans, I know.
+export let defaultConfig: Required<Omit<interpreterConfig, "outputReceiver">> = { // Ugly type shenanigans, I know.
 	xssProtection: true,
 	version: "latest",
 };
