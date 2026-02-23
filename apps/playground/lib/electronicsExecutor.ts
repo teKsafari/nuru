@@ -5,6 +5,7 @@ import type {
 	OutputType,
 	ComponentState,
 } from "@/types/electronics";
+import type { Interpreter } from "./executor";
 
 /**
  * ElectronicsExecutor - Decoupled execution engine for electronics commands
@@ -13,7 +14,7 @@ import type {
  * command codes (washa, zima, subiri, rudia) independent of any UI component.
  * It can be reused across the program by importing it.
  */
-export class ElectronicsExecutor {
+export class ElectronicsExecutor implements Interpreter {
 	private callbacks: ExecutorCallbacks;
 	private config: ExecutorConfig;
 	private programState: ProgramState = "idle";
@@ -48,7 +49,7 @@ export class ElectronicsExecutor {
 		type: OutputType = "info",
 		includeTimestamp = true,
 	) {
-		const prefix = type === "error" ? "❌" : type === "success" ? "✅" : "ℹ️";
+		const prefix = type === "error" ? "[ERROR]" : type === "success" ? "[SUCCESS]" : "[INFO]";
 		const formattedMessage = includeTimestamp
 			? `[${new Date().toLocaleTimeString()}] ${prefix} ${message}`
 			: `${prefix} ${message}`;
@@ -183,11 +184,10 @@ export class ElectronicsExecutor {
 	/**
 	 * Run program and return output as string (for playground integration)
 	 */
-	async run(code: string): Promise<string> {
+	async execute(code: string): Promise<void> {
 		this.outputBuffer = [];
 
 		return new Promise((resolve) => {
-			const originalOnOutput = this.callbacks.onOutput;
 			const originalOnStateChange = this.callbacks.onStateChange;
 
 			// Override to capture completion
@@ -195,9 +195,8 @@ export class ElectronicsExecutor {
 				originalOnStateChange(state);
 				if (state === "idle" && this.programState === "idle") {
 					// Restore original callbacks
-					this.callbacks.onOutput = originalOnOutput;
 					this.callbacks.onStateChange = originalOnStateChange;
-					resolve(this.outputBuffer.join("\n"));
+					resolve();
 				}
 			};
 
@@ -216,7 +215,7 @@ export class ElectronicsExecutor {
 		this.currentLine = -1;
 		this.callbacks.onLineChange(-1);
 		this.callbacks.onError(null);
-		this.addOutput("🚀 Kuanzisha utekelezaji wa programu...");
+		this.addOutput("Kuanzisha utekelezaji wa programu...");
 
 		// Preprocess code to expand rudia() blocks
 		const processedCode = this.preprocessCode(code);
@@ -232,7 +231,7 @@ export class ElectronicsExecutor {
 					return;
 				} else {
 					// End of program, stop execution
-					this.addOutput("✨ Programu imekamilika kwa mafanikio!", "success");
+					this.addOutput("Programu imekamilika kwa mafanikio!", "success");
 					this.programState = "idle";
 					this.callbacks.onStateChange("idle");
 					this.currentLine = -1;
@@ -286,7 +285,7 @@ export class ElectronicsExecutor {
 		this.callbacks.onStateChange("idle");
 		this.currentLine = -1;
 		this.callbacks.onLineChange(-1);
-		this.addOutput("⏹️ Utekelezaji wa programu umesimamishwa", "info");
+		this.addOutput("Utekelezaji wa programu umesimamishwa", "info");
 	}
 
 	/**
@@ -296,7 +295,7 @@ export class ElectronicsExecutor {
 		for (let i = 0; i < this.config.componentCount; i++) {
 			this.callbacks.onComponentChange(i, false);
 		}
-		this.addOutput("🔄 Vifaa vyote vimeresetishwa", "info");
+		this.addOutput("Vifaa vyote vimeresetishwa", "info");
 	}
 
 	/**

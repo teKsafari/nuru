@@ -1,30 +1,30 @@
 "use client";
 
+import { useRef, useMemo } from "react";
+
+import { useNuru } from "@nuru/wasm/react";
+
 import { Playground } from "@/components/playground/playground";
-import { LanguageExecutor, LessonContent } from "@/types/playground";
-import { executeNuru } from "@/lib/nuru";
+import { Executor } from "@/lib/executor";
+// import { executeNuru } from "@/lib/nuru";
 
 import { useTheme } from "next-themes";
 
+import { LessonContent } from "@/types/playground";
+
 export default function Home() {
 	const { theme, forcedTheme } = useTheme();
-	return <Playground theme={(forcedTheme || theme) as "light" | "dark"} lesson={nuruDemo} executor={nuruExecutor} />;
-}
 
-const nuruExecutor: LanguageExecutor = {
-	language: "Nuru",
-	run: async (code) => {
-		return await executeNuru(code);
-	},
-	submit: async (code) => {
-		try {
-			await executeNuru(code);
-			return "✓ Submitted!";
-		} catch (e) {
-			return `X Kosa: ${e}`;
-		}
-	},
-};
+	const nuruExecutor = new Executor("nuru", useNuru)
+
+	return (
+		<Playground
+			theme={(forcedTheme || theme) as "light" | "dark"}
+			lesson={nuruDemo}
+			executor={nuruExecutor}
+		/>
+	);
+}
 
 const nuruDemo: LessonContent = {
 	title: "Nuru - jifunze programu kwa Kiswahili",

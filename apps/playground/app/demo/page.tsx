@@ -9,9 +9,10 @@ import { useTheme } from "next-themes";
 import { Playground } from "@/components/playground/playground";
 import { useElectronicsExecutor } from "@/hooks/useElectronicsExecutor";
 import { EXAMPLE_CODE } from "@/lib/electronicsExecutor";
-import { executeNuru } from "@/lib/nuru";
+import { useNuru } from "@nuru/wasm/react";
 import { LEDNode, BuzzerNode, MotorNode } from "@/components/electronics/nodes";
-import type { LanguageExecutor, LessonContent } from "@/types/playground";
+import type { LessonContent } from "@/types/playground";
+import { Executor, Interpreter } from "@/lib/executor";
 
 // ─── Node types (defined outside component to avoid re-creation) ──────────────
 
@@ -56,18 +57,13 @@ const initialNodes: Node[] = [
 
 // ─── SW (software / Nuru language) playground ────────────────────────────────
 
-const nuruExecutor: LanguageExecutor = {
-	language: "Nuru",
-	run: async (code) => executeNuru(code),
-	submit: async (code) => {
-		try {
-			await executeNuru(code);
-			return "✓ Submitted!";
-		} catch (e) {
-			return `X Kosa: ${e}`;
-		}
-	},
-};
+function SoftwareDemo({ theme }: { theme: "light" | "dark" }) {
+	const nuruExecutor = new Executor("nuru", useNuru);
+
+	return (
+		<Playground lesson={nuruLesson} executor={nuruExecutor} theme={theme} />
+	);
+}
 
 const nuruLesson: LessonContent = {
 	title: "Nuru – Code in Swahili",
@@ -112,12 +108,6 @@ andika("Habari " + jina + "!")
 		</div>
 	),
 };
-
-function SoftwareDemo({ theme }: { theme: "light" | "dark" }) {
-	return (
-		<Playground lesson={nuruLesson} executor={nuruExecutor} theme={theme} />
-	);
-}
 
 // ─── HW (hardware / electronics) playground ──────────────────────────────────
 

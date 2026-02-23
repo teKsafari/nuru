@@ -6,10 +6,11 @@ import {
 	DEFAULT_COMPONENTS,
 } from "@/lib/electronicsExecutor";
 import type { ComponentState, ProgramState } from "@/types/electronics";
-import type { LanguageExecutor } from "@/types/playground";
+import { Executor } from "@/lib/executor";
+import { OutputReceiver } from "@/types";
 
 interface UseElectronicsExecutorReturn {
-	executor: LanguageExecutor;
+	executor: Executor<ElectronicsExecutor>;
 	components: ComponentState[];
 	programState: ProgramState;
 	currentLine: number;
@@ -26,109 +27,63 @@ export function useElectronicsExecutor(): UseElectronicsExecutorReturn {
 	);
 	const [programState, setProgramState] = useState<ProgramState>("idle");
 	const [currentLine, setCurrentLine] = useState(-1);
-	const executorRef = useRef<ElectronicsExecutor | null>(null);
-	const outputBufferRef = useRef<string[]>([]);
-
-	// Initialize executor with callbacks
-	useEffect(() => {
-		executorRef.current = new ElectronicsExecutor(
-			{
-				onComponentChange: (index, isEnabled) => {
-					setComponents((prev) =>
-						prev.map((c, i) => (i === index ? { ...c, isEnabled } : c)),
-					);
-				},
-				onOutput: (message) => {
-					outputBufferRef.current.push(message);
-				},
-				onLineChange: (line) => {
-					setCurrentLine(line);
-				},
-				onStateChange: (state) => {
-					setProgramState(state);
-				},
-				onError: () => {
-					// Error handling is done via output
-				},
-			},
-			{
-				componentCount: DEFAULT_COMPONENTS.length,
-				loop: false,
-			},
-		);
-
-		return () => {
-			executorRef.current?.destroy();
-		};
-	}, []);
+	
+	// We need to keep the executor instance stable
+	const executorInstanceRef = useRef<ElectronicsExecutor | null>(null);
+	const genericExecutorRef = useRef<Executor<ElectronicsExecutor> | null>(null);
 
 	const resetComponents = useCallback(() => {
 		setComponents(DEFAULT_COMPONENTS.map((c) => ({ ...c })));
 	}, []);
 
-	const executor: LanguageExecutor = {
-		language: "Electronics",
-		run: async (code: string) => {
-			outputBufferRef.current = [];
-
-			if (!executorRef.current) {
-				return "❌ Kosa: Executor haipo";
+	if (!genericExecutorRef.current) {
+		genericExecutorRef.current = new Executor(
+			"Electronics",
+			(outputHandler) => {
+				const instance = new ElectronicsExecutor(
+					{
+						onComponentChange: (index, isEnabled) => {
+							setComponents((prev) =>
+								prev.map((c, i) => (i === index ? { ...c, isEnabled } : c)),
+							);
+						},
+						onOutput: (message, type) => {
+							outputHandler(message, type === "error");
+						},
+						onLineChange: (line) => {
+							setCurrentLine(line);
+						},
+						onStateChange: (state) => {
+							setProgramState(state);
+						},
+						onError: () => {
+							// Error handling is done via output
+						},
+					},
+					{
+						componentCount: DEFAULT_COMPONENTS.length,
+						loop: false,
+					},
+				);
+				executorInstanceRef.current = instance;
+				return instance;
+			},
+			{
+				onBeforeRun: () => {
+					resetComponents();
+				}
 			}
+		);
+	}
 
-			// Reset components before running
-			resetComponents();
-
-			// Return a promise that resolves when execution completes
-			return new Promise((resolve) => {
-				const checkCompletion = () => {
-					if (executorRef.current?.getState() === "idle") {
-						resolve(outputBufferRef.current.join("\n"));
-					} else {
-						setTimeout(checkCompletion, 100);
-					}
-				};
-
-				executorRef.current?.startProgram(code);
-
-				// Start checking after a small delay
-				setTimeout(checkCompletion, 100);
-			});
-		},
-		submit: async (code: string) => {
-			// Same as run for electronics
-			outputBufferRef.current = [];
-
-			if (!executorRef.current) {
-				return "❌ Kosa: Executor haipo";
-			}
-
-			resetComponents();
-
-			return new Promise((resolve) => {
-				const checkCompletion = () => {
-					if (executorRef.current?.getState() === "idle") {
-						const output = outputBufferRef.current.join("\n");
-						if (output.includes("❌")) {
-							resolve(output);
-						} else {
-							resolve(`✓ Imekamilika!\n\n${output}`);
-						}
-					} else {
-						setTimeout(checkCompletion, 100);
-					}
-				};
-
-				executorRef.current?.startProgram(code);
-				setTimeout(checkCompletion, 100);
-			});
-		},
-		onBeforeRun: () => {
-			resetComponents();
-		},
-	};
+	useEffect(() => {
+		return () => {
+			executorInstanceRef.current?.destroy();
+		};
+	}, []);
 
 	return {
-		executor,
+		executor: genericExecutorRef.current,
 		components,
 		programState,
 		currentLine,

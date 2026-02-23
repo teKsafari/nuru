@@ -22,6 +22,10 @@
 		".": {
 			"default": "./dist/index.js",
 			"types": "./dist/index.d.ts"
+		},
+		"./react":{
+			"default": "./dist/react/index.js",
+			"types": "./dist/react/index.d.ts"
 		}
 	},
 	"keywords": [],
@@ -33,6 +37,11 @@
 	},
 	"devDependencies": {
 		"@types/node": "^22",
+		"@types/react": "^19.2.14",
+		"react": "^19",
 		"typescript": "^5.9.3"
+	},
+	"peerDependencies": {
+		"react": "^16.8.0"
 	}
 }
