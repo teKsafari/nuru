@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { Terminal, Cpu, Columns2 } from "lucide-react";
 import { LessonPanel } from "./lesson-panel";
@@ -37,7 +37,15 @@ export function Playground({
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
-	executor.onOutput((output, isError) => setOutput(output));
+	useEffect(() => {
+		executor.onOutput((output, isError) => {
+			setOutput((prev) => {
+				if (prev) {
+					return prev + `\n${output}`;
+				} else return output;
+			});
+		});
+	}, [executor]);
 
 	const handleLessonToggle = () => {
 		const lesson = lessonPanelRef.current;
@@ -83,9 +91,8 @@ export function Playground({
 		if (executor.onBeforeRun) {
 			executor.onBeforeRun();
 		}
-		setOutput("Running...");
 		try {
-			const result = executor.run(code);
+			await executor.run(code);
 		} catch (error) {
 			setOutput(`Error: ${error}`);
 		}

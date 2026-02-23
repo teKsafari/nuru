@@ -1,48 +1,68 @@
 import { OutputReceiver } from "@/types";
 
 export interface Interpreter {
-	execute: (code: string) => void;
+	execute: (code: string) => unknown;
+}
+
+export interface ExecutorOptions {
+	onBeforeRun?: () => void;
+	getSolution?: () => string;
 }
 
 export class Executor<LanguageInstace extends Interpreter> {
 	language: string;
 	instance: LanguageInstace;
-	outputHandler: OutputReceiver | null = null;
+	private outputBridge: OutputReceiver | null = null;
 
-	private outputRegistrar: (bridge: OutputReceiver) => void;
+	private options?: ExecutorOptions;
 
 	constructor(
 		language: string,
-		instance: LanguageInstace,
-		outputRegistrar: typeof this.outputRegistrar,
+		createInstance: (outputReceiver: OutputReceiver) => LanguageInstace,
+		options?: ExecutorOptions,
 	) {
 		this.language = language;
-		this.instance = instance;
-		this.outputRegistrar = outputRegistrar;
+		this.instance = createInstance(this.outputHandler);
+		this.options = options;
 	}
 
-	run(code: string) {
-		this.instance.execute(code);
+	private outputHandler = (text: string, isError: boolean) => {
+		if (this.outputBridge) {
+			this.outputBridge(text, isError);
+		} else {
+			console.error(
+				`Output received but output handler not regsitered.\noutput:${text}\n call onOuput method`,
+			);
+		}
+	};
+
+	async run(code: string) {
+		await this.instance.execute(code);
 	}
+
 	async submit(code: string) {
 		try {
-			this.instance.execute(code);
+			await this.instance.execute(code);
 			return "✓ Submitted!";
 		} catch (e) {
 			return `X Kosa: ${e}`;
 		}
 	}
+
 	onOutput(outputBridge: OutputReceiver) {
-		this.outputHandler = outputBridge;
-		this.outputRegistrar(outputBridge);
+		this.outputBridge = outputBridge;
 	}
 
-	onBeforeRun(){
-		// TODO: define onBeforeRun
+	onBeforeRun() {
+		if (this.options?.onBeforeRun) {
+			this.options.onBeforeRun();
+		}
 	}
 
-	getSolution(){
-		// TODO: define getSolution 
-		return "some solution"
+	getSolution() {
+		if (this.options?.getSolution) {
+			return this.options.getSolution();
+		}
+		return "some solution";
 	}
 }

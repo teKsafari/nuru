@@ -4,16 +4,6 @@ import type { Node, Edge, NodeTypes, OnNodesChange } from "@xyflow/react";
 import { Executor } from "@/lib/executor";
 import type { Interpreter } from "@/lib/executor";
 
-
-export interface LanguageExecutor {
-	language: string;
-	run: (code: string) => void;
-	submit: (code: string) => Promise<string>;
-	// getSolution?: () => string;
-	// Callback before execution starts (for resetting components, etc.)
-	onBeforeRun?: () => void;
-}
-
 export interface LessonContent {
 	title: string;
 	description: React.ReactNode;

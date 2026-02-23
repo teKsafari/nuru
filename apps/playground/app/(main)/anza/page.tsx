@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 
 import { useNuru } from "@nuru/wasm/react";
 
@@ -10,45 +10,12 @@ import { Executor } from "@/lib/executor";
 
 import { useTheme } from "next-themes";
 
-import { OutputReceiver } from "@/types";
 import { LessonContent } from "@/types/playground";
 
 export default function Home() {
 	const { theme, forcedTheme } = useTheme();
 
-	const outputHandlerRef = useRef<OutputReceiver | null>(null);
-
-	const nuru = useNuru((output, isError) => {
-		if (outputHandlerRef.current) {
-			outputHandlerRef.current(output, isError);
-		} else {
-			throw new Error(
-				`Output handler not registered before output received.\nOutput is ${output}`,
-			);
-		}
-	});
-
-	const nuruExecutor = new Executor(
-		"nuru",
-		nuru,
-		(bridge) => (outputHandlerRef.current = bridge),
-	);
-
-	// const nuruExecutor: LanguageExecutor = {
-	// 	language: "Nuru",
-	// 	run: async (code) => {
-	// 		"nuru.execute(code)";
-	// 		return "await executeNuru(code)";
-	// 	},
-	// 	submit: async (code) => {
-	// 		try {
-	// 			await executeNuru(code);
-	// 			return "✓ Submitted!";
-	// 		} catch (e) {
-	// 			return `X Kosa: ${e}`;
-	// 		}
-	// 	},
-	// };
+	const nuruExecutor = new Executor("nuru", useNuru)
 
 	return (
 		<Playground

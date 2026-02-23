@@ -8,8 +8,6 @@ export type OutputReceiver = (content: string, isError: boolean) => void;
 export function useNuru(outputReceiver: OutputReceiver): NuruInstance {
 	const [nuruInstance, setNuruInstance] = useState<NuruInstance | null>(null);
 
-	const [isLoading, setIsLoading] = useState(true);
-
 	const outputReceiverRef = useRef(outputReceiver);
 
 	useEffect(() => {
