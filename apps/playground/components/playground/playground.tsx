@@ -37,6 +37,8 @@ export function Playground({
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
+	executor.onOutput((output, isError) => setOutput(output));
+
 	const handleLessonToggle = () => {
 		const lesson = lessonPanelRef.current;
 		const code = codePanelRef.current;
@@ -83,8 +85,7 @@ export function Playground({
 		}
 		setOutput("Running...");
 		try {
-			const result = await executor.run(code);
-			setOutput(result);
+			const result = executor.run(code);
 		} catch (error) {
 			setOutput(`Error: ${error}`);
 		}

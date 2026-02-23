@@ -1,30 +1,63 @@
 "use client";
 
+import { useRef } from "react";
+
+import { useNuru } from "@nuru/wasm/react";
+
 import { Playground } from "@/components/playground/playground";
-import { LanguageExecutor, LessonContent } from "@/types/playground";
-import { executeNuru } from "@/lib/nuru";
+import { Executor } from "@/lib/executor";
+// import { executeNuru } from "@/lib/nuru";
 
 import { useTheme } from "next-themes";
 
+import { OutputReceiver } from "@/types";
+import { LessonContent } from "@/types/playground";
+
 export default function Home() {
 	const { theme, forcedTheme } = useTheme();
-	return <Playground theme={(forcedTheme || theme) as "light" | "dark"} lesson={nuruDemo} executor={nuruExecutor} />;
-}
 
-const nuruExecutor: LanguageExecutor = {
-	language: "Nuru",
-	run: async (code) => {
-		return await executeNuru(code);
-	},
-	submit: async (code) => {
-		try {
-			await executeNuru(code);
-			return "✓ Submitted!";
-		} catch (e) {
-			return `X Kosa: ${e}`;
+	const outputHandlerRef = useRef<OutputReceiver | null>(null);
+
+	const nuru = useNuru((output, isError) => {
+		if (outputHandlerRef.current) {
+			outputHandlerRef.current(output, isError);
+		} else {
+			throw new Error(
+				`Output handler not registered before output received.\nOutput is ${output}`,
+			);
 		}
-	},
-};
+	});
+
+	const nuruExecutor = new Executor(
+		"nuru",
+		nuru,
+		(bridge) => (outputHandlerRef.current = bridge),
+	);
+
+	// const nuruExecutor: LanguageExecutor = {
+	// 	language: "Nuru",
+	// 	run: async (code) => {
+	// 		"nuru.execute(code)";
+	// 		return "await executeNuru(code)";
+	// 	},
+	// 	submit: async (code) => {
+	// 		try {
+	// 			await executeNuru(code);
+	// 			return "✓ Submitted!";
+	// 		} catch (e) {
+	// 			return `X Kosa: ${e}`;
+	// 		}
+	// 	},
+	// };
+
+	return (
+		<Playground
+			theme={(forcedTheme || theme) as "light" | "dark"}
+			lesson={nuruDemo}
+			executor={nuruExecutor}
+		/>
+	);
+}
 
 const nuruDemo: LessonContent = {
 	title: "Nuru - jifunze programu kwa Kiswahili",
