@@ -59,13 +59,17 @@ Our monorepo follows Turborepo's recommended conventions:
 ```
 nuru-wasm/
 ├── apps/                        # Deployable applications
-│   └── nuru-svelte/            # SvelteKit web application
-│       ├── src/
-│       ├── static/
+│   └── playground/              # Next.js web application (Interactive Playground)
+│       ├── app/
+│       ├── components/
 │       ├── package.json
-│       └── vite.config.js
+│       └── next.config.mjs
 ├── packages/                    # Shared, reusable packages
-│   └── nuru-wasm/              # Go WASM interpreter package
+│   ├── database/                # Drizzle ORM and database schema
+│   │   ├── src/
+│   │   ├── drizzle.config.ts
+│   │   └── package.json
+│   └── wasm/                    # Go WASM interpreter package & React hooks
 │       ├── main.go
 │       ├── go.mod
 │       └── package.json
