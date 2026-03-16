@@ -16,17 +16,18 @@ import type {
 // 	| "roles"
 // >;
 
-export type AuthSession = Required<
-	Pick<
-		IdTokenClaims,
-		| "sub"
-		| "name"
-		| "username"
-		| "picture"
-		| "email"
-		| "email_verified"
-		// | "phone_number" // not collecting that yet
-		// | "roles"
+type NonNullableProps<T> = {
+	[P in keyof T]: NonNullable<T[P]>;
+};
+
+export type AuthSession = NonNullableProps<
+	Required<
+		Pick<
+			IdTokenClaims,
+			"sub" | "name" | "username" | "picture" | "email" | "email_verified"
+			// | "phone_number" // not collecting that yet
+			// | "roles"
+		>
 	>
 >;
 
