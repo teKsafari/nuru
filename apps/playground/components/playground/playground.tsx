@@ -13,7 +13,7 @@ import {
 	ResizablePanelGroup,
 } from "@/components/playground/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { PlaygroundProps } from "@/types/playground";
+import { PlaygroundProps, Language, Lesson, LessonContent } from "@/types/playground";
 import { Button } from "@/components/ui/button";
 
 type BottomPaneMode = "output" | "simulation" | "split";
@@ -30,12 +30,47 @@ export function Playground({
 	theme = "dark",
 }: PlaygroundProps) {
 	const isMobile = useIsMobile();
-	const [code, setCode] = useState(lesson.initialCode);
+	const [currentStepIndex, setCurrentStepIndex] = useState(0);
+	const [lang, setLang] = useState<Language>("sw");
+
+	// Normalize lesson
+	const isLegacy = "title" in lesson && typeof lesson.title === "string";
+	const normalizedLesson: Lesson = isLegacy
+		? {
+				id: "legacy",
+				title: { sw: (lesson as LessonContent).title, en: (lesson as LessonContent).title },
+				steps: [
+					{
+						id: "legacy-step",
+						title: { sw: (lesson as LessonContent).title, en: (lesson as LessonContent).title },
+						description: {
+							sw: (lesson as LessonContent).description,
+							en: (lesson as LessonContent).description,
+						},
+						initialCode: (lesson as LessonContent).initialCode,
+						simulation: (lesson as LessonContent).simulation,
+						initialNodes: (lesson as LessonContent).initialNodes,
+						initialEdges: (lesson as LessonContent).initialEdges,
+						nodeTypes: (lesson as LessonContent).nodeTypes,
+					},
+				],
+			}
+		: (lesson as Lesson);
+
+	const currentStep = normalizedLesson.steps[currentStepIndex];
+
+	const [code, setCode] = useState(currentStep.initialCode);
 	const [output, setOutput] = useState("");
 	const [lessonExpanded, setLessonExpanded] = useState(!isMobile);
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
+
+	// Sync code when step changes
+	useEffect(() => {
+		setCode(currentStep.initialCode);
+		setOutput("");
+	}, [currentStepIndex, normalizedLesson.id]);
 
 	useEffect(() => {
 		executor.onOutput((output, isError) => {
@@ -60,13 +95,13 @@ export function Playground({
 		} else {
 			// Take from both panes to give lesson 25%
 			lesson.expand();
-			lesson.resize(25);
-			code?.resize(35);
-			bottom?.resize(40);
+			lesson.resize(40);
+			code?.resize(40);
+			bottom?.resize(20);
 		}
 	};
 
-	const hasSimulation = !!simulation || (nodes && nodes.length > 0);
+	const hasSimulation = !!simulation || (nodes && nodes.length > 0) || !!currentStep.simulation;
 
 	const [bottomPaneMode, setBottomPaneMode] =
 		useState<BottomPaneMode>("simulation");
@@ -109,7 +144,9 @@ export function Playground({
 	};
 
 	const handleShowSolution = () => {
-		if (executor.getSolution) {
+		if (currentStep.solution) {
+			setCode(currentStep.solution);
+		} else if (executor.getSolution) {
 			setCode(executor.getSolution());
 		}
 	};
@@ -117,28 +154,6 @@ export function Playground({
 	if (isMobile) {
 		return (
 			<div className="flex max-h-full flex-1 flex-col overflow-hidden bg-background">
-				{/* Lesson Header (always visible) */}
-				<button
-					onClick={handleLessonToggle}
-					className="flex w-full shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5 text-left"
-				>
-					<h1 className="truncate pr-2 text-sm font-semibold text-foreground">
-						{lesson.title}
-					</h1>
-					<svg
-						className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ${lessonExpanded ? "rotate-180" : ""}`}
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						strokeWidth="2"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<path d="m6 9 6 6 6-6" />
-					</svg>
-				</button>
-
 				<ResizablePanelGroup direction="vertical" className="flex-1">
 					{/* Lesson Content Pane */}
 					<ResizablePanel
@@ -151,12 +166,45 @@ export function Playground({
 						onExpand={() => setLessonExpanded(true)}
 						style={{ overflow: "hidden" }}
 					>
-						<div className="h-full overflow-auto bg-card">
-							<div className="w-full min-w-0 px-4 pb-4 text-sm">
-								{lesson.description}
-							</div>
-						</div>
+						<LessonPanel 
+							lesson={normalizedLesson} 
+							currentStepIndex={currentStepIndex}
+							onStepChange={setCurrentStepIndex}
+							lang={lang}
+							onLangChange={setLang}
+							collapsible 
+							expanded={lessonExpanded} 
+							onToggle={handleLessonToggle} 
+							hideNavigation={isLegacy}
+						/>
 					</ResizablePanel>
+					{!lessonExpanded && (
+						<button
+							onClick={handleLessonToggle}
+							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5 text-left"
+						>
+							<div className="flex items-center gap-2 truncate pr-2">
+								{!isLegacy && (
+									<span className="text-xs font-mono text-primary">{currentStepIndex + 1}.</span>
+								)}
+								<h1 className="truncate text-sm font-semibold text-foreground">
+									{currentStep.title[lang]}
+								</h1>
+							</div>
+							<svg
+								className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ${lessonExpanded ? "rotate-180" : ""}`}
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+							>
+								<path d="m6 9 6 6 6-6" />
+							</svg>
+						</button>
+					)}
 					<ResizableHandle withHandle />
 
 					{/* Code Pane */}
@@ -196,7 +244,7 @@ export function Playground({
 					{/* Output / Simulation Pane */}
 					<ResizablePanel
 						ref={bottomPanelRef}
-						defaultSize={isMobile ? 60 : 40}
+						defaultSize={isMobile ? 10 : 40}
 						minSize={10}
 					>
 						{hasSimulation ? (
@@ -204,12 +252,12 @@ export function Playground({
 								<OutputPanel output={output} showToolbar={false} />
 							) : bottomPaneMode === "simulation" ? (
 								<SimulationPanel
-									nodes={nodes}
-									edges={edges}
+									nodes={nodes.length > 0 ? nodes : (currentStep.initialNodes || [])}
+									edges={edges.length > 0 ? edges : (currentStep.initialEdges || [])}
 									onNodesChange={onNodesChange}
 									onReset={onResetSimulation}
-									nodeTypes={nodeTypes}
-									content={simulation}
+									nodeTypes={nodeTypes || currentStep.nodeTypes}
+									content={simulation || currentStep.simulation}
 								/>
 							) : (
 								<ResizablePanelGroup direction="horizontal" className="h-full">
@@ -219,12 +267,12 @@ export function Playground({
 									<ResizableHandle withHandle />
 									<ResizablePanel defaultSize={50} minSize={20}>
 										<SimulationPanel
-											nodes={nodes}
-											edges={edges}
+											nodes={nodes.length > 0 ? nodes : (currentStep.initialNodes || [])}
+											edges={edges.length > 0 ? edges : (currentStep.initialEdges || [])}
 											onNodesChange={onNodesChange}
 											onReset={onResetSimulation}
-											nodeTypes={nodeTypes}
-											content={simulation}
+											nodeTypes={nodeTypes || currentStep.nodeTypes}
+											content={simulation || currentStep.simulation}
 										/>
 									</ResizablePanel>
 								</ResizablePanelGroup>
@@ -242,7 +290,14 @@ export function Playground({
 		<div className="h-screen bg-background">
 			<ResizablePanelGroup direction="horizontal" className="h-full">
 				<ResizablePanel defaultSize={hasSimulation ? 30 : 40} minSize={20}>
-					<LessonPanel lesson={lesson} />
+					<LessonPanel 
+						lesson={normalizedLesson} 
+						currentStepIndex={currentStepIndex}
+						onStepChange={setCurrentStepIndex}
+						lang={lang}
+						onLangChange={setLang}
+						hideNavigation={isLegacy}
+					/>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel defaultSize={hasSimulation ? 30 : 60} minSize={25}>
@@ -261,12 +316,12 @@ export function Playground({
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize={40} minSize={15}>
 							<SimulationPanel
-								nodes={nodes}
-								edges={edges}
+								nodes={nodes.length > 0 ? nodes : (currentStep.initialNodes || [])}
+								edges={edges.length > 0 ? edges : (currentStep.initialEdges || [])}
 								onNodesChange={onNodesChange}
 								onReset={onResetSimulation}
-								nodeTypes={nodeTypes}
-								content={simulation}
+								nodeTypes={nodeTypes || currentStep.nodeTypes}
+								content={simulation || currentStep.simulation}
 							/>
 						</ResizablePanel>
 					</>
