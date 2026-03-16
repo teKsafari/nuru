@@ -12,7 +12,7 @@ import { EXAMPLE_CODE } from "@/lib/electronicsExecutor";
 import { useNuru } from "@nuru/wasm/react";
 import { LEDNode, BuzzerNode, MotorNode } from "@/components/electronics/nodes";
 import type { LessonContent } from "@/types/playground";
-import { Executor, Interpreter } from "@/lib/executor";
+import { Executor } from "@/lib/executor";
 
 // ─── Node types (defined outside component to avoid re-creation) ──────────────
 
@@ -67,46 +67,14 @@ function SoftwareDemo({ theme }: { theme: "light" | "dark" }) {
 
 const nuruLesson: LessonContent = {
 	title: "Nuru – Code in Swahili",
-	initialCode: `// Programu ya kwanza - Salamu!
+	initialCode: `// Programu ya kwanza - Salamu!\n\njina = jaza("Ingiza jina lako")\n\nandika("Habari " + jina + "!")\n`,
+	description: `Nuru is a Swahili programming language that lets you write real code in your own language.
 
-jina = jaza("Ingiza jina lako")
+### Key functions:
+- \`andika(x)\` – Print x to the console
+- \`jaza("prompt")\` – Read user input
 
-andika("Habari " + jina + "!")
-`,
-	description: (
-		<div className="space-y-6 leading-relaxed text-muted-foreground">
-			<p>
-				Nuru is a Swahili programming language that lets you write real code in
-				your own language.
-			</p>
-			<div className="space-y-3">
-				<h3 className="font-semibold text-foreground">Key functions:</h3>
-				<ul className="list-inside list-disc space-y-2">
-					<li>
-						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-							andika(x)
-						</code>{" "}
-						– Print x to the console
-					</li>
-					<li>
-						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-							jaza(&quot;prompt&quot;)
-						</code>{" "}
-						– Read user input
-					</li>
-				</ul>
-			</div>
-			<div className="mt-6 rounded-lg border border-border bg-secondary/50 p-4">
-				<p className="break-words text-sm text-muted-foreground">
-					<span className="font-semibold text-foreground">Tip:</span> Use{" "}
-					<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-						andika()
-					</code>{" "}
-					to see output.
-				</p>
-			</div>
-		</div>
-	),
+> **Tip:** Use \`andika()\` to see output.`,
 };
 
 // ─── HW (hardware / electronics) playground ──────────────────────────────────
@@ -114,46 +82,15 @@ andika("Habari " + jina + "!")
 const hwLesson: LessonContent = {
 	title: "Electronics playground",
 	initialCode: EXAMPLE_CODE,
-	description: (
-		<div className="space-y-6 leading-relaxed text-muted-foreground">
-			<p>Control LEDs, buzzers, and motors using simple Swahili commands.</p>
-			<div className="space-y-3">
-				<h3 className="font-semibold text-foreground">Available functions:</h3>
-				<ul className="list-inside list-disc space-y-2">
-					<li>
-						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-							washa(n)
-						</code>{" "}
-						– Turn on device n
-					</li>
-					<li>
-						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-							zima(n)
-						</code>{" "}
-						– Turn off device n
-					</li>
-					<li>
-						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-							subiri(ms)
-						</code>{" "}
-						– Wait for ms milliseconds
-					</li>
-					<li>
-						<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-							{"rudia(n) { ... }"}
-						</code>{" "}
-						– Repeat commands n times
-					</li>
-				</ul>
-			</div>
-			<div className="mt-6 rounded-lg border border-border bg-secondary/50 p-4">
-				<p className="break-words text-sm text-muted-foreground">
-					<span className="font-semibold text-foreground">Tip:</span> Drag the
-					components around to arrange your layout!
-				</p>
-			</div>
-		</div>
-	),
+	description: `Control LEDs, buzzers, and motors using simple Swahili commands.
+
+### Available functions:
+- \`washa(n)\` – Turn on device n
+- \`zima(n)\` – Turn off device n
+- \`subiri(ms)\` – Wait for ms milliseconds
+- \`rudia(n) { ... }\` – Repeat commands n times
+
+> **Tip:** Drag the components around to arrange your layout!`,
 };
 
 function HardwareDemo({ theme }: { theme: "light" | "dark" }) {

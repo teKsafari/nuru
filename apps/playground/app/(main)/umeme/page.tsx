@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { useNodesState, Node } from "@xyflow/react";
 import { Playground } from "@/components/playground/playground";
 import { useElectronicsExecutor } from "@/hooks/useElectronicsExecutor";
 import { EXAMPLE_CODE } from "@/lib/electronicsExecutor";
-import type { LessonContent } from "@/types/playground";
+import type { Lesson } from "@/types/playground";
 import { LEDNode, BuzzerNode, MotorNode } from "@/components/electronics/nodes";
 
 import { useTheme } from "next-themes";
@@ -85,66 +85,51 @@ export default function IntegratedElectronicsPage() {
 		);
 	}, [components, setNodes]);
 
-	const lesson: LessonContent = {
-		title: "Elektroniki - Jifunze kudhibiti vifaa kwa Kiswahili",
-		initialCode: EXAMPLE_CODE,
-		description: (
-			<div className="space-y-6 leading-relaxed text-muted-foreground">
-				<p>
-					Jifunze kudhibiti vifaa vya elektroniki kama LED, buzzer, na motor kwa
-					kutumia amri rahisi za Kiswahili. Sasa unaweza pia kupanga vifaa hivi
-					navyo unavyotaka!
-				</p>
+	const lesson: Lesson = {
+		id: "elektroniki",
+		title: {
+			sw: "Elektroniki - Jifunze kudhibiti vifaa kwa Kiswahili",
+			en: "Electronics - Learn to control devices in Swahili",
+		},
+		steps: [
+			{
+				id: "mwanzo",
+				title: {
+					sw: "Elektroniki",
+					en: "Electronics",
+				},
+				initialCode: EXAMPLE_CODE,
+				description: {
+					sw: `Jifunze kudhibiti vifaa vya elektroniki kama LED, buzzer, na motor kwa kutumia amri rahisi za Kiswahili. Sasa unaweza pia kupanga vifaa hivi navyo unavyotaka!
 
-				{/* ... (Existing description content) ... */}
+### Amri zinazopatikana:
+- \`washa(n)\` - Washa kifaa nambari n
+- \`zima(n)\` - Zima kifaa nambari n
+- \`subiri(ms)\` - Subiri kwa millisekunde
+- \`rudia(n) { ... }\` - Rudia amri mara n
 
-				<div className="space-y-3">
-					<h3 className="font-semibold text-foreground">
-						Amri zinazopatikana:
-					</h3>
-					<ul className="list-inside list-disc space-y-2">
-						<li>
-							<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-								washa(n)
-							</code>{" "}
-							- Washa kifaa nambari n
-						</li>
-						<li>
-							<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-								zima(n)
-							</code>{" "}
-							- Zima kifaa nambari n
-						</li>
-						<li>
-							<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-								subiri(ms)
-							</code>{" "}
-							- Subiri kwa millisekunde
-						</li>
-						<li>
-							<code className="rounded bg-background px-1 py-0.5 font-mono text-xs">
-								{"rudia(n) { ... }"}
-							</code>{" "}
-							- Rudia amri mara n
-						</li>
-					</ul>
-				</div>
+> **Kidokezo:** Jaribu kuburuta vifaa hivi kupanga muundo wako!`,
+					en: `Learn to control electronic devices like LEDs, buzzers, and motors using simple Swahili commands. You can now also arrange these devices as you wish!
 
-				<div className="mt-6 rounded-lg border border-border bg-secondary/50 p-4">
-					<p className="break-words text-sm text-muted-foreground">
-						<span className="font-semibold text-foreground">Kidokezo:</span>{" "}
-						Jaribu kuburuta vifaa hivi kupanga muundo wako!
-					</p>
-				</div>
-			</div>
-		),
+### Available commands:
+- \`washa(n)\` - Turn on device n
+- \`zima(n)\` - Turn off device n
+- \`subiri(ms)\` - Wait for milliseconds
+- \`rudia(n) { ... }\` - Repeat commands n times
+
+> **Tip:** Try dragging these devices to arrange your layout!`,
+				},
+				task: {
+					sw: "Bonyeza kitufe cha 'Run' kuona jinsi vifaa vinavyofanya kazi.",
+					en: "Click the 'Run' button to see how the devices work.",
+				}
+			},
+		],
 	};
 
 	return (
 		<Playground
-			theme={ (forcedTheme || theme) as "light" | "dark"} // I hate this, too brittle. Too much prop drilling too
-			// TODO: look into using a provider for playground props that need to reach deeply nested componets
-			// like 'theme' and code-mirror
+			theme={ (forcedTheme || theme) as "light" | "dark"} 
 			lesson={lesson}
 			executor={executor}
 			nodes={nodes}
