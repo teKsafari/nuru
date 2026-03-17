@@ -1,34 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
-import { Menu, Github, Sprout } from "lucide-react";
+import React, { useContext, useState } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
+
+import { AuthContext } from "@/components/providers/auth-provider";
+import UserMenu from "@/components/UserMenu";
+
 import { MobileMenuDrawer } from "./mobile-menu-drawer";
 import { LessonsDrawer } from "./lessons-drawer";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppLogo } from "@/components/app-logo";
-import Link from "next/link";
+
+import { Menu, Github, Sprout } from "lucide-react";
 
 interface SiteHeaderProps {
 	onMenuClick?: () => void;
 }
 
 export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
+	// const { isAuthenticated, claims } = useContext(AuthContext);
+
 	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	const navItems = [
 		{ label: "Home", href: "/", active: pathname === "/" },
 		{ label: "Anza", href: "/anza", active: pathname === "/anza" },
-		{
-			label: "Elektroniki",
-			href: "/umeme",
-			active: pathname === "/umeme",
-		},
-		// {
-		// 	label: "Submissions",
-		// 	href: "/submissions",
-		// 	active: pathname === "/submissions",
-		// },
 	];
 
 	return (
@@ -98,6 +97,7 @@ export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
 								<Sprout className="h-5 w-5" />
 							</a>
 						</div>
+							<UserMenu/>
 
 						{/* Mobile Lessons Drawer Trigger */}
 						<div className="md:hidden">

@@ -1,29 +1,25 @@
-import React from "react";
-import type { Node, Edge, NodeTypes, OnNodesChange } from "@xyflow/react";
-
 import { Executor } from "@/lib/executor";
 import type { Interpreter } from "@/lib/executor";
 
-export interface LessonContent {
-	title: string;
-	description: React.ReactNode;
+export type Language = "sw" | "en";
+
+export interface LessonStep {
+	id: string;
+	title: Record<Language, string>;
+	description: Record<Language, string>;
 	initialCode: string;
-	simulation?: React.ReactNode;
-	// New ReactFlow props
-	initialNodes?: Node[];
-	initialEdges?: Edge[];
-	nodeTypes?: NodeTypes;
+	solution?: string;
+	task?: Record<Language, string>;
+}
+
+export interface Lesson {
+	id: string;
+	title: Record<Language, string>;
+	steps: LessonStep[];
 }
 
 export interface PlaygroundProps {
-	lesson: LessonContent;
+	lesson: Lesson;
 	executor: Executor<Interpreter>;
-	simulation?: React.ReactNode;
-	// New ReactFlow props
-	nodes?: Node[];
-	edges?: Edge[];
-	onNodesChange?: OnNodesChange;
-	onResetSimulation?: () => void;
-	nodeTypes?: NodeTypes;
 	theme?: "light" | "dark";
 }

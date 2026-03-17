@@ -39,4 +39,6 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
-wokwi-elements
+
+# context for agents
+context

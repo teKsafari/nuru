@@ -59,13 +59,17 @@ Our monorepo follows Turborepo's recommended conventions:
 ```
 nuru-wasm/
 ├── apps/                        # Deployable applications
-│   └── nuru-svelte/            # SvelteKit web application
-│       ├── src/
-│       ├── static/
+│   └── playground/              # Next.js web application (Interactive Playground)
+│       ├── app/
+│       ├── components/
 │       ├── package.json
-│       └── vite.config.js
+│       └── next.config.mjs
 ├── packages/                    # Shared, reusable packages
-│   └── nuru-wasm/              # Go WASM interpreter package
+│   ├── database/                # Drizzle ORM and database schema
+│   │   ├── src/
+│   │   ├── drizzle.config.ts
+│   │   └── package.json
+│   └── wasm/                    # Go WASM interpreter package & React hooks
 │       ├── main.go
 │       ├── go.mod
 │       └── package.json
@@ -94,18 +98,18 @@ Workspaces are a feature of package managers (pnpm, npm, yarn) that allow you to
 
 In our monorepo:
 
-- **`nuru-svelte`** is a package (name: `"nuru-svelte"`)
+- **`playground`** is a package (name: `"playground"`)
 - **`nuru-wasm`** is a package (name: `"@nuru/wasm"`)
 
 #### Key Concepts:
 
 1. **Each workspace can have its own dependencies**
    ```json
-   // apps/nuru-svelte/package.json
+   // apps/playground/package.json
    {
      "dependencies": {
        "@nuru/wasm": "workspace:*",
-       "svelte": "^5.0.0"
+       "react": "^18.0.0"
      }
    }
    ```
@@ -115,7 +119,7 @@ In our monorepo:
    - No need to publish to npm for local development
 
 3. **pnpm creates symlinks between workspace packages**
-   - Changes to `packages/nuru-wasm` are immediately available in `apps/nuru-svelte`
+   - Changes to `packages/nuru-wasm` are immediately available in `apps/playground`
 
 4. **Shared dependencies are hoisted to the root when possible**
    - Saves disk space
@@ -193,7 +197,7 @@ Files/directories to cache when the task succeeds. **The beauty of Turborepo** i
 
 For example:
 - **Next.js** outputs to `.next/**`
-- **Vite/SvelteKit** outputs to `dist/**` or `.svelte-kit/**`
+- **Vite/Next.js** outputs to `dist/**` or `.svelte-kit/**`
 - **WASM builds** output to `main.wasm` or `static/*.wasm`
 - **General Node apps** might output to `build/**`
 
@@ -228,16 +232,16 @@ Install packages directly in the workspace that needs them:
 
 ```bash
 # ✅ Good - Install in specific workspace
-cd apps/nuru-svelte
-pnpm add svelte
+cd apps/playground
+pnpm add react
 
 # Or from root with filter
-pnpm add svelte --filter nuru-svelte
+pnpm add react --filter playground
 ```
 
 ```bash
 # ❌ Bad - Don't install app dependencies in root
-pnpm add svelte
+pnpm add react
 ```
 
 **Why?**
@@ -265,7 +269,7 @@ The root `package.json` should only contain:
 // ❌ Bad - Don't put app deps in root
 {
   "dependencies": {
-    "svelte": "^5.0.0",    // ❌ Belongs in apps/nuru-svelte
+    "react": "^18.0.0",    // ❌ Belongs in apps/playground
     "react": "^18.0.0"     // ❌ Belongs in specific app
   },
   "devDependencies": {
@@ -284,14 +288,14 @@ pnpm install
 pnpm add <package> --filter <workspace-name>
 
 # Examples:
-pnpm add lodash --filter nuru-svelte
+pnpm add lodash --filter playground
 pnpm add -D @types/node --filter @nuru/wasm
 
 # Add to multiple workspaces at once
-pnpm add jest --save-dev --recursive --filter=nuru-svelte --filter=@nuru/wasm
+pnpm add jest --save-dev --recursive --filter=playground --filter=@nuru/wasm
 
 # Add a workspace dependency
-pnpm add @nuru/wasm --filter nuru-svelte --workspace
+pnpm add @nuru/wasm --filter playground --workspace
 ```
 
 ### Important Notes
@@ -319,24 +323,24 @@ pnpm lint           # Lint all packages
 Target specific workspaces:
 
 ```bash
-# Run dev only for nuru-svelte
-turbo dev --filter nuru-svelte
+# Run dev only for playground
+turbo dev --filter playground
 
 # Build only nuru-wasm and its dependents
 turbo build --filter @nuru/wasm...
 
-# Run tests for everything except nuru-svelte
-turbo test --filter '!nuru-svelte'
+# Run tests for everything except playground
+turbo test --filter '!playground'
 ```
 
 ### Filter Syntax
 
 | Filter | Meaning |
 |--------|---------|
-| `--filter nuru-svelte` | Only this workspace |
+| `--filter playground` | Only this workspace |
 | `--filter @nuru/wasm...` | This workspace + all that depend on it |
-| `--filter ...nuru-svelte` | This workspace + all its dependencies |
-| `--filter '!nuru-svelte'` | Everything except this workspace |
+| `--filter ...playground` | This workspace + all its dependencies |
+| `--filter '!playground'` | Everything except this workspace |
 
 ### Running Multiple Tasks
 
@@ -405,7 +409,7 @@ turbo build --force
 When referencing another workspace:
 
 ```json
-// apps/nuru-svelte/package.json
+// apps/playground/package.json
 {
   "dependencies": {
     "@nuru/wasm": "workspace:*"
@@ -427,7 +431,7 @@ List all possible build outputs in `turbo.json` for different frameworks:
 "outputs": [
   "dist/**",           // Vite
   ".next/**",          // Next.js
-  ".svelte-kit/**",    // SvelteKit
+  ".svelte-kit/**",    // Next.js
   "build/**",          // Generic
   "*.wasm"             // WASM files
 ]
@@ -439,7 +443,7 @@ Don't run all tasks if you're only working on one package:
 
 ```bash
 # Only dev the web app
-turbo dev --filter nuru-svelte
+turbo dev --filter playground
 ```
 
 ### 5. **Commit `pnpm-lock.yaml`**
@@ -467,10 +471,10 @@ Our config enables Turbo's Terminal UI for better task visibility:
 pnpm dev
 
 # Start specific workspace
-turbo dev --filter nuru-svelte
+turbo dev --filter playground
 
 # Start workspace and its dependencies
-turbo dev --filter ...nuru-svelte
+turbo dev --filter ...playground
 ```
 
 ### Building
@@ -493,7 +497,7 @@ turbo build --force
 pnpm test
 
 # Test specific workspace
-turbo test --filter nuru-svelte
+turbo test --filter playground
 ```
 
 ### Linting
@@ -503,7 +507,7 @@ turbo test --filter nuru-svelte
 pnpm lint
 
 # Lint specific workspace
-turbo lint --filter nuru-svelte
+turbo lint --filter playground
 ```
 
 ### Dependency Management
@@ -546,7 +550,7 @@ pnpm why <package>
 
 **Symptoms:**
 ```
-WARNING  Unable to calculate transitive closures: Workspace 'apps/nuru-svelte' not found in lockfile.
+WARNING  Unable to calculate transitive closures: Workspace 'apps/playground' not found in lockfile.
 ```
 
 **Solution:**
@@ -585,7 +589,7 @@ pnpm install
 # Or manually link
 cd packages/nuru-wasm
 pnpm link
-cd ../../apps/nuru-svelte
+cd ../../apps/playground
 pnpm link @nuru/wasm
 ```
 

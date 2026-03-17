@@ -1,0 +1,28 @@
+"use client";
+
+// import { useContext } from "react";
+import { useNuru } from "@nuru/wasm/react";
+// import { AuthContext } from "@/components/providers/auth-provider";
+import { Playground } from "@/components/playground/playground";
+import { Executor } from "@/lib/executor";
+import { useTheme } from "next-themes";
+import { Lesson } from "@/types/playground";
+
+interface AnzaClientProps {
+	lesson: Lesson;
+}
+
+export function AnzaClient({ lesson }: AnzaClientProps) {
+	const { theme, forcedTheme } = useTheme();
+	// const { isAuthenticated, claims } = useContext(AuthContext);
+
+	const nuruExecutor = new Executor("nuru", useNuru);
+
+	return (
+		<Playground
+			theme={(forcedTheme || theme) as "light" | "dark"}
+			lesson={lesson}
+			executor={nuruExecutor}
+		/>
+	);
+}
