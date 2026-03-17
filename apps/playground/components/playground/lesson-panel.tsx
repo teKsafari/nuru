@@ -196,7 +196,7 @@ export function LessonPanel({
                       const { children, className, ...rest } = props;
                       const match = /language-(\w+)/.exec(className || "");
                       return match ? (
-                        <div className="not-prose my-4 overflow-hidden rounded-md border border-border h-24">
+                        <div className="not-prose my-4 overflow-hidden rounded-md border border-border">
                           <CodeEditor code={String(children).replace(/\n$/, "")} readOnly />
                         </div>
                       ) : (

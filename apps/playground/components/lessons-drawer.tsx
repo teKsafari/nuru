@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 
-import { Book, BookOpen, ChevronRight, Zap } from "lucide-react";
+import { Book, BookOpen, ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import {
@@ -27,13 +27,6 @@ export function LessonsDrawer() {
 			description: "Learn the basics of Nuru",
 			href: "/anza",
 			icon: <BookOpen className="h-5 w-5 text-blue-500" />,
-		},
-		{
-			id: "umeme",
-			title: "Umeme",
-			description: "Learn electronics with Nuru",
-			href: "/umeme",
-			icon: <Zap className="h-5 w-5 text-yellow-500" />,
 		},
 	];
 

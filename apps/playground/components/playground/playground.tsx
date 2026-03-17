@@ -2,10 +2,8 @@
 
 import { useRef, useState, useEffect } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
-import { Terminal, Cpu, Columns2 } from "lucide-react";
 import { LessonPanel } from "./lesson-panel";
 import { CodePanel } from "./code-panel";
-import { SimulationPanel } from "./simulation-panel";
 import { OutputPanel } from "./output-panel";
 import {
 	ResizableHandle,
@@ -13,51 +11,18 @@ import {
 	ResizablePanelGroup,
 } from "@/components/playground/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { PlaygroundProps, Language, Lesson, LessonContent } from "@/types/playground";
-import { Button } from "@/components/ui/button";
-
-type BottomPaneMode = "output" | "simulation" | "split";
+import { PlaygroundProps, Language } from "@/types/playground";
 
 export function Playground({
 	lesson,
 	executor,
-	simulation,
-	nodes = [],
-	edges = [],
-	onNodesChange,
-	onResetSimulation,
-	nodeTypes,
 	theme = "dark",
 }: PlaygroundProps) {
 	const isMobile = useIsMobile();
 	const [currentStepIndex, setCurrentStepIndex] = useState(0);
 	const [lang, setLang] = useState<Language>("sw");
 
-	// Normalize lesson
-	const isLegacy = "title" in lesson && typeof lesson.title === "string";
-	const normalizedLesson: Lesson = isLegacy
-		? {
-				id: "legacy",
-				title: { sw: (lesson as LessonContent).title, en: (lesson as LessonContent).title },
-				steps: [
-					{
-						id: "legacy-step",
-						title: { sw: (lesson as LessonContent).title, en: (lesson as LessonContent).title },
-						description: {
-							sw: (lesson as LessonContent).description,
-							en: (lesson as LessonContent).description,
-						},
-						initialCode: (lesson as LessonContent).initialCode,
-						simulation: (lesson as LessonContent).simulation,
-						initialNodes: (lesson as LessonContent).initialNodes,
-						initialEdges: (lesson as LessonContent).initialEdges,
-						nodeTypes: (lesson as LessonContent).nodeTypes,
-					},
-				],
-			}
-		: (lesson as Lesson);
-
-	const currentStep = normalizedLesson.steps[currentStepIndex];
+	const currentStep = lesson.steps[currentStepIndex];
 
 	const [code, setCode] = useState(currentStep.initialCode);
 	const [output, setOutput] = useState("");
@@ -70,7 +35,7 @@ export function Playground({
 	useEffect(() => {
 		setCode(currentStep.initialCode);
 		setOutput("");
-	}, [currentStepIndex, normalizedLesson.id]);
+	}, [currentStepIndex, lesson.id]);
 
 	useEffect(() => {
 		executor.onOutput((output, isError) => {
@@ -83,44 +48,25 @@ export function Playground({
 	}, [executor]);
 
 	const handleLessonToggle = () => {
-		const lesson = lessonPanelRef.current;
-		const code = codePanelRef.current;
-		const bottom = bottomPanelRef.current;
-		if (!lesson) return;
+		const lessonPanel = lessonPanelRef.current;
+		const codePanel = codePanelRef.current;
+		const bottomPanel = bottomPanelRef.current;
+
+		if (!lessonPanel) return;
+
 		if (lessonExpanded) {
-			lesson.collapse();
+			lessonPanel.collapse();
 			// Redistribute: lesson's 25% goes to code(40%) + bottom(60%)
-			code?.resize(40);
-			bottom?.resize(60);
+			codePanel?.resize(40);
+			bottomPanel?.resize(60);
 		} else {
 			// Take from both panes to give lesson 25%
-			lesson.expand();
-			lesson.resize(40);
-			code?.resize(40);
-			bottom?.resize(20);
+			lessonPanel.expand();
+			lessonPanel.resize(40);
+			codePanel?.resize(40);
+			bottomPanel?.resize(20);
 		}
 	};
-
-	const hasSimulation = !!simulation || (nodes && nodes.length > 0) || !!currentStep.simulation;
-
-	const [bottomPaneMode, setBottomPaneMode] =
-		useState<BottomPaneMode>("simulation");
-
-	const cycleBottomPane = () => {
-		if (!hasSimulation) return;
-		setBottomPaneMode((prev) => {
-			if (prev === "output") return "simulation";
-			if (prev === "simulation") return "split";
-			return "output";
-		});
-	};
-
-	const bottomPaneIcon =
-		bottomPaneMode === "output"
-			? Cpu
-			: bottomPaneMode === "simulation"
-				? Columns2
-				: Terminal;
 
 	const handleRun = async () => {
 		if (executor.onBeforeRun) {
@@ -166,16 +112,15 @@ export function Playground({
 						onExpand={() => setLessonExpanded(true)}
 						style={{ overflow: "hidden" }}
 					>
-						<LessonPanel 
-							lesson={normalizedLesson} 
+						<LessonPanel
+							lesson={lesson}
 							currentStepIndex={currentStepIndex}
 							onStepChange={setCurrentStepIndex}
 							lang={lang}
 							onLangChange={setLang}
-							collapsible 
-							expanded={lessonExpanded} 
-							onToggle={handleLessonToggle} 
-							hideNavigation={isLegacy}
+							collapsible
+							expanded={lessonExpanded}
+							onToggle={handleLessonToggle}
 						/>
 					</ResizablePanel>
 					{!lessonExpanded && (
@@ -184,9 +129,9 @@ export function Playground({
 							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5 text-left"
 						>
 							<div className="flex items-center gap-2 truncate pr-2">
-								{!isLegacy && (
-									<span className="text-xs font-mono text-primary">{currentStepIndex + 1}.</span>
-								)}
+								<span className="text-xs font-mono text-primary">
+									{currentStepIndex + 1}.
+								</span>
 								<h1 className="truncate text-sm font-semibold text-foreground">
 									{currentStep.title[lang]}
 								</h1>
@@ -222,64 +167,17 @@ export function Playground({
 							onShowSolution={handleShowSolution}
 							isMobile
 							theme={theme}
-							mobileExtra={
-								hasSimulation ? (
-									<Button
-										variant="secondary"
-										size="sm"
-										onClick={cycleBottomPane}
-										className="h-8 w-8 p-0 shadow-md"
-									>
-										{(() => {
-											const Icon = bottomPaneIcon;
-											return <Icon className="h-3.5 w-3.5" />;
-										})()}
-									</Button>
-								) : undefined
-							}
 						/>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 
-					{/* Output / Simulation Pane */}
+					{/* Output Pane */}
 					<ResizablePanel
 						ref={bottomPanelRef}
 						defaultSize={isMobile ? 10 : 40}
 						minSize={10}
 					>
-						{hasSimulation ? (
-							bottomPaneMode === "output" ? (
-								<OutputPanel output={output} showToolbar={false} />
-							) : bottomPaneMode === "simulation" ? (
-								<SimulationPanel
-									nodes={nodes.length > 0 ? nodes : (currentStep.initialNodes || [])}
-									edges={edges.length > 0 ? edges : (currentStep.initialEdges || [])}
-									onNodesChange={onNodesChange}
-									onReset={onResetSimulation}
-									nodeTypes={nodeTypes || currentStep.nodeTypes}
-									content={simulation || currentStep.simulation}
-								/>
-							) : (
-								<ResizablePanelGroup direction="horizontal" className="h-full">
-									<ResizablePanel defaultSize={50} minSize={20}>
-										<OutputPanel output={output} showToolbar={false} />
-									</ResizablePanel>
-									<ResizableHandle withHandle />
-									<ResizablePanel defaultSize={50} minSize={20}>
-										<SimulationPanel
-											nodes={nodes.length > 0 ? nodes : (currentStep.initialNodes || [])}
-											edges={edges.length > 0 ? edges : (currentStep.initialEdges || [])}
-											onNodesChange={onNodesChange}
-											onReset={onResetSimulation}
-											nodeTypes={nodeTypes || currentStep.nodeTypes}
-											content={simulation || currentStep.simulation}
-										/>
-									</ResizablePanel>
-								</ResizablePanelGroup>
-							)
-						) : (
-							<OutputPanel output={output} showToolbar={false} />
-						)}
+						<OutputPanel output={output} showToolbar={false} />
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
@@ -289,18 +187,17 @@ export function Playground({
 	return (
 		<div className="h-screen bg-background">
 			<ResizablePanelGroup direction="horizontal" className="h-full">
-				<ResizablePanel defaultSize={hasSimulation ? 30 : 40} minSize={20}>
-					<LessonPanel 
-						lesson={normalizedLesson} 
+				<ResizablePanel defaultSize={40} minSize={20}>
+					<LessonPanel
+						lesson={lesson}
 						currentStepIndex={currentStepIndex}
 						onStepChange={setCurrentStepIndex}
 						lang={lang}
 						onLangChange={setLang}
-						hideNavigation={isLegacy}
 					/>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={hasSimulation ? 30 : 60} minSize={25}>
+				<ResizablePanel defaultSize={60} minSize={25}>
 					<CodePanel
 						code={code}
 						output={output}
@@ -311,21 +208,6 @@ export function Playground({
 						theme={theme}
 					/>
 				</ResizablePanel>
-				{hasSimulation && (
-					<>
-						<ResizableHandle withHandle />
-						<ResizablePanel defaultSize={40} minSize={15}>
-							<SimulationPanel
-								nodes={nodes.length > 0 ? nodes : (currentStep.initialNodes || [])}
-								edges={edges.length > 0 ? edges : (currentStep.initialEdges || [])}
-								onNodesChange={onNodesChange}
-								onReset={onResetSimulation}
-								nodeTypes={nodeTypes || currentStep.nodeTypes}
-								content={simulation || currentStep.simulation}
-							/>
-						</ResizablePanel>
-					</>
-				)}
 			</ResizablePanelGroup>
 		</div>
 	);
