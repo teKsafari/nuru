@@ -1,31 +1,10 @@
-"use client";
+import { getLesson } from "@/lib/lessons.server";
+import { AnzaClient } from "./anza-client";
 
-import { useContext } from "react";
+export const dynamic = "force-dynamic";
 
-import { useNuru } from "@nuru/wasm/react";
+export default async function Home() {
+	const lesson = await getLesson("misingi-ya-nuru");
 
-import { AuthContext } from "@/components/providers/auth-provider";
-
-import { Playground } from "@/components/playground/playground";
-import { Executor } from "@/lib/executor";
-
-import { useTheme } from "next-themes";
-
-import { initialLesson } from "@/lib/lessons";
-
-export default function Home() {
-	const { theme, forcedTheme } = useTheme();
-	const { isAuthenticated, claims } = useContext(AuthContext);
-
-	const nuruExecutor = new Executor("nuru", useNuru);
-
-	console.log({isAuthenticated, claims})
-
-	return (
-		<Playground
-			theme={(forcedTheme || theme) as "light" | "dark"}
-			lesson={initialLesson}
-			executor={nuruExecutor}
-		/>
-	);
+	return <AnzaClient lesson={lesson} />;
 }
