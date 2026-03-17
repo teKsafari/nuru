@@ -1,6 +1,6 @@
 ---
 title: "1. Karibu katika Nuru!"
-task: "Bonyeza kitufe cha 'Run' (kile cha kijani chenye alama ya play) kuona matokeo ya programu hii kwenye sehemu ya 'Output'."
+task: "Bonyeza kitufe cha 'Run' (chenye alama ya play) kuona matokeo ya programu hii kwenye sehemu ya 'Output'."
 initialCode: |
   // Huu ni mwanzo wa safari yako!
   andika("Habari Nuru!")
