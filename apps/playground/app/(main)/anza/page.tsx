@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useContext } from "react";
 
 import { useNuru } from "@nuru/wasm/react";
 
+import { AuthContext } from "@/components/providers/auth-provider";
+
 import { Playground } from "@/components/playground/playground";
 import { Executor } from "@/lib/executor";
-// import { executeNuru } from "@/lib/nuru";
 
 import { useTheme } from "next-themes";
 
@@ -14,8 +15,11 @@ import { LessonContent } from "@/types/playground";
 
 export default function Home() {
 	const { theme, forcedTheme } = useTheme();
+	const { isAuthenticated, claims } = useContext(AuthContext);
 
-	const nuruExecutor = new Executor("nuru", useNuru)
+	const nuruExecutor = new Executor("nuru", useNuru);
+
+	console.log({isAuthenticated, claims})
 
 	return (
 		<Playground

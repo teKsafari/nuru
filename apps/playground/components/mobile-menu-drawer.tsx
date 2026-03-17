@@ -3,8 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, Home, BookOpenIcon, Github, Sprout } from "lucide-react";
+
 import { AppLogo } from "./app-logo";
+import { X, Home, BookOpenIcon, Github, Sprout } from "lucide-react";
 
 interface MobileMenuDrawerProps {
 	isOpen: boolean;
