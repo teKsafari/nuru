@@ -1,8 +1,8 @@
 "use client";
 
-import { useContext } from "react";
+// import { useContext } from "react";
 import { useNuru } from "@nuru/wasm/react";
-import { AuthContext } from "@/components/providers/auth-provider";
+// import { AuthContext } from "@/components/providers/auth-provider";
 import { Playground } from "@/components/playground/playground";
 import { Executor } from "@/lib/executor";
 import { useTheme } from "next-themes";
@@ -14,7 +14,7 @@ interface AnzaClientProps {
 
 export function AnzaClient({ lesson }: AnzaClientProps) {
 	const { theme, forcedTheme } = useTheme();
-	const { isAuthenticated, claims } = useContext(AuthContext);
+	// const { isAuthenticated, claims } = useContext(AuthContext);
 
 	const nuruExecutor = new Executor("nuru", useNuru);
 
