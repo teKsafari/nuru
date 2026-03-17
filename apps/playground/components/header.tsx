@@ -1,27 +1,24 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-import { AuthContext } from "@/components/providers/auth-provider";
 import UserMenu from "@/components/UserMenu";
 
-import { MobileMenuDrawer } from "./mobile-menu-drawer";
-import { LessonsDrawer } from "./lessons-drawer";
+import { MobileMenuDrawer } from "@/components/mobile-menu-drawer";
+import { LessonsDrawer } from "@/components/lessons-drawer";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppLogo } from "@/components/app-logo";
 
-import { Menu, Github, Sprout } from "lucide-react";
+import { Menu } from "lucide-react";
 
 interface SiteHeaderProps {
 	onMenuClick?: () => void;
+	lessons?: { id: string; title: { sw: string; en: string } }[];
 }
 
-export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
-	// const { isAuthenticated, claims } = useContext(AuthContext);
-
+export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
 
@@ -74,34 +71,13 @@ export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
 						))}
 					</nav>
 
-					{/* Right Section: External Links & Mobile Menu */}
+					{/* Right Section: User Menu & Mobile Menu */}
 					<div className="flex items-center gap-2 md:order-3">
-						{/* Desktop Only External Links */}
-						<div className="hidden items-center gap-2 border-l border-border/50 pr-2 md:flex">
-							<a
-								href="https://github.com/nuruprogramming"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-								title="GitHub"
-							>
-								<Github className="h-5 w-5" />
-							</a>
-							<a
-								href="https://teksafari.org"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-								title="teKsafari"
-							>
-								<Sprout className="h-5 w-5" />
-							</a>
-						</div>
-							<UserMenu/>
+						<UserMenu/>
 
 						{/* Mobile Lessons Drawer Trigger */}
 						<div className="md:hidden">
-							<LessonsDrawer />
+							<LessonsDrawer lessons={lessons} />
 						</div>
 
 						{/* Mobile Menu Toggle (Moved to Right) */}

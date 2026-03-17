@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/header";
 
 import AuthProvider from "@/components/providers/auth-provider";
 import { getContextFromClaims } from "@/lib/utils/auth.server";
+import { getAllLessons } from "@/lib/lessons.server";
 
 export default async function MainLayout({
 	children,
@@ -12,10 +13,11 @@ export default async function MainLayout({
 	children: React.ReactNode;
 }) {
 	const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
+	const lessons = await getAllLessons();
 
 	return (
 		<AuthProvider value={getContextFromClaims(isAuthenticated, claims || null)}>
-			<SiteHeader />
+			<SiteHeader lessons={lessons} />
 			{/*
 			h-0 sets an explicit height so that the height of the div is not derived from the height
 			of child elements. flex-1 allows the div to grow to cover the rest of the available space.
