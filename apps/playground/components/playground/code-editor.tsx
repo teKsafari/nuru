@@ -8,11 +8,13 @@ import { createTheme } from "@uiw/codemirror-themes";
 import type { CreateThemeOptions } from "@uiw/codemirror-themes";
 import { githubDark } from "@fsegurai/codemirror-theme-github-dark";
 import { githubLight } from "@fsegurai/codemirror-theme-github-light";
+import { useTheme } from "next-themes";
 
 interface CodeEditorProps {
 	code: string;
-	onChange: (code: string) => void;
+	onChange?: (code: string) => void;
 	theme?: "dark" | "light" | CreateThemeOptions;
+	readOnly?: boolean;
 }
 
 // Custom dark theme matching our design
@@ -102,9 +104,11 @@ const editorBaseTheme = EditorView.baseTheme({
 export function CodeEditor({
 	code,
 	onChange,
-	theme = "light",
+	theme: themeProp,
+	readOnly = false,
 }: CodeEditorProps) {
-	// console.log({theme})
+	const { theme: currentTheme, forcedTheme } = useTheme();
+	const theme = (themeProp || forcedTheme || currentTheme) as "light" | "dark" || "dark";
 
 	return (
 		<div className="h-full overflow-hidden">
@@ -112,20 +116,22 @@ export function CodeEditor({
 				value={code}
 				height="100%"
 				theme={getTheme(theme)}
-				extensions={[go(), editorBaseTheme]}
-				onChange={(value) => onChange(value)}
+				extensions={[go(), editorBaseTheme, EditorView.lineWrapping]}
+				onChange={(value) => onChange?.(value)}
+				editable={!readOnly}
+				readOnly={readOnly}
 				basicSetup={{
-					lineNumbers: true,
-					highlightActiveLineGutter: true,
-					highlightActiveLine: true,
+					lineNumbers: !readOnly,
+					highlightActiveLineGutter: !readOnly,
+					highlightActiveLine: !readOnly,
 					foldGutter: false,
-					dropCursor: true,
+					dropCursor: !readOnly,
 					allowMultipleSelections: true,
 					indentOnInput: true,
 					bracketMatching: true,
 					closeBrackets: true,
-					autocompletion: true,
-					rectangularSelection: true,
+					autocompletion: !readOnly,
+					rectangularSelection: !readOnly,
 					crosshairCursor: false,
 					highlightSelectionMatches: true,
 					searchKeymap: true,
