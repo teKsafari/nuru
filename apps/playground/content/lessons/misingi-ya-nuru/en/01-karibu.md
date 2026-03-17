@@ -1,6 +1,6 @@
 ---
 title: "1. Welcome to Nuru!"
-task: "Click the 'Run' button (the green one with the play icon) to see the results of this program in the 'Output' section."
+task: "Click the 'Run' button (the white one with the play icon) to see the results of this program in the 'Output' section."
 initialCode: |
   // Huu ni mwanzo wa safari yako!
   andika("Habari Nuru!")
