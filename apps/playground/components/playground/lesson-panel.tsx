@@ -164,10 +164,11 @@ export function LessonPanel({
   // Desktop: full height scrollable panel
   if (!collapsible) {
     return (
-      <ScrollArea className="flex h-full w-full bg-card [&>div>div]:h-full [&>div>div]:!flex">
-        <div className="p-6 lg:p-8 w-full min-w-0 flex flex-col min-h-full">
-          <div className="flex-1">
-            {breadcrumbs}
+      <div className="relative h-full w-full bg-card flex flex-col">
+        <ScrollArea className="absolute inset-0 [&>div>div]:min-h-full [&>div>div]:!flex">
+          <div className="p-6 lg:p-8 w-full min-w-0 flex flex-col flex-1">
+            <div className="flex-1">
+              {breadcrumbs}
             {header}
             <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground leading-relaxed">
               <Markdown
@@ -205,21 +206,26 @@ export function LessonPanel({
           </div>
           {navigation}
         </div>
-      </ScrollArea>
+        </ScrollArea>
+      </div>
     )
   }
 
   // Mobile: collapsible panel inside a resizable pane
   return (
     <div className="bg-card flex flex-col h-full overflow-hidden">
-      <button
+      <div
+        role="button"
+        tabIndex={0}
         onClick={onToggle}
-        className="flex items-center justify-between w-full px-4 py-2.5 text-left shrink-0 border-b border-border bg-muted/30"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            onToggle?.();
+          }
+        }}
+        className="flex items-center justify-between w-full px-4 py-2.5 text-left shrink-0 border-b border-border bg-muted/30 cursor-pointer"
       >
         <div className="flex items-center gap-2 truncate">
-          {!hideNavigation && (
-            <span className="text-xs font-mono text-primary font-bold">{currentStepIndex + 1}.</span>
-          )}
           <h1 className="text-sm font-bold text-foreground truncate">
             {step.title[lang]}
           </h1>
@@ -250,7 +256,7 @@ export function LessonPanel({
             )}
           />
         </div>
-      </button>
+      </div>
       {expanded && (
         <ScrollArea className="flex-1 [&>div>div]:h-full">
           <div className="px-4 py-4 text-sm w-full min-w-0 flex flex-col min-h-full">

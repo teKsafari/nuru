@@ -184,26 +184,34 @@ export function Playground({
 						/>
 					</ResizablePanel>
 					{!lessonExpanded && (
-						<button
+						<div
+							role="button"
+							tabIndex={0}
 							onClick={handleLessonToggle}
-							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-muted/30 px-4 py-2.5 text-left"
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									handleLessonToggle();
+								}
+							}}
+							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-muted/30 px-4 py-2.5 text-left cursor-pointer"
 						>
 							<div className="flex items-center gap-2 truncate">
-								<span className="text-xs font-mono text-primary font-bold">{currentStepIndex + 1}.</span>
 								<h1 className="truncate text-sm font-bold text-foreground">
 									{currentStep.title[lang]}
 								</h1>
 							</div>
 							<div className="flex items-center gap-3 shrink-0">
-								<button
+								<Button
+									variant="ghost"
+									size="icon"
 									onClick={(e) => {
 										e.stopPropagation();
 										setLang(lang === "sw" ? "en" : "sw");
 									}}
-									className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-background/50 text-muted-foreground hover:text-foreground"
+									className="h-6 w-6 hover:bg-background/50 text-muted-foreground hover:text-foreground"
 								>
 									<Languages className="h-3.5 w-3.5" />
-								</button>
+								</Button>
 								{isCurrentStepCompleted ? (
 									<CheckCircle2 className="h-4 w-4 text-green-500" />
 								) : (
@@ -222,7 +230,7 @@ export function Playground({
 									<path d="m6 9 6 6 6-6" />
 								</svg>
 							</div>
-						</button>
+						</div>
 					)}
 					<ResizableHandle withHandle />
 

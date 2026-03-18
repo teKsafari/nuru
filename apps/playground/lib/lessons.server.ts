@@ -6,10 +6,10 @@ import { Lesson, LessonStep } from '@/types/playground';
 const LESSONS_ROOT = path.join(process.cwd(), 'content/lessons');
 
 function parseMD(content: string) {
-	const parts = content.split('---');
-	if (parts.length >= 3) {
-		const frontmatter = yaml.parse(parts[1]);
-		const body = parts.slice(2).join('---').trim();
+	const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+	if (match) {
+		const frontmatter = yaml.parse(match[1]);
+		const body = content.slice(match[0].length).trim();
 		return { frontmatter, body };
 	}
 	return { frontmatter: {}, body: content };

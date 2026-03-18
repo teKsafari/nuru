@@ -90,7 +90,6 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 											href={lesson.id === "misingi-ya-nuru" ? "/anza" : `/anza/${lesson.id}`}
 											className="flex items-center gap-2 py-2"
 										>
-											<BookOpen className="h-4 w-4 text-primary" />
 											<div className="flex flex-col">
 												<span className="text-sm font-medium">{lesson.title.sw}</span>
 												<span className="text-[10px] text-muted-foreground">{lesson.title.en}</span>
