@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect, useCallback } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { LessonPanel } from "./lesson-panel";
@@ -19,6 +20,7 @@ export function Playground({
 	executor,
 	theme = "dark",
 }: PlaygroundProps) {
+	const router = useRouter();
 	const isMobile = useIsMobile();
 	const [currentStepIndex, setCurrentStepIndex] = useState(0);
 	const [lang, setLang] = useState<Language>("sw");
@@ -125,9 +127,24 @@ export function Playground({
 		}
 	};
 
+	const handleShowHint = () => {
+		// Basic hint: show the first line of the solution or a generic tip
+		const hintMessage = lang === "sw" 
+			? "Dokezo: Angalia maelezo ya kazi na ujaribu kulinganisha kodi yako na mifano iliyotolewa."
+			: "Hint: Check the task description and try to match your code with the provided examples.";
+		
+		setOutput(prev => prev ? `${prev}\n\n${hintMessage}` : hintMessage);
+	};
+
 	const handleReset = () => {
 		setCode(currentStep.initialCode);
 		setOutput("");
+	};
+
+	const handleNextLesson = () => {
+		// This is a placeholder. In a real scenario, we'd look up the next lesson ID from the curriculum.
+		// For now, let's just go back to the lessons list or a specific known path.
+		router.push("/anza");
 	};
 
 	if (isMobile) {
@@ -155,6 +172,7 @@ export function Playground({
 							expanded={lessonExpanded}
 							onToggle={handleLessonToggle}
 							isCompleted={isCompleted}
+							onNextLesson={handleNextLesson}
 						/>
 					</ResizablePanel>
 					{!lessonExpanded && (
@@ -163,6 +181,7 @@ export function Playground({
 							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5 text-left"
 						>
 							<div className="flex items-center gap-2 truncate pr-2">
+								{isCompleted && <CheckCircle2 className="h-4 w-4 text-green-500" />}
 								<h1 className="truncate text-sm font-semibold text-foreground">
 									{currentStep.title[lang]}
 								</h1>
@@ -196,6 +215,7 @@ export function Playground({
 							onRun={handleRun}
 							onSubmit={handleSubmit}
 							onShowSolution={handleShowSolution}
+							onShowHint={handleShowHint}
 							onReset={handleReset}
 							isMobile
 							theme={theme}
@@ -228,6 +248,7 @@ export function Playground({
 						lang={lang}
 						onLangChange={setLang}
 						isCompleted={isCompleted}
+						onNextLesson={handleNextLesson}
 					/>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
@@ -239,6 +260,7 @@ export function Playground({
 						onRun={handleRun}
 						onSubmit={handleSubmit}
 						onShowSolution={handleShowSolution}
+						onShowHint={handleShowHint}
 						onReset={handleReset}
 						theme={theme}
 						lang={lang}
@@ -248,3 +270,4 @@ export function Playground({
 		</div>
 	);
 }
+import { CheckCircle2 } from "lucide-react";

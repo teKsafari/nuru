@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Play, RotateCcw, Eye } from "lucide-react";
+import { Play, RotateCcw, Eye, HelpCircle } from "lucide-react";
 import { CodeEditor } from "./code-editor";
 import { OutputPanel } from "./output-panel";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ interface CodePanelProps {
 	onRun: () => void;
 	onSubmit: () => void;
 	onShowSolution: () => void;
+	onShowHint: () => void;
 	onReset: () => void;
 	isMobile?: boolean;
 	mobileExtra?: React.ReactNode;
@@ -38,12 +39,14 @@ export function CodePanel({
 	onRun,
 	onSubmit,
 	onShowSolution,
+	onShowHint,
 	onReset,
 	isMobile,
 	mobileExtra,
   theme,
   lang
 }: CodePanelProps) {
+	const isDev = process.env.NODE_ENV === "development";
 
 	const actions = (
 		<TooltipProvider>
@@ -54,12 +57,12 @@ export function CodePanel({
 							variant="outline"
 							size="icon"
 							onClick={onReset}
-							className="h-8 w-8 text-muted-foreground hover:text-foreground"
+							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-sm"
 						>
 							<RotateCcw className="h-4 w-4" />
 						</Button>
 					</TooltipTrigger>
-					<TooltipContent side="top">
+					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
 						{lang === "sw" ? "Anza upya" : "Reset Code"}
 					</TooltipContent>
 				</Tooltip>
@@ -69,23 +72,41 @@ export function CodePanel({
 						<Button
 							variant="outline"
 							size="icon"
-							onClick={onShowSolution}
-							className="h-8 w-8 text-muted-foreground hover:text-foreground"
+							onClick={onShowHint}
+							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-sm"
 						>
-							<Eye className="h-4 w-4" />
+							<HelpCircle className="h-4 w-4" />
 						</Button>
 					</TooltipTrigger>
-					<TooltipContent side="top">
-						{lang === "sw" ? "Onyesha jibu" : "Show Solution"}
+					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
+						{lang === "sw" ? "Dokezo" : "Hint"}
 					</TooltipContent>
 				</Tooltip>
+
+				{isDev && (
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								variant="outline"
+								size="icon"
+								onClick={onShowSolution}
+								className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-sm"
+							>
+								<Eye className="h-4 w-4" />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
+							{lang === "sw" ? "Onyesha jibu (Dev)" : "Show Solution (Dev)"}
+						</TooltipContent>
+					</Tooltip>
+				)}
 
 				<Button
 					onClick={onRun}
 					size="sm"
-					className="h-8 bg-primary px-3 text-xs text-primary-foreground shadow-md hover:bg-primary/90 transition-all active:scale-95"
+					className="h-8 bg-primary px-4 text-xs font-bold text-primary-foreground shadow-md hover:bg-primary/90 transition-all active:scale-95 flex items-center gap-2"
 				>
-					<Play className="mr-1.5 h-3 w-3" />
+					<Play className="h-3.5 w-3.5 fill-current" />
 					{lang === "sw" ? "Endesha" : "Run"}
 				</Button>
 			</div>

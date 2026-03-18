@@ -11,7 +11,13 @@ import { LessonsDrawer } from "@/components/lessons-drawer";
 
 import { AppLogo } from "@/components/app-logo";
 
-import { Menu } from "lucide-react";
+import { Menu, BookOpen, ChevronDown } from "lucide-react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface SiteHeaderProps {
 	onMenuClick?: () => void;
@@ -24,7 +30,7 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 
 	const navItems = [
 		{ label: "Home", href: "/", active: pathname === "/" },
-		{ label: "Anza", href: "/anza", active: pathname === "/anza" },
+		{ label: "Anza", href: "/anza", active: pathname.startsWith("/anza") },
 	];
 
 	return (
@@ -55,7 +61,7 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 					</div>
 
 					{/* Desktop Center Navigation */}
-					<nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:order-2 md:flex">
+					<nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 md:order-2 md:flex">
 						{navItems.map((item) => (
 							<Link
 								key={item.href}
@@ -69,6 +75,31 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 								{item.label}
 							</Link>
 						))}
+
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<button className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground">
+									Mafunzo
+									<ChevronDown className="h-3 w-3 opacity-50" />
+								</button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="center" className="w-56 rounded-xl p-2">
+								{lessons.map((lesson) => (
+									<DropdownMenuItem key={lesson.id} asChild className="rounded-lg">
+										<Link
+											href={lesson.id === "misingi-ya-nuru" ? "/anza" : `/anza/${lesson.id}`}
+											className="flex items-center gap-2 py-2"
+										>
+											<BookOpen className="h-4 w-4 text-primary" />
+											<div className="flex flex-col">
+												<span className="text-sm font-medium">{lesson.title.sw}</span>
+												<span className="text-[10px] text-muted-foreground">{lesson.title.en}</span>
+											</div>
+										</Link>
+									</DropdownMenuItem>
+								))}
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</nav>
 
 					{/* Right Section: User Menu & Mobile Menu */}
