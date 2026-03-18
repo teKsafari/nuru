@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { LessonPanel } from "./lesson-panel";
 import { CodePanel } from "./code-panel";
@@ -12,6 +12,7 @@ import {
 } from "@/components/playground/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps, Language } from "@/types/playground";
+import confetti from "canvas-confetti";
 
 export function Playground({
 	lesson,
@@ -26,6 +27,8 @@ export function Playground({
 
 	const [code, setCode] = useState(currentStep.initialCode);
 	const [output, setOutput] = useState("");
+	const [isRunning, setIsRunning] = useState(false);
+	const [isCompleted, setIsCompleted] = useState(false);
 	const [lessonExpanded, setLessonExpanded] = useState(!isMobile);
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
@@ -35,7 +38,8 @@ export function Playground({
 	useEffect(() => {
 		setCode(currentStep.initialCode);
 		setOutput("");
-	}, [currentStepIndex, lesson.id]);
+		setIsCompleted(false);
+	}, [currentStepIndex, lesson.id, currentStep.initialCode]);
 
 	useEffect(() => {
 		executor.onOutput((output, isError) => {
@@ -68,14 +72,38 @@ export function Playground({
 		}
 	};
 
+	const checkSolution = useCallback((currentCode: string) => {
+		if (!currentStep.solution) return false;
+		
+		// Simple normalization: remove whitespace and comments
+		const normalize = (s: string) => s.replace(/\/\/.*$/gm, "").replace(/\s/g, "");
+		const isCorrect = normalize(currentCode) === normalize(currentStep.solution);
+		
+		if (isCorrect) {
+			setIsCompleted(true);
+			confetti({
+				particleCount: 100,
+				spread: 70,
+				origin: { y: 0.6 },
+				colors: ["#22c55e", "#10b981", "#3b82f6"]
+			});
+		}
+		return isCorrect;
+	}, [currentStep.solution]);
+
 	const handleRun = async () => {
+		setIsRunning(true);
 		if (executor.onBeforeRun) {
 			executor.onBeforeRun();
 		}
+		setOutput("");
 		try {
 			await executor.run(code);
+			checkSolution(code);
 		} catch (error) {
 			setOutput(`Error: ${error}`);
+		} finally {
+			setIsRunning(false);
 		}
 	};
 
@@ -95,6 +123,11 @@ export function Playground({
 		} else if (executor.getSolution) {
 			setCode(executor.getSolution());
 		}
+	};
+
+	const handleReset = () => {
+		setCode(currentStep.initialCode);
+		setOutput("");
 	};
 
 	if (isMobile) {
@@ -121,6 +154,7 @@ export function Playground({
 							collapsible
 							expanded={lessonExpanded}
 							onToggle={handleLessonToggle}
+							isCompleted={isCompleted}
 						/>
 					</ResizablePanel>
 					{!lessonExpanded && (
@@ -129,9 +163,6 @@ export function Playground({
 							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5 text-left"
 						>
 							<div className="flex items-center gap-2 truncate pr-2">
-								<span className="text-xs font-mono text-primary">
-									{currentStepIndex + 1}.
-								</span>
 								<h1 className="truncate text-sm font-semibold text-foreground">
 									{currentStep.title[lang]}
 								</h1>
@@ -165,8 +196,10 @@ export function Playground({
 							onRun={handleRun}
 							onSubmit={handleSubmit}
 							onShowSolution={handleShowSolution}
+							onReset={handleReset}
 							isMobile
 							theme={theme}
+							lang={lang}
 						/>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
@@ -194,6 +227,7 @@ export function Playground({
 						onStepChange={setCurrentStepIndex}
 						lang={lang}
 						onLangChange={setLang}
+						isCompleted={isCompleted}
 					/>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
@@ -205,7 +239,9 @@ export function Playground({
 						onRun={handleRun}
 						onSubmit={handleSubmit}
 						onShowSolution={handleShowSolution}
+						onReset={handleReset}
 						theme={theme}
+						lang={lang}
 					/>
 				</ResizablePanel>
 			</ResizablePanelGroup>

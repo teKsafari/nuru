@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDown, Languages, ChevronLeft, ChevronRight, Lightbulb } from "lucide-react"
+import { ChevronDown, Languages, ChevronLeft, ChevronRight, Lightbulb, CheckCircle2 } from "lucide-react"
 import { ScrollArea } from "@/components/playground/scroll-area"
 import { Lesson, Language } from "@/types/playground"
 import { cn } from "@/lib/utils"
@@ -18,6 +18,7 @@ interface LessonPanelProps {
   expanded?: boolean
   onToggle?: () => void
   hideNavigation?: boolean
+  isCompleted?: boolean
 }
 
 export function LessonPanel({ 
@@ -29,15 +30,29 @@ export function LessonPanel({
   collapsible, 
   expanded, 
   onToggle,
-  hideNavigation
+  hideNavigation,
+  isCompleted
 }: LessonPanelProps) {
   const step = lesson.steps[currentStepIndex];
 
   const header = (
     <div className="flex items-center justify-between mb-6">
-      <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-        {step.title[lang]}
-      </h1>
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
+            {step.title[lang]}
+          </h1>
+          {isCompleted && (
+            <div className={cn(
+              "flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all animate-in zoom-in-50 duration-300",
+              "bg-green-500/10 text-green-500 border border-green-500/20"
+            )}>
+              <CheckCircle2 className="h-3 w-3" />
+              {lang === "sw" ? "Imekamilika" : "Completed"}
+            </div>
+          )}
+        </div>
+      </div>
       {!hideNavigation && (
         <Button 
           variant="ghost" 
@@ -71,10 +86,11 @@ export function LessonPanel({
         </div>
         <div className="hidden md:flex gap-1">
           {lesson.steps.map((_, i) => (
-            <div 
+            <button 
               key={i} 
+              onClick={() => onStepChange(i)}
               className={cn(
-                "h-1 w-4 rounded-full transition-colors",
+                "h-1 w-4 rounded-full transition-all hover:scale-x-110",
                 i === currentStepIndex ? "bg-primary" : i < currentStepIndex ? "bg-primary/40" : "bg-muted"
               )}
             />

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Play } from "lucide-react";
+import { Play, RotateCcw, Eye } from "lucide-react";
 import { CodeEditor } from "./code-editor";
 import { OutputPanel } from "./output-panel";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,12 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/playground/resizable";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface CodePanelProps {
 	code: string;
@@ -18,9 +24,11 @@ interface CodePanelProps {
 	onRun: () => void;
 	onSubmit: () => void;
 	onShowSolution: () => void;
+	onReset: () => void;
 	isMobile?: boolean;
 	mobileExtra?: React.ReactNode;
 	theme?: "light" | "dark";
+	lang: "en" | "sw";
 }
 
 export function CodePanel({
@@ -30,20 +38,58 @@ export function CodePanel({
 	onRun,
 	onSubmit,
 	onShowSolution,
+	onReset,
 	isMobile,
 	mobileExtra,
-  theme
+  theme,
+  lang
 }: CodePanelProps) {
 
-	const runButton = (
-		<Button
-			onClick={onRun}
-			size="sm"
-			className="h-8 bg-primary px-3 text-xs text-primary-foreground shadow-md hover:bg-primary/90"
-		>
-			<Play className="mr-1.5 h-3 w-3" />
-			Run
-		</Button>
+	const actions = (
+		<TooltipProvider>
+			<div className="flex items-center gap-2">
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={onReset}
+							className="h-8 w-8 text-muted-foreground hover:text-foreground"
+						>
+							<RotateCcw className="h-4 w-4" />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent side="top">
+						{lang === "sw" ? "Anza upya" : "Reset Code"}
+					</TooltipContent>
+				</Tooltip>
+
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={onShowSolution}
+							className="h-8 w-8 text-muted-foreground hover:text-foreground"
+						>
+							<Eye className="h-4 w-4" />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent side="top">
+						{lang === "sw" ? "Onyesha jibu" : "Show Solution"}
+					</TooltipContent>
+				</Tooltip>
+
+				<Button
+					onClick={onRun}
+					size="sm"
+					className="h-8 bg-primary px-3 text-xs text-primary-foreground shadow-md hover:bg-primary/90 transition-all active:scale-95"
+				>
+					<Play className="mr-1.5 h-3 w-3" />
+					{lang === "sw" ? "Endesha" : "Run"}
+				</Button>
+			</div>
+		</TooltipProvider>
 	);
 
 	// Mobile: editor with floating action group (output is handled by parent)
@@ -51,9 +97,8 @@ export function CodePanel({
 		return (
 			<div className="bg-background relative flex h-full flex-col">
 				<CodeEditor code={code} onChange={onCodeChange} theme={theme}/>
-				<div className="absolute bottom-3 right-3 z-10 flex items-center gap-2">
-					{mobileExtra}
-					{runButton}
+				<div className="absolute bottom-3 right-3 z-10">
+					{actions}
 				</div>
 			</div>
 		);
@@ -66,7 +111,7 @@ export function CodePanel({
 				<ResizablePanel defaultSize={60} minSize={30}>
 					<div className="relative h-full">
 						<CodeEditor code={code} onChange={onCodeChange} theme={theme} />
-						<div className="absolute bottom-3 right-3 z-10">{runButton}</div>
+						<div className="absolute bottom-3 right-3 z-10">{actions}</div>
 					</div>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
