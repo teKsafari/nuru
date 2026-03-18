@@ -14,6 +14,7 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps, Language } from "@/types/playground";
 import confetti from "canvas-confetti";
+import { CheckCircle2 } from "lucide-react";
 
 export function Playground({
 	lesson,
@@ -30,7 +31,7 @@ export function Playground({
 	const [code, setCode] = useState(currentStep.initialCode);
 	const [output, setOutput] = useState("");
 	const [isRunning, setIsRunning] = useState(false);
-	const [isCompleted, setIsCompleted] = useState(false);
+	const [completedStepIndices, setCompletedStepIndices] = useState<Set<number>>(new Set());
 	const [lessonExpanded, setLessonExpanded] = useState(!isMobile);
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
@@ -40,8 +41,14 @@ export function Playground({
 	useEffect(() => {
 		setCode(currentStep.initialCode);
 		setOutput("");
-		setIsCompleted(false);
 	}, [currentStepIndex, lesson.id, currentStep.initialCode]);
+
+	// Reset progress when lesson changes
+	useEffect(() => {
+		setCompletedStepIndices(new Set());
+	}, [lesson.id]);
+
+	const isCurrentStepCompleted = completedStepIndices.has(currentStepIndex);
 
 	useEffect(() => {
 		executor.onOutput((output, isError) => {
@@ -82,7 +89,7 @@ export function Playground({
 		const isCorrect = normalize(currentCode) === normalize(currentStep.solution);
 		
 		if (isCorrect) {
-			setIsCompleted(true);
+			setCompletedStepIndices(prev => new Set(prev).add(currentStepIndex));
 			confetti({
 				particleCount: 100,
 				spread: 70,
@@ -91,7 +98,7 @@ export function Playground({
 			});
 		}
 		return isCorrect;
-	}, [currentStep.solution]);
+	}, [currentStep.solution, currentStepIndex]);
 
 	const handleRun = async () => {
 		setIsRunning(true);
@@ -171,7 +178,8 @@ export function Playground({
 							collapsible
 							expanded={lessonExpanded}
 							onToggle={handleLessonToggle}
-							isCompleted={isCompleted}
+							isCompleted={isCurrentStepCompleted}
+							completedStepIndices={completedStepIndices}
 							onNextLesson={handleNextLesson}
 						/>
 					</ResizablePanel>
@@ -181,7 +189,7 @@ export function Playground({
 							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5 text-left"
 						>
 							<div className="flex items-center gap-2 truncate pr-2">
-								{isCompleted && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+								{isCurrentStepCompleted && <CheckCircle2 className="h-4 w-4 text-green-500" />}
 								<h1 className="truncate text-sm font-semibold text-foreground">
 									{currentStep.title[lang]}
 								</h1>
@@ -247,7 +255,8 @@ export function Playground({
 						onStepChange={setCurrentStepIndex}
 						lang={lang}
 						onLangChange={setLang}
-						isCompleted={isCompleted}
+						isCompleted={isCurrentStepCompleted}
+						completedStepIndices={completedStepIndices}
 						onNextLesson={handleNextLesson}
 					/>
 				</ResizablePanel>
@@ -270,4 +279,4 @@ export function Playground({
 		</div>
 	);
 }
-import { CheckCircle2 } from "lucide-react";
+
