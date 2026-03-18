@@ -10,8 +10,8 @@ initialCode: |
   ]
 
   fanya pata_tupu = unda() {
-      kwa (fanya r = 0; r < 4; r = r + 1) {
-          kwa (fanya c = 0; c < 4; c = c + 1) {
+      kwa r katika mfululizo(4) {
+          kwa c katika mfululizo(4) {
               kama (gridi[r][c] == 0) {
                   rudisha [r, c]
               }

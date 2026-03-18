@@ -13,7 +13,7 @@ initialCode: |
   // Tumia Merge Sort tuliyojenga!
   fanya unganisha = unda(a, b) {
       fanya matokeo = []
-      wakati (idadi(a) > 0 na idadi(b) > 0) {
+      wakati (idadi(a) > 0 && idadi(b) > 0) {
           kama (a[0] < b[0]) {
               matokeo = weka(matokeo, a[0])
               a = kata(a, 1)

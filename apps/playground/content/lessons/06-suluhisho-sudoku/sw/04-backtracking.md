@@ -1,6 +1,6 @@
 ---
 title: "4. Backtracking (Kisia na Urudi)"
-task: "Kamilisha hatua ya backtracking. Ikiwa `tatua()` inarudisha `urongo`, rudisha kisanduku kuwa `0`."
+task: "Kamilisha hatua ya backtracking. Ikiwa `tatua()` inarudisha `sikweli`, rudisha kisanduku kuwa `0`."
 initialCode: |
   // Kodi ya dhana - usijali kuhusu makosa bado!
   fanya tatua = unda() {
@@ -10,18 +10,18 @@ initialCode: |
       fanya r = nafasi[0]
       fanya c = nafasi[1]
 
-      kwa (fanya n = 1; n <= 4; n = n + 1) {
+      kwa n katika mfululizo(1, 5) {
           kama (ni_salama(r, c, n)) {
               gridi[r][c] = n // 1. Fanya kisia (guess)
 
               kama (tatua()) { rudisha kweli } // 2. Jaribu kutatua vilivyobaki kwa kujirudia
 
               // 3. OH HAPANA! Kisia hiki hakikufanya kazi.
-              // Tunahitaji kufanya 'Backtrack' na kujaribu namba inayofuata.
+              // Tunahitaji kufanya 'Backtrack' && kujaribu namba inayofuata.
               // Rudisha gridi[r][c] kuwa 0 hapa!
           }
       }
-      rudisha urongo // Hakuna namba inayofanya kazi hapa, rudi nyuma
+      rudisha sikweli // Hakuna namba inayofanya kazi hapa, rudi nyuma
   }
 solution: |
   // gridi[r][c] = 0

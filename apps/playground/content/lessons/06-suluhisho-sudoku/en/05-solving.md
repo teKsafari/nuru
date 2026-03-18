@@ -10,24 +10,24 @@ initialCode: |
   ]
 
   fanya ni_salama = unda(r, c, n) {
-      kwa (fanya i = 0; i < 4; i = i + 1) {
-          kama (gridi[r][i] == n au gridi[i][c] == n) { rudisha urongo }
+      kwa i katika mfululizo(4) {
+          kama (gridi[r][i] == n || gridi[i][c] == n) { rudisha sikweli }
       }
       rudisha kweli
   }
 
   fanya tatua = unda() {
-      kwa (fanya r = 0; r < 4; r = r + 1) {
-          kwa (fanya c = 0; c < 4; c = c + 1) {
+      kwa r katika mfululizo(4) {
+          kwa c katika mfululizo(4) {
               kama (gridi[r][c] == 0) {
-                  kwa (fanya n = 1; n <= 4; n = n + 1) {
+                  kwa n katika mfululizo(1, 5) {
                       kama (ni_salama(r, c, n)) {
                           gridi[r][c] = n
                           kama (tatua()) { rudisha kweli }
                           gridi[r][c] = 0 // Backtrack
                       }
                   }
-                  rudisha urongo
+                  rudisha sikweli
               }
           }
       }
@@ -37,7 +37,7 @@ initialCode: |
   tatua()
   
   andika("SUDOKU SOLVED!")
-  kwa (fanya i = 0; i < 4; i = i + 1) { andika(gridi[i]) }
+  kwa i katika mfululizo(4) { andika(gridi[i]) }
 solution: |
   andika("Sawa!")
 ---

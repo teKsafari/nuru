@@ -5,7 +5,7 @@ initialCode: |
   // Tabia mbaya: Kutegemea vibadilika vya nje
   fanya namba_yangu = 10
 
-  // Rekebisha kitendakazi hiki! Kinapaswa kuchukua 'x' na kurudisha 'x + 2'
+  // Rekebisha kitendakazi hiki! Kinapaswa kuchukua 'x' && kurudisha 'x + 2'
   fanya ongeza_mbili = unda() {
       namba_yangu = namba_yangu + 2
   }

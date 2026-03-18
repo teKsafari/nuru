@@ -7,7 +7,7 @@ initialCode: |
   fanya fibo_fast = unda(n) {
       kama (n <= 1) { rudisha n }
 
-      // 1. Check if we already know the answer!
+      // 1. Check kama we already know the answer!
       kama (kumbukumbu[n] != tupu) {
           andika("Nakumbuka namba", n)
           rudisha // rudisha jibu kutoka kumbukumbu
@@ -26,7 +26,7 @@ solution: |
   fanya fibo_fast = unda(n) {
       kama (n <= 1) { rudisha n }
 
-      if (kumbukumbu[n] != tupu) {
+      kama (kumbukumbu[n] != tupu) {
           rudisha kumbukumbu[n]
       }
 

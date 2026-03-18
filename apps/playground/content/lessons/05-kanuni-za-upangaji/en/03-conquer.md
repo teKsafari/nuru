@@ -9,7 +9,7 @@ initialCode: |
       rudisha orodha
   }
 
-  andika(panga([10])) // Should return [10]
+  andika(panga([10])) // Should rudisha [10]
 solution: |
   fanya panga = unda(orodha) {
       kama (idadi(orodha) <= 1) {

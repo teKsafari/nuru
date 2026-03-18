@@ -3,10 +3,10 @@ title: "2. The Starting Point (Base Cases)"
 task: "Add two `kama` (if) statements to return `n` if `n == 0` or `n == 1`."
 initialCode: |
   fanya fibo = unda(n) {
-      // 1. Base Case for 0: If n is 0, return 0
+      // 1. Base Case for 0: If n is 0, rudisha 0
       // kama (n == 0) { rudisha 0 }
       
-      // 2. Base Case for 1: If n is 1, return 1
+      // 2. Base Case for 1: If n is 1, rudisha 1
       // kama (n == 1) { rudisha 1 }
       
       rudisha // still working on it...

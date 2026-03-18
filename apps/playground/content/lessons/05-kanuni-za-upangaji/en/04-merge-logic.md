@@ -5,8 +5,8 @@ initialCode: |
   fanya unganisha = unda(a, b) {
       fanya matokeo = []
       
-      // Keep going while both lists have items
-      wakati (idadi(a) > 0 na idadi(b) > 0) {
+      // Keep going wakati both lists have items
+      wakati (idadi(a) > 0 && idadi(b) > 0) {
           kama (a[0] < b[0]) {
               // Take the smaller one from 'a'
               matokeo = weka(matokeo, a[0])
@@ -25,7 +25,7 @@ initialCode: |
 solution: |
   fanya unganisha = unda(a, b) {
       fanya matokeo = []
-      wakati (idadi(a) > 0 na idadi(b) > 0) {
+      wakati (idadi(a) > 0 && idadi(b) > 0) {
           kama (a[0] < b[0]) {
               matokeo = weka(matokeo, a[0])
               a = kata(a, 1)

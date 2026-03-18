@@ -5,7 +5,7 @@ initialCode: |
   // Bad practice: Relying on global variables
   fanya namba_yangu = 10
 
-  // Fix this function! It should take 'x' and return 'x + 2'
+  // Fix this function! It should take 'x' and rudisha 'x + 2'
   fanya ongeza_mbili = unda() {
       namba_yangu = namba_yangu + 2
   }

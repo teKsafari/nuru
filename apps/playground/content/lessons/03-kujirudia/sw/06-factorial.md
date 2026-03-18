@@ -12,7 +12,7 @@ initialCode: |
       }
       
       // Hatua ya Kujirudia: n * (n-1)!
-      rudisha // Tunahitaji n izidishwe na factorial(n - 1)
+      rudisha // Tunahitaji n izidishwe && factorial(n - 1)
   }
 
   andika("5! ni:", factorial(5)) // Inapaswa kuwa 120

@@ -5,7 +5,7 @@ initialCode: |
   fanya orodha_mbaya = [10, 5, 42, 3, 99, 1]
   fanya orodha_nzuri = [1, 3, 5, 10, 42, 99]
   
-  // Hakuna kodi ya kuandika bado, endesha na ufikirie!
+  // Hakuna kodi ya kuandika bado, endesha && ufikirie!
   andika("Orodha mbaya:", orodha_mbaya)
   andika("Orodha nzuri:", orodha_nzuri)
 solution: |

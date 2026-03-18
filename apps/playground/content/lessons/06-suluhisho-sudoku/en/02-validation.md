@@ -11,12 +11,12 @@ initialCode: |
 
   fanya ni_salama = unda(mstari, safu, namba) {
       // 1. Check Row
-      kwa (fanya i = 0; i < 4; i = i + 1) {
-          kama (gridi[mstari][i] == namba) { rudisha urongo }
+      kwa i katika mfululizo(4) {
+          kama (gridi[mstari][i] == namba) { rudisha sikweli }
       }
 
       // 2. Check Column
-      kwa (fanya i = 0; i < 4; i = i + 1) {
+      kwa i katika mfululizo(4) {
           // Add your logic here!
           // kama (gridi[i][safu] == namba) { ? }
       }
@@ -24,8 +24,8 @@ initialCode: |
       rudisha kweli
   }
 
-  andika("Can we put 4 in [0,1]?", ni_salama(0, 1, 4)) // Should be true
-  andika("Can we put 1 in [0,1]?", ni_salama(0, 1, 1)) // Should be false (Row has 1)
+  andika("Can we put 4 in [0,1]?", ni_salama(0, 1, 4)) // Should be kweli
+  andika("Can we put 1 in [0,1]?", ni_salama(0, 1, 1)) // Should be sikweli (Row has 1)
 solution: |
   fanya gridi = [
     [1, 0, 3, 0],
@@ -35,11 +35,11 @@ solution: |
   ]
 
   fanya ni_salama = unda(mstari, safu, namba) {
-      kwa (fanya i = 0; i < 4; i = i + 1) {
-          kama (gridi[mstari][i] == namba) { rudisha urongo }
+      kwa i katika mfululizo(4) {
+          kama (gridi[mstari][i] == namba) { rudisha sikweli }
       }
-      kwa (fanya i = 0; i < 4; i = i + 1) {
-          kama (gridi[i][safu] == namba) { rudisha urongo }
+      kwa i katika mfululizo(4) {
+          kama (gridi[i][safu] == namba) { rudisha sikweli }
       }
       rudisha kweli
   }

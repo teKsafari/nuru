@@ -1,6 +1,6 @@
 ---
 title: "4. Backtracking (The Guess)"
-task: "Complete the backtracking step. If `tatua()` returns `urongo`, reset the cell back to `0`."
+task: "Complete the backtracking step. If `tatua()` returns `sikweli`, reset the cell back to `0`."
 initialCode: |
   // Concept code - don't worry about errors yet!
   fanya tatua = unda() {
@@ -10,7 +10,7 @@ initialCode: |
       fanya r = nafasi[0]
       fanya c = nafasi[1]
 
-      kwa (fanya n = 1; n <= 4; n = n + 1) {
+      kwa n katika mfululizo(1, 5) {
           kama (ni_salama(r, c, n)) {
               gridi[r][c] = n // 1. Make a guess
 
@@ -21,7 +21,7 @@ initialCode: |
               // Reset gridi[r][c] to 0 here!
           }
       }
-      rudisha urongo // No number works here, go back to previous call
+      rudisha sikweli // No number works here, go back to previous call
   }
 solution: |
   // gridi[r][c] = 0

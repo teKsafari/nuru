@@ -11,7 +11,7 @@ initialCode: |
   
   ficha()
   
-  // This should crash if siri is hidden inside! Try it after fixing.
+  // This should crash kama siri is hidden inside! Try it after fixing.
   // andika("Nje ya function:", siri) 
 solution: |
   fanya ficha = unda() {

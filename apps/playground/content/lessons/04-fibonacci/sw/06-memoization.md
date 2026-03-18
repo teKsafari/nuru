@@ -13,7 +13,7 @@ initialCode: |
           rudisha // rudisha jibu kutoka kumbukumbu
       }
 
-      // 2. Kama sivyo, kokotoa na UIIFADHI
+      // 2. Kama sivyo, kokotoa && UIIFADHI
       fanya jibu = fibo_haraka(n - 1) + fibo_haraka(n - 2)
       kumbukumbu[n] = jibu
       rudisha jibu
