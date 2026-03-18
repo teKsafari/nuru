@@ -22,4 +22,5 @@ export interface PlaygroundProps {
 	lesson: Lesson;
 	executor: Executor<Interpreter>;
 	theme?: "light" | "dark";
+	nextLessonId?: string;
 }

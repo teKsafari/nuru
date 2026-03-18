@@ -10,9 +10,10 @@ import { Lesson } from "@/types/playground";
 
 interface AnzaClientProps {
 	lesson: Lesson;
+	nextLessonId?: string;
 }
 
-export function AnzaClient({ lesson }: AnzaClientProps) {
+export function AnzaClient({ lesson, nextLessonId }: AnzaClientProps) {
 	const { theme, forcedTheme } = useTheme();
 	// const { isAuthenticated, claims } = useContext(AuthContext);
 
@@ -23,6 +24,7 @@ export function AnzaClient({ lesson }: AnzaClientProps) {
 			theme={(forcedTheme || theme) as "light" | "dark"}
 			lesson={lesson}
 			executor={nuruExecutor}
+			nextLessonId={nextLessonId}
 		/>
 	);
 }

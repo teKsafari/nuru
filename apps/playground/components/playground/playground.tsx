@@ -11,6 +11,7 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/playground/resizable";
+// import { Button } from "@/comments/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps, Language } from "@/types/playground";
 import confetti from "canvas-confetti";
@@ -20,6 +21,7 @@ export function Playground({
 	lesson,
 	executor,
 	theme = "dark",
+	nextLessonId,
 }: PlaygroundProps) {
 	const router = useRouter();
 	const isMobile = useIsMobile();
@@ -149,9 +151,11 @@ export function Playground({
 	};
 
 	const handleNextLesson = () => {
-		// This is a placeholder. In a real scenario, we'd look up the next lesson ID from the curriculum.
-		// For now, let's just go back to the lessons list or a specific known path.
-		router.push("/anza");
+		if (nextLessonId) {
+			router.push(`/anza/${nextLessonId}`);
+		} else {
+			router.push("/anza");
+		}
 	};
 
 	if (isMobile) {

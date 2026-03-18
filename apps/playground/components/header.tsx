@@ -79,7 +79,7 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<button className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground">
-									Mafunzo
+									Masomo
 									<ChevronDown className="h-3 w-3 opacity-50" />
 								</button>
 							</DropdownMenuTrigger>
