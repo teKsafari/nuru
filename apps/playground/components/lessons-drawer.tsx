@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 
-import { Book, BookOpen, ChevronRight } from "lucide-react";
+import { Book, BookOpen, ChevronRight, CheckCircle2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import {
@@ -47,44 +47,44 @@ export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
 				</button>
 			</DrawerTrigger>
 			<DrawerContent className="max-h-[85%]">
-				<div className="mx-auto w-full max-w-md overflow-hidden flex flex-col h-full">
+				<div className="mx-auto w-full max-w-xl overflow-hidden flex flex-col h-full">
 					<DrawerHeader className="border-b border-border/50 pb-4">
-						<DrawerTitle className="text-center text-xl font-bold flex items-center justify-center gap-2 text-primary">
-							<BookOpen className="h-5 w-5" />
+						<DrawerTitle className="text-center text-xl font-bold flex items-center justify-center gap-2 text-foreground">
 							Mafunzo ya Nuru
 						</DrawerTitle>
 					</DrawerHeader>
 					<div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
 						<div className="grid grid-cols-1 gap-3 pb-8">
-							{lessonItems.map((lesson) => (
+							{lessonItems.map((lesson, index) => (
 								<Link
 									key={lesson.id}
 									href={lesson.href}
 									onClick={() => setOpen(false)}
 									className={cn(
-										"group relative flex items-center gap-4 rounded-2xl border p-4 transition-all duration-300 overflow-hidden",
+										"group relative flex items-center gap-4 rounded-xl border p-4 transition-all duration-300 overflow-hidden",
 										pathname === lesson.href
 											? "border-primary/50 bg-primary/5 ring-1 ring-primary/20 shadow-sm"
 											: "border-border hover:border-primary/30 hover:bg-muted/50 hover:shadow-md",
 									)}
 								>
+									<div className={cn(
+										"flex items-center justify-center w-8 h-8 rounded-full shrink-0 font-mono text-sm font-bold transition-colors",
+										lesson.isCompleted ? "bg-green-500/10 text-green-500" : "bg-muted/50 text-muted-foreground group-hover:text-foreground"
+									)}>
+										{lesson.isCompleted ? <CheckCircle2 className="h-4 w-4" /> : index + 1}
+									</div>
 									<div className="flex-1 min-w-0">
-										<div className="flex items-center gap-2 mb-1">
-											{lesson.isCompleted && (
-												<CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0" />
-											)}
-											<h3 className={cn(
-												"text-sm font-bold truncate leading-tight transition-colors",
-												pathname === lesson.href ? "text-primary" : "group-hover:text-primary"
-											)}>
-												{lesson.title}
-											</h3>
-										</div>
+										<h3 className={cn(
+											"text-sm font-bold truncate leading-tight transition-colors",
+											pathname === lesson.href ? "text-primary" : "group-hover:text-primary"
+										)}>
+											{lesson.title}
+										</h3>
 										<p className="text-[10px] text-muted-foreground italic truncate">
 											{lesson.enTitle}
 										</p>
 									</div>
-									<div className="flex items-center gap-2">
+									<div className="flex items-center gap-2 shrink-0">
 										<ChevronRight className={cn(
 											"h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1",
 											pathname === lesson.href ? "text-primary" : ""
@@ -92,7 +92,7 @@ export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
 									</div>
 									
 									{pathname === lesson.href && (
-										<div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full" />
+										<div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
 									)}
 								</Link>
 							))}
@@ -108,5 +108,3 @@ export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
 		</Drawer>
 	);
 }
-
-import { CheckCircle2 } from "lucide-react";

@@ -224,9 +224,24 @@ export function LessonPanel({
             {step.title[lang]}
           </h1>
         </div>
-        <div className="flex items-center gap-2">
-           {isCompleted && (
+        <div className="flex items-center gap-3 shrink-0">
+          {!hideNavigation && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={(e) => {
+                e.stopPropagation();
+                onLangChange(lang === "sw" ? "en" : "sw");
+              }}
+              className="h-6 w-6 hover:bg-background/50"
+            >
+              <Languages className="h-3.5 w-3.5" />
+            </Button>
+          )}
+          {isCompleted ? (
             <CheckCircle2 className="h-4 w-4 text-green-500" />
+          ) : (
+            <div className="h-2 w-2 rounded-full bg-muted-foreground/40" />
           )}
           <ChevronDown
             className={cn(
@@ -240,42 +255,6 @@ export function LessonPanel({
         <ScrollArea className="flex-1 [&>div>div]:h-full">
           <div className="px-4 py-4 text-sm w-full min-w-0 flex flex-col min-h-full">
             <div className="flex-1">
-              {breadcrumbs}
-              {!hideNavigation && (
-                <div className="flex justify-between items-start mb-6 gap-4">
-                  <div className="flex-1 min-w-0">
-                    <h2 className="text-xl font-bold text-foreground leading-tight">
-                       {step.title[lang]}
-                    </h2>
-                  </div>
-                  <div className="flex flex-row items-center gap-2 shrink-0 mt-1">
-                    <div className={cn(
-                      "flex items-center gap-1.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider",
-                      isCompleted 
-                        ? "bg-green-500/10 text-green-500 border border-green-500/20" 
-                        : "bg-muted/50 text-muted-foreground border border-transparent"
-                    )}>
-                      {isCompleted ? (
-                        <><CheckCircle2 className="h-2.5 w-2.5" />{lang === "sw" ? "Imekamilika" : "Completed"}</>
-                      ) : (
-                        <><div className="h-1 w-1 rounded-full bg-muted-foreground/40" />{lang === "sw" ? "Inasubiri" : "Incomplete"}</>
-                      )}
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onLangChange(lang === "sw" ? "en" : "sw");
-                      }}
-                      className="h-7 px-2 text-[10px] border border-border/50 bg-background/50"
-                    >
-                      <Languages className="mr-1 h-3 w-3" />
-                      {lang === "sw" ? "EN" : "SW"}
-                    </Button>
-                  </div>
-                </div>
-              )}
               <div className="text-muted-foreground leading-relaxed mb-6">
                 <Markdown
                   components={{

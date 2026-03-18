@@ -14,7 +14,7 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps, Language } from "@/types/playground";
 import confetti from "canvas-confetti";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Languages } from "lucide-react";
 
 export function Playground({
 	lesson,
@@ -186,26 +186,42 @@ export function Playground({
 					{!lessonExpanded && (
 						<button
 							onClick={handleLessonToggle}
-							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5 text-left"
+							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-muted/30 px-4 py-2.5 text-left"
 						>
-							<div className="flex items-center gap-2 truncate pr-2">
-								{isCurrentStepCompleted && <CheckCircle2 className="h-4 w-4 text-green-500" />}
-								<h1 className="truncate text-sm font-semibold text-foreground">
+							<div className="flex items-center gap-2 truncate">
+								<span className="text-xs font-mono text-primary font-bold">{currentStepIndex + 1}.</span>
+								<h1 className="truncate text-sm font-bold text-foreground">
 									{currentStep.title[lang]}
 								</h1>
 							</div>
-							<svg
-								className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ${lessonExpanded ? "rotate-180" : ""}`}
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<path d="m6 9 6 6 6-6" />
-							</svg>
+							<div className="flex items-center gap-3 shrink-0">
+								<button
+									onClick={(e) => {
+										e.stopPropagation();
+										setLang(lang === "sw" ? "en" : "sw");
+									}}
+									className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-background/50 text-muted-foreground hover:text-foreground"
+								>
+									<Languages className="h-3.5 w-3.5" />
+								</button>
+								{isCurrentStepCompleted ? (
+									<CheckCircle2 className="h-4 w-4 text-green-500" />
+								) : (
+									<div className="h-2 w-2 rounded-full bg-muted-foreground/40" />
+								)}
+								<svg
+									className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								>
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							</div>
 						</button>
 					)}
 					<ResizableHandle withHandle />
