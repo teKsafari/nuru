@@ -1,5 +1,5 @@
 import { getLesson } from "@/lib/lessons.server";
-import { AnzaClient } from "./anza-client";
+import { AnzaClient } from "@/app/(main)/anza/[lessonId]/anza-client";
 
 export const dynamic = "force-dynamic";
 

@@ -16,19 +16,21 @@ import {
 	DrawerFooter,
 } from "@/components/ui/drawer";
 
-export function LessonsDrawer() {
+interface LessonsDrawerProps {
+	lessons?: { id: string; title: { sw: string; en: string } }[];
+}
+
+export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
 	const [open, setOpen] = React.useState(false);
 	const pathname = usePathname();
 
-	const lessons = [
-		{
-			id: "anza",
-			title: "Anza",
-			description: "Learn the basics of Nuru",
-			href: "/anza",
-			icon: <BookOpen className="h-5 w-5 text-blue-500" />,
-		},
-	];
+	const lessonItems = lessons.map(lesson => ({
+		id: lesson.id,
+		title: lesson.title.sw, // Default to Swahili for the drawer list
+		enTitle: lesson.title.en,
+		href: lesson.id === "misingi-ya-nuru" ? "/anza" : `/anza/${lesson.id}`,
+		icon: <BookOpen className="h-5 w-5 text-blue-500" />,
+	}));
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
@@ -44,15 +46,15 @@ export function LessonsDrawer() {
 					)}
 				</button>
 			</DrawerTrigger>
-			<DrawerContent className="h-[60%]">
-				<div className="mx-auto w-full max-w-sm">
+			<DrawerContent className="max-h-[80%]">
+				<div className="mx-auto w-full max-w-sm overflow-y-auto">
 					<DrawerHeader>
 						<DrawerTitle className="text-center text-xl font-bold">
-							Lessons
+							Mafunzo (Lessons)
 						</DrawerTitle>
 					</DrawerHeader>
 					<div className="flex flex-col space-y-3 p-4">
-						{lessons.map((lesson) => (
+						{lessonItems.map((lesson) => (
 							<Link
 								key={lesson.id}
 								href={lesson.href}
@@ -69,33 +71,18 @@ export function LessonsDrawer() {
 								</div>
 								<div className="flex-1">
 									<h3 className="text-base font-medium">{lesson.title}</h3>
-									<p className="text-sm text-muted-foreground">
-										{lesson.description}
+									<p className="text-xs text-muted-foreground italic">
+										{lesson.enTitle}
 									</p>
 								</div>
 								<ChevronRight className="h-4 w-4 text-muted-foreground" />
 							</Link>
 						))}
 					</div>
-					<DrawerFooter>
-						<div className="flex w-full justify-center gap-6">
-							<a
-								className="text-xs text-muted-foreground underline hover:text-foreground"
-								href="https://github.com/nuruprogramming"
-								target="_blank"
-								rel="noreferrer"
-							>
-								GitHub
-							</a>
-							<a
-								className="text-xs text-muted-foreground underline hover:text-foreground"
-								href="https://teksafari.org"
-								target="_blank"
-								rel="noreferrer"
-							>
-								teKsafari
-							</a>
-						</div>
+					<DrawerFooter className="pt-2 pb-6">
+						<p className="text-center text-[10px] text-muted-foreground uppercase tracking-widest">
+							teKsafari © 2026
+						</p>
 					</DrawerFooter>
 				</div>
 			</DrawerContent>
