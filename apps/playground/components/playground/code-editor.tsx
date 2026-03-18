@@ -1,13 +1,12 @@
 "use client";
 
 import CodeMirror from "@uiw/react-codemirror";
-import { go } from "@codemirror/lang-go";
+import { nuruLanguage } from "@/lib/nuru-syntax";
 import { EditorView } from "@codemirror/view";
-import { tags } from "@lezer/highlight";
+import * as lezerHighlight from "@lezer/highlight";
+const { tags: t } = lezerHighlight;
 import { createTheme } from "@uiw/codemirror-themes";
 import type { CreateThemeOptions } from "@uiw/codemirror-themes";
-import { githubDark } from "@fsegurai/codemirror-theme-github-dark";
-import { githubLight } from "@fsegurai/codemirror-theme-github-light";
 import { useTheme } from "next-themes";
 
 interface CodeEditorProps {
@@ -32,16 +31,19 @@ const defaultDarkTheme = createTheme({
 		gutterBorder: "transparent",
 	},
 	styles: [
-		{ tag: tags.keyword, color: "#c084fc" },
-		{ tag: tags.string, color: "#fbbf24" },
-		{ tag: tags.function(tags.variableName), color: "#22d3ee" },
-		{ tag: tags.comment, color: "#64748b", fontStyle: "italic" },
-		{ tag: tags.variableName, color: "#e2e8f0" },
-		{ tag: tags.typeName, color: "#34d399" },
-		{ tag: tags.number, color: "#fb923c" },
-		{ tag: tags.operator, color: "#94a3b8" },
-		{ tag: tags.bracket, color: "#94a3b8" },
-		{ tag: tags.propertyName, color: "#60a5fa" },
+		{ tag: t.keyword, color: "#c084fc" },
+		{ tag: t.string, color: "#fbbf24" },
+		{ tag: t.function(t.variableName), color: "#22d3ee" },
+		{ tag: t.standard(t.variableName), color: "#22d3ee" },
+		{ tag: t.definition(t.variableName), color: "#22d3ee" },
+		{ tag: t.comment, color: "#64748b", fontStyle: "italic" },
+		{ tag: t.variableName, color: "#9cdcfe" },
+		{ tag: t.typeName, color: "#34d399" },
+		{ tag: t.number, color: "#fb923c" },
+		{ tag: t.operator, color: "#94a3b8" },
+		{ tag: t.punctuation, color: "#94a3b8" },
+		{ tag: t.bracket, color: "#94a3b8" },
+		{ tag: t.propertyName, color: "#60a5fa" },
 	],
 });
 
@@ -60,26 +62,29 @@ const defaultLightTheme = createTheme({
 		gutterBorder: "hsl(var(--border))",
 	},
 	styles: [
-		{ tag: tags.keyword, color: "#7e22ce" },
-		{ tag: tags.string, color: "#d97706" },
-		{ tag: tags.function(tags.variableName), color: "#0891b2" },
-		{ tag: tags.comment, color: "#64748b", fontStyle: "italic" },
-		{ tag: tags.variableName, color: "#0f172a" },
-		{ tag: tags.typeName, color: "#059669" },
-		{ tag: tags.number, color: "#ea580c" },
-		{ tag: tags.operator, color: "#475569" },
-		{ tag: tags.bracket, color: "#475569" },
-		{ tag: tags.propertyName, color: "#2563eb" },
+		{ tag: t.keyword, color: "#7e22ce" },
+		{ tag: t.string, color: "#d97706" },
+		{ tag: t.function(t.variableName), color: "#0891b2" },
+		{ tag: t.standard(t.variableName), color: "#0891b2" },
+		{ tag: t.definition(t.variableName), color: "#0891b2" },
+		{ tag: t.comment, color: "#64748b", fontStyle: "italic" },
+		{ tag: t.variableName, color: "#2563eb" },
+		{ tag: t.typeName, color: "#059669" },
+		{ tag: t.number, color: "#ea580c" },
+		{ tag: t.operator, color: "#475569" },
+		{ tag: t.punctuation, color: "#475569" },
+		{ tag: t.bracket, color: "#475569" },
+		{ tag: t.propertyName, color: "#2563eb" },
 	],
 });
 
-function getTheme(theme: "dark" | "light" | CreateThemeOptions) {
-	if (theme === "dark") {
-		return defaultDarkTheme;
-	} else if (theme == "light") {
-		return githubLight;
+function getTheme(theme: "dark" | "light" | "system" | CreateThemeOptions | string | undefined) {
+	if (theme === "light") {
+		return defaultLightTheme;
+	} else if (typeof theme === "object" && theme !== null) {
+		return createTheme(theme as CreateThemeOptions);
 	}
-	return createTheme(theme);
+	return defaultDarkTheme;
 }
 
 // Editor base styling
@@ -116,7 +121,7 @@ export function CodeEditor({
 				value={code}
 				height="100%"
 				theme={getTheme(theme)}
-				extensions={[go(), editorBaseTheme, EditorView.lineWrapping]}
+				extensions={[nuruLanguage, editorBaseTheme, EditorView.lineWrapping]}
 				onChange={(value) => onChange?.(value)}
 				editable={!readOnly}
 				readOnly={readOnly}

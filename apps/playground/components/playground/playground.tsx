@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useRef, useState, useEffect, useCallback } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { LessonPanel } from "./lesson-panel";
 import { CodePanel } from "./code-panel";
@@ -10,14 +11,19 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/playground/resizable";
+import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps, Language } from "@/types/playground";
+import confetti from "canvas-confetti";
+import { CheckCircle2, Languages } from "lucide-react";
 
 export function Playground({
 	lesson,
 	executor,
 	theme = "dark",
+	nextLessonId,
 }: PlaygroundProps) {
+	const router = useRouter();
 	const isMobile = useIsMobile();
 	const [currentStepIndex, setCurrentStepIndex] = useState(0);
 	const [lang, setLang] = useState<Language>("sw");
@@ -26,6 +32,8 @@ export function Playground({
 
 	const [code, setCode] = useState(currentStep.initialCode);
 	const [output, setOutput] = useState("");
+	const [isRunning, setIsRunning] = useState(false);
+	const [completedStepIndices, setCompletedStepIndices] = useState<Set<number>>(new Set());
 	const [lessonExpanded, setLessonExpanded] = useState(!isMobile);
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
@@ -35,7 +43,14 @@ export function Playground({
 	useEffect(() => {
 		setCode(currentStep.initialCode);
 		setOutput("");
-	}, [currentStepIndex, lesson.id]);
+	}, [currentStepIndex, lesson.id, currentStep.initialCode]);
+
+	// Reset progress when lesson changes
+	useEffect(() => {
+		setCompletedStepIndices(new Set());
+	}, [lesson.id]);
+
+	const isCurrentStepCompleted = completedStepIndices.has(currentStepIndex);
 
 	useEffect(() => {
 		executor.onOutput((output, isError) => {
@@ -68,14 +83,38 @@ export function Playground({
 		}
 	};
 
+	const checkSolution = useCallback((currentCode: string) => {
+		if (!currentStep.solution) return false;
+		
+		// Simple normalization: remove whitespace and comments
+		const normalize = (s: string) => s.replace(/\/\/.*$/gm, "").replace(/\s/g, "");
+		const isCorrect = normalize(currentCode) === normalize(currentStep.solution);
+		
+		if (isCorrect) {
+			setCompletedStepIndices(prev => new Set(prev).add(currentStepIndex));
+			confetti({
+				particleCount: 100,
+				spread: 70,
+				origin: { y: 0.6 },
+				colors: ["#22c55e", "#10b981", "#3b82f6"]
+			});
+		}
+		return isCorrect;
+	}, [currentStep.solution, currentStepIndex]);
+
 	const handleRun = async () => {
+		setIsRunning(true);
 		if (executor.onBeforeRun) {
 			executor.onBeforeRun();
 		}
+		setOutput("");
 		try {
 			await executor.run(code);
+			checkSolution(code);
 		} catch (error) {
 			setOutput(`Error: ${error}`);
+		} finally {
+			setIsRunning(false);
 		}
 	};
 
@@ -94,6 +133,28 @@ export function Playground({
 			setCode(currentStep.solution);
 		} else if (executor.getSolution) {
 			setCode(executor.getSolution());
+		}
+	};
+
+	const handleShowHint = () => {
+		// Basic hint: show the first line of the solution or a generic tip
+		const hintMessage = lang === "sw" 
+			? "Dokezo: Angalia maelezo ya kazi na ujaribu kulinganisha kodi yako na mifano iliyotolewa."
+			: "Hint: Check the task description and try to match your code with the provided examples.";
+		
+		setOutput(prev => prev ? `${prev}\n\n${hintMessage}` : hintMessage);
+	};
+
+	const handleReset = () => {
+		setCode(currentStep.initialCode);
+		setOutput("");
+	};
+
+	const handleNextLesson = () => {
+		if (nextLessonId) {
+			router.push(`/anza/${nextLessonId}`);
+		} else {
+			router.push("/anza");
 		}
 	};
 
@@ -121,34 +182,59 @@ export function Playground({
 							collapsible
 							expanded={lessonExpanded}
 							onToggle={handleLessonToggle}
+							isCompleted={isCurrentStepCompleted}
+							completedStepIndices={completedStepIndices}
+							onNextLesson={handleNextLesson}
 						/>
 					</ResizablePanel>
 					{!lessonExpanded && (
-						<button
+						<div
+							role="button"
+							tabIndex={0}
 							onClick={handleLessonToggle}
-							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2.5 text-left"
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									handleLessonToggle();
+								}
+							}}
+							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-muted/30 px-4 py-2.5 text-left cursor-pointer"
 						>
-							<div className="flex items-center gap-2 truncate pr-2">
-								<span className="text-xs font-mono text-primary">
-									{currentStepIndex + 1}.
-								</span>
-								<h1 className="truncate text-sm font-semibold text-foreground">
+							<div className="flex items-center gap-2 truncate">
+								<h1 className="truncate text-sm font-bold text-foreground">
 									{currentStep.title[lang]}
 								</h1>
 							</div>
-							<svg
-								className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ${lessonExpanded ? "rotate-180" : ""}`}
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<path d="m6 9 6 6 6-6" />
-							</svg>
-						</button>
+							<div className="flex items-center gap-3 shrink-0">
+								<Button
+									variant="ghost"
+									size="icon"
+									onClick={(e) => {
+										e.stopPropagation();
+										setLang(lang === "sw" ? "en" : "sw");
+									}}
+									className="h-6 w-6 hover:bg-background/50 text-muted-foreground hover:text-foreground"
+								>
+									<Languages className="h-3.5 w-3.5" />
+								</Button>
+								{isCurrentStepCompleted ? (
+									<CheckCircle2 className="h-4 w-4 text-green-500" />
+								) : (
+									<div className="h-2 w-2 rounded-full bg-muted-foreground/40" />
+								)}
+								<svg
+									className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								>
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							</div>
+						</div>
 					)}
 					<ResizableHandle withHandle />
 
@@ -165,8 +251,11 @@ export function Playground({
 							onRun={handleRun}
 							onSubmit={handleSubmit}
 							onShowSolution={handleShowSolution}
+							onShowHint={handleShowHint}
+							onReset={handleReset}
 							isMobile
 							theme={theme}
+							lang={lang}
 						/>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
@@ -194,6 +283,9 @@ export function Playground({
 						onStepChange={setCurrentStepIndex}
 						lang={lang}
 						onLangChange={setLang}
+						isCompleted={isCurrentStepCompleted}
+						completedStepIndices={completedStepIndices}
+						onNextLesson={handleNextLesson}
 					/>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
@@ -205,10 +297,14 @@ export function Playground({
 						onRun={handleRun}
 						onSubmit={handleSubmit}
 						onShowSolution={handleShowSolution}
+						onShowHint={handleShowHint}
+						onReset={handleReset}
 						theme={theme}
+						lang={lang}
 					/>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>
 	);
 }
+

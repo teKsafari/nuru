@@ -26,8 +26,6 @@ export default function UserMenu() {
 		);
 	}
 
-	console.log({ claims });
-
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>

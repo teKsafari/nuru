@@ -1,6 +1,11 @@
 {
 	"name": "nuru-wasm-monorepo",
 	"private": true,
+	"devEngines": {
+		"packageManager":{
+			"name": "pnpm"
+		}
+	},
 	"scripts": {
 		"preinstall" : "npx only-allow pnpm",
 		"build": "turbo run build",
