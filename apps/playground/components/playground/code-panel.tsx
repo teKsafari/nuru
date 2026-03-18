@@ -104,7 +104,7 @@ export function CodePanel({
 				<Button
 					onClick={onRun}
 					size="sm"
-					className="h-8 bg-primary px-4 text-xs font-bold text-primary-foreground shadow-md hover:bg-primary/90 transition-all active:scale-95 flex items-center gap-2"
+					className="h-8 bg-primary px-4 text-xs font-bold text-primary-foreground shadow-md hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
 				>
 					<Play className="h-3.5 w-3.5 fill-current" />
 					{lang === "sw" ? "Endesha" : "Run"}

@@ -11,7 +11,7 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/playground/resizable";
-// import { Button } from "@/comments/ui/button";
+import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps, Language } from "@/types/playground";
 import confetti from "canvas-confetti";

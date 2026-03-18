@@ -50,7 +50,7 @@ export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
 				<div className="mx-auto w-full max-w-xl overflow-hidden flex flex-col h-full">
 					<DrawerHeader className="border-b border-border/50 pb-4">
 						<DrawerTitle className="text-center text-xl font-bold flex items-center justify-center gap-2 text-foreground">
-							Mafunzo ya Nuru
+							Jifunze na Nuru
 						</DrawerTitle>
 					</DrawerHeader>
 					<div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
@@ -91,18 +91,10 @@ export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
 										)} />
 									</div>
 									
-									{pathname === lesson.href && (
-										<div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
-									)}
 								</Link>
 							))}
 						</div>
 					</div>
-					<DrawerFooter className="border-t border-border/50 pt-4 pb-8 bg-muted/20">
-						<p className="text-center text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em]">
-							teKsafari © 2026
-						</p>
-					</DrawerFooter>
 				</div>
 			</DrawerContent>
 		</Drawer>

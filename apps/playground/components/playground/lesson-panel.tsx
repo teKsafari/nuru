@@ -177,7 +177,7 @@ export function LessonPanel({
                     const { children, className, ...rest } = props;
                     const match = /language-(\w+)/.exec(className || "");
                     return match ? (
-                      <div className="not-prose my-4 overflow-hidden rounded-md border border-border p-2 bg-muted/30">
+                      <div className="not-prose my-4 overflow-hidden rounded-xl border border-border p-2 bg-muted/30">
                         <CodeEditor code={String(children).replace(/\n$/, "")} readOnly />
                       </div>
                     ) : (
@@ -268,7 +268,7 @@ export function LessonPanel({
                       const { children, className, ...rest } = props;
                       const match = /language-(\w+)/.exec(className || "");
                       return match ? (
-                        <div className="not-prose my-4 overflow-hidden rounded-md border border-border bg-muted/30">
+                        <div className="not-prose my-4 overflow-hidden rounded-xl border border-border bg-muted/30">
                           <CodeEditor code={String(children).replace(/\n$/, "")} readOnly />
                         </div>
                       ) : (
