@@ -10,13 +10,13 @@ export const nuruLanguage = StreamLanguage.define(
       
       // Keywords
       { 
-        regex: /\b(?:kama|sivyo|kwa|wakati|rudisha|andika|kweli|si_kweli|tupu|fanya|ikiwa)\b/, 
+        regex: /\b(?:unda|kama|sivyo|kwa|wakati|rudisha|andika|kweli|si_kweli|tupu|fanya|ikiwa)\b/, 
         token: "keyword" 
       },
       
       // Built-in functions/types (optional, add more if Nuru has them)
       { 
-        regex: /\b(?:jaza|sukuma|aina_ya|urefu)\b/, 
+        regex: /\b(?:jaza|sukuma|aina_ya|urefu|idadi)\b/, 
         token: "builtin" 
       },
 
@@ -26,6 +26,12 @@ export const nuruLanguage = StreamLanguage.define(
       
       // Numbers
       { regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i, token: "number" },
+
+      // Properties / Methods (e.g. array.idadi)
+      { regex: /\./, token: "punctuation", next: "property" },
+
+      // Function definitions / calls
+      { regex: /[a-zA-Z_]\w*(?=\s*\()/, token: "def" },
       
       // Operators and punctuation
       { regex: /[-+\/*=<>!]+/, token: "operator" },
@@ -33,6 +39,11 @@ export const nuruLanguage = StreamLanguage.define(
       
       // Variables
       { regex: /[a-zA-Z_]\w*/, token: "variable" }
+    ],
+    property: [
+      { regex: /[a-zA-Z_]\w*/, token: "property", next: "start" },
+      { regex: /\s+/, token: null },
+      { regex: /(?=[^a-zA-Z_])/, next: "start" }
     ],
     comment: [
       { regex: /.*?\*\//, token: "comment", next: "start" },
