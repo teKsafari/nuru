@@ -95,7 +95,7 @@ export function LessonPanel({
   );
 
   const navigation = !hideNavigation && (
-    <div className="mt-8 flex items-center justify-between gap-4 pt-4 border-t border-border">
+    <div className="mt-8 flex items-center gap-4 pt-4 border-t border-border @container">
       <Button
         variant="outline"
         size="sm"
@@ -107,11 +107,11 @@ export function LessonPanel({
         {lang === "sw" ? "Nyuma" : "Back"}
       </Button>
       
-      <div className="flex flex-col items-center gap-1">
+      <div className="flex flex-col items-center gap-1 mx-auto">
         <div className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider">
           {lang === "sw" ? "Hatua" : "Step"} {currentStepIndex + 1} / {lesson.steps.length}
         </div>
-        <div className="hidden md:flex gap-1">
+        <div className="hidden @md:flex">
           {lesson.steps.map((_, i) => (
             <button 
               key={i} 
@@ -165,7 +165,7 @@ export function LessonPanel({
   if (!collapsible) {
     return (
       <div className="relative h-full w-full bg-card flex flex-col">
-        <ScrollArea className="absolute inset-0 [&>div>div]:min-h-full [&>div>div]:!flex">
+        <ScrollArea className="flex-1 max-h-full [&>div]:h-full [&>div>div]:h-full [&>div>div]:!flex [&>div>div]:flex-col">
           <div className="p-6 lg:p-8 w-full min-w-0 flex flex-col flex-1">
             <div className="flex-1">
               {breadcrumbs}
