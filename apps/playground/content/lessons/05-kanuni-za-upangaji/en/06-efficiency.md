@@ -2,32 +2,41 @@
 title: "6. Why Merge Sort?"
 task: "Run the code to see how Merge Sort handles a list of 100 items."
 initialCode: |
+  // Kisaidizi cha kukata orodha (Helper to slice arrays)
+  fanya kata = unda(orodha, anza, mwisho = -1) {
+      kama (mwisho == -1) { mwisho = orodha.idadi() }
+      fanya mpya = []
+      kwa i, t ktk orodha { kama (i >= anza && i < mwisho) { mpya.sukuma(t) } }
+      rudisha mpya
+  }
+
+
   // Let's generate a big list of 100 numbers
   fanya orodha_kubwa = []
   fanya i = 100
   wakati (i > 0) {
-      orodha_kubwa = weka(orodha_kubwa, i)
+      orodha_kubwa.sukuma(i)
       i = i - 1
   }
 
   // Use the Merge Sort we built!
   fanya unganisha = unda(a, b) {
       fanya matokeo = []
-      wakati (idadi(a) > 0 && idadi(b) > 0) {
+      wakati (a.idadi() > 0 && b.idadi() > 0) {
           kama (a[0] < b[0]) {
-              matokeo = weka(matokeo, a[0])
+              matokeo.sukuma(a[0])
               a = kata(a, 1)
           } sivyo {
-              matokeo = weka(matokeo, b[0])
+              matokeo.sukuma(b[0])
               b = kata(b, 1)
           }
       }
-      rudisha unganisha_orodha(matokeo, unganisha_orodha(a, b))
+      rudisha matokeo + a + b
   }
 
   fanya panga = unda(orodha) {
-      kama (idadi(orodha) <= 1) { rudisha orodha }
-      fanya kati = idadi(orodha) / 2
+      kama (orodha.idadi() <= 1) { rudisha orodha }
+      fanya kati = orodha.idadi() / 2
       fanya kushoto = panga(kata(orodha, 0, kati))
       fanya kulia = panga(kata(orodha, kati))
       rudisha unganisha(kushoto, kulia)
@@ -36,6 +45,15 @@ initialCode: |
   andika("Sorting 100 items...")
   andika(panga(orodha_kubwa))
 solution: |
+  // Kisaidizi cha kukata orodha (Helper to slice arrays)
+  fanya kata = unda(orodha, anza, mwisho = -1) {
+      kama (mwisho == -1) { mwisho = orodha.idadi() }
+      fanya mpya = []
+      kwa i, t ktk orodha { kama (i >= anza && i < mwisho) { mpya.sukuma(t) } }
+      rudisha mpya
+  }
+
+
   andika("Sawa!")
 ---
 Why did we do all this work? Why not just use a simple loop?

@@ -1,46 +1,40 @@
 ---
 title: "7. Kujirudia na Safu (Arrays)"
-task: "Kamilisha kitendakazi `jumla` ili kirudishe `orodha[0] + jumla(orodha_mpya)`."
+task: "Kamilisha kitendakazi `jumla` ili kirudishe `orodha[i] + jumla(orodha, i + 1)`."
 initialCode: |
-  fanya jumla = unda(orodha) {
-      // Kesi ya Msingi: Safu tupu
-      kama (idadi(orodha) == 0) {
+  fanya jumla = unda(orodha, i=0) {
+      // Kesi ya Msingi: Tumefika mwisho wa safu
+      kama (i == orodha.idadi()) {
           rudisha 0
       }
       
-      // Pata vitu vyote ISIPOKUWA cha kwanza
-      fanya orodha_mpya = kata(orodha, 1)
-      
-      // Hatua ya Kujirudia: Kitu cha kwanza + jumla ya vilivyosalia
+      // Hatua ya Kujirudia: Kitu cha sasa + jumla ya vilivyosalia
       rudisha // weka mantiki hapa
   }
 
   andika(jumla([10, 20, 30])) // Inapaswa kuwa 60
 solution: |
-  fanya jumla = unda(orodha) {
-      kama (idadi(orodha) == 0) {
+  fanya jumla = unda(orodha, i=0) {
+      kama (i == orodha.idadi()) {
           rudisha 0
       }
-      fanya orodha_mpya = kata(orodha, 1)
-      rudisha orodha[0] + jumla(orodha_mpya)
+      rudisha orodha[i] + jumla(orodha, i + 1)
   }
 
   andika(jumla([10, 20, 30]))
 ---
 Unaweza kutumia kujirudia kuchakata orodha za data!
 
-Ikiwa unataka kupata jumla ya namba zote kwenye safu (array), mantiki ya kujirudia ni:
-1. **Kesi ya Msingi:** Ikiwa safu ni tupu, jumla ni 0.
-2. **Hatua ya Kujirudia:** Chukua namba ya kwanza, na uijumlishe kwa jumla ya *safu iliyosalia*.
+Ikiwa unataka kupata jumla ya namba zote kwenye safu (array), tunaweza kupitisha namba `i` inayoonyesha tupo wapi.
+
+### Mantiki ya Kujirudia:
+1. **Kesi ya Msingi:** Ikiwa `i` inafika mwisho wa safu (`orodha.idadi()`), jumla ni 0.
+2. **Hatua ya Kujirudia:** Chukua namba ya sasa (`orodha[i]`), na uijumlishe kwa jumla ya *safu iliyosalia* (`jumla(orodha, i + 1)`).
 
 ### Kuiona Kimantiki:
-`jumla([1, 2, 3])`
-- `1 + jumla([2, 3])`
-- `1 + (2 + jumla([3]))`
-- `1 + (2 + (3 + jumla([])))`
-- `1 + (2 + (3 + 0))` = **6**
+`jumla([10, 20], 0)`
+- `10 + jumla([10, 20], 1)`
+- `10 + (20 + jumla([10, 20], 2))`
+- `10 + (20 + 0)` = **30**
 
-### Zana ya Ndani:
-Tunatumia kitendakazi cha asili `kata(orodha, 1)` kupata safu mpya ambayo inakosa kitu cha kwanza.
-
-**Kazi Yako:** Kamilisha mantiki ya `jumla`. Rudisha thamani ya kitu cha kwanza kwenye orodha (`orodha[0]`) jumlisha matokeo ya kuita `jumla` kwenye orodha iliyosalia.
+**Kazi Yako:** Kamilisha mantiki ya `jumla`. Rudisha thamani ya kitu cha sasa kwenye orodha (`orodha[i]`) jumlisha matokeo ya kuita `jumla` kwenye orodha iliyosalia (`jumla(orodha, i + 1)`).

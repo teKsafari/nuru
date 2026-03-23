@@ -4,7 +4,7 @@ task: "Use `jaza()` to ask the user for their favorite food, then print it."
 initialCode: |
   chakula = jaza("Unapenda kula nini? ")
   andika("Wow, nami napenda " + chakula)
-solution: "chakula = jaza(\"Wali\"); andika(chakula)"
+solution: "chakula = jaza(\"Wali\")\nandika(chakula)"
 ---
 The `jaza()` function allows you to get information from the user. The computer will pause and wait until the user types something.
 

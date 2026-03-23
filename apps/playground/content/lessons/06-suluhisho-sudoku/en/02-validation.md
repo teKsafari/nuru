@@ -51,4 +51,4 @@ Before placing a number, we must check if it's allowed.
 
 A placement is **Safe** if that number does not already appear in that row or column. (For this 4x4 example, we'll keep it simple and just check rows and columns).
 
-**Your Task:** Complete the column check. Loop through all 4 rows at the given `safu` index. If the number is already there, return `urongo` (false).
+**Your Task:** Complete the column check. Loop through all 4 rows at the given `safu` index. If the number is already there, return `sikweli` (false).

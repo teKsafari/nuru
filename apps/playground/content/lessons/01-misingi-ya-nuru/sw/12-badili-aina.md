@@ -4,7 +4,7 @@ task: "Chukua namba kutoka kwa mtumiaji, iongezee 10 na uonyeshe tokeo."
 initialCode: |
   n = jaza("Weka namba: ")
   andika(namba(n) + 10)
-solution: "n = jaza(\"10\"); andika(namba(n) + 10)"
+solution: "n = jaza(\"10\")\nandika(namba(n) + 10)"
 ---
 Kama unakumbuka, `jaza()` inatoa maandishi. Kama unataka kufanya hesabu na ingizo hilo, lazima ulibadilishe kuwa namba.
 
