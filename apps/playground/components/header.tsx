@@ -38,7 +38,7 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 			<MobileMenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
 
 			{/* Main Header Container */}
-			<header className="sticky left-0 right-0 top-0 z-40 border-b border-border/50 bg-background/80 shadow-sm backdrop-blur-md">
+			<header className="sticky left-0 right-0 top-0 z-40 border-b border-border/50 bg-background/80 shadow-xs backdrop-blur-md">
 				<div className="flex h-14 items-center justify-between px-4 md:px-8">
 					{/* Logo Section (Left on Mobile & Desktop) */}
 					<div className="flex items-center gap-2 md:order-1">
@@ -68,7 +68,7 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 								href={item.href}
 								className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
 									item.active
-										? "bg-foreground text-background shadow-sm"
+										? "bg-foreground text-background shadow-xs"
 										: "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
 								}`}
 							>

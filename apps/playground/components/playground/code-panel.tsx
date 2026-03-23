@@ -57,7 +57,7 @@ export function CodePanel({
 							variant="outline"
 							size="icon"
 							onClick={onReset}
-							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-sm"
+							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-xs"
 						>
 							<RotateCcw className="h-4 w-4" />
 						</Button>
@@ -73,7 +73,7 @@ export function CodePanel({
 							variant="outline"
 							size="icon"
 							onClick={onShowHint}
-							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-sm"
+							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-xs"
 						>
 							<HelpCircle className="h-4 w-4" />
 						</Button>
@@ -90,7 +90,7 @@ export function CodePanel({
 								variant="outline"
 								size="icon"
 								onClick={onShowSolution}
-								className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-sm"
+								className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-xs"
 							>
 								<Eye className="h-4 w-4" />
 							</Button>

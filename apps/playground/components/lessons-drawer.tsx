@@ -63,7 +63,7 @@ export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
 									className={cn(
 										"group relative flex items-center gap-4 rounded-xl border p-4 transition-all duration-300 overflow-hidden",
 										pathname === lesson.href
-											? "border-primary/50 bg-primary/5 ring-1 ring-primary/20 shadow-sm"
+											? "border-primary/50 bg-primary/5 ring-1 ring-primary/20 shadow-xs"
 											: "border-border hover:border-primary/30 hover:bg-muted/50 hover:shadow-md",
 									)}
 								>

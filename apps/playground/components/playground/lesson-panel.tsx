@@ -75,7 +75,7 @@ export function LessonPanel({
         <div className={cn(
           "flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all duration-500",
           isCompleted 
-            ? "bg-green-500/10 text-green-500 border border-green-500/20 shadow-sm" 
+            ? "bg-green-500/10 text-green-500 border border-green-500/20 shadow-xs" 
             : "bg-muted/50 text-muted-foreground border border-transparent"
         )}>
           {isCompleted ? (
@@ -165,7 +165,7 @@ export function LessonPanel({
   if (!collapsible) {
     return (
       <div className="relative h-full w-full bg-card flex flex-col">
-        <ScrollArea className="flex-1 max-h-full [&>div]:h-full [&>div>div]:h-full [&>div>div]:!flex [&>div>div]:flex-col">
+        <ScrollArea className="flex-1 max-h-full [&>div]:h-full [&>div>div]:h-full [&>div>div]:flex! [&>div>div]:flex-col">
           <div className="p-6 lg:p-8 w-full min-w-0 flex flex-col flex-1">
             <div className="flex-1">
               {breadcrumbs}
@@ -193,7 +193,7 @@ export function LessonPanel({
             </div>
             
             {step.task && (
-              <div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-sm">
+              <div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-xs">
                 <h4 className="mb-2 font-bold text-foreground flex items-center gap-2 text-sm uppercase tracking-tight">
                   <Lightbulb className="h-4 w-4 text-yellow-500" />
                   {lang === "sw" ? "Kazi Yako:" : "Your Task:"}
@@ -283,7 +283,7 @@ export function LessonPanel({
                 </Markdown>
               </div>
               {step.task && (
-                <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-3 mb-4 shadow-sm">
+                <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-3 mb-4 shadow-xs">
                    <h4 className="mb-1 font-bold text-foreground flex items-center gap-2 text-xs uppercase tracking-tight">
                     <Lightbulb className="h-3 w-3 text-yellow-500" />
                     {lang === "sw" ? "Kazi Yako:" : "Your Task:"}
