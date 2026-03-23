@@ -11,7 +11,7 @@ initialCode: |
 
   // 0 inamaanisha kisanduku kiko wazi (tupu).
   andika("Gridi ya Sudoku:")
-  kwa i katika mfululizo(idadi(gridi)) {
+  kwa i ktk mfululizo(idadi(gridi)) {
       andika(gridi[i])
   }
 solution: |

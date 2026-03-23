@@ -10,7 +10,7 @@ initialCode: |
       fanya r = nafasi[0]
       fanya c = nafasi[1]
 
-      kwa n katika mfululizo(1, 5) {
+      kwa n ktk mfululizo(1, 5) {
           kama (ni_salama(r, c, n)) {
               gridi[r][c] = n // 1. Make a guess
 

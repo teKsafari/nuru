@@ -11,7 +11,7 @@ initialCode: |
 
   // A 0 means the cell is empty.
   andika("Sudoku Gridi:")
-  kwa i katika mfululizo(idadi(gridi)) {
+  kwa i ktk mfululizo(idadi(gridi)) {
       andika(gridi[i])
   }
 solution: |
