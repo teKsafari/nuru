@@ -34,7 +34,16 @@ export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolb
       <ScrollArea className="flex-1">
         <div className="p-4">
           {output ? (
-            <pre className="font-mono text-sm text-foreground whitespace-pre-wrap">{output}</pre>
+            <pre className="font-mono text-sm text-foreground whitespace-pre-wrap">
+              {output.split("\n").map((line, i) => {
+                const isError = line.toLowerCase().includes("error:");
+                return (
+                  <span key={i} className={isError ? "text-red-500 dark:text-red-400 block" : "block"}>
+                    {line}
+                  </span>
+                );
+              })}
+            </pre>
           ) : (
             <p className="text-sm text-muted-foreground italic">Run your code to see output here...</p>
           )}

@@ -1,33 +1,36 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-import { AuthContext } from "@/components/providers/auth-provider";
 import UserMenu from "@/components/UserMenu";
 
-import { MobileMenuDrawer } from "./mobile-menu-drawer";
-import { LessonsDrawer } from "./lessons-drawer";
+import { MobileMenuDrawer } from "@/components/mobile-menu-drawer";
+import { LessonsDrawer } from "@/components/lessons-drawer";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppLogo } from "@/components/app-logo";
 
-import { Menu, Github, Sprout } from "lucide-react";
+import { Menu, BookOpen, ChevronDown } from "lucide-react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface SiteHeaderProps {
 	onMenuClick?: () => void;
+	lessons?: { id: string; title: { sw: string; en: string } }[];
 }
 
-export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
-	// const { isAuthenticated, claims } = useContext(AuthContext);
-
+export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	const navItems = [
 		{ label: "Home", href: "/", active: pathname === "/" },
-		{ label: "Anza", href: "/anza", active: pathname === "/anza" },
+		{ label: "Anza", href: "/anza", active: pathname.startsWith("/anza") },
 	];
 
 	return (
@@ -58,7 +61,7 @@ export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
 					</div>
 
 					{/* Desktop Center Navigation */}
-					<nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:order-2 md:flex">
+					<nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 md:order-2 md:flex">
 						{navItems.map((item) => (
 							<Link
 								key={item.href}
@@ -72,36 +75,39 @@ export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
 								{item.label}
 							</Link>
 						))}
+
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<button className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground">
+									Masomo
+									<ChevronDown className="h-3 w-3 opacity-50" />
+								</button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="center" className="w-56 rounded-xl p-2">
+								{lessons.map((lesson) => (
+									<DropdownMenuItem key={lesson.id} asChild className="rounded-lg">
+										<Link
+											href={lesson.id === "misingi-ya-nuru" ? "/anza" : `/anza/${lesson.id}`}
+											className="flex items-center gap-2 py-2"
+										>
+											<div className="flex flex-col">
+												<span className="text-sm font-medium">{lesson.title.sw}</span>
+												<span className="text-[10px] text-muted-foreground">{lesson.title.en}</span>
+											</div>
+										</Link>
+									</DropdownMenuItem>
+								))}
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</nav>
 
-					{/* Right Section: External Links & Mobile Menu */}
+					{/* Right Section: User Menu & Mobile Menu */}
 					<div className="flex items-center gap-2 md:order-3">
-						{/* Desktop Only External Links */}
-						<div className="hidden items-center gap-2 border-l border-border/50 pr-2 md:flex">
-							<a
-								href="https://github.com/nuruprogramming"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-								title="GitHub"
-							>
-								<Github className="h-5 w-5" />
-							</a>
-							<a
-								href="https://teksafari.org"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-								title="teKsafari"
-							>
-								<Sprout className="h-5 w-5" />
-							</a>
-						</div>
-							<UserMenu/>
+						<UserMenu/>
 
 						{/* Mobile Lessons Drawer Trigger */}
 						<div className="md:hidden">
-							<LessonsDrawer />
+							<LessonsDrawer lessons={lessons} />
 						</div>
 
 						{/* Mobile Menu Toggle (Moved to Right) */}
