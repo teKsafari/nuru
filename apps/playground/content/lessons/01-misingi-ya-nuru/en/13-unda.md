@@ -2,12 +2,12 @@
 title: "13. Functions"
 task: "Create a function `jumla` that takes `a` and `b` and returns their sum."
 initialCode: |
-  jumla = unda(a, b) {
+  jumlisha = unda(a, b) {
       rudisha a + b
   }
   
-  andika(jumla(5, 7))
-solution: "jumla = unda(a, b) {\n    rudisha a + b\n}\n\nandika(jumla(5, 7))"
+  andika(jumlisha(5, 7))
+solution: "jumlisha = unda(a, b) {\n    rudisha a + b\n}\n\nandika(jumlisha(5, 7))"
 ---
 Functions are pieces of code that you can call at any time. We use the word `unda` to create a function.
 

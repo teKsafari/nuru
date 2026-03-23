@@ -5,7 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { AppLogo } from "./app-logo";
-import { X, Home, BookOpenIcon, Github, Sprout } from "lucide-react";
+import { X, Home, BookOpenIcon, Sprout } from "lucide-react";
+import {SiGithub} from "@icons-pack/react-simple-icons"
 
 interface MobileMenuDrawerProps {
 	isOpen: boolean;
@@ -26,7 +27,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 
 	const externalLinks = [
 		{
-			icon: <Github className="h-5 w-5" />,
+			icon: <SiGithub className="h-5 w-5" />,
 			label: "GitHub",
 			href: "https://github.com/nuruprogramming",
 		},
