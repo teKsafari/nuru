@@ -19,18 +19,6 @@
 			"prettier-plugin-tailwindcss"
 		]
 	},
-	"pnpm": {
-		"supportedArchitectures": {
-			"os": [
-				"linux",
-				"darwin"
-			],
-			"cpu": [
-				"x64",
-				""
-			]
-		}
-	},
 	"dependencies": {
 		"@codemirror/lang-go": "^6.0.1",
 		"@codemirror/language": "^6.12.2",
