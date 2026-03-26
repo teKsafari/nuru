@@ -112,7 +112,9 @@ export function LessonPanel({
 			<Button
 				variant="outline"
 				size="sm"
-				disabled={!isNaN(currentStepIndex) || currentStepIndex > 0} // keep it as <= instead of == to stop wierd hydration erros
+				// @ts-expect-error // unknown attr 'autoComplete'; needed for firefox
+				autoComplete="off" // keep this here to prevent weird disabled null hydration errors on firefox. https://github.com/vercel/next.js/discussions/21999
+				disabled={currentStepIndex == 0}
 				onClick={() => onStepChange(currentStepIndex - 1)}
 				className="h-8 text-xs"
 			>

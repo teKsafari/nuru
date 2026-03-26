@@ -6,9 +6,9 @@ initialCode: |
   kama (alama >= 50) {
       andika("Umefaulu!")
   } sivyo {
-      andika("Ufeli, jaribu tena.")
+      andika("Umefeli, jaribu tena.")
   }
-solution: "alama = 40\nkama (alama >= 50) {\n    andika(\"Umefaulu!\")\n} sivyo {\n    andika(\"Ufeli, jaribu tena.\")\n}"
+solution: "alama = 40\nkama (alama >= 50) {\n    andika(\"Umefaulu!\")\n} sivyo {\n    andika(\"Umefeli, jaribu tena.\")\n}"
 ---
 A program can make decisions based on certain conditions using `kama`.
 

@@ -276,7 +276,7 @@ export function Playground({
 	return (
 		<div className="h-screen bg-background">
 			<ResizablePanelGroup direction="horizontal" className="h-full">
-				<ResizablePanel defaultSize={40} minSize={20}>
+				<ResizablePanel defaultSize={50} minSize={20}>
 					<LessonPanel
 						lesson={lesson}
 						currentStepIndex={currentStepIndex}
@@ -289,7 +289,7 @@ export function Playground({
 					/>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={60} minSize={25}>
+				<ResizablePanel defaultSize={50} minSize={25}>
 					<CodePanel
 						code={code}
 						output={output}
