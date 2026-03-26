@@ -35,8 +35,8 @@ export function proxy(request: NextRequest) {
 
 export const config = {
 	matcher: [
-		// Skip all internal paths (_next)
-		"/((?!_next).*)",
+		// Skip all internal paths (_next), auth callback and potential api routees
+		"/((?!_next|callback|api).*)",
 		// Optional: only run on root (/) URL
 		// '/'
 	],

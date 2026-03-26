@@ -23,4 +23,6 @@ export interface PlaygroundProps {
 	executor: Executor<Interpreter>;
 	theme?: "light" | "dark";
 	nextLessonId?: string;
+	lang: Language;
+	dict: any;
 }

@@ -10,24 +10,25 @@ interface OutputPanelProps {
   onSubmit?: () => void
   onShowSolution?: () => void
   showToolbar?: boolean
+  dict?: any
 }
 
-export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolbar = true }: OutputPanelProps) {
+export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolbar = true, dict }: OutputPanelProps) {
   return (
     <div className="flex flex-col h-full bg-background">
       {showToolbar && (
         <div className="flex items-center gap-2 px-4 py-2 border-b border-border bg-card">
           <Button onClick={onSubmit} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground h-7 px-3 text-xs">
             <Send className="w-3 h-3 mr-1.5" />
-            Submit
+            {dict?.outputPanel?.submit || "Submit"}
           </Button>
           <Button variant="secondary" size="sm" onClick={onRun} className="h-7 px-3 text-xs">
             <Play className="w-3 h-3 mr-1.5" />
-            Run
+            {dict?.outputPanel?.run || "Run"}
           </Button>
           <Button variant="secondary" size="sm" onClick={onShowSolution} className="h-7 px-3 text-xs">
             <Eye className="w-3 h-3 mr-1.5" />
-            Solution
+            {dict?.outputPanel?.solution || "Solution"}
           </Button>
         </div>
       )}
@@ -36,7 +37,7 @@ export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolb
           {output ? (
             <pre className="font-mono text-sm text-foreground whitespace-pre-wrap">
               {output.split("\n").map((line, i) => {
-                const isError = line.toLowerCase().includes("error:");
+                const isError = line.toLowerCase().includes("error:") || line.toLowerCase().includes("hitilafu:");
                 return (
                   <span key={i} className={isError ? "text-red-500 dark:text-red-400 block" : "block"}>
                     {line}
@@ -45,7 +46,7 @@ export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolb
               })}
             </pre>
           ) : (
-            <p className="text-sm text-muted-foreground italic">Run your code to see output here...</p>
+            <p className="text-sm text-muted-foreground italic">{dict?.outputPanel?.placeholder || "Run your code to see output here..."}</p>
           )}
         </div>
       </ScrollArea>

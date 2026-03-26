@@ -13,20 +13,21 @@ import {
 } from "@/components/playground/resizable";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { PlaygroundProps, Language } from "@/types/playground";
+import { PlaygroundProps } from "@/types/playground";
 import confetti from "canvas-confetti";
-import { CheckCircle2, Languages } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 export function Playground({
 	lesson,
 	executor,
 	theme = "dark",
 	nextLessonId,
+	lang,
+	dict,
 }: PlaygroundProps) {
 	const router = useRouter();
 	const isMobile = useIsMobile();
 	const [currentStepIndex, setCurrentStepIndex] = useState(0);
-	const [lang, setLang] = useState<Language>("sw");
 
 	const currentStep = lesson.steps[currentStepIndex];
 
@@ -112,19 +113,19 @@ export function Playground({
 			await executor.run(code);
 			checkSolution(code);
 		} catch (error) {
-			setOutput(`Error: ${error}`);
+			setOutput(`${dict.playground?.error || "Error: "}${error}`);
 		} finally {
 			setIsRunning(false);
 		}
 	};
 
 	const handleSubmit = async () => {
-		setOutput("Testing...");
+		setOutput(dict.playground?.testing || "Testing...");
 		try {
 			const result = await executor.submit(code);
 			setOutput(result);
 		} catch (error) {
-			setOutput(`Error: ${error}`);
+			setOutput(`${dict.playground?.error || "Error: "}${error}`);
 		}
 	};
 
@@ -138,9 +139,7 @@ export function Playground({
 
 	const handleShowHint = () => {
 		// Basic hint: show the first line of the solution or a generic tip
-		const hintMessage = lang === "sw" 
-			? "Dokezo: Angalia maelezo ya kazi na ujaribu kulinganisha kodi yako na mifano iliyotolewa."
-			: "Hint: Check the task description and try to match your code with the provided examples.";
+		const hintMessage = dict.playground?.hint || "Hint: Check the task description and try to match your code with the provided examples.";
 		
 		setOutput(prev => prev ? `${prev}\n\n${hintMessage}` : hintMessage);
 	};
@@ -152,9 +151,9 @@ export function Playground({
 
 	const handleNextLesson = () => {
 		if (nextLessonId) {
-			router.push(`/anza/${nextLessonId}`);
+			router.push(`/${lang}/anza/${nextLessonId}`);
 		} else {
-			router.push("/anza");
+			router.push(`/${lang}/anza`);
 		}
 	};
 
@@ -178,7 +177,7 @@ export function Playground({
 							currentStepIndex={currentStepIndex}
 							onStepChange={setCurrentStepIndex}
 							lang={lang}
-							onLangChange={setLang}
+							dict={dict}
 							collapsible
 							expanded={lessonExpanded}
 							onToggle={handleLessonToggle}
@@ -201,21 +200,10 @@ export function Playground({
 						>
 							<div className="flex items-center gap-2 truncate">
 								<h1 className="truncate text-sm font-bold text-foreground">
-									{currentStep.title[lang]}
+									{currentStep.title[lang] || currentStep.title.sw}
 								</h1>
 							</div>
 							<div className="flex items-center gap-3 shrink-0">
-								<Button
-									variant="ghost"
-									size="icon"
-									onClick={(e) => {
-										e.stopPropagation();
-										setLang(lang === "sw" ? "en" : "sw");
-									}}
-									className="h-6 w-6 hover:bg-background/50 text-muted-foreground hover:text-foreground"
-								>
-									<Languages className="h-3.5 w-3.5" />
-								</Button>
 								{isCurrentStepCompleted ? (
 									<CheckCircle2 className="h-4 w-4 text-green-500" />
 								) : (
@@ -256,6 +244,7 @@ export function Playground({
 							isMobile
 							theme={theme}
 							lang={lang}
+							dict={dict}
 						/>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
@@ -266,7 +255,7 @@ export function Playground({
 						defaultSize={isMobile ? 10 : 40}
 						minSize={10}
 					>
-						<OutputPanel output={output} showToolbar={false} />
+						<OutputPanel output={output} showToolbar={false} dict={dict} />
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
@@ -282,7 +271,7 @@ export function Playground({
 						currentStepIndex={currentStepIndex}
 						onStepChange={setCurrentStepIndex}
 						lang={lang}
-						onLangChange={setLang}
+						dict={dict}
 						isCompleted={isCurrentStepCompleted}
 						completedStepIndices={completedStepIndices}
 						onNextLesson={handleNextLesson}
@@ -301,6 +290,7 @@ export function Playground({
 						onReset={handleReset}
 						theme={theme}
 						lang={lang}
+						dict={dict}
 					/>
 				</ResizablePanel>
 			</ResizablePanelGroup>

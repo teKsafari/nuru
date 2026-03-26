@@ -22,7 +22,7 @@ interface LessonPanelProps {
 	currentStepIndex: number;
 	onStepChange: (index: number) => void;
 	lang: Language;
-	onLangChange: (lang: Language) => void;
+	dict: any;
 	collapsible?: boolean;
 	expanded?: boolean;
 	onToggle?: () => void;
@@ -37,7 +37,7 @@ export function LessonPanel({
 	currentStepIndex,
 	onStepChange,
 	lang,
-	onLangChange,
+	dict,
 	collapsible,
 	expanded,
 	onToggle,
@@ -52,10 +52,10 @@ export function LessonPanel({
 	const breadcrumbs = (
 		<Breadcrumbs
 			items={[
-				{ label: lang === "sw" ? "Mafunzo" : "Lessons", href: "/anza" },
-				{ label: lesson.title[lang], href: `/anza/${lesson.id}` },
+				{ label: dict.lessonPanel?.lessons || "Lessons", href: `/${lang}/anza` },
+				{ label: lesson.title[lang] || lesson.title.sw, href: `/${lang}/anza/${lesson.id}` },
 				{
-					label: `${lang === "sw" ? "Hatua" : "Step"} ${currentStepIndex + 1}`,
+					label: `${dict.lessonPanel?.step || "Step"} ${currentStepIndex + 1}`,
 					current: true,
 				},
 			]}
@@ -67,21 +67,10 @@ export function LessonPanel({
 		<div className="mb-6 flex items-start justify-between gap-4">
 			<div className="flex min-w-0 flex-1 flex-col gap-1">
 				<h1 className="text-foreground text-2xl leading-tight font-bold lg:text-3xl">
-					{step.title[lang]}
+					{step.title[lang] || step.title.sw}
 				</h1>
 			</div>
 			<div className="flex shrink-0 flex-row items-center gap-2 md:flex-col md:items-end">
-				{!hideNavigation && (
-					<Button
-						variant="ghost"
-						size="sm"
-						onClick={() => onLangChange(lang === "sw" ? "en" : "sw")}
-						className="border-border/50 bg-background/50 h-8 border px-2 text-xs"
-					>
-						<Languages className="mr-2 h-4 w-4" />
-						{lang === "sw" ? "English" : "Kiswahili"}
-					</Button>
-				)}
 				{/* Status Indicator (Persistent to avoid layout shifts) */}
 				<div
 					className={cn(
@@ -94,12 +83,12 @@ export function LessonPanel({
 					{isCompleted ? (
 						<>
 							<CheckCircle2 className="h-3 w-3" />
-							{lang === "sw" ? "Imekamilika" : "Completed"}
+							{dict.lessonPanel?.completed || "Completed"}
 						</>
 					) : (
 						<>
 							<div className="bg-muted-foreground/40 h-1.5 w-1.5 animate-pulse rounded-full" />
-							{lang === "sw" ? "Inasubiri" : "Incomplete"}
+							{dict.lessonPanel?.incomplete || "Incomplete"}
 						</>
 					)}
 				</div>
@@ -119,12 +108,12 @@ export function LessonPanel({
 				className="h-8 text-xs"
 			>
 				<ChevronLeft className="mr-1 h-3 w-3" />
-				{lang === "sw" ? "Nyuma" : "Back"}
+				{dict.lessonPanel?.back || "Back"}
 			</Button>
 
 			<div className="mx-auto flex flex-col items-center gap-1">
 				<div className="text-muted-foreground font-mono text-[10px] tracking-wider uppercase">
-					{lang === "sw" ? "Hatua" : "Step"} {currentStepIndex + 1} /{" "}
+					{dict.lessonPanel?.step || "Step"} {currentStepIndex + 1} /{" "}
 					{lesson.steps.length}
 				</div>
 				<div className="hidden @md:flex">
@@ -154,7 +143,7 @@ export function LessonPanel({
 					onClick={onNextLesson}
 					className="h-8 animate-pulse bg-green-600 text-xs text-white hover:bg-green-700"
 				>
-					{lang === "sw" ? "Somo Linalofuata" : "Next Lesson"}
+					{dict.lessonPanel?.nextLesson || "Next Lesson"}
 					<ArrowRight className="ml-1 h-3 w-3" />
 				</Button>
 			) : (
@@ -169,12 +158,8 @@ export function LessonPanel({
 					className="bg-primary hover:bg-primary/90 h-8 text-xs"
 				>
 					{currentStepIndex === lesson.steps.length - 1
-						? lang === "sw"
-							? "Maliza"
-							: "Finish"
-						: lang === "sw"
-							? "Mbele"
-							: "Next"}
+						? dict.lessonPanel?.finish || "Finish"
+						: dict.lessonPanel?.next || "Next"}
 					<ChevronRight className="ml-1 h-3 w-3" />
 				</Button>
 			)}
@@ -214,7 +199,7 @@ export function LessonPanel({
 										},
 									}}
 								>
-									{step.description[lang]}
+									{step.description[lang] || step.description.sw}
 								</Markdown>
 							</div>
 
@@ -222,10 +207,10 @@ export function LessonPanel({
 								<div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-xs">
 									<h4 className="text-foreground mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
 										<Lightbulb className="h-4 w-4 text-yellow-500" />
-										{lang === "sw" ? "Kazi Yako:" : "Your Task:"}
+										{dict.lessonPanel?.yourTask || "Your Task:"}
 									</h4>
 									<p className="text-muted-foreground text-sm leading-normal italic">
-										{step.task[lang]}
+										{step.task[lang] || step.task.sw}
 									</p>
 								</div>
 							)}
@@ -253,23 +238,10 @@ export function LessonPanel({
 			>
 				<div className="flex items-center gap-2 truncate">
 					<h1 className="text-foreground truncate text-sm font-bold">
-						{step.title[lang]}
+						{step.title[lang] || step.title.sw}
 					</h1>
 				</div>
 				<div className="flex shrink-0 items-center gap-3">
-					{!hideNavigation && (
-						<Button
-							variant="ghost"
-							size="icon"
-							onClick={(e) => {
-								e.stopPropagation();
-								onLangChange(lang === "sw" ? "en" : "sw");
-							}}
-							className="hover:bg-background/50 h-6 w-6"
-						>
-							<Languages className="h-3.5 w-3.5" />
-						</Button>
-					)}
 					{isCompleted ? (
 						<CheckCircle2 className="h-4 w-4 text-green-500" />
 					) : (
@@ -311,17 +283,17 @@ export function LessonPanel({
 										},
 									}}
 								>
-									{step.description[lang]}
+									{step.description[lang] || step.description.sw}
 								</Markdown>
 							</div>
 							{step.task && (
 								<div className="mb-4 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-3 shadow-xs">
 									<h4 className="text-foreground mb-1 flex items-center gap-2 text-xs font-bold tracking-tight uppercase">
 										<Lightbulb className="h-3 w-3 text-yellow-500" />
-										{lang === "sw" ? "Kazi Yako:" : "Your Task:"}
+										{dict.lessonPanel?.yourTask || "Your Task:"}
 									</h4>
 									<p className="text-muted-foreground text-xs leading-normal italic">
-										{step.task[lang]}
+										{step.task[lang] || step.task.sw}
 									</p>
 								</div>
 							)}

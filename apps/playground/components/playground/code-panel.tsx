@@ -30,6 +30,7 @@ interface CodePanelProps {
 	mobileExtra?: React.ReactNode;
 	theme?: "light" | "dark";
 	lang: "en" | "sw";
+	dict: any;
 }
 
 export function CodePanel({
@@ -44,7 +45,8 @@ export function CodePanel({
 	isMobile,
 	mobileExtra,
   theme,
-  lang
+  lang,
+  dict
 }: CodePanelProps) {
 	const isDev = process.env.NODE_ENV === "development";
 
@@ -63,7 +65,7 @@ export function CodePanel({
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-						{lang === "sw" ? "Anza upya" : "Reset Code"}
+						{dict.codePanel?.reset || "Reset Code"}
 					</TooltipContent>
 				</Tooltip>
 
@@ -79,7 +81,7 @@ export function CodePanel({
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-						{lang === "sw" ? "Dokezo" : "Hint"}
+						{dict.codePanel?.hint || "Hint"}
 					</TooltipContent>
 				</Tooltip>
 
@@ -96,7 +98,7 @@ export function CodePanel({
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-							{lang === "sw" ? "Onyesha jibu (Dev)" : "Show Solution (Dev)"}
+							{dict.codePanel?.showSolution || "Show Solution (Dev)"}
 						</TooltipContent>
 					</Tooltip>
 				)}
@@ -136,7 +138,7 @@ export function CodePanel({
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel defaultSize={40} minSize={15}>
-					<OutputPanel output={output} showToolbar={false} />
+					<OutputPanel output={output} showToolbar={false} dict={dict} />
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>
