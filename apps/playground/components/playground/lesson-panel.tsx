@@ -16,13 +16,14 @@ import { Button } from "@/components/ui/button";
 import Markdown from "react-markdown";
 import { CodeEditor } from "./code-editor";
 import { Breadcrumbs } from "./breadcrumbs";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface LessonPanelProps {
 	lesson: Lesson;
 	currentStepIndex: number;
 	onStepChange: (index: number) => void;
 	lang: Language;
-	dict: any;
+	dict: Dictionary;
 	collapsible?: boolean;
 	expanded?: boolean;
 	onToggle?: () => void;
@@ -52,10 +53,10 @@ export function LessonPanel({
 	const breadcrumbs = (
 		<Breadcrumbs
 			items={[
-				{ label: dict.lessonPanel?.lessons || "Lessons", href: `/${lang}/anza` },
+				{ label: dict.lessonPanel.lessons, href: `/${lang}/anza` },
 				{ label: lesson.title[lang] || lesson.title.sw, href: `/${lang}/anza/${lesson.id}` },
 				{
-					label: `${dict.lessonPanel?.step || "Step"} ${currentStepIndex + 1}`,
+					label: `${dict.lessonPanel.step} ${currentStepIndex + 1}`,
 					current: true,
 				},
 			]}
@@ -83,12 +84,12 @@ export function LessonPanel({
 					{isCompleted ? (
 						<>
 							<CheckCircle2 className="h-3 w-3" />
-							{dict.lessonPanel?.completed || "Completed"}
+							{dict.lessonPanel.completed}
 						</>
 					) : (
 						<>
 							<div className="bg-muted-foreground/40 h-1.5 w-1.5 animate-pulse rounded-full" />
-							{dict.lessonPanel?.incomplete || "Incomplete"}
+							{dict.lessonPanel.incomplete}
 						</>
 					)}
 				</div>
@@ -108,12 +109,12 @@ export function LessonPanel({
 				className="h-8 text-xs"
 			>
 				<ChevronLeft className="mr-1 h-3 w-3" />
-				{dict.lessonPanel?.back || "Back"}
+				{dict.lessonPanel.back}
 			</Button>
 
 			<div className="mx-auto flex flex-col items-center gap-1">
 				<div className="text-muted-foreground font-mono text-[10px] tracking-wider uppercase">
-					{dict.lessonPanel?.step || "Step"} {currentStepIndex + 1} /{" "}
+					{dict.lessonPanel.step} {currentStepIndex + 1} /{" "}
 					{lesson.steps.length}
 				</div>
 				<div className="hidden @md:flex">
@@ -143,7 +144,7 @@ export function LessonPanel({
 					onClick={onNextLesson}
 					className="h-8 animate-pulse bg-green-600 text-xs text-white hover:bg-green-700"
 				>
-					{dict.lessonPanel?.nextLesson || "Next Lesson"}
+					{dict.lessonPanel.nextLesson}
 					<ArrowRight className="ml-1 h-3 w-3" />
 				</Button>
 			) : (
@@ -158,8 +159,8 @@ export function LessonPanel({
 					className="bg-primary hover:bg-primary/90 h-8 text-xs"
 				>
 					{currentStepIndex === lesson.steps.length - 1
-						? dict.lessonPanel?.finish || "Finish"
-						: dict.lessonPanel?.next || "Next"}
+						? dict.lessonPanel.finish
+						: dict.lessonPanel.next}
 					<ChevronRight className="ml-1 h-3 w-3" />
 				</Button>
 			)}
@@ -207,7 +208,7 @@ export function LessonPanel({
 								<div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-xs">
 									<h4 className="text-foreground mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
 										<Lightbulb className="h-4 w-4 text-yellow-500" />
-										{dict.lessonPanel?.yourTask || "Your Task:"}
+										{dict.lessonPanel.yourTask}
 									</h4>
 									<p className="text-muted-foreground text-sm leading-normal italic">
 										{step.task[lang] || step.task.sw}
@@ -290,7 +291,7 @@ export function LessonPanel({
 								<div className="mb-4 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-3 shadow-xs">
 									<h4 className="text-foreground mb-1 flex items-center gap-2 text-xs font-bold tracking-tight uppercase">
 										<Lightbulb className="h-3 w-3 text-yellow-500" />
-										{dict.lessonPanel?.yourTask || "Your Task:"}
+										{dict.lessonPanel.yourTask}
 									</h4>
 									<p className="text-muted-foreground text-xs leading-normal italic">
 										{step.task[lang] || step.task.sw}

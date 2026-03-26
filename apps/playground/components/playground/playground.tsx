@@ -113,19 +113,19 @@ export function Playground({
 			await executor.run(code);
 			checkSolution(code);
 		} catch (error) {
-			setOutput(`${dict.playground?.error || "Error: "}${error}`);
+			setOutput(`${dict.playground.error}${error}`);
 		} finally {
 			setIsRunning(false);
 		}
 	};
 
 	const handleSubmit = async () => {
-		setOutput(dict.playground?.testing || "Testing...");
+		setOutput(dict.playground.testing);
 		try {
 			const result = await executor.submit(code);
 			setOutput(result);
 		} catch (error) {
-			setOutput(`${dict.playground?.error || "Error: "}${error}`);
+			setOutput(`${dict.playground.error}${error}`);
 		}
 	};
 
@@ -139,7 +139,7 @@ export function Playground({
 
 	const handleShowHint = () => {
 		// Basic hint: show the first line of the solution or a generic tip
-		const hintMessage = dict.playground?.hint || "Hint: Check the task description and try to match your code with the provided examples.";
+		const hintMessage = dict.playground.hint;
 		
 		setOutput(prev => prev ? `${prev}\n\n${hintMessage}` : hintMessage);
 	};

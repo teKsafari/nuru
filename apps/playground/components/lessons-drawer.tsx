@@ -15,11 +15,12 @@ import {
 	DrawerTrigger,
 	DrawerFooter,
 } from "@/components/ui/drawer";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface LessonsDrawerProps {
 	lessons?: { id: string; title: { sw: string; en: string } }[];
 	lang: "en" | "sw";
-	dict: any;
+	dict: Dictionary;
 }
 
 export function LessonsDrawer({ lessons = [], lang, dict }: LessonsDrawerProps) {
@@ -52,7 +53,7 @@ export function LessonsDrawer({ lessons = [], lang, dict }: LessonsDrawerProps) 
 				<div className="mx-auto w-full max-w-xl overflow-hidden flex flex-col h-full">
 					<DrawerHeader className="border-b border-border/50 pb-4">
 						<DrawerTitle className="text-center text-xl font-bold flex items-center justify-center gap-2 text-foreground">
-							{dict.lessonsDrawer?.title || "Jifunze na Nuru"}
+							{dict.lessonsDrawer.title}
 						</DrawerTitle>
 					</DrawerHeader>
 					<div className="flex-1 overflow-y-auto p-4 custom-scrollbar">

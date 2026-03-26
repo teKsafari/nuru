@@ -7,22 +7,23 @@ import { usePathname } from "next/navigation";
 import { AppLogo } from "./app-logo";
 import { X, Home, BookOpenIcon, Sprout } from "lucide-react";
 import {SiGithub} from "@icons-pack/react-simple-icons"
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface MobileMenuDrawerProps {
 	isOpen: boolean;
 	onClose: () => void;
 	lang: "en" | "sw";
-	dict: any;
+	dict: Dictionary;
 }
 
 export function MobileMenuDrawer({ isOpen, onClose, lang, dict }: MobileMenuDrawerProps) {
 	const pathname = usePathname();
 
 	const navItems = [
-		{ icon: <Home className="h-5 w-5" />, label: dict.mobileMenu?.home || "Home", href: `/${lang}` },
+		{ icon: <Home className="h-5 w-5" />, label: dict.mobileMenu.home, href: `/${lang}` },
 		{
 			icon: <BookOpenIcon className="h-5 w-5" />,
-			label: dict.mobileMenu?.anza || "Anza Kujifunza",
+			label: dict.mobileMenu.anza,
 			href: `/${lang}/anza`,
 		},
 	];
@@ -64,7 +65,7 @@ export function MobileMenuDrawer({ isOpen, onClose, lang, dict }: MobileMenuDraw
 							<div>
 								<h2 className="text-lg font-bold">Nuru</h2>
 								<p className="text-xs text-muted-foreground">
-									{dict.mobileMenu?.subtitle || "Jifunze, Unda na Vumbua"}
+									{dict.mobileMenu.subtitle}
 								</p>
 							</div>
 						</div>
@@ -81,7 +82,7 @@ export function MobileMenuDrawer({ isOpen, onClose, lang, dict }: MobileMenuDraw
 					<div className="flex-1 overflow-y-auto p-4">
 						<div className="space-y-1">
 							<p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-								{dict.mobileMenu?.navigation || "Navigation"}
+								{dict.mobileMenu.navigation}
 							</p>
 							{navItems.map((item) => (
 								<Link
@@ -106,7 +107,7 @@ export function MobileMenuDrawer({ isOpen, onClose, lang, dict }: MobileMenuDraw
 						{/* External Links */}
 						<div className="space-y-1">
 							<p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-								{dict.mobileMenu?.resources || "Resources"}
+								{dict.mobileMenu.resources}
 							</p>
 							{externalLinks.map((link) => (
 								<a
@@ -127,7 +128,7 @@ export function MobileMenuDrawer({ isOpen, onClose, lang, dict }: MobileMenuDraw
 					{/* Footer */}
 					<div className="border-t border-border p-4">
 						<p className="text-center text-xs text-muted-foreground">
-							{dict.mobileMenu?.builtWith || "Built with ❤️ by teKsafari"}
+							{dict.mobileMenu.builtWith}
 						</p>
 					</div>
 				</div>

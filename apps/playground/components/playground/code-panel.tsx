@@ -16,6 +16,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface CodePanelProps {
 	code: string;
@@ -30,7 +31,7 @@ interface CodePanelProps {
 	mobileExtra?: React.ReactNode;
 	theme?: "light" | "dark";
 	lang: "en" | "sw";
-	dict: any;
+	dict: Dictionary;
 }
 
 export function CodePanel({
@@ -65,7 +66,7 @@ export function CodePanel({
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-						{dict.codePanel?.reset || "Reset Code"}
+						{dict.codePanel.reset}
 					</TooltipContent>
 				</Tooltip>
 
@@ -81,7 +82,7 @@ export function CodePanel({
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-						{dict.codePanel?.hint || "Hint"}
+						{dict.codePanel.hint}
 					</TooltipContent>
 				</Tooltip>
 
@@ -98,7 +99,7 @@ export function CodePanel({
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-							{dict.codePanel?.showSolution || "Show Solution (Dev)"}
+							{dict.codePanel.showSolution}
 						</TooltipContent>
 					</Tooltip>
 				)}

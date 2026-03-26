@@ -18,12 +18,13 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface SiteHeaderProps {
 	onMenuClick?: () => void;
 	lessons?: { id: string; title: { sw: string; en: string } }[];
 	lang: "en" | "sw";
-	dict: any;
+	dict: Dictionary;
 }
 
 export function SiteHeader({ onMenuClick, lessons = [], lang, dict }: SiteHeaderProps) {
@@ -32,8 +33,8 @@ export function SiteHeader({ onMenuClick, lessons = [], lang, dict }: SiteHeader
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	const navItems = [
-		{ label: dict.header?.home || "Home", href: `/${lang}`, active: pathname === `/${lang}` },
-		{ label: dict.header?.anza || "Anza", href: `/${lang}/anza`, active: pathname.startsWith(`/${lang}/anza`) },
+		{ label: dict.header.home, href: `/${lang}`, active: pathname === `/${lang}` },
+		{ label: dict.header.anza, href: `/${lang}/anza`, active: pathname.startsWith(`/${lang}/anza`) },
 	];
 
 	const toggleLanguage = () => {
@@ -94,7 +95,7 @@ export function SiteHeader({ onMenuClick, lessons = [], lang, dict }: SiteHeader
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<button className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground">
-									{dict.header?.masomo || "Masomo"}
+									{dict.header.masomo}
 									<ChevronDown className="h-3 w-3 opacity-50" />
 								</button>
 							</DropdownMenuTrigger>

@@ -3,6 +3,7 @@
 import { Play, Send, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/playground/scroll-area"
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries"
 
 interface OutputPanelProps {
   output: string
@@ -10,7 +11,7 @@ interface OutputPanelProps {
   onSubmit?: () => void
   onShowSolution?: () => void
   showToolbar?: boolean
-  dict?: any
+  dict: Dictionary
 }
 
 export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolbar = true, dict }: OutputPanelProps) {
@@ -20,19 +21,19 @@ export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolb
         <div className="flex items-center gap-2 px-4 py-2 border-b border-border bg-card">
           <Button onClick={onSubmit} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground h-7 px-3 text-xs">
             <Send className="w-3 h-3 mr-1.5" />
-            {dict?.outputPanel?.submit || "Submit"}
+            {dict.outputPanel.submit}
           </Button>
           <Button variant="secondary" size="sm" onClick={onRun} className="h-7 px-3 text-xs">
             <Play className="w-3 h-3 mr-1.5" />
-            {dict?.outputPanel?.run || "Run"}
+            {dict.outputPanel.run}
           </Button>
           <Button variant="secondary" size="sm" onClick={onShowSolution} className="h-7 px-3 text-xs">
             <Eye className="w-3 h-3 mr-1.5" />
-            {dict?.outputPanel?.solution || "Solution"}
+            {dict.outputPanel.solution}
           </Button>
         </div>
-      )}
-      <ScrollArea className="flex-1">
+        )}
+        <ScrollArea className="flex-1">
         <div className="p-4">
           {output ? (
             <pre className="font-mono text-sm text-foreground whitespace-pre-wrap">
@@ -46,7 +47,7 @@ export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolb
               })}
             </pre>
           ) : (
-            <p className="text-sm text-muted-foreground italic">{dict?.outputPanel?.placeholder || "Run your code to see output here..."}</p>
+            <p className="text-sm text-muted-foreground italic">{dict.outputPanel.placeholder}</p>
           )}
         </div>
       </ScrollArea>
