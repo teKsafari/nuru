@@ -9,20 +9,19 @@ import {
 	ArrowRight,
 } from "lucide-react";
 import { ScrollArea } from "@/components/playground/scroll-area";
-import { Lesson, Language } from "@/types/playground";
+import { Lesson, Language, PlaygroundLabels } from "@/types/playground";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Markdown from "react-markdown";
 import { CodeEditor } from "./code-editor";
 import { Breadcrumbs } from "./breadcrumbs";
-import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface LessonPanelProps {
 	lesson: Lesson;
 	currentStepIndex: number;
 	onStepChange: (index: number) => void;
 	lang: Language;
-	dict: Dictionary;
+	labels: PlaygroundLabels;
 	collapsible?: boolean;
 	expanded?: boolean;
 	onToggle?: () => void;
@@ -37,7 +36,7 @@ export function LessonPanel({
 	currentStepIndex,
 	onStepChange,
 	lang,
-	dict,
+	labels,
 	collapsible,
 	expanded,
 	onToggle,
@@ -52,13 +51,13 @@ export function LessonPanel({
 	const breadcrumbs = (
 		<Breadcrumbs
 			items={[
-				{ label: dict.lessonPanel.lessons, href: `/${lang}/anza` },
+				{ label: labels.lessons, href: `/${lang}/anza` },
 				{
 					label: lesson.title[lang] || lesson.title.sw,
 					href: `/${lang}/anza/${lesson.id}`,
 				},
 				{
-					label: `${dict.lessonPanel.step} ${currentStepIndex + 1}`,
+					label: `${labels.step} ${currentStepIndex + 1}`,
 					current: true,
 				},
 			]}
@@ -75,7 +74,7 @@ export function LessonPanel({
 				<div className="flex items-center gap-2">
 					<div className="bg-primary/30 h-px w-8" />
 					<span className="text-muted-foreground font-mono text-[10px] tracking-widest uppercase">
-						{dict.lessonPanel.step} {currentStepIndex + 1} OF{" "}
+						{labels.step} {currentStepIndex + 1} {labels.of}{" "}
 						{lesson.steps.length}
 					</span>
 				</div>
@@ -92,12 +91,12 @@ export function LessonPanel({
 					{isCompleted ? (
 						<>
 							<CheckCircle2 className="h-3 w-3 stroke-3" />
-							{dict.lessonPanel.completed}
+							{labels.completed}
 						</>
 					) : (
 						<>
 							<div className="bg-muted-foreground/40 h-1.5 w-1.5 animate-pulse rounded-full" />
-							{dict.lessonPanel.incomplete}
+							{labels.incomplete}
 						</>
 					)}
 				</div>
@@ -117,7 +116,7 @@ export function LessonPanel({
 				className="border-border/50 bg-background/50 hover:bg-muted h-9 px-3 text-xs font-bold transition-all"
 			>
 				<ChevronLeft className="mr-1.5 h-4 w-4" />
-				{dict.lessonPanel.back}
+				{labels.back}
 			</Button>
 
 			<div className="mx-auto flex flex-col items-center gap-2">
@@ -148,7 +147,7 @@ export function LessonPanel({
 					onClick={onNextLesson}
 					className="h-9 animate-pulse bg-green-600 px-4 text-xs font-bold text-white shadow-lg shadow-green-600/20 hover:bg-green-700"
 				>
-					{dict.lessonPanel.nextLesson}
+					{labels.nextLesson}
 					<ArrowRight className="ml-1.5 h-4 w-4" />
 				</Button>
 			) : (
@@ -164,8 +163,8 @@ export function LessonPanel({
 					className="bg-primary hover:bg-primary/90 h-9 px-4 text-xs font-bold shadow-md transition-all hover:translate-x-0.5 active:translate-x-0"
 				>
 					{currentStepIndex === lesson.steps.length - 1
-						? dict.lessonPanel.finish
-						: dict.lessonPanel.next}
+						? labels.finish
+						: labels.next}
 					<ChevronRight className="ml-1.5 h-4 w-4" />
 				</Button>
 			)}
@@ -220,10 +219,10 @@ export function LessonPanel({
 									<div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-sm">
 										<h4 className="text-foreground mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
 											<Lightbulb className="h-4 w-4 text-yellow-500" />
-											{dict.lessonPanel.yourTask}
+											{labels.yourTask}
 										</h4>
 										<p className="text-muted-foreground text-sm leading-normal italic">
-											{step.task[lang]}
+											{step.task[lang] || step.task.sw}
 										</p>
 									</div>
 								)}
@@ -309,7 +308,7 @@ export function LessonPanel({
 										<div className="flex items-center justify-between border-b border-yellow-500/10 bg-yellow-500/10 px-3 py-2">
 											<h4 className="flex items-center gap-1.5 text-[10px] font-black tracking-widest text-yellow-600 uppercase dark:text-yellow-500">
 												<Lightbulb className="h-3 w-3" />
-												{dict.lessonPanel.yourTask}
+												{labels.yourTask}
 											</h4>
 										</div>
 										<div className="p-4">

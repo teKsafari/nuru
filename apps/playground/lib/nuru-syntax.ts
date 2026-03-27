@@ -57,5 +57,5 @@ export const nuruLanguage = StreamLanguage.define(
 			dontIndentStates: ["comment"],
 			lineComment: "//",
 		},
-	}),
+	} as any),
 );
