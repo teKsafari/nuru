@@ -46,5 +46,15 @@
     "run": "Endesha",
     "solution": "Jibu",
     "placeholder": "Endesha kodi yako ili uone matokeo hapa..."
+  },
+  "difficulty": {
+    "mwanzilishi": "Mwanzilishi",
+    "wa kati": "Wa kati",
+    "wa juu": "Wa juu"
+  },
+  "map": {
+    "title": "Ramani ya Mafunzo",
+    "description": "Ona safari yako ya kiprogramu ya Nuru.",
+    "journey": "Safari Yako"
   }
 }

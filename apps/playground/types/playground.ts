@@ -17,6 +17,7 @@ export interface Lesson {
 	id: string;
 	title: Record<Language, string>;
 	steps: LessonStep[];
+	difficulty?: string;
 }
 
 export interface PlaygroundProps {

@@ -26,6 +26,11 @@ export function MobileMenuDrawer({ isOpen, onClose, lang, dict }: MobileMenuDraw
 			label: dict.mobileMenu.anza,
 			href: `/${lang}/anza`,
 		},
+		{
+			icon: <BookOpenIcon className="h-5 w-5" />,
+			label: dict.map.title,
+			href: `/${lang}/masomo`,
+		},
 	];
 
 	const externalLinks = [

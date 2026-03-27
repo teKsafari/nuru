@@ -8,6 +8,7 @@ import { Executor } from "@/lib/executor";
 import { useTheme } from "next-themes";
 import { Lesson, Language } from "@/types/playground";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
+import { Suspense } from "react";
 
 interface AnzaClientProps {
 	lesson: Lesson;
@@ -23,13 +24,15 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 	const nuruExecutor = new Executor("nuru", useNuru);
 
 	return (
-		<Playground
-			theme={(forcedTheme || theme) as "light" | "dark"}
-			lesson={lesson}
-			executor={nuruExecutor}
-			nextLessonId={nextLessonId}
-			lang={lang}
-			dict={dict}
-		/>
+		<Suspense fallback={<div className="flex-1 bg-background animate-pulse" />}>
+			<Playground
+				theme={(forcedTheme || theme) as "light" | "dark"}
+				lesson={lesson}
+				executor={nuruExecutor}
+				nextLessonId={nextLessonId}
+				lang={lang}
+				dict={dict}
+			/>
+		</Suspense>
 	);
 }
