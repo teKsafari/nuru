@@ -55,6 +55,10 @@
   "map": {
     "title": "Ramani ya Mafunzo",
     "description": "Ona safari yako ya kiprogramu ya Nuru.",
-    "journey": "Safari Yako"
+    "journey": "Safari Yako",
+    "estimatedTime": "Muda uliokadiriwa",
+    "recommended": "Imependekezwa kwa ajili yako",
+    "continue": "Endelea Kujifunza",
+    "completedCount": "Hatua zilizokamilika"
   }
 }

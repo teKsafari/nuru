@@ -55,6 +55,10 @@
   "map": {
     "title": "Course Map",
     "description": "Visualize your journey through Nuru programming.",
-    "journey": "Your Journey"
+    "journey": "Your Journey",
+    "estimatedTime": "Estimated Time",
+    "recommended": "Recommended for you",
+    "continue": "Continue Learning",
+    "completedCount": "Steps completed"
   }
 }
