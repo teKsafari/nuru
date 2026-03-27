@@ -178,32 +178,6 @@
 	body {
 		@apply bg-background text-foreground;
 	}
-
-	/* Subtle Custom Scrollbars */
-	::-webkit-scrollbar {
-		width: 6px;
-		height: 6px;
-	}
-
-	::-webkit-scrollbar-track {
-		@apply bg-transparent;
-	}
-
-	::-webkit-scrollbar-thumb {
-		@apply bg-muted-foreground/20 rounded-full transition-colors;
-	}
-
-	::-webkit-scrollbar-thumb:hover {
-		@apply bg-muted-foreground/40;
-	}
-
-	.dark ::-webkit-scrollbar-thumb {
-		@apply bg-muted-foreground/10;
-	}
-
-	.dark ::-webkit-scrollbar-thumb:hover {
-		@apply bg-muted-foreground/20;
-	}
 }
 
 @keyframes sprout-glow {

@@ -8,7 +8,6 @@ import {
 	CheckCircle2,
 	ArrowRight,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/playground/scroll-area";
 import { Lesson, Language } from "@/types/playground";
 import { cn } from "@/lib/utils";
@@ -92,7 +91,7 @@ export function LessonPanel({
 				>
 					{isCompleted ? (
 						<>
-							<CheckCircle2 className="h-3 w-3 stroke-[3]" />
+							<CheckCircle2 className="h-3 w-3 stroke-3" />
 							{dict.lessonPanel.completed}
 						</>
 					) : (
@@ -181,60 +180,54 @@ export function LessonPanel({
 					<div className="flex w-full min-w-0 flex-1 flex-col p-6 lg:p-8">
 						<div className="flex-1">
 							{breadcrumbs}
-							<AnimatePresence mode="wait">
-								<motion.div
-									key={currentStepIndex}
-									initial={{ opacity: 0, x: 10 }}
-									animate={{ opacity: 1, x: 0 }}
-									exit={{ opacity: 0, x: -10 }}
-									transition={{ duration: 0.2, ease: "easeOut" }}
-									className="flex flex-col"
-								>
-									{header}
-									<div className="prose prose-sm dark:prose-invert text-muted-foreground/90 max-w-none leading-relaxed">
-										<Markdown
-											components={{
-												code(props) {
-													const { children, className, ...rest } = props;
-													const match = /language-(\w+)/.exec(className || "");
-													return match ? (
-														<div className="not-prose border-border bg-muted/30 my-6 overflow-hidden rounded-xl border p-2 shadow-xs">
-															<CodeEditor
-																code={String(children).replace(/\n$/, "")}
-																readOnly
-															/>
-														</div>
-													) : (
-														<code
-															className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[13px] font-medium"
-															{...rest}
-														>
-															{children}
-														</code>
-													);
-												},
-												p: ({ children }) => (
-													<p className="mb-4 last:mb-0">{children}</p>
-												),
-											}}
-										>
-											{step.description[lang] || step.description.sw}
-										</Markdown>
-									</div>
+							<div
+								key={currentStepIndex}
+								className="animate-in fade-in slide-in-from-right-4 flex flex-col duration-300"
+							>
+								{header}
+								<div className="prose prose-sm dark:prose-invert text-muted-foreground/90 max-w-none leading-relaxed">
+									<Markdown
+										components={{
+											code(props) {
+												const { children, className, ...rest } = props;
+												const match = /language-(\w+)/.exec(className || "");
+												return match ? (
+													<div className="not-prose border-border bg-muted/30 my-6 overflow-hidden rounded-xl border p-2 shadow-xs">
+														<CodeEditor
+															code={String(children).replace(/\n$/, "")}
+															readOnly
+														/>
+													</div>
+												) : (
+													<code
+														className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[13px] font-medium"
+														{...rest}
+													>
+														{children}
+													</code>
+												);
+											},
+											p: ({ children }) => (
+												<p className="mb-4 last:mb-0">{children}</p>
+											),
+										}}
+									>
+										{step.description[lang] || step.description.sw}
+									</Markdown>
+								</div>
 
-									{step.task && (
-										<div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-sm">
-											<h4 className="text-foreground mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
-												<Lightbulb className="h-4 w-4 text-yellow-500" />
-												{dict.lessonPanel.yourTask}
-											</h4>
-											<p className="text-muted-foreground text-sm leading-normal italic">
-												{step.task[lang]}
-											</p>
-										</div>
-									)}
-								</motion.div>
-							</AnimatePresence>
+								{step.task && (
+									<div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-sm">
+										<h4 className="text-foreground mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
+											<Lightbulb className="h-4 w-4 text-yellow-500" />
+											{dict.lessonPanel.yourTask}
+										</h4>
+										<p className="text-muted-foreground text-sm leading-normal italic">
+											{step.task[lang]}
+										</p>
+									</div>
+								)}
+							</div>{" "}
 						</div>
 						{navigation}
 					</div>
@@ -280,58 +273,53 @@ export function LessonPanel({
 				<ScrollArea className="flex-1 [&>div>div]:h-full">
 					<div className="flex min-h-full w-full min-w-0 flex-col px-4 pt-4 pb-6 text-sm">
 						<div className="flex-1">
-							<AnimatePresence mode="wait">
-								<motion.div
-									key={currentStepIndex}
-									initial={{ opacity: 0, y: 5 }}
-									animate={{ opacity: 1, y: 0 }}
-									exit={{ opacity: 0, y: -5 }}
-									transition={{ duration: 0.15 }}
-								>
-									<div className="text-muted-foreground/90 mb-6 leading-relaxed">
-										<Markdown
-											components={{
-												code(props) {
-													const { children, className, ...rest } = props;
-													const match = /language-(\w+)/.exec(className || "");
-													return match ? (
-														<div className="not-prose border-border bg-muted/30 my-4 overflow-hidden rounded-xl border">
-															<CodeEditor
-																code={String(children).replace(/\n$/, "")}
-																readOnly
-															/>
-														</div>
-													) : (
-														<code
-															className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[12px]"
-															{...rest}
-														>
-															{children}
-														</code>
-													);
-												},
-											}}
-										>
-											{step.description[lang] || step.description.sw}
-										</Markdown>
-									</div>
-									{step.task && (
-										<div className="mb-6 overflow-hidden rounded-xl border border-yellow-500/20 bg-yellow-500/[0.03] shadow-xs">
-											<div className="flex items-center justify-between border-b border-yellow-500/10 bg-yellow-500/10 px-3 py-2">
-												<h4 className="flex items-center gap-1.5 text-[10px] font-black tracking-[0.1em] text-yellow-600 uppercase dark:text-yellow-500">
-													<Lightbulb className="h-3 w-3" />
-													{dict.lessonPanel.yourTask}
-												</h4>
-											</div>
-											<div className="p-4">
-												<p className="text-foreground/90 text-[13px] leading-relaxed italic">
-													{step.task[lang] || step.task.sw}
-												</p>
-											</div>
+							<div
+								key={currentStepIndex}
+								className="animate-in fade-in slide-in-from-bottom-2 duration-300"
+							>
+								<div className="text-muted-foreground/90 mb-6 leading-relaxed">
+									<Markdown
+										components={{
+											code(props) {
+												const { children, className, ...rest } = props;
+												const match = /language-(\w+)/.exec(className || "");
+												return match ? (
+													<div className="not-prose border-border bg-muted/30 my-4 overflow-hidden rounded-xl border">
+														<CodeEditor
+															code={String(children).replace(/\n$/, "")}
+															readOnly
+														/>
+													</div>
+												) : (
+													<code
+														className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[12px]"
+														{...rest}
+													>
+														{children}
+													</code>
+												);
+											},
+										}}
+									>
+										{step.description[lang] || step.description.sw}
+									</Markdown>
+								</div>
+								{step.task && (
+									<div className="mb-6 overflow-hidden rounded-xl border border-yellow-500/20 bg-yellow-500/3 shadow-xs">
+										<div className="flex items-center justify-between border-b border-yellow-500/10 bg-yellow-500/10 px-3 py-2">
+											<h4 className="flex items-center gap-1.5 text-[10px] font-black tracking-widest text-yellow-600 uppercase dark:text-yellow-500">
+												<Lightbulb className="h-3 w-3" />
+												{dict.lessonPanel.yourTask}
+											</h4>
 										</div>
-									)}
-								</motion.div>
-							</AnimatePresence>
+										<div className="p-4">
+											<p className="text-foreground/90 text-[13px] leading-relaxed italic">
+												{step.task[lang] || step.task.sw}
+											</p>
+										</div>
+									</div>
+								)}
+							</div>{" "}
 						</div>
 						{navigation}
 					</div>

@@ -19,11 +19,7 @@ export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolb
     <div className="flex flex-col h-full bg-background overflow-hidden border-t border-border/20">
       <div className="flex items-center justify-between px-4 py-2 bg-muted/30 border-b border-border/50">
         <div className="flex items-center gap-2.5">
-          <div className="flex gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-red-500/20" />
-            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20" />
-            <div className="w-2.5 h-2.5 rounded-full bg-green-500/20" />
-          </div>
+          
           <div className="flex items-center gap-1.5 ml-1">
             <Terminal className="w-3 h-3 text-muted-foreground" />
             <span className="text-[10px] font-black tracking-widest text-muted-foreground uppercase font-mono">
