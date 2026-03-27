@@ -1,6 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
-import { ChevronRight, Home } from "lucide-react"
+import { ChevronRight, Folder } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface BreadcrumbsProps {
@@ -14,29 +14,29 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   return (
-    <nav className={cn("flex items-center space-x-1 text-xs font-medium text-muted-foreground mb-4", className)}>
+    <nav className={cn("flex items-center space-x-1.5 text-[10px] font-mono tracking-widest text-muted-foreground mb-6 uppercase", className)}>
       <Link 
         href="/" 
-        className="flex items-center hover:text-foreground transition-colors"
+        className="flex items-center hover:text-foreground transition-colors group"
       >
-        <Home className="h-3 w-3 mr-1" />
-        <span className="sr-only">Nyumbani</span>
+        <Folder className="h-3 w-3 mr-1.5 opacity-40 group-hover:opacity-100 transition-opacity" />
+        <span className="sr-only">Nuru</span>
       </Link>
       
       {items.map((item, index) => (
         <React.Fragment key={index}>
-          <ChevronRight className="h-3 w-3 shrink-0 opacity-50" />
+          <ChevronRight className="h-2.5 w-2.5 shrink-0 opacity-20" />
           {item.href && !item.current ? (
             <Link 
               href={item.href}
-              className="hover:text-foreground transition-colors whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] sm:max-w-[150px]"
+              className="hover:text-foreground transition-colors whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px] sm:max-w-[180px] hover:underline decoration-border underline-offset-4"
             >
               {item.label}
             </Link>
           ) : (
             <span className={cn(
-              "whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] sm:max-w-[150px]",
-              item.current ? "text-foreground font-bold" : ""
+              "whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px] sm:max-w-[180px]",
+              item.current ? "text-primary font-black" : ""
             )}>
               {item.label}
             </span>
