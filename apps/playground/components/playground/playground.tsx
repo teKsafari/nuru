@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState, useEffect, useCallback } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { LessonPanel } from "./lesson-panel";
@@ -26,8 +26,20 @@ export function Playground({
 	dict,
 }: PlaygroundProps) {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
 	const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+	// Initial step from URL
+	useEffect(() => {
+		const stepId = searchParams.get("step");
+		if (stepId) {
+			const index = lesson.steps.findIndex((s) => s.id === stepId);
+			if (index !== -1) {
+				setCurrentStepIndex(index);
+			}
+		}
+	}, [searchParams, lesson.steps]);
 
 	const currentStep = lesson.steps[currentStepIndex];
 

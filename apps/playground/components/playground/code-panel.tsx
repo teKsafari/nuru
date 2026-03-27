@@ -53,14 +53,14 @@ export function CodePanel({
 
 	const actions = (
 		<TooltipProvider>
-			<div className="flex items-center gap-2">
+			<div className="flex items-center gap-1.5 rounded-xl border border-border/50 bg-background/60 p-1.5 backdrop-blur-md shadow-lg">
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Button
-							variant="outline"
+							variant="ghost"
 							size="icon"
 							onClick={onReset}
-							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-xs"
+							className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
 						>
 							<RotateCcw className="h-4 w-4" />
 						</Button>
@@ -73,10 +73,10 @@ export function CodePanel({
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Button
-							variant="outline"
+							variant="ghost"
 							size="icon"
 							onClick={onShowHint}
-							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-xs"
+							className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
 						>
 							<HelpCircle className="h-4 w-4" />
 						</Button>
@@ -90,10 +90,10 @@ export function CodePanel({
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<Button
-								variant="outline"
+								variant="ghost"
 								size="icon"
 								onClick={onShowSolution}
-								className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-xs"
+								className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
 							>
 								<Eye className="h-4 w-4" />
 							</Button>
@@ -104,12 +104,15 @@ export function CodePanel({
 					</Tooltip>
 				)}
 
+				<div className="mx-1 h-4 w-px bg-border/50" />
+
 				<Button
 					onClick={onRun}
-					size="icon"
-					className="h-8 bg-primary text-xs font-bold text-primary-foreground shadow-md hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+					size="sm"
+					className="h-8 bg-primary px-3 text-[11px] font-black tracking-wider uppercase text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
 				>
-					<Play className="h-3.5 w-3.5 fill-current" />
+					<Play className="h-3 w-3 fill-current" />
+					RUN
 				</Button>
 			</div>
 		</TooltipProvider>

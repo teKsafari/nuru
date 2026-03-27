@@ -100,6 +100,12 @@ export function SiteHeader({ onMenuClick, lessons = [], lang, dict }: SiteHeader
 								</button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="center" className="w-56 rounded-xl p-2">
+								<DropdownMenuItem asChild className="rounded-lg mb-1 bg-muted/50">
+									<Link href={`/${lang}/masomo`} className="flex items-center gap-2 py-2 font-bold text-primary">
+										<BookOpen className="h-4 w-4" />
+										<span>{dict.map.title}</span>
+									</Link>
+								</DropdownMenuItem>
 								{lessons.map((lesson) => (
 									<DropdownMenuItem key={lesson.id} asChild className="rounded-lg">
 										<Link

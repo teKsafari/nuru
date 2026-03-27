@@ -52,8 +52,16 @@ export function LessonsDrawer({ lessons = [], lang, dict }: LessonsDrawerProps) 
 			<DrawerContent className="max-h-[85%]">
 				<div className="mx-auto w-full max-w-xl overflow-hidden flex flex-col h-full">
 					<DrawerHeader className="border-b border-border/50 pb-4">
-						<DrawerTitle className="text-center text-xl font-bold flex items-center justify-center gap-2 text-foreground">
-							{dict.lessonsDrawer.title}
+						<DrawerTitle className="text-center text-xl font-bold flex flex-col items-center justify-center gap-2 text-foreground">
+							<span>{dict.lessonsDrawer.title}</span>
+							<Link 
+								href={`/${lang}/masomo`} 
+								onClick={() => setOpen(false)}
+								className="text-xs font-medium text-primary hover:underline flex items-center gap-1"
+							>
+								<BookOpen className="h-3 w-3" />
+								{dict.map.title}
+							</Link>
 						</DrawerTitle>
 					</DrawerHeader>
 					<div className="flex-1 overflow-y-auto p-4 custom-scrollbar">

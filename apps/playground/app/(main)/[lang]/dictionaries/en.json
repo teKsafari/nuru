@@ -46,5 +46,19 @@
     "run": "Run",
     "solution": "Solution",
     "placeholder": "Run your code to see output here..."
+  },
+  "difficulty": {
+    "mwanzilishi": "Beginner",
+    "wa kati": "Intermediate",
+    "wa juu": "Advanced"
+  },
+  "map": {
+    "title": "Course Map",
+    "description": "Visualize your journey through Nuru programming.",
+    "journey": "Your Journey",
+    "estimatedTime": "Estimated Time",
+    "recommended": "Recommended for you",
+    "continue": "Continue Learning",
+    "completedCount": "Steps completed"
   }
 }
