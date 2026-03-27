@@ -46,7 +46,6 @@ export interface PlaygroundProps {
 		currentStepIndex: number;
 		code: string;
 		output: string;
-		isRunning: boolean;
 		completedStepIndices: Set<number>;
 	};
 	actions: {

@@ -39,7 +39,6 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 
 	const [code, setCode] = useState(currentStep.initialCode);
 	const [output, setOutput] = useState("");
-	const [isRunning, setIsRunning] = useState(false);
 	const [completedStepIndices, setCompletedStepIndices] = useState<Set<number>>(new Set());
 
 	// Sync code when step changes
@@ -54,16 +53,6 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 	}, [lesson.id]);
 
 	const executor = new Executor("nuru", useNuru);
-
-	// Call useNuru at top level
-	// const nuru = useNuru(executor.outputHandler);
-
-	// Sync nuru instance with executor
-	// useEffect(() => {
-	// 	if (nuru) {
-	// 		executor.setInstance(nuru);
-	// 	}
-	// }, [nuru, executor]);
 
 	useEffect(() => {
 		executor.onOutput((text, isError) => {
@@ -91,7 +80,6 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 	}, [currentStep.solution, currentStepIndex]);
 
 	const handleRun = async () => {
-		setIsRunning(true);
 		if (executor.onBeforeRun) {
 			executor.onBeforeRun();
 		}
@@ -101,8 +89,6 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 			checkSolution(code);
 		} catch (error) {
 			setOutput(`${dict.playground.error}${error}`);
-		} finally {
-			setIsRunning(false);
 		}
 	};
 
@@ -175,7 +161,6 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 					currentStepIndex,
 					code,
 					output,
-					isRunning,
 					completedStepIndices,
 				}}
 				actions={{
