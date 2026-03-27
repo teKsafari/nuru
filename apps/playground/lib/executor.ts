@@ -26,7 +26,7 @@ export class Executor<LanguageInstace extends Interpreter> {
 		this.options = options;
 	}
 
-	private outputHandler = (text: string, isError: boolean) => {
+	outputHandler = (text: string, isError: boolean) => {
 		if (this.outputBridge) {
 			this.outputBridge(text, isError);
 		} else {
@@ -34,6 +34,10 @@ export class Executor<LanguageInstace extends Interpreter> {
 				`Output received but output handler not regsitered.\noutput:${text}\n call onOuput method`,
 			);
 		}
+	};
+
+	setInstance = (instance: LanguageInstace) => {
+		this.instance = instance;
 	};
 
 	async run(code: string) {

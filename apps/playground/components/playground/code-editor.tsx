@@ -1,8 +1,8 @@
 "use client";
 
 import CodeMirror from "@uiw/react-codemirror";
-import { nuruLanguage } from "@/lib/nuru-syntax";
 import { EditorView } from "@codemirror/view";
+import { Extension } from "@codemirror/state";
 import * as lezerHighlight from "@lezer/highlight";
 const { tags: t } = lezerHighlight;
 import { createTheme } from "@uiw/codemirror-themes";
@@ -14,6 +14,7 @@ interface CodeEditorProps {
 	onChange?: (code: string) => void;
 	theme?: "dark" | "light" | CreateThemeOptions;
 	readOnly?: boolean;
+	extensions?: Extension[];
 }
 
 // Custom dark theme matching our design
@@ -111,6 +112,7 @@ export function CodeEditor({
 	onChange,
 	theme: themeProp,
 	readOnly = false,
+	extensions = [],
 }: CodeEditorProps) {
 	const { theme: currentTheme, forcedTheme } = useTheme();
 	const theme = (themeProp || forcedTheme || currentTheme) as "light" | "dark" || "dark";
@@ -121,7 +123,7 @@ export function CodeEditor({
 				value={code}
 				height="100%"
 				theme={getTheme(theme)}
-				extensions={[nuruLanguage, editorBaseTheme, EditorView.lineWrapping]}
+				extensions={[...extensions, editorBaseTheme, EditorView.lineWrapping]}
 				onChange={(value) => onChange?.(value)}
 				editable={!readOnly}
 				readOnly={readOnly}

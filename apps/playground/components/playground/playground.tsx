@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { LessonPanel } from "./lesson-panel";
 import { CodePanel } from "./code-panel";
@@ -11,69 +10,27 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/playground/resizable";
-import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps } from "@/types/playground";
-import confetti from "canvas-confetti";
 import { CheckCircle2 } from "lucide-react";
 
 export function Playground({
 	lesson,
-	executor,
+	state,
+	actions,
+	labels,
 	theme = "dark",
-	nextLessonId,
 	lang,
-	dict,
+	extensions,
 }: PlaygroundProps) {
-	const router = useRouter();
-	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
-	const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
-	// Initial step from URL
-	useEffect(() => {
-		const stepId = searchParams.get("step");
-		if (stepId) {
-			const index = lesson.steps.findIndex((s) => s.id === stepId);
-			if (index !== -1) {
-				setCurrentStepIndex(index);
-			}
-		}
-	}, [searchParams, lesson.steps]);
-
-	const currentStep = lesson.steps[currentStepIndex];
-
-	const [code, setCode] = useState(currentStep.initialCode);
-	const [output, setOutput] = useState("");
-	const [isRunning, setIsRunning] = useState(false);
-	const [completedStepIndices, setCompletedStepIndices] = useState<Set<number>>(new Set());
 	const [lessonExpanded, setLessonExpanded] = useState(!isMobile);
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
-	// Sync code when step changes
-	useEffect(() => {
-		setCode(currentStep.initialCode);
-		setOutput("");
-	}, [currentStepIndex, lesson.id, currentStep.initialCode]);
-
-	// Reset progress when lesson changes
-	useEffect(() => {
-		setCompletedStepIndices(new Set());
-	}, [lesson.id]);
-
-	const isCurrentStepCompleted = completedStepIndices.has(currentStepIndex);
-
-	useEffect(() => {
-		executor.onOutput((output, isError) => {
-			setOutput((prev) => {
-				if (prev) {
-					return prev + `\n${output}`;
-				} else return output;
-			});
-		});
-	}, [executor]);
+	const currentStep = lesson.steps[state.currentStepIndex];
+	const isCurrentStepCompleted = state.completedStepIndices.has(state.currentStepIndex);
 
 	const handleLessonToggle = () => {
 		const lessonPanel = lessonPanelRef.current;
@@ -96,79 +53,6 @@ export function Playground({
 		}
 	};
 
-	const checkSolution = useCallback((currentCode: string) => {
-		if (!currentStep.solution) return false;
-		
-		// Simple normalization: remove whitespace and comments
-		const normalize = (s: string) => s.replace(/\/\/.*$/gm, "").replace(/\s/g, "");
-		const isCorrect = normalize(currentCode) === normalize(currentStep.solution);
-		
-		if (isCorrect) {
-			setCompletedStepIndices(prev => new Set(prev).add(currentStepIndex));
-			confetti({
-				particleCount: 100,
-				spread: 70,
-				origin: { y: 0.6 },
-				colors: ["#22c55e", "#10b981", "#3b82f6"]
-			});
-		}
-		return isCorrect;
-	}, [currentStep.solution, currentStepIndex]);
-
-	const handleRun = async () => {
-		setIsRunning(true);
-		if (executor.onBeforeRun) {
-			executor.onBeforeRun();
-		}
-		setOutput("");
-		try {
-			await executor.run(code);
-			checkSolution(code);
-		} catch (error) {
-			setOutput(`${dict.playground.error}${error}`);
-		} finally {
-			setIsRunning(false);
-		}
-	};
-
-	const handleSubmit = async () => {
-		setOutput(dict.playground.testing);
-		try {
-			const result = await executor.submit(code);
-			setOutput(result);
-		} catch (error) {
-			setOutput(`${dict.playground.error}${error}`);
-		}
-	};
-
-	const handleShowSolution = () => {
-		if (currentStep.solution) {
-			setCode(currentStep.solution);
-		} else if (executor.getSolution) {
-			setCode(executor.getSolution());
-		}
-	};
-
-	const handleShowHint = () => {
-		// Basic hint: show the first line of the solution or a generic tip
-		const hintMessage = dict.playground.hint;
-		
-		setOutput(prev => prev ? `${prev}\n\n${hintMessage}` : hintMessage);
-	};
-
-	const handleReset = () => {
-		setCode(currentStep.initialCode);
-		setOutput("");
-	};
-
-	const handleNextLesson = () => {
-		if (nextLessonId) {
-			router.push(`/${lang}/anza/${nextLessonId}`);
-		} else {
-			router.push(`/${lang}/anza`);
-		}
-	};
-
 	if (isMobile) {
 		return (
 			<div className="flex max-h-full flex-1 flex-col overflow-hidden bg-background">
@@ -186,16 +70,16 @@ export function Playground({
 					>
 						<LessonPanel
 							lesson={lesson}
-							currentStepIndex={currentStepIndex}
-							onStepChange={setCurrentStepIndex}
+							currentStepIndex={state.currentStepIndex}
+							onStepChange={actions.onStepChange}
 							lang={lang}
-							dict={dict}
+							labels={labels}
 							collapsible
 							expanded={lessonExpanded}
 							onToggle={handleLessonToggle}
 							isCompleted={isCurrentStepCompleted}
-							completedStepIndices={completedStepIndices}
-							onNextLesson={handleNextLesson}
+							completedStepIndices={state.completedStepIndices}
+							onNextLesson={actions.onNextLesson}
 						/>
 					</ResizablePanel>
 					{!lessonExpanded && (
@@ -245,18 +129,19 @@ export function Playground({
 						minSize={15}
 					>
 						<CodePanel
-							code={code}
-							output={output}
-							onCodeChange={setCode}
-							onRun={handleRun}
-							onSubmit={handleSubmit}
-							onShowSolution={handleShowSolution}
-							onShowHint={handleShowHint}
-							onReset={handleReset}
+							code={state.code}
+							output={state.output}
+							onCodeChange={actions.onCodeChange}
+							onRun={actions.onRun}
+							onSubmit={actions.onSubmit}
+							onShowSolution={actions.onShowSolution}
+							onShowHint={actions.onShowHint}
+							onReset={actions.onReset}
 							isMobile
 							theme={theme}
 							lang={lang}
-							dict={dict}
+							labels={labels}
+							extensions={extensions}
 						/>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
@@ -267,7 +152,7 @@ export function Playground({
 						defaultSize={isMobile ? 10 : 40}
 						minSize={10}
 					>
-						<OutputPanel output={output} showToolbar={false} dict={dict} />
+						<OutputPanel output={state.output} showToolbar={false} labels={labels} />
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
@@ -280,33 +165,33 @@ export function Playground({
 				<ResizablePanel defaultSize={50} minSize={20}>
 					<LessonPanel
 						lesson={lesson}
-						currentStepIndex={currentStepIndex}
-						onStepChange={setCurrentStepIndex}
+						currentStepIndex={state.currentStepIndex}
+						onStepChange={actions.onStepChange}
 						lang={lang}
-						dict={dict}
+						labels={labels}
 						isCompleted={isCurrentStepCompleted}
-						completedStepIndices={completedStepIndices}
-						onNextLesson={handleNextLesson}
+						completedStepIndices={state.completedStepIndices}
+						onNextLesson={actions.onNextLesson}
 					/>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel defaultSize={50} minSize={25}>
 					<CodePanel
-						code={code}
-						output={output}
-						onCodeChange={setCode}
-						onRun={handleRun}
-						onSubmit={handleSubmit}
-						onShowSolution={handleShowSolution}
-						onShowHint={handleShowHint}
-						onReset={handleReset}
+						code={state.code}
+						output={state.output}
+						onCodeChange={actions.onCodeChange}
+						onRun={actions.onRun}
+						onSubmit={actions.onSubmit}
+						onShowSolution={actions.onShowSolution}
+						onShowHint={actions.onShowHint}
+						onReset={actions.onReset}
 						theme={theme}
 						lang={lang}
-						dict={dict}
+						labels={labels}
+						extensions={extensions}
 					/>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>
 	);
 }
-

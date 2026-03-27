@@ -17,6 +17,8 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
+import { PlaygroundLabels } from "@/types/playground";
+import { Extension } from "@codemirror/state";
 
 interface CodePanelProps {
 	code: string;
@@ -31,7 +33,8 @@ interface CodePanelProps {
 	mobileExtra?: React.ReactNode;
 	theme?: "light" | "dark";
 	lang: "en" | "sw";
-	dict: Dictionary;
+	labels: PlaygroundLabels;
+	extensions?: Extension[];
 }
 
 export function CodePanel({
@@ -47,7 +50,8 @@ export function CodePanel({
 	mobileExtra,
   theme,
   lang,
-  dict
+  labels,
+  extensions
 }: CodePanelProps) {
 	const isDev = process.env.NODE_ENV === "development";
 
@@ -66,7 +70,7 @@ export function CodePanel({
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-						{dict.codePanel.reset}
+						{labels.reset}
 					</TooltipContent>
 				</Tooltip>
 
@@ -82,7 +86,7 @@ export function CodePanel({
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-						{dict.codePanel.hint}
+						{labels.hint}
 					</TooltipContent>
 				</Tooltip>
 
@@ -99,7 +103,7 @@ export function CodePanel({
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-							{dict.codePanel.showSolution}
+							{labels.showSolution}
 						</TooltipContent>
 					</Tooltip>
 				)}
@@ -112,7 +116,7 @@ export function CodePanel({
 					className="h-8 bg-primary px-3 text-[11px] font-black tracking-wider uppercase text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
 				>
 					<Play className="h-3 w-3 fill-current" />
-					RUN
+					{labels.run}
 				</Button>
 			</div>
 		</TooltipProvider>
@@ -122,7 +126,7 @@ export function CodePanel({
 	if (isMobile) {
 		return (
 			<div className="bg-background relative flex h-full flex-col">
-				<CodeEditor code={code} onChange={onCodeChange} theme={theme}/>
+				<CodeEditor code={code} onChange={onCodeChange} theme={theme} extensions={extensions}/>
 				<div className="absolute bottom-3 right-3 z-10">
 					{actions}
 				</div>
@@ -136,13 +140,13 @@ export function CodePanel({
 			<ResizablePanelGroup direction="vertical" className="flex-1">
 				<ResizablePanel defaultSize={60} minSize={30}>
 					<div className="relative h-full">
-						<CodeEditor code={code} onChange={onCodeChange} theme={theme} />
+						<CodeEditor code={code} onChange={onCodeChange} theme={theme} extensions={extensions} />
 						<div className="absolute bottom-3 right-3 z-10">{actions}</div>
 					</div>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel defaultSize={40} minSize={15}>
-					<OutputPanel output={output} showToolbar={false} dict={dict} />
+					<OutputPanel output={output} showToolbar={false} labels={labels} />
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>
