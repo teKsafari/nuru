@@ -6,14 +6,17 @@ import { useNuru } from "@nuru/wasm/react";
 import { Playground } from "@/components/playground/playground";
 import { Executor } from "@/lib/executor";
 import { useTheme } from "next-themes";
-import { Lesson } from "@/types/playground";
+import { Lesson, Language } from "@/types/playground";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface AnzaClientProps {
 	lesson: Lesson;
 	nextLessonId?: string;
+	lang: Language;
+	dict: Dictionary;
 }
 
-export function AnzaClient({ lesson, nextLessonId }: AnzaClientProps) {
+export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps) {
 	const { theme, forcedTheme } = useTheme();
 	// const { isAuthenticated, claims } = useContext(AuthContext);
 
@@ -25,6 +28,8 @@ export function AnzaClient({ lesson, nextLessonId }: AnzaClientProps) {
 			lesson={lesson}
 			executor={nuruExecutor}
 			nextLessonId={nextLessonId}
+			lang={lang}
+			dict={dict}
 		/>
 	);
 }

@@ -1,5 +1,6 @@
 import { Executor } from "@/lib/executor";
 import type { Interpreter } from "@/lib/executor";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 export type Language = "sw" | "en";
 
@@ -23,4 +24,6 @@ export interface PlaygroundProps {
 	executor: Executor<Interpreter>;
 	theme?: "light" | "dark";
 	nextLessonId?: string;
+	lang: Language;
+	dict: Dictionary;
 }

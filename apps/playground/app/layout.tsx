@@ -55,7 +55,7 @@ export default function RootLayout({
 				<meta name="theme-color" content="#00b4d8" />
 				<link rel="manifest" href="/manifest.json" />
 			</head>
-			<body className={cn(jetbrainsMono.className, "flex h-[100dvh] flex-col")}>
+			<body className={cn(jetbrainsMono.className, "flex h-dvh flex-col")}>
 				<Suspense>
 					<CustomThemeProvider>{children}</CustomThemeProvider>
 				</Suspense>

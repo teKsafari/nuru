@@ -10,17 +10,17 @@ initialCode: |
   ]
 
   fanya ni_salama = unda(r, c, n) {
-      kwa i katika mfululizo(4) {
+      kwa i ktk mfululizo(4) {
           kama (gridi[r][i] == n || gridi[i][c] == n) { rudisha sikweli }
       }
       rudisha kweli
   }
 
   fanya tatua = unda() {
-      kwa r katika mfululizo(4) {
-          kwa c katika mfululizo(4) {
+      kwa r ktk mfululizo(4) {
+          kwa c ktk mfululizo(4) {
               kama (gridi[r][c] == 0) {
-                  kwa n katika mfululizo(1, 5) {
+                  kwa n ktk mfululizo(1, 5) {
                       kama (ni_salama(r, c, n)) {
                           gridi[r][c] = n
                           kama (tatua()) { rudisha kweli }
@@ -37,7 +37,7 @@ initialCode: |
   tatua()
   
   andika("SUDOKU IMETATULIWA!")
-  kwa i katika mfululizo(4) { andika(gridi[i]) }
+  kwa i ktk mfululizo(4) { andika(gridi[i]) }
 solution: |
   andika("Sawa!")
 ---

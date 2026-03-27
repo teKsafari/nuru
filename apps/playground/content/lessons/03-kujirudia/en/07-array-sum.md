@@ -1,46 +1,40 @@
 ---
 title: "7. Recursion with Arrays"
-task: "Complete the `jumla` function to return `orodha[0] + jumla(orodha_mpya)`."
+task: "Complete the `jumla` function to return `orodha[i] + jumla(orodha, i + 1)`."
 initialCode: |
-  fanya jumla = unda(orodha) {
-      // Base Case: Empty array
-      kama (idadi(orodha) == 0) {
+  fanya jumla = unda(orodha, i=0) {
+      // Base Case: We have reached the end of the array
+      kama (i == orodha.idadi()) {
           rudisha 0
       }
       
-      // Get all items EXCEPT the first one
-      fanya orodha_mpya = kata(orodha, 1)
-      
-      // Recursive Step: First item + sum of the rest
+      // Recursive Step: Current item + sum of the rest
       rudisha // weka mantiki hapa
   }
 
   andika(jumla([10, 20, 30])) // Should be 60
 solution: |
-  fanya jumla = unda(orodha) {
-      kama (idadi(orodha) == 0) {
+  fanya jumla = unda(orodha, i=0) {
+      kama (i == orodha.idadi()) {
           rudisha 0
       }
-      fanya orodha_mpya = kata(orodha, 1)
-      rudisha orodha[0] + jumla(orodha_mpya)
+      rudisha orodha[i] + jumla(orodha, i + 1)
   }
 
   andika(jumla([10, 20, 30]))
 ---
 You can use recursion to process lists of data! 
 
-If you want to find the sum of all numbers in an array, the recursive logic is:
-1. **Base Case:** If the array is empty, the sum is 0.
-2. **Recursive Step:** Take the first number, and add it to the sum of the *rest* of the array.
+If you want to find the sum of all numbers in an array, we can pass an index `i` that keeps track of where we are.
+
+### The Recursive Logic:
+1. **Base Case:** If `i` reaches the end of the array (`orodha.idadi()`), the sum is 0.
+2. **Recursive Step:** Take the current number (`orodha[i]`), and add it to the sum of the *rest* of the array (`jumla(orodha, i + 1)`).
 
 ### Visualizing it:
-`jumla([1, 2, 3])`
-- `1 + jumla([2, 3])`
-- `1 + (2 + jumla([3]))`
-- `1 + (2 + (3 + jumla([])))`
-- `1 + (2 + (3 + 0))` = **6**
+`jumla([10, 20], 0)`
+- `10 + jumla([10, 20], 1)`
+- `10 + (20 + jumla([10, 20], 2))`
+- `10 + (20 + 0)` = **30**
 
-### Built-in Tool:
-We use the function `kata(orodha, 1)` to get a new array that is missing the first item.
-
-**Your Task:** Complete the logic for `jumla`. Return the value of the first item in the list (`orodha[0]`) plus the result of calling `jumla` on the rest of the list.
+**Your Task:** Complete the logic for `jumla`. Return the value of the current item in the list (`orodha[i]`) plus the result of calling `jumla` on the rest of the list (`jumla(orodha, i + 1)`).

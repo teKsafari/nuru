@@ -5,28 +5,32 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { AppLogo } from "./app-logo";
-import { X, Home, BookOpenIcon, Github, Sprout } from "lucide-react";
+import { X, Home, BookOpenIcon, Sprout } from "lucide-react";
+import {SiGithub} from "@icons-pack/react-simple-icons"
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface MobileMenuDrawerProps {
 	isOpen: boolean;
 	onClose: () => void;
+	lang: "en" | "sw";
+	dict: Dictionary;
 }
 
-export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
+export function MobileMenuDrawer({ isOpen, onClose, lang, dict }: MobileMenuDrawerProps) {
 	const pathname = usePathname();
 
 	const navItems = [
-		{ icon: <Home className="h-5 w-5" />, label: "Home", href: "/" },
+		{ icon: <Home className="h-5 w-5" />, label: dict.mobileMenu.home, href: `/${lang}` },
 		{
 			icon: <BookOpenIcon className="h-5 w-5" />,
-			label: "Anza Kujifunza",
-			href: "/anza",
+			label: dict.mobileMenu.anza,
+			href: `/${lang}/anza`,
 		},
 	];
 
 	const externalLinks = [
 		{
-			icon: <Github className="h-5 w-5" />,
+			icon: <SiGithub className="h-5 w-5" />,
 			label: "GitHub",
 			href: "https://github.com/nuruprogramming",
 		},
@@ -61,7 +65,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 							<div>
 								<h2 className="text-lg font-bold">Nuru</h2>
 								<p className="text-xs text-muted-foreground">
-									Jifunze, Unda na Vumbua
+									{dict.mobileMenu.subtitle}
 								</p>
 							</div>
 						</div>
@@ -78,7 +82,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 					<div className="flex-1 overflow-y-auto p-4">
 						<div className="space-y-1">
 							<p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-								Navigation
+								{dict.mobileMenu.navigation}
 							</p>
 							{navItems.map((item) => (
 								<Link
@@ -86,7 +90,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 									href={item.href}
 									onClick={onClose}
 									className={`flex items-center gap-3 rounded-lg px-3 py-3 transition-colors ${
-										pathname === item.href
+										pathname === item.href || pathname.startsWith(item.href + "/") && item.href !== `/${lang}`
 											? "bg-accent font-medium text-accent-foreground"
 											: "text-muted-foreground hover:bg-muted hover:text-foreground"
 									}`}
@@ -103,7 +107,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 						{/* External Links */}
 						<div className="space-y-1">
 							<p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-								Resources
+								{dict.mobileMenu.resources}
 							</p>
 							{externalLinks.map((link) => (
 								<a
@@ -124,7 +128,7 @@ export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
 					{/* Footer */}
 					<div className="border-t border-border p-4">
 						<p className="text-center text-xs text-muted-foreground">
-							Built with ❤️ by teKsafari
+							{dict.mobileMenu.builtWith}
 						</p>
 					</div>
 				</div>

@@ -2,14 +2,23 @@
 title: "4. The Merge (Combining)"
 task: "Complete the `unganisha` function to combine two sorted lists into one big sorted list."
 initialCode: |
+  // Kisaidizi cha kukata orodha (Helper to slice arrays)
+  fanya kata = unda(orodha, anza, mwisho = -1) {
+      kama (mwisho == -1) { mwisho = orodha.idadi() }
+      fanya mpya = []
+      kwa i, t ktk orodha { kama (i >= anza && i < mwisho) { mpya.sukuma(t) } }
+      rudisha mpya
+  }
+
+
   fanya unganisha = unda(a, b) {
       fanya matokeo = []
       
       // Keep going wakati both lists have items
-      wakati (idadi(a) > 0 && idadi(b) > 0) {
+      wakati (a.idadi() > 0 && b.idadi() > 0) {
           kama (a[0] < b[0]) {
               // Take the smaller one from 'a'
-              matokeo = weka(matokeo, a[0])
+              matokeo.sukuma(a[0])
               a = kata(a, 1)
           } sivyo {
               // Take the smaller one from 'b'
@@ -18,23 +27,32 @@ initialCode: |
       }
       
       // Add any leftover items
-      rudisha unganisha_orodha(matokeo, unganisha_orodha(a, b))
+      rudisha matokeo + a + b
   }
 
   andika(unganisha([1, 5], [2, 10])) // Should be [1, 2, 5, 10]
 solution: |
+  // Kisaidizi cha kukata orodha (Helper to slice arrays)
+  fanya kata = unda(orodha, anza, mwisho = -1) {
+      kama (mwisho == -1) { mwisho = orodha.idadi() }
+      fanya mpya = []
+      kwa i, t ktk orodha { kama (i >= anza && i < mwisho) { mpya.sukuma(t) } }
+      rudisha mpya
+  }
+
+
   fanya unganisha = unda(a, b) {
       fanya matokeo = []
-      wakati (idadi(a) > 0 && idadi(b) > 0) {
+      wakati (a.idadi() > 0 && b.idadi() > 0) {
           kama (a[0] < b[0]) {
-              matokeo = weka(matokeo, a[0])
+              matokeo.sukuma(a[0])
               a = kata(a, 1)
           } sivyo {
-              matokeo = weka(matokeo, b[0])
+              matokeo.sukuma(b[0])
               b = kata(b, 1)
           }
       }
-      rudisha unganisha_orodha(matokeo, unganisha_orodha(a, b))
+      rudisha matokeo + a + b
   }
 
   andika(unganisha([1, 5], [2, 10]))
@@ -46,4 +64,4 @@ After we split the lists down to size 1, we need to put them back together in th
 2. Pick the smaller one and put it in our `matokeo` (result) list.
 3. Repeat until one list is empty!
 
-**Your Task:** Complete the `sivyo` block. If `b[0]` is smaller (or equal) to `a[0]`, add it to the `matokeo` and remove it from `b`. (Note: `weka` adds an item to an array, and `unganisha_orodha` joins two arrays).
+**Your Task:** Complete the `sivyo` block. If `b[0]` is smaller (or equal) to `a[0]`, add it to the `matokeo` and remove it from `b`. (Note: `.sukuma()` adds an item to an array, and `+` joins two arrays).

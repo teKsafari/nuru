@@ -1,13 +1,8 @@
 {
 	"name": "nuru-wasm-monorepo",
 	"private": true,
-	"devEngines": {
-		"packageManager":{
-			"name": "pnpm"
-		}
-	},
 	"scripts": {
-		"preinstall" : "npx only-allow pnpm",
+		"preinstall": "npx only-allow pnpm",
 		"build": "turbo run build",
 		"dev": "turbo run dev",
 		"start": "turbo run start",
@@ -16,6 +11,26 @@
 		"format": "turbo run format"
 	},
 	"packageManager": "pnpm@9.0.0",
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm"
+		}
+	},
+	"pnpm": {
+		"supportedArchitectures": {
+			"os": [
+				"linux",
+				"darwin"
+			],
+			"cpu": [
+				"x64",
+				"arm64"
+			],
+			"libc": [
+				"glibc"
+			]
+		}
+	},
 	"devDependencies": {
 		"turbo": "^2.7.1"
 	}

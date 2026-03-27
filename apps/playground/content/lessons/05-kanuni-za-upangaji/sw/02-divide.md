@@ -1,23 +1,35 @@
 ---
 title: "2. Kugawanya Tatizo"
-task: "Tumia kitendakazi cha `kata` kugawanya `orodha` katika sehemu mbili sawa: `kushoto` na `kulia`."
+task: "Tumia kitanzi cha `kwa` kugawanya `orodha` katika sehemu mbili sawa: `kushoto` na `kulia`."
 initialCode: |
   fanya orodha = [1, 2, 3, 4, 5, 6]
   
-  fanya katikati = idadi(orodha) / 2
+  fanya katikati = orodha.idadi() / 2
   
-  // Tumia kata(orodha, mwanzo, mwisho)
-  fanya kushoto = // kata orodha kuanzia 0 hadi katikati
-  fanya kulia = // kata orodha kuanzia katikati hadi mwisho
+  fanya kushoto = []
+  fanya kulia = []
+  
+  // Tumia kitanzi cha kwa kuweka vitu kushoto au kulia
+  kwa i, namba ktk orodha {
+      // weka mantiki hapa: kama i < katikati ...
+  }
   
   andika("Kushoto:", kushoto)
   andika("Kulia:", kulia)
 solution: |
   fanya orodha = [1, 2, 3, 4, 5, 6]
-  fanya katikati = idadi(orodha) / 2
+  fanya katikati = orodha.idadi() / 2
   
-  fanya kushoto = kata(orodha, 0, katikati)
-  fanya kulia = kata(orodha, katikati)
+  fanya kushoto = []
+  fanya kulia = []
+  
+  kwa i, namba ktk orodha {
+      kama (i < katikati) {
+          kushoto.sukuma(namba)
+      } sivyo {
+          kulia.sukuma(namba)
+      }
+  }
   
   andika("Kushoto:", kushoto)
   andika("Kulia:", kulia)
@@ -27,8 +39,8 @@ solution: |
 Badala ya kujaribu kupanga orodha kubwa yote kwa mara moja, tunaigawanya katika orodha mbili ndogo. Ni rahisi zaidi kupanga vitu viwili vidogo kuliko kitu kimoja kikubwa!
 
 ### Mgawanyo:
-Tunatafuta namba ya katikati na kuikata safu (array) nusu.
+Tunatafuta namba ya katikati na kuikata safu (array) nusu kwa kutumia kitanzi cha `kwa`.
 
-**Kazi Yako:** Tumia kitendakazi cha `kata` kugawanya orodha katikati.
-- `kata(orodha, 0, katikati)` inapata nusu ya kwanza.
-- `kata(orodha, katikati)` inapata nusu iliyobaki. (Je, ulijua ukiacha namba ya mwisho, inaenda hadi mwisho wa orodha?)
+**Kazi Yako:** Tumia kitanzi cha `kwa` kugawanya orodha katikati.
+- Ikiwa `i` ni chini ya `katikati`, sukuma namba kwenye `kushoto`.
+- Vinginevyo, isukume kwenye `kulia`.

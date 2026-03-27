@@ -4,7 +4,7 @@ task: "Ongeza sentensi ya `kama` ili kurudisha `orodha` ikiwa urefu wake ni 1 au
 initialCode: |
   fanya panga = unda(orodha) {
       // Kesi ya Msingi: Ikiwa orodha ina kitu 1 tu, tayari imepangwa!
-      // kama (idadi(orodha) <= 1) { ? }
+      // kama (orodha.idadi() <= 1) { ? }
       
       rudisha orodha
   }
@@ -12,7 +12,7 @@ initialCode: |
   andika(panga([10])) // Inapaswa kurudisha [10]
 solution: |
   fanya panga = unda(orodha) {
-      kama (idadi(orodha) <= 1) {
+      kama (orodha.idadi() <= 1) {
           rudisha orodha
       }
       rudisha orodha
@@ -31,4 +31,4 @@ Orodha yenye namba moja tu **tayari imepangwa**!
 
 Hii ndiyo **Kesi yetu ya Msingi**. Tukishafika kwenye orodha ya ukubwa wa 1, tunaacha kugawanya na kuanza kuziunganisha tena pamoja kwa mpangilio.
 
-**Kazi Yako:** Ongeza Kesi ya Msingi. Ikiwa `idadi(orodha)` ni 1 au chini ya hapo, rudisha orodha hiyo mara moja.
+**Kazi Yako:** Ongeza Kesi ya Msingi. Ikiwa `orodha.idadi()` ni 1 au chini ya hapo, rudisha orodha hiyo mara moja.

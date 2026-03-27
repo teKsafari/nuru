@@ -1,14 +1,14 @@
 ---
 title: "7. Maamuzi (kama/au kama/sivyo)"
-task: "Badili `alama = 40` na uone kama programu itakuambia \"Ufeli\"."
+task: "Badili `alama = 40` na uone kama programu itakuambia \"Umefeli\"."
 initialCode: |
   alama = 85
   kama (alama >= 50) {
       andika("Umefaulu!")
   } sivyo {
-      andika("Ufeli, jaribu tena.")
+      andika("Umefeli, jaribu tena.")
   }
-solution: "alama = 40\nkama (alama >= 50) {\n    andika(\"Umefaulu!\")\n} sivyo {\n    andika(\"Ufeli, jaribu tena.\")\n}"
+solution: "alama = 40\nkama (alama >= 50) {\n    andika(\"Umefaulu!\")\n} sivyo {\n    andika(\"Umefeli, jaribu tena.\")\n}"
 ---
 Programu inaweza kufanya maamuzi kulingana na hali fulani kwa kutumia `kama`.
 

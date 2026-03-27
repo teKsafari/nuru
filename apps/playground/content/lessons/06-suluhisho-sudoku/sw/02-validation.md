@@ -11,12 +11,12 @@ initialCode: |
 
   fanya ni_salama = unda(mstari, safu, namba) {
       // 1. Angalia Mstari (Row)
-      kwa i katika mfululizo(4) {
+      kwa i ktk mfululizo(4) {
           kama (gridi[mstari][i] == namba) { rudisha sikweli }
       }
 
       // 2. Angalia Safu (Column)
-      kwa i katika mfululizo(4) {
+      kwa i ktk mfululizo(4) {
           // Weka mantiki yako hapa!
           // kama (gridi[i][safu] == namba) { ? }
       }
@@ -35,10 +35,10 @@ solution: |
   ]
 
   fanya ni_salama = unda(mstari, safu, namba) {
-      kwa i katika mfululizo(4) {
+      kwa i ktk mfululizo(4) {
           kama (gridi[mstari][i] == namba) { rudisha sikweli }
       }
-      kwa i katika mfululizo(4) {
+      kwa i ktk mfululizo(4) {
           kama (gridi[i][safu] == namba) { rudisha sikweli }
       }
       rudisha kweli

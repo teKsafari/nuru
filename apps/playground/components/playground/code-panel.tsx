@@ -16,6 +16,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface CodePanelProps {
 	code: string;
@@ -30,6 +31,7 @@ interface CodePanelProps {
 	mobileExtra?: React.ReactNode;
 	theme?: "light" | "dark";
 	lang: "en" | "sw";
+	dict: Dictionary;
 }
 
 export function CodePanel({
@@ -44,7 +46,8 @@ export function CodePanel({
 	isMobile,
 	mobileExtra,
   theme,
-  lang
+  lang,
+  dict
 }: CodePanelProps) {
 	const isDev = process.env.NODE_ENV === "development";
 
@@ -57,13 +60,13 @@ export function CodePanel({
 							variant="outline"
 							size="icon"
 							onClick={onReset}
-							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-sm"
+							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-xs"
 						>
 							<RotateCcw className="h-4 w-4" />
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-						{lang === "sw" ? "Anza upya" : "Reset Code"}
+						{dict.codePanel.reset}
 					</TooltipContent>
 				</Tooltip>
 
@@ -73,13 +76,13 @@ export function CodePanel({
 							variant="outline"
 							size="icon"
 							onClick={onShowHint}
-							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-sm"
+							className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-xs"
 						>
 							<HelpCircle className="h-4 w-4" />
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-						{lang === "sw" ? "Dokezo" : "Hint"}
+						{dict.codePanel.hint}
 					</TooltipContent>
 				</Tooltip>
 
@@ -90,24 +93,23 @@ export function CodePanel({
 								variant="outline"
 								size="icon"
 								onClick={onShowSolution}
-								className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-sm"
+								className="h-8 w-8 text-muted-foreground hover:text-foreground border-border/50 bg-background/50 shadow-xs"
 							>
 								<Eye className="h-4 w-4" />
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent side="top" className="text-[10px] uppercase font-bold tracking-wider">
-							{lang === "sw" ? "Onyesha jibu (Dev)" : "Show Solution (Dev)"}
+							{dict.codePanel.showSolution}
 						</TooltipContent>
 					</Tooltip>
 				)}
 
 				<Button
 					onClick={onRun}
-					size="sm"
-					className="h-8 bg-primary px-4 text-xs font-bold text-primary-foreground shadow-md hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+					size="icon"
+					className="h-8 bg-primary text-xs font-bold text-primary-foreground shadow-md hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
 				>
 					<Play className="h-3.5 w-3.5 fill-current" />
-					{lang === "sw" ? "Endesha" : "Run"}
 				</Button>
 			</div>
 		</TooltipProvider>
@@ -137,7 +139,7 @@ export function CodePanel({
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel defaultSize={40} minSize={15}>
-					<OutputPanel output={output} showToolbar={false} />
+					<OutputPanel output={output} showToolbar={false} dict={dict} />
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>

@@ -1,23 +1,35 @@
 ---
 title: "2. Divide and Conquer"
-task: "Use the `kata` function to split the `orodha` into two equal halves: `kushoto` (left) and `kulia` (right)."
+task: "Use a `kwa` loop to split the `orodha` into two equal halves: `kushoto` (left) and `kulia` (right)."
 initialCode: |
   fanya orodha = [1, 2, 3, 4, 5, 6]
   
-  fanya katikati = idadi(orodha) / 2
+  fanya katikati = orodha.idadi() / 2
   
-  // Use kata(list, start, end)
-  fanya kushoto = // kata orodha from 0 to katikati
-  fanya kulia = // kata orodha from katikati to end
+  fanya kushoto = []
+  fanya kulia = []
+  
+  // Use a kwa loop to push items to kushoto or kulia
+  kwa i, namba ktk orodha {
+      // weka mantiki hapa: kama i < katikati ...
+  }
   
   andika("Kushoto:", kushoto)
   andika("Kulia:", kulia)
 solution: |
   fanya orodha = [1, 2, 3, 4, 5, 6]
-  fanya katikati = idadi(orodha) / 2
+  fanya katikati = orodha.idadi() / 2
   
-  fanya kushoto = kata(orodha, 0, katikati)
-  fanya kulia = kata(orodha, katikati)
+  fanya kushoto = []
+  fanya kulia = []
+  
+  kwa i, namba ktk orodha {
+      kama (i < katikati) {
+          kushoto.sukuma(namba)
+      } sivyo {
+          kulia.sukuma(namba)
+      }
+  }
   
   andika("Kushoto:", kushoto)
   andika("Kulia:", kulia)
@@ -27,8 +39,8 @@ solution: |
 Instead of trying to sort a big list all at once, we split it into two smaller lists. It's much easier to sort two small things than one big thing!
 
 ### The Split:
-We find the middle index and slice the array in half.
+We find the middle index and slice the array in half using a `kwa` loop.
 
-**Your Task:** Use the `kata` function to split the list in half.
-- `kata(orodha, 0, katikati)` gets the first half.
-- `kata(orodha, katikati)` gets the rest. (Wait, did you know if you leave out the last number, it goes to the end?)
+**Your Task:** Use a `kwa` loop to split the list in half.
+- If the index `i` is less than `katikati`, push the number to `kushoto`.
+- Otherwise, push it to `kulia`.

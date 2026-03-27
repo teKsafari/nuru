@@ -4,7 +4,7 @@ task: "Tumia `jaza()` kuuliza mtumiaji chakula anachopenda, kisha kichapishe."
 initialCode: |
   chakula = jaza("Unapenda kula nini? ")
   andika("Wow, nami napenda " + chakula)
-solution: "chakula = jaza(\"Wali\"); andika(chakula)"
+solution: "chakula = jaza(\"Wali\")\nandika(chakula)"
 ---
 Kitendakazi cha `jaza()` kinakuwezesha kupata taarifa kutoka kwa mtumiaji. Kompyuta itasimama na kusubiri mpaka mtumiaji aandike kitu.
 
