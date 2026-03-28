@@ -105,7 +105,7 @@ export function LessonPanel({
 	);
 
 	const navigation = !hideNavigation && (
-		<div className="border-border bg-card/50 @container sticky bottom-0 mt-auto flex items-center gap-4 border-t pt-6 pb-2 backdrop-blur-xs">
+		<div className="border-border bg-card/50 @container sticky bottom-0 mt-auto flex items-center justify-between gap-2 border-t pt-6 pb-2 backdrop-blur-xs">
 			<Button
 				variant="outline"
 				size="sm"
@@ -113,31 +113,34 @@ export function LessonPanel({
 				autoComplete="off"
 				disabled={currentStepIndex == 0}
 				onClick={() => onStepChange(currentStepIndex - 1)}
-				className="border-border/50 bg-background/50 hover:bg-muted h-9 px-3 text-xs font-bold transition-all"
+				className="border-border/50 bg-background/50 hover:bg-muted h-9 px-3 text-xs font-bold transition-all shrink-0"
 			>
 				<ChevronLeft className="mr-1.5 h-4 w-4" />
-				{labels.back}
+				<span className="hidden @[300px]:inline">{labels.back}</span>
 			</Button>
 
-			<div className="mx-auto flex flex-col items-center gap-2">
-				<div className="flex items-center gap-1.5">
+			<div className="flex flex-col items-center gap-1.5 overflow-hidden">
+				<div className="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full px-2">
 					{lesson.steps.map((_, i) => (
 						<button
 							key={i}
 							onClick={() => onStepChange(i)}
 							className={cn(
-								"h-1.5 rounded-full transition-all duration-300",
+								"h-1.5 rounded-full transition-all duration-300 shrink-0",
 								i === currentStepIndex
-									? "bg-primary w-6 shadow-[0_0_8px_rgba(var(--primary),0.4)]"
+									? "bg-primary w-4 shadow-[0_0_8px_rgba(var(--primary),0.4)]"
 									: completedStepIndices.has(i)
-										? "w-3 bg-green-500 hover:w-4"
+										? "w-2 bg-green-500 hover:w-3"
 										: i < currentStepIndex
-											? "bg-primary/40 w-2 hover:w-3"
-											: "bg-muted w-2 hover:w-3",
+											? "bg-primary/40 w-1.5 hover:w-2"
+											: "bg-muted w-1.5 hover:w-2",
 							)}
 						/>
 					))}
 				</div>
+				<span className="text-muted-foreground font-mono text-[9px] uppercase tracking-tighter @[300px]:tracking-widest">
+					{currentStepIndex + 1} / {lesson.steps.length}
+				</span>
 			</div>
 
 			{isLastStep && isCompleted && onNextLesson ? (
@@ -145,10 +148,10 @@ export function LessonPanel({
 					variant="default"
 					size="sm"
 					onClick={onNextLesson}
-					className="h-9 animate-pulse bg-green-600 px-4 text-xs font-bold text-white shadow-lg shadow-green-600/20 hover:bg-green-700"
+					className="h-9 animate-pulse bg-green-600 px-3 text-xs font-bold text-white shadow-lg shadow-green-600/20 hover:bg-green-700 shrink-0"
 				>
-					{labels.nextLesson}
-					<ArrowRight className="ml-1.5 h-4 w-4" />
+					<span className="hidden @[300px]:inline mr-1.5">{labels.nextLesson}</span>
+					<ArrowRight className="h-4 w-4" />
 				</Button>
 			) : (
 				<Button
@@ -160,12 +163,14 @@ export function LessonPanel({
 							onStepChange(currentStepIndex + 1);
 						}
 					}}
-					className="bg-primary hover:bg-primary/90 h-9 px-4 text-xs font-bold shadow-md transition-all hover:translate-x-0.5 active:translate-x-0"
+					className="bg-primary hover:bg-primary/90 h-9 px-3 text-xs font-bold shadow-md transition-all hover:translate-x-0.5 active:translate-x-0 shrink-0"
 				>
-					{currentStepIndex === lesson.steps.length - 1
-						? labels.finish
-						: labels.next}
-					<ChevronRight className="ml-1.5 h-4 w-4" />
+					<span className="hidden @[300px]:inline mr-1.5">
+						{currentStepIndex === lesson.steps.length - 1
+							? labels.finish
+							: labels.next}
+					</span>
+					<ChevronRight className="h-4 w-4" />
 				</Button>
 			)}
 		</div>
