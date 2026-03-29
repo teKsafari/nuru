@@ -158,6 +158,9 @@ importers:
       drizzle-orm:
         specifier: ^0.45.1
         version: 0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(kysely@0.28.14)
+      lightningcss-linux-x64-gnu:
+        specifier: ^1.32.0
+        version: 1.32.0
       lucide-react:
         specifier: ^1.0.1
         version: 1.0.1(react@19.2.4)
@@ -7794,8 +7797,7 @@ snapshots:
   lightningcss-linux-arm64-musl@1.32.0:
     optional: true
 
-  lightningcss-linux-x64-gnu@1.32.0:
-    optional: true
+  lightningcss-linux-x64-gnu@1.32.0: {}
 
   lightningcss-linux-x64-musl@1.32.0:
     optional: true
