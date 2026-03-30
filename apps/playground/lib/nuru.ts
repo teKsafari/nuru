@@ -5,7 +5,8 @@
  * Handles initialization, output capture, and automatic recovery from errors.
  */
 
-import init, { NuruInstance } from "@nuru/wasm";
+import init from "@nuru/wasm";
+import type { NuruInstance } from "@nuru/wasm"
 
 // Singleton state
 let nuruInstance: NuruInstance | null = null;

@@ -1,0 +1,64 @@
+{
+  "landing": {
+    "title": "Lugha ya kiprogramu ya Kiswahili"
+  },
+  "header": {
+    "home": "Nyumbani",
+    "anza": "Anza Kujifunza",
+    "masomo": "Masomo"
+  },
+  "mobileMenu": {
+    "home": "Nyumbani",
+    "anza": "Anza Kujifunza",
+    "subtitle": "Jifunze, Unda na Vumbua",
+    "navigation": "Kuelekeza",
+    "resources": "Rasilimali",
+    "builtWith": "Imeundwa na ❤️ na teKsafari"
+  },
+  "lessonsDrawer": {
+    "title": "Jifunze na Nuru"
+  },
+  "playground": {
+    "hint": "Dokezo: Angalia maelezo ya kazi na ujaribu kulinganisha kodi yako na mifano iliyotolewa.",
+    "testing": "Inapima...",
+    "error": "Hitilafu: "
+  },
+  "lessonPanel": {
+    "lessons": "Mafunzo",
+    "step": "Hatua",
+    "completed": "Imekamilika",
+    "incomplete": "Inasubiri",
+    "back": "Nyuma",
+    "nextLesson": "Somo Linalofuata",
+    "finish": "Maliza",
+    "next": "Mbele",
+    "yourTask": "Kazi Yako:",
+    "english": "Kiingereza",
+    "swahili": "Kiswahili"
+  },
+  "codePanel": {
+    "reset": "Anza upya",
+    "hint": "Dokezo",
+    "showSolution": "Onyesha jibu (Dev)"
+  },
+  "outputPanel": {
+    "submit": "Wasilisha",
+    "run": "Endesha",
+    "solution": "Jibu",
+    "placeholder": "Endesha kodi yako ili uone matokeo hapa..."
+  },
+  "difficulty": {
+    "mwanzilishi": "Mwanzilishi",
+    "wa kati": "Wa kati",
+    "wa juu": "Wa juu"
+  },
+  "map": {
+    "title": "Ramani ya Mafunzo",
+    "description": "Ona safari yako ya kiprogramu ya Nuru.",
+    "journey": "Safari Yako",
+    "estimatedTime": "Muda uliokadiriwa",
+    "recommended": "Imependekezwa kwa ajili yako",
+    "continue": "Endelea Kujifunza",
+    "completedCount": "Hatua zilizokamilika"
+  }
+}

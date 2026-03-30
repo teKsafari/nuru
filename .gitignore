@@ -9,8 +9,8 @@ node_modules
 .env
 .env.local
 .env.development.local
-.env.test.local
-.env.production.local
+.env.test.z
+.env.production.z
 
 # Testing
 coverage
@@ -27,6 +27,9 @@ out/
 build
 dist
 
+# symlinks
+next-forge
+
 
 # Debug
 npm-debug.log*
@@ -36,4 +39,6 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
-wokwi-elements
+
+# context for agents
+context

@@ -1,16 +1,18 @@
 "use client"
 
-import { BookOpen, Code2, Workflow } from "lucide-react"
+import { BookOpen, Code2, Terminal } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { PlaygroundLabels } from "@/types/playground"
 
 interface MobileNavProps {
-  activeTab: "lesson" | "code" | "simulation"
-  onTabChange: (tab: "lesson" | "code" | "simulation") => void
+  activeTab: "lesson" | "code" | "output"
+  onTabChange: (tab: "lesson" | "code" | "output") => void
+  labels: PlaygroundLabels
 }
 
-export function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
+export function MobileNav({ activeTab, onTabChange, labels }: MobileNavProps) {
   return (
-    <nav className="flex items-center gap-1 p-2 bg-card border-b border-border">
+    <nav className="flex items-center gap-1 p-2 bg-card border-b border-border shrink-0">
       <button
         onClick={() => onTabChange("lesson")}
         className={cn(
@@ -21,7 +23,7 @@ export function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
         )}
       >
         <BookOpen className="w-4 h-4" />
-        Lesson
+        <span className="truncate">Lesson</span>
       </button>
       <button
         onClick={() => onTabChange("code")}
@@ -33,19 +35,19 @@ export function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
         )}
       >
         <Code2 className="w-4 h-4" />
-        Code
+        <span className="truncate">Code</span>
       </button>
       <button
-        onClick={() => onTabChange("simulation")}
+        onClick={() => onTabChange("output")}
         className={cn(
           "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex-1 justify-center",
-          activeTab === "simulation"
+          activeTab === "output"
             ? "bg-primary text-primary-foreground"
             : "text-muted-foreground hover:text-foreground hover:bg-secondary",
         )}
       >
-        <Workflow className="w-4 h-4" />
-        Simulation
+        <Terminal className="w-4 h-4" />
+        <span className="truncate">Output</span>
       </button>
     </nav>
   )

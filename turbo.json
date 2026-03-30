@@ -1,36 +1,43 @@
 {
-  "$schema": "https://turborepo.com/schema.json",
-  "ui": "tui",
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**",
-        "build/**",
-        "public/build/**",
-        "main.wasm",
-        "main"
-      ]
-    },
-    "nuru-playground#build": {
-      "dependsOn": ["@nuru/wasm#build"]
-    },
-    "test": {
-      "dependsOn": ["^test"],
-      "cache": false
-    },
-    "dev": {
-      "persistent": true,
-      "cache": false
-    },
-    "start": {
-      "persistent": true,
-      "cache": false
-    },
-    "lint": {
-      "outputs": []
-    }
-  }
+	"$schema": "https://turborepo.com/schema.json",
+	"ui": "tui",
+	"globalDependencies": [".env"],
+	"globalEnv": ["DATABASE_URL", "LOGTO_APP_ID", "LOGTO_BASE_URL", "LOGTO_APP_SECRET", "DB_URL"],
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"outputs": ["dist/**", ".next/**", "!.next/cache/**", "build/**", "public/build/**", "main.wasm", "main"]
+		},
+		"nuru-playground#build": {
+			"dependsOn": ["@nuru/wasm#build"]
+		},
+		"test": {
+			"dependsOn": ["^test"],
+			"cache": false
+		},
+		"dev": {
+			"persistent": true,
+			"cache": false
+		},
+		"start": {
+			"persistent": true,
+			"cache": false
+		},
+		"lint": {
+			"outputs": []
+		},
+		"db:generate": {
+			"cache": false
+		},
+		"db:migrate": {
+			"cache": false
+		},
+		"db:push": {
+			"cache": false
+		},
+		"db:studio": {
+			"cache": false
+		}
+	}
 }

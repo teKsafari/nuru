@@ -1,42 +1,65 @@
 "use client";
 
 import React, { useState } from "react";
-import { Menu, Github, Sprout } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { MobileMenuDrawer } from "./mobile-menu-drawer";
-import { LessonsDrawer } from "./lessons-drawer";
-import { AppLogo } from "@/components/app-logo";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+
+import UserMenu from "@/components/UserMenu";
+
+import { MobileMenuDrawer } from "@/components/mobile-menu-drawer";
+import { LessonsDrawer } from "@/components/lessons-drawer";
+
+import { AppLogo } from "@/components/app-logo";
+
+import { Menu, BookOpen, ChevronDown, Languages } from "lucide-react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface SiteHeaderProps {
 	onMenuClick?: () => void;
+	lessons?: { id: string; title: { sw: string; en: string } }[];
+	lang: "en" | "sw";
+	dict: Dictionary;
 }
 
-export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
+export function SiteHeader({ onMenuClick, lessons = [], lang, dict }: SiteHeaderProps) {
 	const pathname = usePathname();
+	const router = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	const navItems = [
-		{ label: "Home", href: "/", active: pathname === "/" },
-		{ label: "Anza", href: "/anza", active: pathname === "/anza" },
-		{
-			label: "Elektroniki",
-			href: "/umeme",
-			active: pathname === "/umeme",
-		},
+		{ label: dict.header.home, href: `/${lang}`, active: pathname === `/${lang}` },
+		{ label: dict.header.anza, href: `/${lang}/anza`, active: pathname.startsWith(`/${lang}/anza`) },
 	];
+
+	const toggleLanguage = () => {
+		const newLang = lang === "sw" ? "en" : "sw";
+		// Replace the language segment in the URL
+		const segments = pathname.split("/");
+		if (segments[1] === lang) {
+			segments[1] = newLang;
+			router.push(segments.join("/"));
+		} else {
+			router.push(`/${newLang}`);
+		}
+	};
 
 	return (
 		<>
-			<MobileMenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+			<MobileMenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} lang={lang} dict={dict} />
 
 			{/* Main Header Container */}
-			<header className="sticky left-0 right-0 top-0 z-40 border-b border-border/50 bg-background/80 shadow-sm backdrop-blur-md">
+			<header className="sticky left-0 right-0 top-0 z-40 border-b border-border/50 bg-background/80 shadow-xs backdrop-blur-md">
 				<div className="flex h-14 items-center justify-between px-4 md:px-8">
 					{/* Logo Section (Left on Mobile & Desktop) */}
 					<div className="flex items-center gap-2 md:order-1">
 						<Link
-							href="/"
+							href={`/${lang}`}
 							className="group flex items-center gap-3 transition-opacity hover:opacity-90"
 						>
 							<div className="relative">
@@ -54,49 +77,76 @@ export function SiteHeader({ onMenuClick }: SiteHeaderProps) {
 					</div>
 
 					{/* Desktop Center Navigation */}
-					<nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:order-2 md:flex">
+					<nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 md:order-2 md:flex">
 						{navItems.map((item) => (
 							<Link
 								key={item.href}
 								href={item.href}
 								className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
 									item.active
-										? "bg-accent text-accent-foreground shadow-sm"
+										? "bg-foreground text-background shadow-xs"
 										: "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
 								}`}
 							>
 								{item.label}
 							</Link>
 						))}
+
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<button className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground">
+									{dict.header.masomo}
+									<ChevronDown className="h-3 w-3 opacity-50" />
+								</button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="center" className="w-56 rounded-xl p-2">
+								<DropdownMenuItem asChild className="rounded-lg mb-1 bg-muted/50">
+									<Link href={`/${lang}/masomo`} className="flex items-center gap-2 py-2 font-bold text-primary">
+										<BookOpen className="h-4 w-4" />
+										<span>{dict.map.title}</span>
+									</Link>
+								</DropdownMenuItem>
+								{lessons.map((lesson) => (
+									<DropdownMenuItem key={lesson.id} asChild className="rounded-lg">
+										<Link
+											href={lesson.id === "misingi-ya-nuru" ? `/${lang}/anza` : `/${lang}/anza/${lesson.id}`}
+											className="flex items-center gap-2 py-2"
+										>
+											<div className="flex flex-col">
+												<span className="text-sm font-medium">{lesson.title[lang] || lesson.title.sw}</span>
+												<span className="text-[10px] text-muted-foreground">{lang === 'sw' ? lesson.title.en : lesson.title.sw}</span>
+											</div>
+										</Link>
+									</DropdownMenuItem>
+								))}
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</nav>
 
-					{/* Right Section: External Links & Mobile Menu */}
+					{/* Right Section: User Menu & Mobile Menu */}
 					<div className="flex items-center gap-2 md:order-3">
-						{/* Desktop Only External Links */}
-						<div className="hidden items-center gap-2 border-l border-border/50 pr-2 md:flex">
-							<a
-								href="https://github.com/nuruprogramming"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-								title="GitHub"
-							>
-								<Github className="h-5 w-5" />
-							</a>
-							<a
-								href="https://teksafari.org"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-[#00b4d8]/10 hover:text-[#00b4d8]"
-								title="teKsafari"
-							>
-								<Sprout className="h-5 w-5" />
-							</a>
-						</div>
+						{/* Desktop Language Switcher */}
+						<button
+							onClick={toggleLanguage}
+							className="hidden items-center gap-2  bg-background/50 px-3 py-1.5 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground md:flex"
+						>
+							<Languages className="size-4" />
+							{lang === "sw" ? "English" : "Kiswahili"}
+						</button>
+
+						<UserMenu/>
+
+						{/* Mobile Language Switcher */}
+						<button
+							onClick={toggleLanguage}
+							className="flex h-8 w-8 items-center justify-center rounded-full border border-border/50 bg-background/50 text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground md:hidden"
+						>
+							<Languages className="h-4 w-4" />
+						</button>
 
 						{/* Mobile Lessons Drawer Trigger */}
 						<div className="md:hidden">
-							<LessonsDrawer />
+							<LessonsDrawer lessons={lessons} lang={lang} dict={dict} />
 						</div>
 
 						{/* Mobile Menu Toggle (Moved to Right) */}

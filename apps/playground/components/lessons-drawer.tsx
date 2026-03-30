@@ -1,9 +1,11 @@
 "use client";
 
-import * as React from "react";
-import { Book, BookOpen, ChevronRight, Zap } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import * as React from "react";
+
+import { Book, BookOpen, ChevronRight, CheckCircle2 } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import {
 	Drawer,
@@ -13,27 +15,25 @@ import {
 	DrawerTrigger,
 	DrawerFooter,
 } from "@/components/ui/drawer";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
-export function LessonsDrawer() {
+interface LessonsDrawerProps {
+	lessons?: { id: string; title: { sw: string; en: string } }[];
+	lang: "en" | "sw";
+	dict: Dictionary;
+}
+
+export function LessonsDrawer({ lessons = [], lang, dict }: LessonsDrawerProps) {
 	const [open, setOpen] = React.useState(false);
 	const pathname = usePathname();
 
-	const lessons = [
-		{
-			id: "anza",
-			title: "Anza",
-			description: "Learn the basics of Nuru",
-			href: "/anza",
-			icon: <BookOpen className="h-5 w-5 text-blue-500" />,
-		},
-		{
-			id: "umeme",
-			title: "Umeme",
-			description: "Learn electronics with Nuru",
-			href: "/umeme",
-			icon: <Zap className="h-5 w-5 text-yellow-500" />,
-		},
-	];
+	const lessonItems = lessons.map((lesson, index) => ({
+		id: lesson.id,
+		title: lesson.title[lang] || lesson.title.sw,
+		enTitle: lang === 'sw' ? lesson.title.en : lesson.title.sw,
+		href: lesson.id === "misingi-ya-nuru" ? `/${lang}/anza` : `/${lang}/anza/${lesson.id}`,
+		isCompleted: index === 0, // Placeholder for actual progress logic
+	}));
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
@@ -43,65 +43,69 @@ export function LessonsDrawer() {
 					aria-label="Open lessons"
 				>
 					{open ? (
-						<BookOpen className="h-6 w-6 scale-110 transform transition-all duration-300" />
+						<BookOpen className="h-6 w-6 scale-110 transform transition-all duration-300 text-primary" />
 					) : (
 						<Book className="h-6 w-6 transition-all duration-300 group-hover:scale-105" />
 					)}
 				</button>
 			</DrawerTrigger>
-			<DrawerContent className="h-[60%]">
-				<div className="mx-auto w-full max-w-sm">
-					<DrawerHeader>
-						<DrawerTitle className="text-center text-xl font-bold">
-							Lessons
+			<DrawerContent className="max-h-[85%]">
+				<div className="mx-auto w-full max-w-xl overflow-hidden flex flex-col h-full">
+					<DrawerHeader className="border-b border-border/50 pb-4">
+						<DrawerTitle className="text-center text-xl font-bold flex flex-col items-center justify-center gap-2 text-foreground">
+							<span>{dict.lessonsDrawer.title}</span>
+							<Link 
+								href={`/${lang}/masomo`} 
+								onClick={() => setOpen(false)}
+								className="text-xs font-medium text-primary hover:underline flex items-center gap-1"
+							>
+								<BookOpen className="h-3 w-3" />
+								{dict.map.title}
+							</Link>
 						</DrawerTitle>
 					</DrawerHeader>
-					<div className="flex flex-col space-y-3 p-4">
-						{lessons.map((lesson) => (
-							<Link
-								key={lesson.id}
-								href={lesson.href}
-								onClick={() => setOpen(false)}
-								className={cn(
-									"flex items-center gap-4 rounded-xl border p-4 transition-all duration-200",
-									pathname === lesson.href
-										? "border-primary/50 bg-primary/5 shadow-sm"
-										: "border-border hover:border-foreground/20 hover:bg-muted/50",
-								)}
-							>
-								<div className="rounded-lg border border-border/50 bg-background p-2 shadow-sm">
-									{lesson.icon}
-								</div>
-								<div className="flex-1">
-									<h3 className="text-base font-medium">{lesson.title}</h3>
-									<p className="text-sm text-muted-foreground">
-										{lesson.description}
-									</p>
-								</div>
-								<ChevronRight className="h-4 w-4 text-muted-foreground" />
-							</Link>
-						))}
-					</div>
-					<DrawerFooter>
-						<div className="flex w-full justify-center gap-6">
-							<a
-								className="text-xs text-muted-foreground underline hover:text-foreground"
-								href="https://github.com/nuruprogramming"
-								target="_blank"
-								rel="noreferrer"
-							>
-								GitHub
-							</a>
-							<a
-								className="text-xs text-muted-foreground underline hover:text-foreground"
-								href="https://teksafari.org"
-								target="_blank"
-								rel="noreferrer"
-							>
-								teKsafari
-							</a>
+					<div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+						<div className="grid grid-cols-1 gap-3 pb-8">
+							{lessonItems.map((lesson, index) => (
+								<Link
+									key={lesson.id}
+									href={lesson.href}
+									onClick={() => setOpen(false)}
+									className={cn(
+										"group relative flex items-center gap-4 rounded-xl border p-4 transition-all duration-300 overflow-hidden",
+										pathname === lesson.href
+											? "border-primary/50 bg-primary/5 ring-1 ring-primary/20 shadow-xs"
+											: "border-border hover:border-primary/30 hover:bg-muted/50 hover:shadow-md",
+									)}
+								>
+									<div className={cn(
+										"flex items-center justify-center w-8 h-8 rounded-full shrink-0 font-mono text-sm font-bold transition-colors",
+										lesson.isCompleted ? "bg-green-500/10 text-green-500" : "bg-muted/50 text-muted-foreground group-hover:text-foreground"
+									)}>
+										{lesson.isCompleted ? <CheckCircle2 className="h-4 w-4" /> : index + 1}
+									</div>
+									<div className="flex-1 min-w-0">
+										<h3 className={cn(
+											"text-sm font-bold truncate leading-tight transition-colors",
+											pathname === lesson.href ? "text-primary" : "group-hover:text-primary"
+										)}>
+											{lesson.title}
+										</h3>
+										<p className="text-[10px] text-muted-foreground italic truncate">
+											{lesson.enTitle}
+										</p>
+									</div>
+									<div className="flex items-center gap-2 shrink-0">
+										<ChevronRight className={cn(
+											"h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1",
+											pathname === lesson.href ? "text-primary" : ""
+										)} />
+									</div>
+									
+								</Link>
+							))}
 						</div>
-					</DrawerFooter>
+					</div>
 				</div>
 			</DrawerContent>
 		</Drawer>
