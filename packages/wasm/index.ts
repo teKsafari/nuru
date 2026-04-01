@@ -14,6 +14,7 @@ type interpreterConfig = {
 	outputReceiver: (output: string, isError: boolean) => void;
 	xssProtection?: boolean;
 	version?: string;
+	wasmURL?: string; // optional wasm source
 };
 export type NuruInstance = {
 	config: interpreterConfig;
@@ -24,7 +25,8 @@ export type NuruInstance = {
 let initialized = false;
 let outputReceiverRegistered = false;
 
-export let defaultConfig: Required<Omit<interpreterConfig, "outputReceiver">> = { // Ugly type shenanigans, I know.
+export let defaultConfig: Required<Omit<interpreterConfig, "outputReceiver" | "wasmURL">> = {
+	// Ugly type shenanigans, I know.
 	xssProtection: true,
 	version: "latest",
 };
@@ -123,10 +125,10 @@ export default async function init(config: interpreterConfig): Promise<NuruInsta
 	if (!config.outputReceiver) throw new Error("output receiver not specified. Pass it in the config");
 
 	registerOutputReceiver(config.outputReceiver, config.xssProtection);
-	outputReceiverRegistered=true
+	outputReceiverRegistered = true;
 
 	// let wasmBinaryUrl = "/main.wasm";
-	let wasmBinaryUrl = `https://cdn.jsdelivr.net/npm/@nuru/wasm@${config.version}/main.wasm`;
+	let wasmBinaryUrl = config.wasmURL || `https://cdn.jsdelivr.net/npm/@nuru/wasm@${config.version}/main.wasm`;
 
 	return new Promise<NuruInstance>(async (resolve, reject) => {
 		const go = new Go();
