@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { CustomThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const viewport: Viewport = {
 	width: "device-width",
@@ -60,6 +61,7 @@ export default function RootLayout({
 					<CustomThemeProvider>{children}</CustomThemeProvider>
 				</Suspense>
 			</body>
+			<GoogleAnalytics gaId="G-HPT3V2KPP4" />
 		</html>
 	);
 }
