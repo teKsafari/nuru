@@ -1,0 +1,3 @@
+[submodule "packages/wasm/core/Nuru"]
+	path = packages/wasm/core/Nuru
+	url = https://github.com/NuruProgramming/Nuru
