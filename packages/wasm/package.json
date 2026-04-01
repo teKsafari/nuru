@@ -1,20 +1,21 @@
 {
 	"name": "@nuru/wasm",
 	"version": "0.5.19",
-	"description": "A wasm compiler/intepreter for [Nuru](https://github.com/NuruProgramming/Nuru)",
+	"description": "A wasm intepreter for [Nuru](https://github.com/NuruProgramming/Nuru)",
 	"main": "dist/index.js",
 	"files": [
 		"dist",
 		"main.wasm"
 	],
 	"scripts": {
-		"setup": "bash setup.sh",
+		"update-core": "git submodule update --remote deps/nuru",
 		"test": "echo \"Mocktest Wasm-core  🟢 🟢 🟢 🟢\" && exit 0 >> /dev/null",
-		"build:wasm": "pnpm run replace && GOOS=js GOARCH=wasm tinygo build -o main.wasm",
-		"build": "tsc",
+		"build:wasm": "cd core/Nuru && GOOS=js GOARCH=wasm tinygo build -o ../../main.wasm",
+		"build:js": "tsc",
+		"dev:wasm": "cd ../../../Nuru &&` GOOS=js GOARCH=wasm tinygo build -o ../nuru-wasm/packages/wasm/main.wasm`",
+		"build": "pnpm run build:wasm && pnpm run build:js",
 		"prepublishOnly": "npm run build:wasm && npm run build",
-		"dev": "tsc --watch & go run cmd/server/main.go",
-		"replace": "cp -r ./modified/* ./deps/Nuru/"
+		"dev": "pnpm run dev:wasm && tsc --watch & go run cmd/server/main.go"
 	},
 	"type": "module",
 	"man": "./dist/index.js",
