@@ -10,12 +10,12 @@
 	"scripts": {
 		"update-core": "git submodule update --remote deps/nuru",
 		"test": "echo \"Mocktest Wasm-core  🟢 🟢 🟢 🟢\" && exit 0 >> /dev/null",
-		"build:wasm": "cd core/Nuru && GOOS=js GOARCH=wasm tinygo build -o ../../main.wasm",
+		"build:wasm": "cd core/Nuru && GOOS=js GOARCH=waxsm tinygo build -o ../../main.wasm",
 		"build:js": "tsc",
 		"dev:wasm": "cd ../../../Nuru &&` GOOS=js GOARCH=wasm tinygo build -o ../nuru-wasm/packages/wasm/main.wasm`",
 		"build": "pnpm run build:wasm && pnpm run build:js",
 		"prepublishOnly": "npm run build:wasm && npm run build",
-		"dev": "pnpm run dev:wasm && tsc --watch & go run cmd/server/main.go"
+		"dev": "pnpm run dev:wasm && tsc --watch & node scripts/serve.js"
 	},
 	"type": "module",
 	"man": "./dist/index.js",
@@ -24,7 +24,7 @@
 			"default": "./dist/index.js",
 			"types": "./dist/index.d.ts"
 		},
-		"./react":{
+		"./react": {
 			"default": "./dist/react/index.js",
 			"types": "./dist/react/index.d.ts"
 		}
@@ -37,7 +37,6 @@
 		"xss": "^1.0.15"
 	},
 	"devDependencies": {
-		"@types/node": "^22",
 		"@types/react": "^19.2.14",
 		"react": "^19",
 		"typescript": "^5.9.3"
