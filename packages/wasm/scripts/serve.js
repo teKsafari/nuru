@@ -38,5 +38,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Serving ${DIR} on http://localhost:${PORT}`);
+  console.log(`Serving dev wasm binary on http://localhost:${PORT}/main.wasm`);
 });

@@ -10,14 +10,14 @@ declare global {
 	var runCode: (code: string) => void;
 }
 
-type interpreterConfig = {
+export type InterpreterConfig = {
 	outputReceiver: (output: string, isError: boolean) => void;
 	xssProtection?: boolean;
 	version?: string;
 	wasmURL?: string; // optional wasm source
 };
 export type NuruInstance = {
-	config: interpreterConfig;
+	config: InterpreterConfig;
 	initialized: boolean;
 	execute: typeof execute;
 };
@@ -25,7 +25,7 @@ export type NuruInstance = {
 let initialized = false;
 let outputReceiverRegistered = false;
 
-export let defaultConfig: Required<Omit<interpreterConfig, "outputReceiver" | "wasmURL">> = {
+export let defaultConfig: Required<Omit<InterpreterConfig, "outputReceiver" | "wasmURL">> = {
 	// Ugly type shenanigans, I know.
 	xssProtection: true,
 	version: "latest",
@@ -119,12 +119,12 @@ export function execute(code: string) {
 	globalThis.runCode(code);
 }
 
-export default async function init(config: interpreterConfig): Promise<NuruInstance> {
+export default async function init(config: InterpreterConfig): Promise<NuruInstance> {
 	config = { ...defaultConfig, ...config };
 
 	if (!config.outputReceiver) throw new Error("output receiver not specified. Pass it in the config");
 
-	registerOutputReceiver(config.outputReceiver, config.xssProtection);
+	registerOutputReceiver(config.outputReceiver, config.xssProtection || false);
 	outputReceiverRegistered = true;
 
 	// let wasmBinaryUrl = "/main.wasm";

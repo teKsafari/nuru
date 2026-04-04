@@ -18,11 +18,23 @@ export class Executor<LanguageInstace extends Interpreter> {
 
 	constructor(
 		language: string,
-		createInstance: (outputReceiver: OutputReceiver) => LanguageInstace,
+		createInstance: (
+			outputReceiver: OutputReceiver,
+			props?: any,
+		) => LanguageInstace,
 		options?: ExecutorOptions,
 	) {
 		this.language = language;
-		this.instance = createInstance(this.outputHandler);
+		if (process.env.NODE_ENV == "development") {
+			// TODO: hoist this up. this logic should occur up in the consumer and passed down as an argument.
+			this.instance = createInstance(this.outputHandler, {
+				wasmURL:
+					process.env.NEXT_PUBLIC_WASM_DEV_URL ||
+					"http://localhost:7070/main.wasm",
+			});
+		} else {
+			this.instance = createInstance(this.outputHandler);
+		}
 		this.options = options;
 	}
 
