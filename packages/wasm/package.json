@@ -13,9 +13,11 @@
 		"build:wasm": "cd core/Nuru && GOOS=js GOARCH=waxsm tinygo build -o ../../main.wasm",
 		"build:js": "tsc",
 		"dev:wasm": "cd ../../../Nuru &&` GOOS=js GOARCH=wasm tinygo build -o ../nuru-wasm/packages/wasm/main.wasm`",
+		"dev:ts": "tsc --watch",
+		"dev:serve":"node scripts/serve.js",
+		"dev":"turbo run dev:wasm dev:ts dev:serve",
 		"build": "pnpm run build:wasm && pnpm run build:js",
-		"prepublishOnly": "npm run build:wasm && npm run build",
-		"dev": "pnpm run dev:wasm && tsc --watch & node scripts/serve.js"
+		"prepublishOnly": "npm run build:wasm && npm run build"
 	},
 	"type": "module",
 	"man": "./dist/index.js",
