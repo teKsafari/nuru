@@ -10,13 +10,13 @@
 	"scripts": {
 		"update-core": "git submodule update --remote deps/nuru",
 		"test": "echo \"Mocktest Wasm-core  🟢 🟢 🟢 🟢\" && exit 0 >> /dev/null",
-		"build:wasm": "cd core/Nuru && GOOS=js GOARCH=waxsm tinygo build -o ../../main.wasm",
-		"build:js": "tsc",
+		"build:wasm": "cd core/Nuru && GOOS=js GOARCH=wasm tinygo build -o ../../main.wasm",
+		"build:ts": "tsc",
 		"dev:wasm": "cd ../../../Nuru &&` GOOS=js GOARCH=wasm tinygo build -o ../nuru-wasm/packages/wasm/main.wasm`",
 		"dev:ts": "tsc --watch",
 		"dev:serve":"node scripts/serve.js",
 		"dev":"turbo run dev:wasm dev:ts dev:serve",
-		"build": "pnpm run build:wasm && pnpm run build:js",
+		"build": "pnpm run build:wasm && pnpm run build:ts",
 		"prepublishOnly": "npm run build:wasm && npm run build"
 	},
 	"type": "module",
