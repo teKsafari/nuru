@@ -40,12 +40,6 @@ async function loadWasmBinary(url: string) {
 		throw new Error(`Failed to fetch ${url}`);
 	}
 
-	// Get the total size from the headers
-	const contentLength = response.headers.get("Content-Length");
-	if (!contentLength) {
-		throw new Error("Content-Length header is missing");
-	}
-
 	if (!response.body) throw new Error("Response body is empty");
 
 	// Create a reader to track the stream
