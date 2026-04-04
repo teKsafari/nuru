@@ -36,8 +36,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
 	matcher: [
-		// Skip all internal paths (_next), auth callback and potential api routees
-		"/((?!_next|callback|api).*)",
+		// Skip all internal paths (_next), auth callback, potential api routees, and wasm binary
+		"/((?!_next|callback|api|main\\.wasm).*)",
 		// Optional: only run on root (/) URL
 		// '/'
 	],
