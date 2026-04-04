@@ -33,7 +33,9 @@ export class Executor<LanguageInstace extends Interpreter> {
 					"http://localhost:7070/main.wasm",
 			});
 		} else {
-			this.instance = createInstance(this.outputHandler);
+			this.instance = createInstance(this.outputHandler, {
+				wasmURL: "/main.wasm",
+			});
 		}
 		this.options = options;
 	}
