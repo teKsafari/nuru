@@ -3,7 +3,7 @@
 import { useNuru } from "@nuru/wasm/react";
 import { Playground } from "@/components/playground/playground";
 import { Executor } from "@/lib/executor";
-import { useTheme } from "next-themes";
+import { useTheme } from "@wrksz/themes/client";
 import { Lesson, Language, PlaygroundLabels } from "@/types/playground";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 import { Suspense, useState, useEffect, useCallback, useMemo } from "react";

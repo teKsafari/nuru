@@ -1,7 +1,5 @@
-"use client";
 
-import { useSearchParams } from "next/navigation";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ThemeProvider as NextThemesProvider } from "@wrksz/themes/next";
 import type { ReactNode } from "react";
 
 interface CustomThemeProviderProps {
@@ -9,18 +7,10 @@ interface CustomThemeProviderProps {
 }
 
 export function CustomThemeProvider({ children }: CustomThemeProviderProps) {
-	const searchParams = useSearchParams();
-	const themeParam = searchParams.get("theme");
-
-	// Check if theme parameter is valid
-	const isValidTheme = themeParam === "dark" || themeParam === "light";
-	const forcedTheme = isValidTheme ? themeParam : undefined;
-
 	return (
 		<NextThemesProvider
 			attribute="class"
 			defaultTheme="dark"
-			forcedTheme={forcedTheme}
 			storageKey="nuru-theme"
 			enableSystem
 		>

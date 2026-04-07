@@ -1,20 +1,22 @@
 {
 	"name": "@nuru/wasm",
 	"version": "0.5.19",
-	"description": "A wasm compiler/intepreter for [Nuru](https://github.com/NuruProgramming/Nuru)",
+	"description": "A wasm intepreter for [Nuru](https://github.com/NuruProgramming/Nuru)",
 	"main": "dist/index.js",
 	"files": [
 		"dist",
 		"main.wasm"
 	],
 	"scripts": {
-		"setup": "go mod vendor",
+		"update-core": "git submodule update --remote deps/nuru",
 		"test": "echo \"Mocktest Wasm-core  🟢 🟢 🟢 🟢\" && exit 0 >> /dev/null",
-		"build:wasm": "pnpm run replace && GOOS=js GOARCH=wasm go build -mod=vendor -o main.wasm",
+		"build:wasm": "cd core/Nuru && GOOS=js GOARCH=wasm tinygo build -o ../../main.wasm",
 		"build": "tsc",
-		"prepublishOnly": "npm run build:wasm && npm run build",
-		"dev": "tsc --watch",
-		"replace": "cp -r ./modified/* ./vendor/github.com/NuruProgramming/Nuru/"
+		"dev:wasm": "cd ../../../Nuru &&` GOOS=js GOARCH=wasm tinygo build -o ../nuru-wasm/packages/wasm/main.wasm`",
+		"dev:ts": "tsc --watch",
+		"dev:serve":"node scripts/serve.js",
+		"dev":"turbo run dev:wasm dev:ts dev:serve",
+		"prepublishOnly": "pnpm run build:wasm && pnpm run build"
 	},
 	"type": "module",
 	"man": "./dist/index.js",
@@ -23,7 +25,7 @@
 			"default": "./dist/index.js",
 			"types": "./dist/index.d.ts"
 		},
-		"./react":{
+		"./react": {
 			"default": "./dist/react/index.js",
 			"types": "./dist/react/index.d.ts"
 		}
@@ -36,7 +38,6 @@
 		"xss": "^1.0.15"
 	},
 	"devDependencies": {
-		"@types/node": "^22",
 		"@types/react": "^19.2.14",
 		"react": "^19",
 		"typescript": "^5.9.3"

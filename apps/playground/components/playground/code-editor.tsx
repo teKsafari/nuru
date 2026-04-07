@@ -7,7 +7,7 @@ import * as lezerHighlight from "@lezer/highlight";
 const { tags: t } = lezerHighlight;
 import { createTheme } from "@uiw/codemirror-themes";
 import type { CreateThemeOptions } from "@uiw/codemirror-themes";
-import { useTheme } from "next-themes";
+import { useTheme } from "@wrksz/themes/client";
 
 interface CodeEditorProps {
 	code: string;
