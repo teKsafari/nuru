@@ -18,7 +18,6 @@ function getLocale(request: NextRequest) {
 
 export function middleware(request: NextRequest) {
 	// Check if there is any supported locale in the pathname
-	console.log("prxy hit")
 	const { pathname } = request.nextUrl;
 	const pathnameHasLocale = locales.some(
 		(locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
@@ -36,8 +35,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
 	matcher: [
-		// Skip all internal paths (_next), auth callback and potential api routees
-		"/((?!_next|callback|api).*)",
+		// Skip all internal paths (_next), auth callback, potential api routees, and wasm binary
+		"/((?!_next|callback|api|main\\.wasm).*)",
 		// Optional: only run on root (/) URL
 		// '/'
 	],
