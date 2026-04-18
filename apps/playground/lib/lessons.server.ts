@@ -99,5 +99,27 @@ export async function getLesson(id: string): Promise<Lesson> {
 		id,
 		title: frontmatter.title,
 		steps,
+		difficulty: frontmatter.difficulty,
 	};
+}
+
+export async function getAllLessonsWithSteps(): Promise<Lesson[]> {
+	const entries = await fs.readdir(LESSONS_ROOT, { withFileTypes: true });
+	const lessonDirs = entries
+		.filter((e) => e.isDirectory())
+		.sort((a, b) => a.name.localeCompare(b.name));
+
+	const lessons: Lesson[] = [];
+
+	for (const entry of lessonDirs) {
+		try {
+			const id = entry.name.replace(/^\d+-/, '');
+			const lesson = await getLesson(id);
+			lessons.push(lesson);
+		} catch (error) {
+			console.error(`Error reading lesson for ${entry.name}:`, error);
+		}
+	}
+
+	return lessons;
 }

@@ -125,7 +125,7 @@ export default function ContributorsPage() {
 	const row3 = shuffle(contributors, 3);
 
 	return (
-		<div className="relative flex h-[100dvh] w-full items-center justify-center overflow-hidden bg-slate-100 dark:bg-background">
+		<div className="relative flex h-dvh w-full items-center justify-center overflow-hidden bg-slate-100 dark:bg-background">
 			{/* Slideshow */}
 			<div
 				className="relative z-10 flex w-full flex-col gap-2 sm:gap-4"

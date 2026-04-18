@@ -1,11 +1,11 @@
 import init, { defaultConfig } from "../index";
-import type { NuruInstance } from "../index";
+import type { NuruInstance, InterpreterConfig } from "../index";
 
 import { useState, useEffect, useRef } from "react";
 
 export type OutputReceiver = (content: string, isError: boolean) => void;
 
-export function useNuru(outputReceiver: OutputReceiver): NuruInstance {
+export function useNuru(outputReceiver: OutputReceiver, interpreterConfig?: InterpreterConfig): NuruInstance {
 	const [nuruInstance, setNuruInstance] = useState<NuruInstance | null>(null);
 
 	const outputReceiverRef = useRef(outputReceiver);
@@ -19,6 +19,7 @@ export function useNuru(outputReceiver: OutputReceiver): NuruInstance {
 		if (!nuruInstance) {
 			// setIsLoading(true)
 			init({
+				...interpreterConfig,
 				outputReceiver: (output, isError) => {
 					if (outputReceiverRef.current) {
 						outputReceiverRef.current(output, isError);

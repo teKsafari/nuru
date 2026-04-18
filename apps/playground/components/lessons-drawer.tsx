@@ -15,20 +15,23 @@ import {
 	DrawerTrigger,
 	DrawerFooter,
 } from "@/components/ui/drawer";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface LessonsDrawerProps {
 	lessons?: { id: string; title: { sw: string; en: string } }[];
+	lang: "en" | "sw";
+	dict: Dictionary;
 }
 
-export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
+export function LessonsDrawer({ lessons = [], lang, dict }: LessonsDrawerProps) {
 	const [open, setOpen] = React.useState(false);
 	const pathname = usePathname();
 
 	const lessonItems = lessons.map((lesson, index) => ({
 		id: lesson.id,
-		title: lesson.title.sw,
-		enTitle: lesson.title.en,
-		href: lesson.id === "misingi-ya-nuru" ? "/anza" : `/anza/${lesson.id}`,
+		title: lesson.title[lang] || lesson.title.sw,
+		enTitle: lang === 'sw' ? lesson.title.en : lesson.title.sw,
+		href: lesson.id === "misingi-ya-nuru" ? `/${lang}/anza` : `/${lang}/anza/${lesson.id}`,
 		isCompleted: index === 0, // Placeholder for actual progress logic
 	}));
 
@@ -49,8 +52,16 @@ export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
 			<DrawerContent className="max-h-[85%]">
 				<div className="mx-auto w-full max-w-xl overflow-hidden flex flex-col h-full">
 					<DrawerHeader className="border-b border-border/50 pb-4">
-						<DrawerTitle className="text-center text-xl font-bold flex items-center justify-center gap-2 text-foreground">
-							Jifunze na Nuru
+						<DrawerTitle className="text-center text-xl font-bold flex flex-col items-center justify-center gap-2 text-foreground">
+							<span>{dict.lessonsDrawer.title}</span>
+							<Link 
+								href={`/${lang}/masomo`} 
+								onClick={() => setOpen(false)}
+								className="text-xs font-medium text-primary hover:underline flex items-center gap-1"
+							>
+								<BookOpen className="h-3 w-3" />
+								{dict.map.title}
+							</Link>
 						</DrawerTitle>
 					</DrawerHeader>
 					<div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
@@ -63,7 +74,7 @@ export function LessonsDrawer({ lessons = [] }: LessonsDrawerProps) {
 									className={cn(
 										"group relative flex items-center gap-4 rounded-xl border p-4 transition-all duration-300 overflow-hidden",
 										pathname === lesson.href
-											? "border-primary/50 bg-primary/5 ring-1 ring-primary/20 shadow-sm"
+											? "border-primary/50 bg-primary/5 ring-1 ring-primary/20 shadow-xs"
 											: "border-border hover:border-primary/30 hover:bg-muted/50 hover:shadow-md",
 									)}
 								>

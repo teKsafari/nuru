@@ -18,15 +18,29 @@ export class Executor<LanguageInstace extends Interpreter> {
 
 	constructor(
 		language: string,
-		createInstance: (outputReceiver: OutputReceiver) => LanguageInstace,
+		createInstance: (
+			outputReceiver: OutputReceiver,
+			props?: any,
+		) => LanguageInstace,
 		options?: ExecutorOptions,
 	) {
 		this.language = language;
-		this.instance = createInstance(this.outputHandler);
+		if (process.env.NODE_ENV == "development") {
+			// TODO: hoist this up. this logic should occur up in the consumer and passed down as an argument.
+			this.instance = createInstance(this.outputHandler, {
+				wasmURL:
+					process.env.NEXT_PUBLIC_WASM_DEV_URL ||
+					"http://localhost:7070/main.wasm",
+			});
+		} else {
+			this.instance = createInstance(this.outputHandler, {
+				wasmURL: "/main.wasm",
+			});
+		}
 		this.options = options;
 	}
 
-	private outputHandler = (text: string, isError: boolean) => {
+	outputHandler = (text: string, isError: boolean) => {
 		if (this.outputBridge) {
 			this.outputBridge(text, isError);
 		} else {
@@ -34,6 +48,10 @@ export class Executor<LanguageInstace extends Interpreter> {
 				`Output received but output handler not regsitered.\noutput:${text}\n call onOuput method`,
 			);
 		}
+	};
+
+	setInstance = (instance: LanguageInstace) => {
+		this.instance = instance;
 	};
 
 	async run(code: string) {

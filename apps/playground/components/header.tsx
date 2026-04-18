@@ -1,49 +1,68 @@
 "use client";
 
-import React, { useState } from "react";
-import { usePathname } from "next/navigation";
+import React from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 import UserMenu from "@/components/UserMenu";
 
-import { MobileMenuDrawer } from "@/components/mobile-menu-drawer";
 import { LessonsDrawer } from "@/components/lessons-drawer";
 
 import { AppLogo } from "@/components/app-logo";
 
-import { Menu, BookOpen, ChevronDown } from "lucide-react";
+import { BookOpen, ChevronDown, Languages } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface SiteHeaderProps {
-	onMenuClick?: () => void;
 	lessons?: { id: string; title: { sw: string; en: string } }[];
+	lang: "en" | "sw";
+	dict: Dictionary;
 }
 
-export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
+export function SiteHeader({ lessons = [], lang, dict }: SiteHeaderProps) {
 	const pathname = usePathname();
-	const [menuOpen, setMenuOpen] = useState(false);
+	const router = useRouter();
 
 	const navItems = [
-		{ label: "Home", href: "/", active: pathname === "/" },
-		{ label: "Anza", href: "/anza", active: pathname.startsWith("/anza") },
+		{
+			label: dict.header.home,
+			href: `/${lang}`,
+			active: pathname === `/${lang}`,
+		},
+		{
+			label: dict.header.anza,
+			href: `/${lang}/anza`,
+			active: pathname.startsWith(`/${lang}/anza`),
+		},
 	];
+
+	const toggleLanguage = () => {
+		const newLang = lang === "sw" ? "en" : "sw";
+		// Replace the language segment in the URL
+		const segments = pathname.split("/");
+		if (segments[1] === lang) {
+			segments[1] = newLang;
+			router.push(segments.join("/"));
+		} else {
+			router.push(`/${newLang}`);
+		}
+	};
 
 	return (
 		<>
-			<MobileMenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
-
 			{/* Main Header Container */}
-			<header className="sticky left-0 right-0 top-0 z-40 border-b border-border/50 bg-background/80 shadow-sm backdrop-blur-md">
+			<header className="border-border/50 bg-background/80 sticky top-0 right-0 left-0 z-40 border-b shadow-xs backdrop-blur-md">
 				<div className="flex h-14 items-center justify-between px-4 md:px-8">
 					{/* Logo Section (Left on Mobile & Desktop) */}
 					<div className="flex items-center gap-2 md:order-1">
 						<Link
-							href="/"
+							href={`/${lang}`}
 							className="group flex items-center gap-3 transition-opacity hover:opacity-90"
 						>
 							<div className="relative">
@@ -68,7 +87,7 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 								href={item.href}
 								className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
 									item.active
-										? "bg-foreground text-background shadow-sm"
+										? "bg-foreground text-background shadow-xs"
 										: "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
 								}`}
 							>
@@ -78,21 +97,48 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<button className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground">
-									Masomo
+								<button className="text-muted-foreground hover:bg-muted/50 hover:text-foreground flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-all">
+									{dict.header.masomo}
 									<ChevronDown className="h-3 w-3 opacity-50" />
 								</button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent align="center" className="w-56 rounded-xl p-2">
+							<DropdownMenuContent
+								align="center"
+								className="w-56 rounded-xl p-2"
+							>
+								<DropdownMenuItem
+									asChild
+									className="bg-muted/50 mb-1 rounded-lg"
+								>
+									<Link
+										href={`/${lang}/masomo`}
+										className="text-primary flex items-center gap-2 py-2 font-bold"
+									>
+										<BookOpen className="h-4 w-4" />
+										<span>{dict.map.title}</span>
+									</Link>
+								</DropdownMenuItem>
 								{lessons.map((lesson) => (
-									<DropdownMenuItem key={lesson.id} asChild className="rounded-lg">
+									<DropdownMenuItem
+										key={lesson.id}
+										asChild
+										className="rounded-lg"
+									>
 										<Link
-											href={lesson.id === "misingi-ya-nuru" ? "/anza" : `/anza/${lesson.id}`}
+											href={
+												lesson.id === "misingi-ya-nuru"
+													? `/${lang}/anza`
+													: `/${lang}/anza/${lesson.id}`
+											}
 											className="flex items-center gap-2 py-2"
 										>
 											<div className="flex flex-col">
-												<span className="text-sm font-medium">{lesson.title.sw}</span>
-												<span className="text-[10px] text-muted-foreground">{lesson.title.en}</span>
+												<span className="text-sm font-medium">
+													{lesson.title[lang] || lesson.title.sw}
+												</span>
+												<span className="text-muted-foreground text-[10px]">
+													{lang === "sw" ? lesson.title.en : lesson.title.sw}
+												</span>
 											</div>
 										</Link>
 									</DropdownMenuItem>
@@ -103,26 +149,22 @@ export function SiteHeader({ onMenuClick, lessons = [] }: SiteHeaderProps) {
 
 					{/* Right Section: User Menu & Mobile Menu */}
 					<div className="flex items-center gap-2 md:order-3">
-						<UserMenu/>
+						{/* Language Switcher */}
+						<button
+							onClick={toggleLanguage}
+							className="bg-background/50 text-muted-foreground hover:bg-muted/50 hover:text-foreground flex items-center gap-2 rounded px-3 py-1.5 text-sm font-medium transition-all"
+						>
+							<Languages className="size-4" />
+							<p className="hidden md:block">
+								{lang === "sw" ? "English" : "Kiswahili"}
+							</p>
+						</button>
 
 						{/* Mobile Lessons Drawer Trigger */}
 						<div className="md:hidden">
-							<LessonsDrawer lessons={lessons} />
+							<LessonsDrawer lessons={lessons} lang={lang} dict={dict} />
 						</div>
-
-						{/* Mobile Menu Toggle (Moved to Right) */}
-						<div className="flex items-center md:hidden">
-							<button
-								onClick={() => {
-									setMenuOpen(true);
-									onMenuClick?.();
-								}}
-								className="-mr-2 rounded-md p-2 transition-colors hover:bg-muted"
-								aria-label="Menu"
-							>
-								<Menu className="h-6 w-6" />
-							</button>
-						</div>
+						<UserMenu />
 					</div>
 				</div>
 			</header>

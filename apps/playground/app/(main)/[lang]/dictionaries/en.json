@@ -1,0 +1,64 @@
+{
+  "landing": {
+    "title": "Swahili Programming Language"
+  },
+  "header": {
+    "home": "Home",
+    "anza": "Start Learning",
+    "masomo": "Lessons"
+  },
+  "mobileMenu": {
+    "home": "Home",
+    "anza": "Start Learning",
+    "subtitle": "Learn, Create and Discover",
+    "navigation": "Navigation",
+    "resources": "Resources",
+    "builtWith": "Built with ❤️ by teKsafari"
+  },
+  "lessonsDrawer": {
+    "title": "Learn with Nuru"
+  },
+  "playground": {
+    "hint": "Hint: Check the task description and try to match your code with the provided examples.",
+    "testing": "Testing...",
+    "error": "Error: "
+  },
+  "lessonPanel": {
+    "lessons": "Lessons",
+    "step": "Step",
+    "completed": "Completed",
+    "incomplete": "Incomplete",
+    "back": "Back",
+    "nextLesson": "Next Lesson",
+    "finish": "Finish",
+    "next": "Next",
+    "yourTask": "Your Task:",
+    "english": "English",
+    "swahili": "Kiswahili"
+  },
+  "codePanel": {
+    "reset": "Reset Code",
+    "hint": "Hint",
+    "showSolution": "Show Solution (Dev)"
+  },
+  "outputPanel": {
+    "submit": "Submit",
+    "run": "Run",
+    "solution": "Solution",
+    "placeholder": "Run your code to see output here..."
+  },
+  "difficulty": {
+    "mwanzilishi": "Beginner",
+    "wa kati": "Intermediate",
+    "wa juu": "Advanced"
+  },
+  "map": {
+    "title": "Course Map",
+    "description": "Visualize your journey through Nuru programming.",
+    "journey": "Your Journey",
+    "estimatedTime": "Estimated Time",
+    "recommended": "Recommended for you",
+    "continue": "Continue Learning",
+    "completedCount": "Steps completed"
+  }
+}

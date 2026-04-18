@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { LessonPanel } from "./lesson-panel";
 import { CodePanel } from "./code-panel";
@@ -11,56 +10,51 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/playground/resizable";
-import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { PlaygroundProps, Language } from "@/types/playground";
-import confetti from "canvas-confetti";
-import { CheckCircle2, Languages } from "lucide-react";
+import { PlaygroundProps } from "@/types/playground";
+import { CheckCircle2, BookOpen, Terminal, ChevronDown } from "lucide-react";
+import { Drawer, DrawerContent, DrawerTrigger, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
 
 export function Playground({
 	lesson,
-	executor,
+	state,
+	actions,
+	labels,
 	theme = "dark",
-	nextLessonId,
+	lang,
+	extensions,
 }: PlaygroundProps) {
-	const router = useRouter();
 	const isMobile = useIsMobile();
-	const [currentStepIndex, setCurrentStepIndex] = useState(0);
-	const [lang, setLang] = useState<Language>("sw");
-
-	const currentStep = lesson.steps[currentStepIndex];
-
-	const [code, setCode] = useState(currentStep.initialCode);
-	const [output, setOutput] = useState("");
-	const [isRunning, setIsRunning] = useState(false);
-	const [completedStepIndices, setCompletedStepIndices] = useState<Set<number>>(new Set());
+	const [lessonDrawerOpen, setLessonDrawerOpen] = useState(false);
 	const [lessonExpanded, setLessonExpanded] = useState(!isMobile);
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
-	// Sync code when step changes
+	// Automatically open lesson drawer on mobile if it's the first step of a lesson
 	useEffect(() => {
-		setCode(currentStep.initialCode);
-		setOutput("");
-	}, [currentStepIndex, lesson.id, currentStep.initialCode]);
+		if (isMobile && state.currentStepIndex === 0) {
+			// Small delay to ensure smooth entry
+			const timer = setTimeout(() => setLessonDrawerOpen(true), 500);
+			return () => clearTimeout(timer);
+		}
+	}, [isMobile, lesson.id]); // Only run when lesson changes or on mount
 
-	// Reset progress when lesson changes
-	useEffect(() => {
-		setCompletedStepIndices(new Set());
-	}, [lesson.id]);
+	const currentStep = lesson.steps[state.currentStepIndex];
+	const isCurrentStepCompleted = state.completedStepIndices.has(state.currentStepIndex);
+	const isLastStep = state.currentStepIndex === lesson.steps.length - 1;
+	const nextActionLabel = isLastStep ? labels.nextLesson : labels.next;
+	const handleNextAction = isLastStep
+		? actions.onNextLesson
+		: () => actions.onStepChange(state.currentStepIndex + 1);
 
-	const isCurrentStepCompleted = completedStepIndices.has(currentStepIndex);
-
-	useEffect(() => {
-		executor.onOutput((output, isError) => {
-			setOutput((prev) => {
-				if (prev) {
-					return prev + `\n${output}`;
-				} else return output;
-			});
-		});
-	}, [executor]);
+	const handleRun = () => {
+		actions.onRun();
+		if (isMobile) {
+			bottomPanelRef.current?.expand();
+			bottomPanelRef.current?.resize(20);
+		}
+	};
 
 	const handleLessonToggle = () => {
 		const lessonPanel = lessonPanelRef.current;
@@ -83,192 +77,98 @@ export function Playground({
 		}
 	};
 
-	const checkSolution = useCallback((currentCode: string) => {
-		if (!currentStep.solution) return false;
-		
-		// Simple normalization: remove whitespace and comments
-		const normalize = (s: string) => s.replace(/\/\/.*$/gm, "").replace(/\s/g, "");
-		const isCorrect = normalize(currentCode) === normalize(currentStep.solution);
-		
-		if (isCorrect) {
-			setCompletedStepIndices(prev => new Set(prev).add(currentStepIndex));
-			confetti({
-				particleCount: 100,
-				spread: 70,
-				origin: { y: 0.6 },
-				colors: ["#22c55e", "#10b981", "#3b82f6"]
-			});
-		}
-		return isCorrect;
-	}, [currentStep.solution, currentStepIndex]);
-
-	const handleRun = async () => {
-		setIsRunning(true);
-		if (executor.onBeforeRun) {
-			executor.onBeforeRun();
-		}
-		setOutput("");
-		try {
-			await executor.run(code);
-			checkSolution(code);
-		} catch (error) {
-			setOutput(`Error: ${error}`);
-		} finally {
-			setIsRunning(false);
-		}
-	};
-
-	const handleSubmit = async () => {
-		setOutput("Testing...");
-		try {
-			const result = await executor.submit(code);
-			setOutput(result);
-		} catch (error) {
-			setOutput(`Error: ${error}`);
-		}
-	};
-
-	const handleShowSolution = () => {
-		if (currentStep.solution) {
-			setCode(currentStep.solution);
-		} else if (executor.getSolution) {
-			setCode(executor.getSolution());
-		}
-	};
-
-	const handleShowHint = () => {
-		// Basic hint: show the first line of the solution or a generic tip
-		const hintMessage = lang === "sw" 
-			? "Dokezo: Angalia maelezo ya kazi na ujaribu kulinganisha kodi yako na mifano iliyotolewa."
-			: "Hint: Check the task description and try to match your code with the provided examples.";
-		
-		setOutput(prev => prev ? `${prev}\n\n${hintMessage}` : hintMessage);
-	};
-
-	const handleReset = () => {
-		setCode(currentStep.initialCode);
-		setOutput("");
-	};
-
-	const handleNextLesson = () => {
-		if (nextLessonId) {
-			router.push(`/anza/${nextLessonId}`);
-		} else {
-			router.push("/anza");
-		}
-	};
-
 	if (isMobile) {
 		return (
-			<div className="flex max-h-full flex-1 flex-col overflow-hidden bg-background">
-				<ResizablePanelGroup direction="vertical" className="flex-1">
-					{/* Lesson Content Pane */}
-					<ResizablePanel
-						ref={lessonPanelRef}
-						defaultSize={isMobile ? 0 : 25}
-						minSize={0}
-						collapsible
-						collapsedSize={0}
-						onCollapse={() => setLessonExpanded(false)}
-						onExpand={() => setLessonExpanded(true)}
-						style={{ overflow: "hidden" }}
-					>
-						<LessonPanel
-							lesson={lesson}
-							currentStepIndex={currentStepIndex}
-							onStepChange={setCurrentStepIndex}
-							lang={lang}
-							onLangChange={setLang}
-							collapsible
-							expanded={lessonExpanded}
-							onToggle={handleLessonToggle}
-							isCompleted={isCurrentStepCompleted}
-							completedStepIndices={completedStepIndices}
-							onNextLesson={handleNextLesson}
-						/>
-					</ResizablePanel>
-					{!lessonExpanded && (
-						<div
-							role="button"
-							tabIndex={0}
-							onClick={handleLessonToggle}
-							onKeyDown={(e) => {
-								if (e.key === "Enter" || e.key === " ") {
-									handleLessonToggle();
-								}
-							}}
-							className="flex w-full shrink-0 items-center justify-between border-b border-border bg-muted/30 px-4 py-2.5 text-left cursor-pointer"
-						>
-							<div className="flex items-center gap-2 truncate">
-								<h1 className="truncate text-sm font-bold text-foreground">
-									{currentStep.title[lang]}
-								</h1>
+			<div className="flex max-h-full flex-1 flex-col overflow-hidden bg-background relative">
+				<Drawer open={lessonDrawerOpen} onOpenChange={setLessonDrawerOpen}>
+					<DrawerTrigger asChild>
+						<button className="flex w-full shrink-0 items-center justify-between border-b border-border bg-muted/5 px-4 py-3 text-left hover:bg-muted/10 transition-colors shadow-sm z-10">
+							<div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
+								<div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 shadow-inner">
+									<BookOpen className="h-4.5 w-4.5 text-primary shrink-0" />
+								</div>
+								<div className="flex flex-col min-w-0">
+									<span className="text-[9px] font-black uppercase tracking-widest text-primary/70">{labels.step} {state.currentStepIndex + 1}</span>
+									<h1 className="truncate text-sm font-bold text-foreground tracking-tight">
+										{currentStep.title[lang] || currentStep.title.sw}
+									</h1>
+								</div>
 							</div>
 							<div className="flex items-center gap-3 shrink-0">
-								<Button
-									variant="ghost"
-									size="icon"
-									onClick={(e) => {
-										e.stopPropagation();
-										setLang(lang === "sw" ? "en" : "sw");
-									}}
-									className="h-6 w-6 hover:bg-background/50 text-muted-foreground hover:text-foreground"
-								>
-									<Languages className="h-3.5 w-3.5" />
-								</Button>
+								<div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-95 transition-transform">
+									<span>View</span>
+									<ChevronDown className="h-3 w-3" />
+								</div>
 								{isCurrentStepCompleted ? (
-									<CheckCircle2 className="h-4 w-4 text-green-500" />
+									<CheckCircle2 className="h-5 w-5 text-green-500" />
 								) : (
 									<div className="h-2 w-2 rounded-full bg-muted-foreground/40" />
 								)}
-								<svg
-									className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200"
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								>
-									<path d="m6 9 6 6 6-6" />
-								</svg>
 							</div>
+						</button>
+					</DrawerTrigger>
+					<DrawerContent className="max-h-[85vh]">
+						<DrawerTitle className="sr-only">
+							{currentStep.title[lang] || currentStep.title.sw}
+						</DrawerTitle>
+						<DrawerDescription className="sr-only">
+							Lesson instructions for {currentStep.title[lang] || currentStep.title.sw}
+						</DrawerDescription>
+						<div className="overflow-y-auto px-4 pb-8 pt-2 h-full">
+							<LessonPanel
+								lesson={lesson}
+								currentStepIndex={state.currentStepIndex}
+								onStepChange={actions.onStepChange}
+								lang={lang}
+								labels={labels}
+								collapsible={false}
+								expanded={true}
+								isCompleted={isCurrentStepCompleted}
+								completedStepIndices={state.completedStepIndices}
+								onNextLesson={actions.onNextLesson}
+							/>
 						</div>
-					)}
-					<ResizableHandle withHandle />
+					</DrawerContent>
+				</Drawer>
 
-					{/* Code Pane */}
-					<ResizablePanel
-						ref={codePanelRef}
-						defaultSize={isMobile ? 40 : 35}
-						minSize={15}
-					>
-						<CodePanel
-							code={code}
-							output={output}
-							onCodeChange={setCode}
-							onRun={handleRun}
-							onSubmit={handleSubmit}
-							onShowSolution={handleShowSolution}
-							onShowHint={handleShowHint}
-							onReset={handleReset}
-							isMobile
-							theme={theme}
-							lang={lang}
-						/>
-					</ResizablePanel>
-					<ResizableHandle withHandle />
-
-					{/* Output Pane */}
-					<ResizablePanel
-						ref={bottomPanelRef}
-						defaultSize={isMobile ? 10 : 40}
-						minSize={10}
-					>
-						<OutputPanel output={output} showToolbar={false} />
-					</ResizablePanel>
-				</ResizablePanelGroup>
+				<div className="flex-1 overflow-hidden relative">
+					<ResizablePanelGroup direction="vertical">
+						<ResizablePanel defaultSize={80} minSize={20}>
+							<CodePanel
+								code={state.code}
+								output={state.output}
+								onCodeChange={actions.onCodeChange}
+								onRun={handleRun}
+								onSubmit={actions.onSubmit}
+								onShowSolution={actions.onShowSolution}
+								onShowHint={actions.onShowHint}
+								onReset={actions.onReset}
+								isMobile
+								theme={theme}
+								lang={lang}
+								labels={labels}
+								extensions={extensions}
+								isCompleted={isCurrentStepCompleted}
+								onNextAction={handleNextAction}
+								nextActionLabel={nextActionLabel}
+							/>
+						</ResizablePanel>
+						<ResizableHandle withHandle />
+						<ResizablePanel
+							ref={bottomPanelRef}
+							defaultSize={20}
+							minSize={10}
+							collapsible
+							collapsedSize={0}
+						>
+							<div className="flex h-full flex-col bg-background">
+								<div className="flex-1 overflow-hidden">
+									<OutputPanel output={state.output} showToolbar={false} labels={labels} />
+								</div>
+							</div>
+						</ResizablePanel>
+					</ResizablePanelGroup>
+				</div>
 			</div>
 		);
 	}
@@ -276,35 +176,39 @@ export function Playground({
 	return (
 		<div className="h-screen bg-background">
 			<ResizablePanelGroup direction="horizontal" className="h-full">
-				<ResizablePanel defaultSize={40} minSize={20}>
+				<ResizablePanel defaultSize={50} minSize={20}>
 					<LessonPanel
 						lesson={lesson}
-						currentStepIndex={currentStepIndex}
-						onStepChange={setCurrentStepIndex}
+						currentStepIndex={state.currentStepIndex}
+						onStepChange={actions.onStepChange}
 						lang={lang}
-						onLangChange={setLang}
+						labels={labels}
 						isCompleted={isCurrentStepCompleted}
-						completedStepIndices={completedStepIndices}
-						onNextLesson={handleNextLesson}
+						completedStepIndices={state.completedStepIndices}
+						onNextLesson={actions.onNextLesson}
 					/>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={60} minSize={25}>
+				<ResizablePanel defaultSize={50} minSize={25}>
 					<CodePanel
-						code={code}
-						output={output}
-						onCodeChange={setCode}
-						onRun={handleRun}
-						onSubmit={handleSubmit}
-						onShowSolution={handleShowSolution}
-						onShowHint={handleShowHint}
-						onReset={handleReset}
+						code={state.code}
+						output={state.output}
+						onCodeChange={actions.onCodeChange}
+						onRun={actions.onRun}
+						onSubmit={actions.onSubmit}
+						onShowSolution={actions.onShowSolution}
+						onShowHint={actions.onShowHint}
+						onReset={actions.onReset}
 						theme={theme}
 						lang={lang}
+						labels={labels}
+						extensions={extensions}
+						isCompleted={isCurrentStepCompleted}
+						onNextAction={handleNextAction}
+						nextActionLabel={nextActionLabel}
 					/>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>
 	);
 }
-

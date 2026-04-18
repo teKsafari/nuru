@@ -10,13 +10,14 @@ declare global {
 	var runCode: (code: string) => void;
 }
 
-type interpreterConfig = {
+export type InterpreterConfig = {
 	outputReceiver: (output: string, isError: boolean) => void;
 	xssProtection?: boolean;
 	version?: string;
+	wasmURL?: string; // optional wasm source
 };
 export type NuruInstance = {
-	config: interpreterConfig;
+	config: InterpreterConfig;
 	initialized: boolean;
 	execute: typeof execute;
 };
@@ -24,7 +25,8 @@ export type NuruInstance = {
 let initialized = false;
 let outputReceiverRegistered = false;
 
-export let defaultConfig: Required<Omit<interpreterConfig, "outputReceiver">> = { // Ugly type shenanigans, I know.
+export let defaultConfig: Required<Omit<InterpreterConfig, "outputReceiver" | "wasmURL">> = {
+	// Ugly type shenanigans, I know.
 	xssProtection: true,
 	version: "latest",
 };
@@ -36,12 +38,6 @@ async function loadWasmBinary(url: string) {
 	if (!response.ok) {
 		console.log(response);
 		throw new Error(`Failed to fetch ${url}`);
-	}
-
-	// Get the total size from the headers
-	const contentLength = response.headers.get("Content-Length");
-	if (!contentLength) {
-		throw new Error("Content-Length header is missing");
 	}
 
 	if (!response.body) throw new Error("Response body is empty");
@@ -117,16 +113,16 @@ export function execute(code: string) {
 	globalThis.runCode(code);
 }
 
-export default async function init(config: interpreterConfig): Promise<NuruInstance> {
+export default async function init(config: InterpreterConfig): Promise<NuruInstance> {
 	config = { ...defaultConfig, ...config };
 
 	if (!config.outputReceiver) throw new Error("output receiver not specified. Pass it in the config");
 
-	registerOutputReceiver(config.outputReceiver, config.xssProtection);
-	outputReceiverRegistered=true
+	registerOutputReceiver(config.outputReceiver, config.xssProtection || false);
+	outputReceiverRegistered = true;
 
 	// let wasmBinaryUrl = "/main.wasm";
-	let wasmBinaryUrl = `https://cdn.jsdelivr.net/npm/@nuru/wasm@${config.version}/main.wasm`;
+	let wasmBinaryUrl = config.wasmURL || `https://cdn.jsdelivr.net/npm/@nuru/wasm@${config.version}/main.wasm`;
 
 	return new Promise<NuruInstance>(async (resolve, reject) => {
 		const go = new Go();
