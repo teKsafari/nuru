@@ -21,6 +21,7 @@ const jetbrainsMono = JetBrains_Mono({
 	variable: "--font-jetbrains-mono",
 });
 
+
 export const metadata: Metadata = {
 	title: "nuru playground",
 	description: "nuru playground",
@@ -56,7 +57,7 @@ export default function RootLayout({
 				<meta name="theme-color" content="#00b4d8" />
 				<link rel="manifest" href="/manifest.json" />
 			</head>
-			<body className={cn(jetbrainsMono.className, "flex h-dvh flex-col")}>
+			<body className={"flex h-dvh flex-col"}>
 				<Suspense>
 					<CustomThemeProvider>{children}</CustomThemeProvider>
 				</Suspense>

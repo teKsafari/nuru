@@ -4,7 +4,8 @@ import { logtoConfig } from "@/app/logto";
 import { SiteHeader } from "@/components/header";
 
 import AuthProvider from "@/components/providers/auth-provider";
-import { getContextFromClaims } from "@/lib/utils/auth.server";
+import { getAuthContextFromClaims } from "@/lib/utils/auth.server";
+
 import { getAllLessons } from "@/lib/lessons.server";
 import { getDictionary, Locale } from "@/app/(main)/[lang]/dictionaries";
 
@@ -16,12 +17,13 @@ export default async function MainLayout({
 	params: Promise<{ lang: string }>;
 }) {
 	const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
+	
 	const lessons = await getAllLessons();
 	const { lang } = await params;
 	const dict = await getDictionary(lang as Locale);
 
 	return (
-		<AuthProvider value={getContextFromClaims(isAuthenticated, claims || null)}>
+		<AuthProvider value={getAuthContextFromClaims(isAuthenticated, claims || null)}>
 			<SiteHeader lessons={lessons} dict={dict} lang={lang as Locale} />
 			{/*
 			h-0 sets an explicit height so that the height of the div is not derived from the height

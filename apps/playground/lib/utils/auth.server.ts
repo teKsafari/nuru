@@ -10,7 +10,7 @@ import { AuthSession, AuthContextType } from "@/types/auth";
 
 // auth utilities for the server only
 
-export function getContextFromClaims(
+export function getAuthContextFromClaims(
 	isAuthenticated: boolean,
 	claims: IdTokenClaims | null,
 ): AuthContextType {
