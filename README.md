@@ -31,7 +31,8 @@ Follow these steps to set up the development environment.
 
 - **Node.js** (^18.13)
 - **pnpm** (Package Manager)
-- **Go** (^1.19.0) - *Required for building the WASM binary*
+- **Go** (^1.19.0)
+- **TinyGo** (^0.27.0) - *Required for building the optimized WASM binary*
 
 ### Installation
 
@@ -69,13 +70,11 @@ We use `turbo` to manage tasks across the monorepo.
 
 ## 🤝 Contributing
 
-We welcome contributions! Whether you're fixing bugs in the WASM bridge, enhancing the playground UI, or improving documentation, your help is appreciated.
+We actively welcome contributions! 
 
-1. Fork the repository.
-2. Create your feature branch (`git checkout -b feature/amazing-feature`).
-3. Commit your changes (`git commit -m 'Add some amazing feature'`).
-4. Push to the branch (`git push origin feature/amazing-feature`).
-5. Open a Pull Request.
+**🚨 Call for Educators & Writers:** We are actively looking for contributors to help build out our **Learning Resources (Lessons)** in the Nuru Playground. The current lessons are just templates. If you can help teach programming in Swahili and English, please submit a PR!
+
+Whether you're writing new lessons, fixing bugs in the WASM bridge, or enhancing the UI, please see our full [Contributing Guide (CONTRIBUTING.md)](./CONTRIBUTING.md) for detailed instructions on how to get started, especially regarding the structure and formatting of lesson files.
 
 ---
 
