@@ -2,11 +2,11 @@
 
 First off, thank you for considering contributing to Nuru! It's people like you that make Nuru a great tool for Swahili speakers to learn programming. 
 
-We are especially looking for contributors to help us build out our **Learning Resources (Lessons)**. The current lessons in the playground are just templates, and we want to expand them to cover all aspects of programming in Nuru.
+We are especially looking for contributors to help us build out our **Learning Resources (Lessons)**. We want to expand the lessons to cover all aspects of programming in Nuru.
 
 This document outlines the process for contributing to the repository, with a special focus on how to add or update lessons.
 
-## 🚀 Getting Started Locally
+## Getting Started Locally
 
 Before you can contribute, you'll need to set up the project locally.
 
@@ -37,7 +37,7 @@ Before you can contribute, you'll need to set up the project locally.
 
 ---
 
-## 📚 How to Contribute Lessons
+## How to Contribute Lessons
 
 Our primary goal right now is to populate the Nuru Playground with comprehensive, easy-to-understand lessons. If you have a knack for teaching or want to help others learn Nuru, this is the perfect place to start!
 
@@ -111,7 +111,7 @@ Your markdown content explaining the concept goes here. Keep it simple, engaging
 
 ---
 
-## 🛠️ Contributing Code or Fixes
+## Contributing Code or Fixes
 
 If you are contributing to the core WASM bridge, the Playground UI, or fixing bugs:
 
@@ -125,7 +125,7 @@ If you are contributing to the core WASM bridge, the Playground UI, or fixing bu
 
 ---
 
-## 📩 Submitting a Pull Request (PR)
+## Submitting a Pull Request (PR)
 
 Once your lessons or code changes are ready:
 
