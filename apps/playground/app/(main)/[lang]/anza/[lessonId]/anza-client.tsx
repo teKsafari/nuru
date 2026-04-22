@@ -19,7 +19,7 @@ interface AnzaClientProps {
 }
 
 export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps) {
-	const { theme, forcedTheme } = useTheme();
+	const { theme} = useTheme();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -41,15 +41,37 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 	const [output, setOutput] = useState("");
 	const [completedStepIndices, setCompletedStepIndices] = useState<Set<number>>(new Set());
 
+	// Handle initial hydration from localStorage on client
+	useEffect(() => {
+		// Load code
+		const storedCode = localStorage.getItem(`nuru-code-${lesson.id}-${currentStep.id}`);
+		if (storedCode !== null) {
+			setCode(storedCode);
+		} else {
+			setCode(currentStep.initialCode);
+		}
+
+		// Load progress
+		const storedCompleted = localStorage.getItem(`nuru-completed-${lesson.id}`);
+		if (storedCompleted) {
+			try {
+				setCompletedStepIndices(new Set(JSON.parse(storedCompleted)));
+			} catch (e) {
+				setCompletedStepIndices(new Set());
+			}
+		}
+	}, [lesson.id, currentStep.id, currentStep.initialCode]);
+
 	// Sync code when step changes
 	useEffect(() => {
-		setCode(currentStep.initialCode);
+		const storedCode = localStorage.getItem(`nuru-code-${lesson.id}-${currentStep.id}`);
+		setCode(storedCode !== null ? storedCode : currentStep.initialCode);
 		setOutput("");
-	}, [currentStepIndex, lesson.id, currentStep.initialCode]);
+	}, [currentStepIndex, lesson.id, currentStep.id, currentStep.initialCode]);
 
-	// Reset progress when lesson changes
+	// Reset output when lesson changes
 	useEffect(() => {
-		setCompletedStepIndices(new Set());
+		setOutput("");
 	}, [lesson.id]);
 
 	const executor = new Executor("nuru", useNuru);
@@ -68,7 +90,11 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 		const isCorrect = normalize(currentCode) === normalize(currentStep.solution);
 		
 		if (isCorrect) {
-			setCompletedStepIndices(prev => new Set(prev).add(currentStepIndex));
+			setCompletedStepIndices(prev => {
+				const next = new Set(prev).add(currentStepIndex);
+				localStorage.setItem(`nuru-completed-${lesson.id}`, JSON.stringify(Array.from(next)));
+				return next;
+			});
 			confetti({
 				particleCount: 100,
 				spread: 70,
@@ -77,7 +103,12 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 			});
 		}
 		return isCorrect;
-	}, [currentStep.solution, currentStepIndex]);
+	}, [currentStep.solution, currentStepIndex, lesson.id]);
+
+	const handleCodeChange = useCallback((newCode: string) => {
+		setCode(newCode);
+		localStorage.setItem(`nuru-code-${lesson.id}-${currentStep.id}`, newCode);
+	}, [lesson.id, currentStep.id]);
 
 	const handleRun = async () => {
 		if (executor.onBeforeRun) {
@@ -105,8 +136,11 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 	const handleShowSolution = () => {
 		if (currentStep.solution) {
 			setCode(currentStep.solution);
+			localStorage.setItem(`nuru-code-${lesson.id}-${currentStep.id}`, currentStep.solution);
 		} else if (executor.getSolution) {
-			setCode(executor.getSolution());
+			const sol = executor.getSolution();
+			setCode(sol);
+			localStorage.setItem(`nuru-code-${lesson.id}-${currentStep.id}`, sol);
 		}
 	};
 
@@ -118,6 +152,7 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 	const handleReset = () => {
 		setCode(currentStep.initialCode);
 		setOutput("");
+		localStorage.setItem(`nuru-code-${lesson.id}-${currentStep.id}`, currentStep.initialCode);
 	};
 
 	const handleNextLesson = () => {
@@ -155,7 +190,7 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 	return (
 		<Suspense fallback={<div className="flex-1 bg-background animate-pulse" />}>
 			<Playground
-				theme={(forcedTheme || theme) as "light" | "dark"}
+				theme={(theme) as "light" | "dark"}
 				lesson={lesson}
 				state={{
 					currentStepIndex,
@@ -165,7 +200,7 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 				}}
 				actions={{
 					onStepChange: setCurrentStepIndex,
-					onCodeChange: setCode,
+					onCodeChange: handleCodeChange,
 					onRun: handleRun,
 					onSubmit: handleSubmit,
 					onShowSolution: handleShowSolution,

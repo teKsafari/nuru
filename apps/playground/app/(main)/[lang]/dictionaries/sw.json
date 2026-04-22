@@ -1,6 +1,26 @@
 {
   "landing": {
-    "title": "Lugha ya kiprogramu ya Kiswahili"
+    "title": "Lugha ya kiprogramu ya Kiswahili",
+    "tagline": "Rahisi Kujifunza, Rahisi Kutumia.",
+    "actions": {
+      "anza": "Anza",
+      "mifano": "Pitia Mifano"
+    },
+    "features": [
+      {
+        "title": "Sintaksia Rahisi 😎",
+        "details": "Sintaksia ya Nuru ni rahisi kujifunza kwa wenye uzoefu na wasio na uzoefu na kutengeneza programu."
+      },
+      {
+        "title": "Maneno Rahisi 🎹",
+        "details": "Andika programu kana kwamba unaandika barua na maneno rahisi kama andika() kuchapisha kitu na jaza() kupata maingizo kutoka kwa watumiaji."
+      },
+      {
+        "title": "Inaendeshwa na Jumuiya 👥",
+        "details": "Nuru inaendeshwa na jamii na sauti yako ni muhimu. Tunahakikisha kushauriana na jamii kabla ya kufanya uamuzi. Njoo ujiunge nasi [Telegram](https://t.me/NuruProgrammingChat)"
+      }
+    ],
+    "contributors": "Wachangiaji"
   },
   "header": {
     "home": "Nyumbani",

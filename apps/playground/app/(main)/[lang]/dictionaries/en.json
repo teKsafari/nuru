@@ -1,6 +1,26 @@
 {
   "landing": {
-    "title": "Swahili Programming Language"
+    "title": "Swahili Programming Language",
+    "tagline": "Easy to Learn, Easy to Use.",
+    "actions": {
+      "anza": "Start",
+      "mifano": "Examples"
+    },
+    "features": [
+      {
+        "title": "Simple Syntax 😎",
+        "details": "Nuru syntax is easy to learn for both experienced and inexperienced programmers."
+      },
+      {
+        "title": "Easy Words 🎹",
+        "details": "Write programs as if you are writing a letter with simple words like andika() to print something and jaza() to get user input."
+      },
+      {
+        "title": "Community Driven 👥",
+        "details": "Nuru is driven by the community and your voice matters. We ensure to consult the community before making decisions. Come join us on [Telegram](https://t.me/NuruProgrammingChat)"
+      }
+    ],
+    "contributors": "Contributors"
   },
   "header": {
     "home": "Home",

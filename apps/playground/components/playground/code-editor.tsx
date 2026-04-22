@@ -114,8 +114,11 @@ export function CodeEditor({
 	readOnly = false,
 	extensions = [],
 }: CodeEditorProps) {
-	const { theme: currentTheme, forcedTheme } = useTheme();
-	const theme = (themeProp || forcedTheme || currentTheme) as "light" | "dark" || "dark";
+	// console.log({themeProp})
+
+	const { theme: currentTheme } = useTheme();
+	const theme = (themeProp || currentTheme) as "light" | "dark" || "dark";
+
 
 	return (
 		<div className="h-full overflow-hidden">
