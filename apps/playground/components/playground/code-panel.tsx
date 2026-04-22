@@ -16,49 +16,39 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
-import { PlaygroundLabels } from "@/types/playground";
-import { Extension } from "@codemirror/state";
+import { usePlayground } from "./playground-context";
 
 interface CodePanelProps {
-	code: string;
-	output: string;
-	onCodeChange: (code: string) => void;
-	onRun: () => void;
-	onSubmit: () => void;
-	onShowSolution: () => void;
-	onShowHint: () => void;
-	onReset: () => void;
+	onRun?: () => void;
 	isMobile?: boolean;
 	mobileExtra?: React.ReactNode;
-	theme?: "light" | "dark";
-	lang: "en" | "sw";
-	labels: PlaygroundLabels;
-	extensions?: Extension[];
-	isCompleted?: boolean;
-	onNextAction?: () => void;
-	nextActionLabel?: string;
 }
 
 export function CodePanel({
-	code,
-	output,
-	onCodeChange,
-	onRun,
-	onSubmit,
-	onShowSolution,
-	onShowHint,
-	onReset,
+	onRun: onRunProp,
 	isMobile,
 	mobileExtra,
-  theme,
-  lang,
-  labels,
-  extensions,
-  isCompleted,
-  onNextAction,
-  nextActionLabel
 }: CodePanelProps) {
+	const {
+		state: { code, output },
+		actions: {
+			onCodeChange,
+			onRun: onRunAction,
+			onSubmit,
+			onShowSolution,
+			onShowHint,
+			onReset,
+		},
+		theme,
+		labels,
+		extensions,
+		isCurrentStepCompleted: isCompleted,
+		handleNextAction: onNextAction,
+		nextActionLabel,
+	} = usePlayground();
+
+	const onRun = onRunProp || onRunAction;
+
 	const isDev = process.env.NODE_ENV === "development";
 
 	const actions = (isMobileLayout: boolean) => (
@@ -122,7 +112,7 @@ export function CodePanel({
 				<Button
 					onClick={onRun}
 					size="sm"
-					className="h-8 bg-primary px-3 text-[11px] font-black tracking-wider uppercase text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+					className="h-8 bg-primary px-3 text-[11px] tracking-wider uppercase text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
 				>
 					<Play className="h-3 w-3 fill-current" />
 					{labels.run}
@@ -134,7 +124,7 @@ export function CodePanel({
 						<Button
 							onClick={onNextAction}
 							size="sm"
-							className="h-8 bg-green-600 px-3 text-[11px] font-black tracking-wider uppercase text-white shadow-lg shadow-green-600/20 hover:bg-green-700 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 animate-pulse"
+							className="h-8 bg-green-600 px-3 text-[11px] tracking-wider uppercase text-white shadow-lg shadow-green-600/20 hover:bg-green-700 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 animate-pulse"
 						>
 							{nextActionLabel}
 							<ArrowRight className="h-3 w-3" />
@@ -171,7 +161,7 @@ export function CodePanel({
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel defaultSize={40} minSize={15}>
-					<OutputPanel output={output} showToolbar={false} labels={labels} />
+					<OutputPanel showToolbar={false} />
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</div>

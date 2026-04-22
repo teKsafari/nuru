@@ -8,14 +8,6 @@ import contributors from "@/public/contributors.json";
 import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
-
-import { Noto_Rashi_Hebrew } from "next/font/google";
-
-const NotoRashi = Noto_Rashi_Hebrew({
-	subsets:['latin'],
-	variable:'--font-noto-rashi'
-})
-
 export default async function Home({
 	params,
 }: {
@@ -28,7 +20,7 @@ export default async function Home({
 	const dict = await getDictionary(lang);
 
 	return (
-		<main className={cn(NotoRashi.className,"bg-background relative overflow-x-hidden")}>
+		<main className="bg-background relative overflow-x-hidden">
 			{/* Hero Section */}
 			<section className="text-center/ relative z-10 mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center px-4 py-20">
 				<h1 className="text-foreground mb-2 font-serif text-6xl leading-tight font-bold text-yellow-500 md:text-6xl">
@@ -45,16 +37,14 @@ export default async function Home({
 				<div className="flex flex-col items-center gap-4 sm:flex-row">
 					<Button
 						asChild
-						size="lg"
-						className="h-14 rounded-xl bg-yellow-500 px-8 text-lg font-bold text-black hover:bg-yellow-600"
+						size={"lg"}
 					>
 						<Link href={`/${lang}/anza`}>{dict.landing.actions.anza}</Link>
 					</Button>
 					<Button
 						asChild
+						size={"lg"}
 						variant="outline"
-						size="lg"
-						className="h-14 rounded-xl border-2 px-8 text-lg font-bold"
 					>
 						<Link href={`/${lang}/anza`}>{dict.landing.actions.mifano}</Link>
 					</Button>

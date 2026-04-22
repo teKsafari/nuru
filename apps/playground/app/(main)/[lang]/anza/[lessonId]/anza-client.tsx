@@ -19,7 +19,7 @@ interface AnzaClientProps {
 }
 
 export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps) {
-	const { theme, forcedTheme } = useTheme();
+	const { theme} = useTheme();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -190,7 +190,7 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 	return (
 		<Suspense fallback={<div className="flex-1 bg-background animate-pulse" />}>
 			<Playground
-				theme={(forcedTheme || theme) as "light" | "dark"}
+				theme={(theme) as "light" | "dark"}
 				lesson={lesson}
 				state={{
 					currentStepIndex,
