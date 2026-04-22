@@ -12,7 +12,8 @@ export const viewport: Viewport = {
 };
 
 import "./globals.css";
-import { JetBrains_Mono } from "next/font/google";
+
+import { JetBrains_Mono, Noto_Rashi_Hebrew } from "next/font/google";
 
 const jetbrainsMono = JetBrains_Mono({
 	subsets: ["latin"],
@@ -20,7 +21,10 @@ const jetbrainsMono = JetBrains_Mono({
 	weight: ["400", "500", "700"],
 	variable: "--font-jetbrains-mono",
 });
-
+const NotoRashi = Noto_Rashi_Hebrew({
+	subsets: ["latin"],
+	variable: "--font-noto-rashi",
+});
 
 export const metadata: Metadata = {
 	title: "nuru playground",
@@ -43,9 +47,9 @@ export default function RootLayout({
 		<html
 			lang="en"
 			suppressHydrationWarning
-			className={`${jetbrainsMono.variable}`}
+			className={cn(jetbrainsMono.variable, NotoRashi.variable)}
 		>
-			<head>	
+			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 				<link
 					rel="icon"
