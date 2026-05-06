@@ -15,6 +15,7 @@ import Markdown from "react-markdown";
 import { CodeEditor } from "./code-editor";
 import { Breadcrumbs } from "./breadcrumbs";
 import { usePlayground } from "./playground-context";
+import { parseHighlights } from "@/lib/utils/highlights";
 
 interface LessonPanelProps {
 	collapsible?: boolean;
@@ -189,15 +190,22 @@ export function LessonPanel({
 											code(props) {
 												const { children, className, ...rest } = props;
 												const match = /language-(\w+)/.exec(className || "");
-												return match ? (
-													<div className="not-prose border-border bg-muted/30 my-6 overflow-hidden rounded-xl border p-2 shadow-xs">
-														<CodeEditor
-															code={String(children).replace(/\n$/, "")}
-															readOnly
-															extensions={extensions}
-														/>
-													</div>
-												) : (
+												if (match) {
+													const { cleanedCode, highlights } = parseHighlights(
+														String(children).replace(/\n$/, ""),
+													);
+													return (
+														<div className="not-prose border-border bg-muted/30 my-6 overflow-hidden rounded-xl border p-2 shadow-xs">
+															<CodeEditor
+																code={cleanedCode}
+																highlights={highlights}
+																readOnly
+																extensions={extensions}
+															/>
+														</div>
+													);
+												}
+												return (
 													<code
 														className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[13px] font-medium"
 														{...rest}
@@ -282,15 +290,22 @@ export function LessonPanel({
 											code(props) {
 												const { children, className, ...rest } = props;
 												const match = /language-(\w+)/.exec(className || "");
-												return match ? (
-													<div className="not-prose border-border bg-muted/30 my-4 overflow-hidden rounded-xl border">
-														<CodeEditor
-															code={String(children).replace(/\n$/, "")}
-															readOnly
-															extensions={extensions}
-														/>
-													</div>
-												) : (
+												if (match) {
+													const { cleanedCode, highlights } = parseHighlights(
+														String(children).replace(/\n$/, ""),
+													);
+													return (
+														<div className="not-prose border-border bg-muted/30 my-4 overflow-hidden rounded-xl border">
+															<CodeEditor
+																code={cleanedCode}
+																highlights={highlights}
+																readOnly
+																extensions={extensions}
+															/>
+														</div>
+													);
+												}
+												return (
 													<code
 														className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[12px]"
 														{...rest}

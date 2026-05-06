@@ -11,3 +11,8 @@ Nuru is a programming language designed specifically for Swahili speakers. It al
 Our goal is to break the language barrier in the tech world. In this tutorial, you will learn all the basics of programming step by step.
 
 A program is a series of commands you give to the computer. Let's start by seeing how a program works!
+
+### Your first line:
+```nuru
+andika(+++"Habari Nuru!"+++)
+```

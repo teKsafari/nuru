@@ -8,6 +8,7 @@ const { tags: t } = lezerHighlight;
 import { createTheme } from "@uiw/codemirror-themes";
 import type { CreateThemeOptions } from "@uiw/codemirror-themes";
 import { useTheme } from "@wrksz/themes/client";
+import { Highlight, getHighlightExtension } from "@/lib/utils/highlights";
 
 interface CodeEditorProps {
 	code: string;
@@ -15,6 +16,7 @@ interface CodeEditorProps {
 	theme?: "dark" | "light" | CreateThemeOptions;
 	readOnly?: boolean;
 	extensions?: Extension[];
+	highlights?: Highlight[];
 }
 
 // Custom dark theme matching our design
@@ -113,12 +115,17 @@ export function CodeEditor({
 	theme: themeProp,
 	readOnly = false,
 	extensions = [],
+	highlights = [],
 }: CodeEditorProps) {
 	// console.log({themeProp})
 
 	const { theme: currentTheme } = useTheme();
 	const theme = (themeProp || currentTheme) as "light" | "dark" || "dark";
 
+	const allExtensions = [...extensions, editorBaseTheme, EditorView.lineWrapping];
+	if (highlights && highlights.length > 0) {
+		allExtensions.push(getHighlightExtension(highlights));
+	}
 
 	return (
 		<div className="h-full overflow-hidden">
@@ -126,7 +133,7 @@ export function CodeEditor({
 				value={code}
 				height="100%"
 				theme={getTheme(theme)}
-				extensions={[...extensions, editorBaseTheme, EditorView.lineWrapping]}
+				extensions={allExtensions}
 				onChange={(value) => onChange?.(value)}
 				editable={!readOnly}
 				readOnly={readOnly}
