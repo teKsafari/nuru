@@ -83,9 +83,7 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
                 {/* Recommended Next Step Card */}
                 {activeStep && (
                     <Link 
-                        href={activeStep.lessonId === "misingi-ya-nuru" 
-                            ? `/${lang}/anza?step=${activeStep.id}` 
-                            : `/${lang}/anza/${activeStep.lessonId}?step=${activeStep.id}`}
+                        href={`/${lang}/anza/${activeStep.lessonId}/${activeStep.id}`}
                         className="flex items-center justify-between gap-4 rounded-2xl bg-card border border-primary/20 p-4 sm:p-5 hover:border-primary/40 hover:bg-primary/5 transition-all shadow-sm group/rec"
                     >
                         <div className="flex items-center gap-4">
@@ -168,9 +166,7 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
                                     const isLocked = globalIndex > currentActiveGlobalIndex;
 
                                     const stepTitle = step.title[lang] || step.title.sw;
-                                    const href = lesson.id === "misingi-ya-nuru" 
-                                        ? `/${lang}/anza?step=${step.id}` 
-                                        : `/${lang}/anza/${lesson.id}?step=${step.id}`;
+                                    const href = `/${lang}/anza/${lesson.id}/${step.id}`;
 
                                     return (
                                         <div key={step.id} className="relative">

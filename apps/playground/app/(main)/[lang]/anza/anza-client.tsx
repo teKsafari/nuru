@@ -7,33 +7,25 @@ import { useTheme } from "@wrksz/themes/client";
 import { Lesson, Language, PlaygroundLabels } from "@/types/playground";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 import { Suspense, useState, useEffect, useCallback, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import { nuruLanguage } from "@/lib/nuru-syntax";
 
 interface AnzaClientProps {
 	lesson: Lesson;
+	stepId: string;
 	nextLessonId?: string;
 	lang: Language;
 	dict: Dictionary;
 }
 
-export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps) {
+export function AnzaClient({ lesson, stepId, nextLessonId, lang, dict }: AnzaClientProps) {
 	const { theme} = useTheme();
 	const router = useRouter();
-	const searchParams = useSearchParams();
-	const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
-	// Initial step from URL
-	useEffect(() => {
-		const stepId = searchParams.get("step");
-		if (stepId) {
-			const index = lesson.steps.findIndex((s) => s.id === stepId);
-			if (index !== -1) {
-				setCurrentStepIndex(index);
-			}
-		}
-	}, [searchParams, lesson.steps]);
+	const currentStepIndex = useMemo(() => {
+		const index = lesson.steps.findIndex((s) => s.id === stepId);
+		return index !== -1 ? index : 0;
+	}, [lesson.steps, stepId]);
 
 	const currentStep = lesson.steps[currentStepIndex];
 
@@ -199,7 +191,7 @@ export function AnzaClient({ lesson, nextLessonId, lang, dict }: AnzaClientProps
 					completedStepIndices,
 				}}
 				actions={{
-					onStepChange: setCurrentStepIndex,
+					onStepChange: (index) => router.push(`/${lang}/anza/${lesson.id}/${lesson.steps[index].id}`),
 					onCodeChange: handleCodeChange,
 					onRun: handleRun,
 					onSubmit: handleSubmit,
