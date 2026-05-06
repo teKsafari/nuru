@@ -1,9 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
 import yaml from 'yaml';
-import { Lesson, LessonStep } from '@/types/playground';
+import { Lesson, LessonStep, Language } from '@/types/playground';
 
 const LESSONS_ROOT = path.join(process.cwd(), 'content/lessons');
+const HIDDEN_LESSON_ERROR = 'LESSON_HIDDEN';
 
 function parseMD(content: string) {
 	const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -15,7 +16,14 @@ function parseMD(content: string) {
 	return { frontmatter: {}, body: content };
 }
 
-export async function getAllLessons() {
+function isLessonHidden(frontmatter: any) {
+	const isDraft = frontmatter?.status === 'draft' || frontmatter?.visibility === 'draft';
+	const isProd = process.env.NODE_ENV === 'production';
+	const showDrafts = process.env.SHOW_DRAFTS === 'true';
+	return isDraft && isProd && !showDrafts;
+}
+
+export async function getAllLessons(): Promise<{ id: string; title: Record<Language, string> }[]> {
 	const entries = await fs.readdir(LESSONS_ROOT, { withFileTypes: true });
 	const lessonDirs = entries
 		.filter((e) => e.isDirectory())
@@ -30,6 +38,11 @@ export async function getAllLessons() {
 				'utf-8'
 			);
 			const { frontmatter } = parseMD(indexContent);
+
+			if (isLessonHidden(frontmatter)) {
+				continue; // skipp if hidden
+			}
+
 			lessons.push({
 				id: entry.name.replace(/^\d+-/, ''),
 				title: frontmatter.title,
@@ -57,6 +70,10 @@ export async function getLesson(id: string): Promise<Lesson> {
 		'utf-8'
 	);
 	const { frontmatter } = parseMD(indexContent);
+
+	if (isLessonHidden(frontmatter)) {
+		throw new Error(HIDDEN_LESSON_ERROR);
+	}
 
 	const steps: LessonStep[] = [];
 
@@ -117,6 +134,9 @@ export async function getAllLessonsWithSteps(): Promise<Lesson[]> {
 			const lesson = await getLesson(id);
 			lessons.push(lesson);
 		} catch (error) {
+			if (error instanceof Error && error.message === HIDDEN_LESSON_ERROR) {
+				continue;
+			}
 			console.error(`Error reading lesson for ${entry.name}:`, error);
 		}
 	}

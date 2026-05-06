@@ -1,6 +1,6 @@
 # Contributing to Nuru Monorepo
 
-First off, thank you for considering contributing to Nuru! It's people like you that make Nuru a great tool for Swahili speakers to learn programming. 
+First off, thank you for considering contributing to Nuru. 
 
 We are especially looking for contributors to help us build out our **Learning Resources (Lessons)**. We want to expand the lessons to cover all aspects of programming in Nuru.
 
@@ -73,6 +73,7 @@ When creating a new lesson module, you need an `index.md` file at its root. This
 ```yaml
 ---
 difficulty: "mwanzilishi" # Options: mwanzilishi (Beginner), kati (Intermediate), mtaalamu (Advanced)
+status: "draft" # optional. hides the lesson in prod. good for WIP lessons.  
 title:
   sw: "Misingi ya Nuru"
   en: "Nuru Basics"
@@ -95,13 +96,13 @@ initialCode: |
 solution: "The exact code required to pass this task."
 ---
 
-Your markdown content explaining the concept goes here. Keep it simple, engaging, and easy to understand!
+Your markdown content explaining the concept goes here. Keep it simple, engaging, and easy to understand
 ```
 
 **Tips for writing topics:**
 - **Keep it brief:** Break complex concepts into smaller, digestible topics.
 - **Provide clear tasks:** Ensure the `task` clearly explains what the user needs to write in the editor to proceed.
-- **Bilingual:** Always strive to provide both Swahili (`sw/`) and English (`en/`) versions of your lesson to maintain accessibility for everyone.
+- **Bilingual:** Always provide both Swahili (`sw/`) and English (`en/`) versions of your lesson
 
 ### 3. Testing Your Lessons
 

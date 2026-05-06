@@ -34,7 +34,7 @@ When we create `unda(jina)`, `jina` acts as a placeholder variable. When we call
 
 **Your Task:** Finish the `karibu` function so it can welcome anyone by their name!
 
-```s
+```nuru
 fanya karibu = unda(jina) {
     andika("Karibu,", +++jina+++)
 }
