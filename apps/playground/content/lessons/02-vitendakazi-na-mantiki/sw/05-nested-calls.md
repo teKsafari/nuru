@@ -38,7 +38,7 @@ fanya pata_namba = unda() {
 }
 
 fanya hesabu = unda() {
-    fanya n = pata_namba()
+    +++fanya n = pata_namba()+++
     andika(n + 1) // 11
 }
 
@@ -46,3 +46,10 @@ hesabu()
 ```
 
 **Kazi Yako:** Ndani ya kitendakazi `salimia`, ita `tafuta_jina()` na uhifadhi matokeo kwenye kibadilika `jina`. Kisha tumia kibadilika hicho kwenye salamu!
+
+```s
+fanya salimia = unda() {
+    +++fanya jina = tafuta_jina()+++
+    andika("Habari", jina)
+}
+```

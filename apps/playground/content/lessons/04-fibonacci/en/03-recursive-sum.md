@@ -37,3 +37,7 @@ If you ask for `fibo(2)`:
 3. It adds them: `1 + 0 = 1`.
 
 **Your Task:** Complete the recursive step! Make the function call itself twice to get the sum of the previous two numbers.
+
+```nuru
+rudisha +++fibo(n - 1) + fibo(n - 2)+++
+```

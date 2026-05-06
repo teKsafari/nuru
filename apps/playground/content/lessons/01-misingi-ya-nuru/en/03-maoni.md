@@ -13,15 +13,15 @@ Comments are lines of text that the Nuru interpreter ignores. They are used to p
 2. **Multi-line**: Use `/*` to start and `*/` to end.
 
 ### Example:
-```s
-// This is a secret number
+```nuru
++++//+++ This is a secret number
 fanya secret = 1234
 
-/* 
++++/*+++ 
    Here we write
    very long 
    explanations...
-*/
++++*/+++
 andika("Ready")
 ```
 

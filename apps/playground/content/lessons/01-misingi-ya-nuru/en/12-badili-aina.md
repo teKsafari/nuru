@@ -13,9 +13,9 @@ As you remember, `jaza()` returns text. If you want to do math with that input, 
 - `tungo(thing)`: Converts to a string.
 
 ### Example:
-```s
+```nuru
 fanya input = jaza("Enter a number: ") // "10"
-fanya x = namba(input)                 // 10 (now it's a number)
+fanya x = +++namba(input)+++                 // 10 (now it's a number)
 andika(x + 5)                          // 15
 ```
 

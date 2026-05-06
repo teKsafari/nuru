@@ -46,4 +46,4 @@ Mara tu kitendakazi cha `0` kinapomaliza, kompyuta inaendelea pale ilipoishia kw
 - `hesabu(2)` (Inaendelea) -> Inaandika 2
 - ... na kuendelea.
 
-**Kazi Yako:** Badilisha mpangilio wa `andika(n)` na `hesabu(n-1)` ili uone "ufunguzi" huu ukifanyika. Itaandika namba kwa mpangilio wa kinyume (1, 2, 3, 4, 5)!
+**Kazi Yako:** Badilisha mpangilio kwa kusogeza +++andika(n)+++ chini ya +++hesabu(n - 1)+++ ili uone "ufunguzi" huu ukifanyika. Itaandika namba kwa mpangilio wa kinyume (1, 2, 3, 4, 5)!

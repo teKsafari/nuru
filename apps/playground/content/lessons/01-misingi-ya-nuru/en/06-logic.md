@@ -16,9 +16,9 @@ When you want to compare values, you use these operators:
 - `!` (**Not**): Inverts `kweli` to `sikweli`.
 
 ### Example:
-```s
-andika(10 > 5)          // true
-andika(5 == 5 && 2 > 3) // false (because 2 is not more than 3)
-andika(5 == 5 || 2 > 3) // true (because one side is true)
+```nuru
+andika(10 +++>+++ 5)          // true
+andika(5 +++==+++ 5 +++&&+++ 2 +++>+++ 3) // false (because 2 is not more than 3)
+andika(5 +++==+++ 5 +++||+++ 2 +++>+++ 3) // true (because one side is true)
 ```
 

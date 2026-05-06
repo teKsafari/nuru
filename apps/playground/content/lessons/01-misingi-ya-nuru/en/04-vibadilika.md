@@ -17,9 +17,9 @@ We use the `=` sign to assign a value to a variable. You can use the word `fanya
 - Case sensitivity matters (`name` is different from `Name`).
 
 ### Example:
-```s
-fanya year = 2024
-name = "Nuru"
+```nuru
++++fanya year = 2024+++
++++name = "Nuru"+++
 andika(name, "existed since", year)
 ```
 

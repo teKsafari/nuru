@@ -16,9 +16,9 @@ Functions are pieces of code that you can call at any time. We use the word `und
 2. To make code cleaner.
 
 ### Example:
-```s
-fanya square = unda(n) {
-    rudisha n * n
+```nuru
+fanya square = +++unda(n)+++ {
+    +++rudisha n * n+++
 }
 
 andika(square(5))  // 25

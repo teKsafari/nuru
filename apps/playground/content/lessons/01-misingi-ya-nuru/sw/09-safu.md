@@ -16,10 +16,10 @@ Safu ni mkusanyiko wa vitu vingi katika sanduku moja. Vitu hivi huwekwa ndani ya
 - `sukuma(kitu)` inaongeza kitu mwishoni.
 
 ### Mfano:
-```s
-fanya wanafunzi = ["Juma", "Asha"]
-wanafunzi.sukuma("Baraka")
+```nuru
+fanya wanafunzi = +++["Juma", "Asha"]+++
+wanafunzi.+++sukuma("Baraka")+++
 andika(wanafunzi[0])      // Juma
-andika(wanafunzi.idadi()) // 3
+andika(wanafunzi.+++idadi()+++) // 3
 ```
 

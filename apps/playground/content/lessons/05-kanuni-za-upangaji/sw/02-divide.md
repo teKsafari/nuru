@@ -41,6 +41,14 @@ Badala ya kujaribu kupanga orodha kubwa yote kwa mara moja, tunaigawanya katika 
 ### Mgawanyo:
 Tunatafuta namba ya katikati na kuikata safu (array) nusu kwa kutumia kitanzi cha `kwa`.
 
-**Kazi Yako:** Tumia kitanzi cha `kwa` kugawanya orodha katikati.
-- Ikiwa `i` ni chini ya `katikati`, sukuma namba kwenye `kushoto`.
+**Kazi Yako:** Tumia mzunguko wa `kwa` kugawanya orodha katikati.
+- Ikiwa fahirisi `i` ni chini ya `katikati`, sukuma namba kwenye `kushoto`.
 - Vinginevyo, isukume kwenye `kulia`.
+
+```nuru
+kama (i < katikati) {
+    +++kushoto.sukuma(namba)+++
+} sivyo {
+    +++kulia.sukuma(namba)+++
+}
+```

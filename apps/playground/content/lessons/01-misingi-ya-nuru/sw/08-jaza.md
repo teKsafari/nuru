@@ -11,8 +11,8 @@ Kitendakazi cha `jaza()` kinakuwezesha kupata taarifa kutoka kwa mtumiaji. Kompy
 **Muhimu**: Thamani inayorudishwa na `jaza()` kila mara ni **Tungo** (maandishi).
 
 ### Mfano:
-```s
-fanya jina = jaza("Unaitwa nani? ")
+```nuru
+fanya jina = +++jaza("Unaitwa nani? ")+++
 andika("Karibu sana,", jina)
 ```
 

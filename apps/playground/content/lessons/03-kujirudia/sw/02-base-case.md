@@ -41,4 +41,4 @@ fanya simama_kwenye_sifuri = unda(n) {
 
 Bila Kesi ya Msingi, kujirudia kunakuwa kitanzi kibaya kisicho na mwisho.
 
-**Kazi Yako:** Ongeza sentensi ya `kama` kwenye kitendakazi `hesabu`. Ikiwa `n` ni 0 au chini ya hapo, andika "Imekamilika!" na urudishe `tupu` ili kusimamisha kitendakazi.
+**Kazi Yako:** Ongeza Kesi ya Msingi kwa kuandika +++rudisha tupu+++ mahali pa `?` na uondoe alama za `//` kwenye sentensi hiyo ya `kama`. Pia, uondoe alama ya `//` kwenye +++hesabu(5)+++ chini kabisa ili kuijaribu!

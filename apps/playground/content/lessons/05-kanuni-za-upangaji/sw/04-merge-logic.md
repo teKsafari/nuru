@@ -64,4 +64,11 @@ Baada ya kuigawanya orodha hadi ukubwa wa 1, tunahitaji kuziweka pamoja kwa mpan
 2. Chagua kile kidogo zaidi na ukiweke kwenye orodha yetu ya `matokeo`.
 3. Rudia hadi orodha moja iwe tupu!
 
-**Kazi Yako:** Kamilisha kitalu cha `sivyo`. Ikiwa `b[0]` ni ndogo (au sawa) na `a[0]`, iongeze kwenye `matokeo` na uiondoe kwenye `b`. (Kumbuka: `.sukuma()` inaongeza kitu kwenye safu, na `+` inaunganisha safu mbili).
+**Kazi Yako:** Kamilisha kizuizi cha `sivyo`. Ikiwa `b[0]` ni ndogo kuliko (au sawa na) `a[0]`, iongeze kwenye `matokeo` na uiondoe kwenye `b`. (Kumbuka: `.sukuma()` huongeza kitu kwenye safu, na `+` huunganisha safu mbili).
+
+```nuru
+sivyo {
+    +++matokeo.sukuma(b[0])+++
+    +++b = kata(b, 1)+++
+}
+```

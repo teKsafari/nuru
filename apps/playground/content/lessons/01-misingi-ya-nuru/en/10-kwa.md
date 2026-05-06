@@ -10,16 +10,16 @@ solution: "kwa i ktk mfululizo(5) {\n    andika(i)\n}"
 Loops are used to repeat an action many times. The word `kwa` helps us iterate through everything in an array or string.
 
 ### Iterating through an Array:
-```s
+```nuru
 fruits = ["Mango", "Papaya", "Pineapple"]
-kwa f ktk fruits {
++++kwa f ktk fruits+++ {
     andika("I like", f)
 }
 ```
 
 ### Using mfululizo():
-```s
-kwa i ktk mfululizo(1, 6) {
+```nuru
++++kwa i ktk mfululizo(1, 6)+++ {
     andika("Number:", i) // Prints 1, 2, 3, 4, 5
 }
 ```

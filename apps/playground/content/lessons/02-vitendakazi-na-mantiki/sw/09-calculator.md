@@ -54,4 +54,4 @@ Tunatumia sentensi ya `kama` (if) ili kuangalia kile ambacho mtumiaji anataka ku
 ### Kwa nini hii ni muhimu?
 Mfumo huu unatumika kila mahali! Kuanzia kuamua ni kitufe gani mtumiaji alibonyeza kwenye tovuti hadi kuamua jinsi mhusika anavyosogea kwenye mchezo wa video (game).
 
-**Kazi Yako:** Kamilisha mantiki iliyokosekana kwa shughuli nyingine tatu za kihisabati (`toa`, `zidisha`, `gawanya`). Usisahau kutoa alama za `//` kwenye majaribio yaliyo chini kabisa!
+**Kazi Yako:** Kamilisha mantiki kwa kuandika +++rudisha a - b+++, +++rudisha a * b+++, na +++rudisha a / b+++ ndani ya vizuizi vya `kama` husika. Pia, toa alama za `//` kwenye majaribio yaliyo chini kabisa!

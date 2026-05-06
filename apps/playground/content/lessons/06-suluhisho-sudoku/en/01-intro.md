@@ -25,3 +25,7 @@ A Sudoku grid is a 2D array (a list of lists). The goal is to fill every `0` wit
 3. No number repeats in a **Box**.
 
 **Your Task:** Look at the grid. We use `0` to represent empty cells. How would a computer even begin to solve this? We'll use a technique called **Backtracking**.
+
+```nuru
++++andika(gridi[i])+++
+```

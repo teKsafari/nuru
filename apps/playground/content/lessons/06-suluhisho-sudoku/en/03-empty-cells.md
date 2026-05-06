@@ -33,3 +33,7 @@ We scan the grid from top-to-bottom, left-to-right, until we find a `0`. This is
 If `pata_tupu()` returns `tupu`, it means there are no more zeros left in the grid. That means **the puzzle is solved!**
 
 **Your Task:** Run the code and notice how it correctly identifies `[0, 1]` as the first empty spot. We are ready to start guessing!
+
+```nuru
++++rudisha [r, c]+++
+```

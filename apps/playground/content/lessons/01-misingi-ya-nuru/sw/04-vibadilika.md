@@ -17,9 +17,9 @@ Tunatumia alama ya `=` kumpa kibadilika thamani. Unaweza kutumia neno `fanya` ku
 - Herufi kubwa na ndogo ni tofauti (`jina` ni tofauti na `Jina`).
 
 ### Mfano:
-```s
-fanya mwaka = 2024
-jina = "Nuru"
+```nuru
++++fanya mwaka = 2024+++
++++jina = "Nuru"+++
 andika(jina, "ilikuwepo tangu", mwaka)
 ```
 

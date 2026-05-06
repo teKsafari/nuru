@@ -14,11 +14,11 @@ Kitanzi cha `wakati` kinaendelea kurudia mradi tu hali fulani iwe kweli.
 **Onyo**: Hakikisha hali hiyo itakuja kuwa sikweli wakati fulani, vinginevyo programu itajirudia milele!
 
 ### Mfano:
-```s
+```nuru
 fanya hesabu = 1
-wakati (hesabu <= 3) {
++++wakati (hesabu <= 3)+++ {
     andika("Hesabu ni:", hesabu)
-    hesabu = hesabu + 1
+    +++hesabu = hesabu + 1+++
 }
 ```
 

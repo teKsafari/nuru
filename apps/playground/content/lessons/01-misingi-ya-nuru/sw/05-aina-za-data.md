@@ -15,9 +15,9 @@ Katika Nuru, kuna aina mbalimbali za taarifa:
 - `+` (Jumla), `-` (Kutoa), `*` (Kuzidisha), `/` (Kugawanya), `%` (Baki).
 
 ### Mfano:
-```s
-andika(10 + 5.5)  // 15.5
-andika("Nuru" + " ni " + "nzuri") // Kuunganisha maandishi
-andika(10 % 3)    // 1 (baki la kugawa 10 kwa 3)
+```nuru
+andika(10 +++++++ 5.5)  // 15.5
+andika("Nuru" +++++++ " ni " +++++++ "nzuri") // Kuunganisha maandishi
+andika(10 +++%+++ 3)    // 1 (baki la kugawa 10 kwa 3)
 ```
 

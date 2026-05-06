@@ -13,9 +13,9 @@ Kama unakumbuka, `jaza()` inatoa maandishi. Kama unataka kufanya hesabu na ingiz
 - `tungo(kitu)`: Hugeuza kuwa maandishi.
 
 ### Mfano:
-```s
+```nuru
 fanya ingizo = jaza("Weka namba: ") // "10"
-fanya x = namba(ingizo)            // 10 (sasa ni namba)
+fanya x = +++namba(ingizo)+++            // 10 (sasa ni namba)
 andika(x + 5)                      // 15
 ```
 

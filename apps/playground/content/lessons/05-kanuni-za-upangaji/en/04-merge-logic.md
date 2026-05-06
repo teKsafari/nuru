@@ -65,3 +65,10 @@ After we split the lists down to size 1, we need to put them back together in th
 3. Repeat until one list is empty!
 
 **Your Task:** Complete the `sivyo` block. If `b[0]` is smaller (or equal) to `a[0]`, add it to the `matokeo` and remove it from `b`. (Note: `.sukuma()` adds an item to an array, and `+` joins two arrays).
+
+```nuru
+sivyo {
+    +++matokeo.sukuma(b[0])+++
+    +++b = kata(b, 1)+++
+}
+```

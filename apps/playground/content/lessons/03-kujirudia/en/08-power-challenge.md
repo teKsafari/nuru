@@ -38,4 +38,4 @@ And $2^0$ is always **1**. This is your Base Case!
 ### Final Tip:
 Always make sure you are changing the argument in each step (e.g., `y - 1`) so you eventually reach the Base Case (`y == 0`).
 
-**Your Task:** Complete the function. Can you make the computer calculate powers using recursion?
+**Your Task:** Complete the `peo` function. Write +++rudisha 1+++ inside the Base Case and +++rudisha x * peo(x, y - 1)+++ for the Recursive Step.

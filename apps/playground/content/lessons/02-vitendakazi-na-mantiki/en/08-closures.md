@@ -43,4 +43,4 @@ chora_nyekundu() // Prints: Kuchora kwa rangi ya Nyekundu
 
 This is called a **Closure** because the inner function "closes over" and remembers the variables from the outer function even after the outer function finishes.
 
-**Your Task:** Get the inner function from `tengeneza_salamu()`, save it to a variable, and then run it!
+**Your Task:** Get the inner function by writing +++fanya sema_jambo = tengeneza_salamu()+++ and then run it by calling +++sema_jambo()+++!

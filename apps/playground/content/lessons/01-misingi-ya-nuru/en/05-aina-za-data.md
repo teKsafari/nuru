@@ -15,9 +15,9 @@ In Nuru, there are different types of information:
 - `+` (Add), `-` (Subtract), `*` (Multiply), `/` (Divide), `%` (Modulo/Remainder).
 
 ### Example:
-```s
-andika(10 + 5.5)  // 15.5
-andika("Nuru" + " is " + "great") // Combining text
-andika(10 % 3)    // 1 (remainder of 10 divided by 3)
+```nuru
+andika(10 +++++++ 5.5)  // 15.5
+andika("Nuru" +++++++ " is " +++++++ "great") // Combining text
+andika(10 +++%+++ 3)    // 1 (remainder of 10 divided by 3)
 ```
 

@@ -83,4 +83,9 @@ Ni wakati wa kuweka vipande vyote pamoja katika moja ya algorithms maarufu zaidi
 
 **Kazi Yako:** Jaza wito wa kujirudia. Lazima uite `panga` kwa `kata(orodha, 0, kati)` na `panga` kwa `kata(orodha, kati)`.
 
+```nuru
+fanya kushoto = +++panga(kata(orodha, 0, kati))+++
+fanya kulia = +++panga(kata(orodha, kati))+++
+```
+
 Je, si jambo la kushangaza? Kitendakazi kinapanga nusu kwa kujiita *chenyewe*! Huu ndio nguvu halisi ya kujirudia.

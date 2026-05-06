@@ -14,11 +14,11 @@ A `wakati` loop continues to repeat as long as a certain condition is true.
 **Warning**: Make sure that condition will eventually become false, otherwise the program will loop forever!
 
 ### Example:
-```s
+```nuru
 fanya count = 1
-wakati (count <= 3) {
++++wakati (count <= 3)+++ {
     andika("Count is:", count)
-    count = count + 1
+    +++count = count + 1+++
 }
 ```
 

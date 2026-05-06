@@ -44,3 +44,11 @@ We find the middle index and slice the array in half using a `kwa` loop.
 **Your Task:** Use a `kwa` loop to split the list in half.
 - If the index `i` is less than `katikati`, push the number to `kushoto`.
 - Otherwise, push it to `kulia`.
+
+```nuru
+kama (i < katikati) {
+    +++kushoto.sukuma(namba)+++
+} sivyo {
+    +++kulia.sukuma(namba)+++
+}
+```

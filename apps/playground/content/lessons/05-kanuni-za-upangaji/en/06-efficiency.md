@@ -69,3 +69,7 @@ You now understand:
 3. **Algorithmic Efficiency:** Why the way we write code matters for speed.
 
 **Your Task:** Run the code and watch it effortlessly sort 100 numbers. You've just implemented a professional-grade sorting algorithm!
+
+```nuru
++++andika(panga(orodha_kubwa))+++
+```

@@ -16,9 +16,9 @@ Unapotaka kulinganisha thamani, unatumia viendeshaji hivi:
 - `!` (**Siyo**): Inageuza `kweli` kuwa `sikweli`.
 
 ### Mfano:
-```s
-andika(10 > 5)          // kweli
-andika(5 == 5 && 2 > 3) // sikweli (kwa sababu 2 si zaidi ya 3)
-andika(5 == 5 || 2 > 3) // kweli (kwa sababu upande mmoja ni kweli)
+```nuru
+andika(10 +++>+++ 5)          // kweli
+andika(5 +++==+++ 5 +++&&+++ 2 +++>+++ 3) // sikweli (kwa sababu 2 si zaidi ya 3)
+andika(5 +++==+++ 5 +++||+++ 2 +++>+++ 3) // kweli (kwa sababu upande mmoja ni kweli)
 ```
 

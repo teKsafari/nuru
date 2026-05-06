@@ -17,4 +17,8 @@ Fikiria unatafuta neno kwenye kamusi ambapo kurasa zimepangwa kiholela. Itachuku
 
 Katika sayansi ya kompyuta, kupanga ndio msingi wa utafutaji wa haraka.
 
-**Kazi Yako:** Endesha kodi. Angalia jinsi ilivyo rahisi kwa binadamu (na kompyuta) kuelewa orodha ambayo imepangwa vizuri. Tutajifunza algorithm yenye nguvu zaidi ya kupanga: **Merge Sort**.
+**Kazi Yako:** Endesha kodi. Angalia jinsi ilivyo rahisi kwa binadamu (na kompyuta) kuelewa orodha ambayo imepangwa. Tutajifunza algoriti yenye nguvu zaidi ya kupanga: **Merge Sort**.
+
+```nuru
++++andika("Orodha nzuri:", orodha_nzuri)+++
+```

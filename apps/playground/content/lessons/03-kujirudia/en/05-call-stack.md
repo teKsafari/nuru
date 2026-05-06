@@ -46,4 +46,4 @@ Once the `0` function finishes (returns), the computer resumes where it left off
 - `hesabu(2)` (Resumed) -> Prints 2
 - ... and so on.
 
-**Your Task:** Swap the order of `andika(n)` and `hesabu(n-1)` to see this "unwinding" in action. It will print the numbers in reverse order (1, 2, 3, 4, 5)!
+**Your Task:** Swap the order by moving +++andika(n)+++ below +++hesabu(n - 1)+++ to see this "unwinding" in action. It will print the numbers in reverse order (1, 2, 3, 4, 5)!

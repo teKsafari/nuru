@@ -31,3 +31,7 @@ Kadiri `n` inavyokuwa kubwa, idadi ya wito inalipuka!
 Hii ndiyo sababu kujirudia rahisi wakati mwingine kunaweza kuwa "ghali" kwa kompyuta. Inafanya mamilioni ya hesabu kwa namba zile zile ndogo (kama `fibo(2)`) kwa sababu haina kumbukumbu.
 
 **Kazi Yako:** Badilisha ingizo (input) kuwa 30. Angalia mkwamo kidogo wakati kompyuta yako inafanya kazi kwa bidii kukokotoa mamilioni ya hatua! Tutarekebisha tatizo hili la kasi katika somo lijalo.
+
+```nuru
+andika(fibo(+++30+++))
+```

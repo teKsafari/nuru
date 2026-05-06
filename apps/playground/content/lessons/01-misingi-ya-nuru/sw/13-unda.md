@@ -16,9 +16,9 @@ Vitendakazi ni mapande ya msimbo unayoweza kuyaita wakati wowote. Tunatumia neno
 2. Kufanya msimbo uwe nadhifu.
 
 ### Mfano:
-```s
-fanya mraba = unda(n) {
-    rudisha n * n
+```nuru
+fanya mraba = +++unda(n)+++ {
+    +++rudisha n * n+++
 }
 
 andika(mraba(5)) // 25

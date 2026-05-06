@@ -18,3 +18,7 @@ Imagine looking for a word in a dictionary where the pages were in a random orde
 In computer science, sorting is the foundation of fast searching.
 
 **Your Task:** Run the code. Notice how much easier it is for a human (and a computer) to reason about a list that is in order. We're going to learn the most powerful sorting algorithm: **Merge Sort**.
+
+```nuru
++++andika("Orodha nzuri:", orodha_nzuri)+++
+```

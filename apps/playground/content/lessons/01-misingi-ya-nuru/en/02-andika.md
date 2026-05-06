@@ -19,7 +19,9 @@ andika(2024)             // Prints: 2024
 ```
 
 You can also use special characters like `/n` to start a new line:
-```s
-andika("First line /n Second line")
+
+### Example:
+```nuru
+andika("My name is Amani +++/n+++ I live in Dar es Salaam")
 ```
 

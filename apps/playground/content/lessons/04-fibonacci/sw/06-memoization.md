@@ -45,3 +45,9 @@ Katika sayansi ya kompyuta, hii inaitwa **Memoization**. Kila wakati tunapokokot
 Ukiwa na kumbukumbu, `fibo(30)` inatoka kwenye wito Milioni 2 hadi wito **30** tu. Hiyo ni ongezeko kubwa sana la kasi!
 
 **Kazi Yako:** Malizia sentensi ya `kama` ili kurudisha thamani iliyohifadhiwa ikiwa ipo kwenye `kumbukumbu[n]`. (Katika Nuru, tunatumia `tupu` kuangalia ikiwa thamani haipo).
+
+```nuru
+kama (kumbukumbu[n] != tupu) {
+    rudisha +++kumbukumbu[n]+++
+}
+```

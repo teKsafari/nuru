@@ -22,7 +22,7 @@ Tunatumia neno `unda` kutengeneza kitendakazi.
 ### Inavyoonekana:
 ```s
 fanya piga_kelele = unda() {
-    andika("AAAH!")
+    +++andika("AAAH!")+++
 }
 
 // Ili kuiendesha, "tunaiita" kwa kutumia mabano:
@@ -33,3 +33,9 @@ piga_kelele()
 Katika mfano hapo juu, `piga_kelele()` inaendesha kodi iliyo ndani ya mabano ya mawimbi `{ ... }`. Kwa sababu tumeiita mara mbili, itaandika "AAAH!" mara mbili.
 
 **Kazi Yako:** Je, unaweza kurekebisha mashine ya `salamu` ili iandike `"Jambo!"` kwenye skrini?
+
+```s
+fanya salamu = unda() {
+    +++andika("Jambo!")+++
+}
+```

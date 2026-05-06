@@ -83,4 +83,9 @@ It's time to put all the pieces together into one of the most famous algorithms 
 
 **Your Task:** Fill in the recursive calls. You must call `panga` on `kata(orodha, 0, kati)` and `panga` on `kata(orodha, kati)`.
 
+```nuru
+fanya kushoto = +++panga(kata(orodha, 0, kati))+++
+fanya kulia = +++panga(kata(orodha, kati))+++
+```
+
 Wait, isn't it amazing? The function sorts the halves by calling *itself*! This is the true power of recursion.

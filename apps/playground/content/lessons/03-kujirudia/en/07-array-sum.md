@@ -37,4 +37,4 @@ If you want to find the sum of all numbers in an array, we can pass an index `i`
 - `10 + (20 + jumla([10, 20], 2))`
 - `10 + (20 + 0)` = **30**
 
-**Your Task:** Complete the logic for `jumla`. Return the value of the current item in the list (`orodha[i]`) plus the result of calling `jumla` on the rest of the list (`jumla(orodha, i + 1)`).
+**Your Task:** Complete the logic for `jumla` by writing +++rudisha orodha[i] + jumla(orodha, i + 1)+++. This will sum up all items in the list.

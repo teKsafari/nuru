@@ -69,3 +69,7 @@ Sasa unaelewa:
 3. **Ufanisi wa Algorithmic:** Kwa nini jinsi tunavyoandika kodi ni muhimu kwa kasi ya programu.
 
 **Kazi Yako:** Endesha kodi na utazame inavyopanga namba 100 bila shida. Umetoka tu kutekeleza algorithm ya kupanga ya kiwango cha juu!
+
+```nuru
++++andika(panga(orodha_kubwa))+++
+```

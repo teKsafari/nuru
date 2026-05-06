@@ -46,3 +46,7 @@ Ili kupata `fibo(5)`, kompyuta haifanyi hatua 5 tu. Inaita kitendakazi mara **15
 - Angalia jinsi `fibo(3)` inavyokokotolewa mara mbili? Kadiri `n` inavyokuwa kubwa, kompyuta inaanza kurudia kazi ile ile mara nyingi sana.
 
 **Kazi Yako:** Endesha kodi na utazame matokeo. Je, unaamini ilichukua wito 15 kwa namba 5 tu? Fikiria itachukua ngapi kwa namba 30!
+
+```nuru
+fanya jibu = fibo(+++5+++)
+```

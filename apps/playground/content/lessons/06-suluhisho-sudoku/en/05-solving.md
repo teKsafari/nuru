@@ -55,3 +55,7 @@ This same Backtracking algorithm is used to:
 You started with `andika("Jambo")` and you ended with an automated Sudoku solver. The world of technology is now yours to explore.
 
 **Your Task:** Run the final solver. Look at how the empty zeros were replaced by the correct numbers. Congratulations on completing the Nuru Wasm Tutorial!
+
+```nuru
++++tatua()+++
+```

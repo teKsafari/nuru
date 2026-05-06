@@ -25,3 +25,7 @@ Gridi ya Sudoku ni safu ya 2D (orodha ya orodha). Lengo ni kujaza kila `0` kwa n
 3. Hakuna namba inayojirudia katika **Kikundi** (Box).
 
 **Kazi Yako:** Angalia gridi hiyo. Tunatumia `0` kuwakilisha visanduku vilivyo wazi. Kompyuta inaanzaje kutatua fumbo hili? Tutatumia mbinu inayoitwa **Backtracking**.
+
+```nuru
++++andika(gridi[i])+++
+```

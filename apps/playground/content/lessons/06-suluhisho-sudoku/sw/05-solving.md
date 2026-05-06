@@ -55,3 +55,7 @@ Algorithm hii ya Backtracking inatumiwa pia:
 Ulianza na `andika("Jambo")` na umemaliza na suluhisho la Sudoku linalojiendesha lenyewe. Ulimwengu wa teknolojia sasa ni wako kuuchunguza.
 
 **Kazi Yako:** Endesha suluhisho la mwisho. Angalia jinsi sifuri zilivyobadilishwa na namba sahihi. Hongera sana kwa kukamilisha Mafunzo ya Nuru Wasm!
+
+```nuru
++++tatua()+++
+```

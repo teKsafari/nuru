@@ -39,4 +39,4 @@ Fikiria boksi lililo ndani ya boksi lingine. Ili kupata zawadi iliyo katikati, u
 2. Ikiwa ndilo boksi la mwisho kabisa lenye zawadi (**Kesi ya Msingi**), unachukua zawadi.
 3. Ikiwa sivyo, unafungua boksi lingine dogo zaidi lililo ndani (**Hatua ya Kujirudia**).
 
-**Kazi Yako:** Pima nguvu ya kitendakazi chako! Badilisha namba ya kuanzia kutoka 5 hadi 10. Angalia jinsi kodi ile ile ndogo inavyoweza kufanya kazi kubwa zaidi sasa.
+**Kazi Yako:** Pima nguvu ya kitendakazi chako! Badilisha namba ya kuanzia kwa kuandika +++hesabu(10)+++ chini kabisa. Angalia jinsi kodi ile ile ndogo inavyoweza kufanya kazi kubwa zaidi sasa.

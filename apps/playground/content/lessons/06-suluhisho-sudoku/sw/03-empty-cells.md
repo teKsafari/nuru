@@ -33,3 +33,7 @@ Tunakagua gridi kuanzia juu kwenda chini, kushoto kwenda kulia, hadi tupate `0`.
 Ikiwa `pata_tupu()` inarudisha `tupu`, inamaanisha hakuna sifuri zilizobaki kwenye gridi. Hiyo inamaanisha **fumbo limetatuliwa!**
 
 **Kazi Yako:** Endesha kodi na uone jinsi inavyotambua kwa usahihi `[0, 1]` kama nafasi ya kwanza iliyo wazi. Tuko tayari kuanza kukisia!
+
+```nuru
++++rudisha [r, c]+++
+```

@@ -41,4 +41,4 @@ fanya stop_at_zero = unda(n) {
 
 Without a Base Case, recursion is just a destructive infinite loop.
 
-**Your Task:** Add the `kama` statement to the `hesabu` function. If `n` is 0 or less, print "Imekamilika!" and return `tupu` to stop the function.
+**Your Task:** Add the Base Case by writing +++rudisha tupu+++ in place of `?` and uncommenting the `kama` statement. Also, uncomment +++hesabu(5)+++ at the bottom to test it!

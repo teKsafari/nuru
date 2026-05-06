@@ -36,4 +36,4 @@ fanya sema = unda() {
 sema() // This will crash!
 ```
 
-**Your Task:** Run the code to see it in action. Then, comment out the `kioo()` call inside the function using `//` so it only runs once.
+**Your Task:** Run the code to see it in action. Then, fix it by adding +++//+++ in front of the `kioo()` call inside the function so it only runs once.

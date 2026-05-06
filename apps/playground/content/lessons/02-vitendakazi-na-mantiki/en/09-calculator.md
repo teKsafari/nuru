@@ -54,4 +54,4 @@ We can use the `kama` (if) statement to check what the user wants to do. If `ten
 ### Why this matters:
 This pattern is used everywhere! From deciding which button a user clicked on a website to deciding how a character moves in a game.
 
-**Your Task:** Complete the missing logic for the other three mathematical operations (`toa`, `zidisha`, `gawanya`). Don't forget to uncomment the test calls at the bottom!
+**Your Task:** Complete the logic by writing +++rudisha a - b+++, +++rudisha a * b+++, and +++rudisha a / b+++ inside the respective `kama` blocks. Also, remove the `//` from the test calls at the bottom!

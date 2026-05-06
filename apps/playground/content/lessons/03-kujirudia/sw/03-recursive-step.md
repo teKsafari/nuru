@@ -40,4 +40,4 @@ Katika mfano huu, tunahesabu kurudi nyuma. Kwa hiyo, kila hatua lazima iwe ndogo
 - Hatua ya 3: `hesabu(1)`
 - Hatua ya 4: `hesabu(0)` -> **SIMAMA!**
 
-**Kazi Yako:** Badilisha mwito wa kitendakazi `hesabu(n)` kuwa `hesabu(n - 1)`. Hii hatimaye itafanya kujirudia kufanye kazi!
+**Kazi Yako:** Kamilisha Hatua ya Kujirudia kwa kuandika +++hesabu(n - 1)+++. Hii hatimaye itafanya kujirudia kufanye kazi!

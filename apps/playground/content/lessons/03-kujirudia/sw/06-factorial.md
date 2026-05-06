@@ -43,4 +43,4 @@ fanya fact = unda(n) {
 }
 ```
 
-**Kazi Yako:** Kamilisha kitendakazi cha `factorial`. Tumia `rudisha` kurudisha namba ya sasa `n` ikizidishwa na matokeo ya kitendakazi kikiwa kimejiita chenyewe kwa `n - 1`.
+**Kazi Yako:** Kamilisha kitendakazi cha `factorial` kwa kuandika +++rudisha n * factorial(n - 1)+++. Je, unaweza kuona jinsi inavyozidisha namba zote?

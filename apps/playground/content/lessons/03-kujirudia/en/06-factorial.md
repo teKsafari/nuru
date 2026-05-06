@@ -43,4 +43,4 @@ fanya fact = unda(n) {
 }
 ```
 
-**Your Task:** Complete the `factorial` function. Use `rudisha` to return the current number `n` multiplied by the result of the function calling itself for `n - 1`.
+**Your Task:** Complete the `factorial` function by writing +++rudisha n * factorial(n - 1)+++. Can you see how it multiplies all the numbers?

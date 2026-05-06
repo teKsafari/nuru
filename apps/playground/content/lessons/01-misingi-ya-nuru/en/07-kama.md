@@ -24,13 +24,13 @@ kama (condition) {
 ```
 
 ### Example:
-```s
+```nuru
 time = 14
-kama (time < 12) {
++++kama (time < 12)+++ {
     andika("Good morning")
-} au kama (time < 18) {
+} +++au kama (time < 18)+++ {
     andika("Good afternoon")
-} sivyo {
+} +++sivyo+++ {
     andika("Good evening")
 }
 ```

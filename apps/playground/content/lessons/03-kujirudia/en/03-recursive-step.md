@@ -40,4 +40,4 @@ In this example, we are counting down. So, each step must be smaller than the la
 - Step 3: `hesabu(1)`
 - Step 4: `hesabu(0)` -> **STOP!**
 
-**Your Task:** Change the function call `hesabu(n)` to `hesabu(n - 1)`. This will finally make the recursion work!
+**Your Task:** Complete the Recursive Step by writing +++hesabu(n - 1)+++. This will finally make the recursion work!

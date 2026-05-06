@@ -36,4 +36,4 @@ fanya sema = unda() {
 sema() // Hii itasababisha kosa!
 ```
 
-**Kazi Yako:** Endesha kodi ili uone inavyofanya kazi. Kisha, weka alama ya `//` mbele ya mwito wa `kioo()` ndani ya kitendakazi ili kiendeshe mara moja tu.
+**Kazi Yako:** Endesha kodi ili uone inavyofanya kazi. Kisha, kirekebishe kwa kuweka +++//+++ mbele ya mwito wa `kioo()` ndani ya kitendakazi ili kiendeshe mara moja tu.

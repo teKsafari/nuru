@@ -10,16 +10,16 @@ solution: "kwa i ktk mfululizo(5) {\n    andika(i)\n}"
 Vitanzi vinatumiwa kurudia jambo mara nyingi. Neno `kwa` linatusaidia kupita kwenye kila kitu katika safu au tungo.
 
 ### Kupita kwenye Safu:
-```s
+```nuru
 matunda = ["Embe", "Papai", "Nanasi"]
-kwa t ktk matunda {
++++kwa t ktk matunda+++ {
     andika("Napenda", t)
 }
 ```
 
 ### Kutumia mfululizo():
-```s
-kwa i ktk mfululizo(1, 6) {
+```nuru
++++kwa i ktk mfululizo(1, 6)+++ {
     andika("Namba:", i) // Itachapisha 1, 2, 3, 4, 5
 }
 ```

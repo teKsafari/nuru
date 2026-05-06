@@ -38,4 +38,4 @@ Na $2^0$ kila wakati ni **1**. Hii ndiyo Kesi yako ya Msingi!
 ### Kidokezo cha Mwisho:
 Daima hakikisha unabadilisha hoja katika kila hatua (mfano, `y - 1`) ili hatimaye ufikie Kesi ya Msingi (`y == 0`).
 
-**Kazi Yako:** Kamilisha kitendakazi. Je, unaweza kuifanya kompyuta ipige hesabu ya vipeo kwa kutumia kujirudia?
+**Kazi Yako:** Kamilisha kitendakazi cha `peo`. Andika +++rudisha 1+++ ndani ya Kesi ya Msingi na +++rudisha x * peo(x, y - 1)+++ kwa ajili ya Hatua ya Kujirudia.

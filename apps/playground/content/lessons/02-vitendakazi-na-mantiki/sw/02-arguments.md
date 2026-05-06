@@ -22,7 +22,7 @@ Mashine si muhimu sana ikiwa inafanya kitu kile kile kila wakati kila inapowashw
 
 ### Mfano:
 ```s
-fanya jumlisha = unda(a, b) {
+fanya jumlisha = unda(+++a, b+++) {
     andika(a + b)
 }
 
@@ -33,3 +33,9 @@ jumlisha(100, 1) // Inaandika 101
 Tunapotengeneza `unda(jina)`, `jina` inakuwa kishikilia-nafasi. Tunapoita `karibu("Amani")`, kompyuta inabadilisha `jina` na kuweka `"Amani"` ndani ya kitendakazi.
 
 **Kazi Yako:** Malizia kitendakazi cha `karibu` ili kiweze kumkaribisha mtu yeyote kwa jina lake!
+
+```s
+fanya karibu = unda(jina) {
+    andika("Karibu,", +++jina+++)
+}
+```

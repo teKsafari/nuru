@@ -34,11 +34,17 @@ fanya ongeza = unda(x) {
 }
 
 // SAFI (Salama na Inatabirika)
-fanya ongeza_safi = unda(x, y) {
+fanya ongeza_safi = +++unda(x, y) {
     rudisha x + y // Kinapiga hesabu na kurudisha tu
-}
+}+++
 ```
 
 Vitendakazi safi vinafanya kodi yako kuwa rahisi kuipima na kuielewa kwa sababu vimejitenga na ulimwengu wa nje.
 
 **Kazi Yako:** Andika upya `ongeza_mbili` ili kiwe kitendakazi safi. Kinapaswa kuchukua namba na kurudisha namba hiyo jumlisha 2.
+
+```s
+fanya ongeza_mbili = +++unda(x) {
+    rudisha x + 2
+}+++
+```

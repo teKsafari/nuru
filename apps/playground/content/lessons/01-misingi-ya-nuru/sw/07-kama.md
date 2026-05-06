@@ -24,13 +24,13 @@ kama (hali) {
 ```
 
 ### Mfano:
-```s
+```nuru
 saatisa = 14
-kama (saatisa < 12) {
++++kama (saatisa < 12)+++ {
     andika("Habari ya asubuhi")
-} au kama (saatisa < 18) {
+} +++au kama (saatisa < 18)+++ {
     andika("Habari ya mchana")
-} sivyo {
+} +++sivyo+++ {
     andika("Habari ya jioni")
 }
 ```

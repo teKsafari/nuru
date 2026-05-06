@@ -16,10 +16,10 @@ An array is a collection of many things in a single box. These things are placed
 - `sukuma(item)` adds an item to the end.
 
 ### Example:
-```s
-fanya students = ["Juma", "Asha"]
-students.sukuma("Baraka")
+```nuru
+fanya students = +++["Juma", "Asha"]+++
+students.+++sukuma("Baraka")+++
 andika(students[0])      // Juma
-andika(students.idadi()) // 3
+andika(students.+++idadi()+++) // 3
 ```
 

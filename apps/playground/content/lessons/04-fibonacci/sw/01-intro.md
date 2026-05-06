@@ -25,3 +25,8 @@ Inaanza na **0** na **1**. Baada ya hapo, kila namba mpya ni **jumla ya namba mb
 - 5 + 8 = **13**
 
 **Kazi Yako:** Angalia mfumo hapo juu. Ikiwa namba ya mwisho ni 13, ni namba gani mbili zinazofuata katika msururu huu? Ziandike kwenye kodi! (Dokezo: 8+13=?)
+
+```nuru
+fanya namba_moja = 13
+fanya namba_mbili = +++21+++
+```

@@ -32,3 +32,9 @@ A list with only one number is **already sorted**!
 This is our **Base Case**. Once we reach a list of size 1, we stop splitting and start merging them back together.
 
 **Your Task:** Add the Base Case. If `orodha.idadi()` is 1 or less, return the list immediately.
+
+```nuru
+kama (orodha.idadi() <= 1) {
+    +++rudisha orodha+++
+}
+```

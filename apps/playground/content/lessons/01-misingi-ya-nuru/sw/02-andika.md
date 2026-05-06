@@ -19,7 +19,9 @@ andika(2024)             // Itachapisha: 2024
 ```
 
 Unaweza pia kutumia herufi maalum kama `/n` kuanza mstari mpya:
-```s
-andika("Mstari wa kwanza /n Mstari wa pili")
+
+### Mfano:
+```nuru
+andika("Jina langu ni Amani +++/n+++ Naishi Dar es Salaam")
 ```
 

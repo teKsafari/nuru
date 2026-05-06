@@ -11,8 +11,8 @@ The `jaza()` function allows you to get information from the user. The computer 
 **Important**: The value returned by `jaza()` is always a **String** (text).
 
 ### Example:
-```s
-fanya name = jaza("What is your name? ")
+```nuru
+fanya name = +++jaza("What is your name? ")+++
 andika("Welcome,", name)
 ```
 

@@ -39,4 +39,4 @@ Imagine a Russian nesting doll. To find the prize in the middle, you:
 2. If it's the smallest doll (**Base Case**), you take the prize.
 3. If not, you open the next smaller doll (**Recursive Step**).
 
-**Your Task:** Test the power of your function! Change the starting number from 5 to 10. Notice how the same small amount of code can now handle much more work.
+**Your Task:** Test the power of your function! Change the starting number by writing +++hesabu(10)+++ at the bottom. Notice how the same small amount of code can now handle much more work.
