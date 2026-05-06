@@ -3,7 +3,7 @@ title: "7. Conditionals (kama/else if/sivyo)"
 task: "Change `alama = 40` and see if the program tells you \"You failed\"."
 initialCode: |
   alama = 
-  kama (alama >= 50) {
+  kama ( ) {
       andika("Umefaulu!")
   } sivyo {
       andika("Umefeli, jaribu tena.")
@@ -25,8 +25,8 @@ kama (condition) {
 
 ### Task:
 ```nuru
-alama = +++40+++
-kama (alama >= 50) {
+alama = +++60+++
+kama (+++alama >= 50+++) {
     andika("Umefaulu!")
 } sivyo {
     andika("Umefeli, jaribu tena.")
