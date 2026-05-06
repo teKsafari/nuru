@@ -34,12 +34,47 @@ initialCode: |
       rudisha kweli
   }
 
+  // Wito (call) wa tatua unapaswa kuwa hapa
+
+  andika("SUDOKU SOLVED!")
+  kwa i ktk mfululizo(4) { andika(gridi[i]) }
+solution: |
+  fanya gridi = [
+    [1, 0, 3, 0],
+    [0, 0, 2, 1],
+    [0, 1, 0, 2],
+    [2, 4, 0, 3]
+  ]
+
+  fanya ni_salama = unda(r, c, n) {
+      kwa i ktk mfululizo(4) {
+          kama (gridi[r][i] == n || gridi[i][c] == n) { rudisha sikweli }
+      }
+      rudisha kweli
+  }
+
+  fanya tatua = unda() {
+      kwa r ktk mfululizo(4) {
+          kwa c ktk mfululizo(4) {
+              kama (gridi[r][c] == 0) {
+                  kwa n ktk mfululizo(1, 5) {
+                      kama (ni_salama(r, c, n)) {
+                          gridi[r][c] = n
+                          kama (tatua()) { rudisha kweli }
+                          gridi[r][c] = 0 // Backtrack
+                      }
+                  }
+                  rudisha sikweli
+              }
+          }
+      }
+      rudisha kweli
+  }
+
   tatua()
   
   andika("SUDOKU SOLVED!")
   kwa i ktk mfululizo(4) { andika(gridi[i]) }
-solution: |
-  andika("Sawa!")
 ---
 You've reached the end of the course! 
 
@@ -54,8 +89,14 @@ This same Backtracking algorithm is used to:
 ### You are now a Programmer!
 You started with `andika("Jambo")` and you ended with an automated Sudoku solver. The world of technology is now yours to explore.
 
-**Your Task:** Run the final solver. Look at how the empty zeros were replaced by the correct numbers. Congratulations on completing the Nuru Wasm Tutorial!
+**Your Task:** Run the final solver by calling the `tatua()` function. Look at how the empty zeros were replaced by the correct numbers. Congratulations on completing the Nuru Wasm Tutorial!
 
 ```nuru
+// ...
+}
+
 +++tatua()+++
+
+andika("SUDOKU SOLVED!")
+// ...
 ```

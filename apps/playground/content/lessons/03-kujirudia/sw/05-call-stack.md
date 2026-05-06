@@ -1,18 +1,13 @@
 ---
 title: "5. Msururu wa Wito (Call Stack)"
-task: "Sogeza `andika(n)` iwe *baada* ya `hesabu(n - 1)`. Iendeshe na uone nini kinatokea!"
+task: "Weka `andika(n)` *baada* ya `hesabu(n - 1)` ili uone jinsi msururu wa wito unavyofunguka."
 initialCode: |
   fanya hesabu = unda(n) {
       kama (n <= 0) {
           rudisha tupu
       }
       
-      // Sogeza mstari huu hadi chini!
-      andika(n) 
-      
       hesabu(n - 1)
-      
-      // Uweke hapa badala yake!
   }
 
   hesabu(5)
@@ -46,4 +41,17 @@ Mara tu kitendakazi cha `0` kinapomaliza, kompyuta inaendelea pale ilipoishia kw
 - `hesabu(2)` (Inaendelea) -> Inaandika 2
 - ... na kuendelea.
 
-**Kazi Yako:** Badilisha mpangilio kwa kusogeza +++andika(n)+++ chini ya +++hesabu(n - 1)+++ ili uone "ufunguzi" huu ukifanyika. Itaandika namba kwa mpangilio wa kinyume (1, 2, 3, 4, 5)!
+**Kazi Yako:** Ongeza +++andika(n)+++ chini ya +++hesabu(n - 1)+++ ili uone "ufunguzi" huu ukifanyika. Itaandika namba kwa mpangilio wa kinyume (1, 2, 3, 4, 5)!
+
+```nuru
+fanya hesabu = unda(n) {
+    kama (n <= 0) {
+        rudisha tupu
+    }
+    
+    hesabu(n - 1)
+    +++andika(n)+++
+}
+
+hesabu(5)
+```

@@ -48,8 +48,14 @@ hesabu()
 **Your Task:** Inside the `salimia` function, call `tafuta_jina()` and store the result in the `jina` variable. Then use that variable in the greeting!
 
 ```s
+fanya tafuta_jina = unda() {
+    rudisha "Amani"
+}
+
 fanya salimia = unda() {
     +++fanya jina = tafuta_jina()+++
     andika("Habari", jina)
 }
+
+salimia()
 ```

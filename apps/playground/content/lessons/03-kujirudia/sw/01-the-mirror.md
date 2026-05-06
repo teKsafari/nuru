@@ -4,9 +4,6 @@ task: "Endesha kodi uone nini kinatokea wakati kitendakazi kinajiita chenyewe mi
 initialCode: |
   fanya kioo = unda() {
       andika("Natazama kwenye kioo...")
-      
-      // ONYO: Hii itajirudia milele!
-      // Kurekebisha, weka // mbele ya mstari unaofuata
       kioo() 
   }
 
@@ -37,3 +34,12 @@ sema() // Hii itasababisha kosa!
 ```
 
 **Kazi Yako:** Endesha kodi ili uone inavyofanya kazi. Kisha, kirekebishe kwa kuweka +++//+++ mbele ya mwito wa `kioo()` ndani ya kitendakazi ili kiendeshe mara moja tu.
+
+```nuru
+fanya kioo = unda() {
+    andika("Natazama kwenye kioo...")
+    +++//+++ kioo() 
+}
+
+kioo()
+```

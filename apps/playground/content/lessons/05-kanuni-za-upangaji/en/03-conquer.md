@@ -3,13 +3,13 @@ title: "3. When to Stop (Base Case)"
 task: "Add an `if` statement to return the `orodha` if its length is 1 or less."
 initialCode: |
   fanya panga = unda(orodha) {
-      // Base Case: If the list has only 1 item, it's already sorted!
-      // kama (orodha.idadi() <= 1) { ? }
-      
+      kama (orodha.idadi() <= 1) {
+          
+      }
       rudisha orodha
   }
 
-  andika(panga([10])) // Should rudisha [10]
+  andika(panga([10]))
 solution: |
   fanya panga = unda(orodha) {
       kama (orodha.idadi() <= 1) {
@@ -34,7 +34,12 @@ This is our **Base Case**. Once we reach a list of size 1, we stop splitting and
 **Your Task:** Add the Base Case. If `orodha.idadi()` is 1 or less, return the list immediately.
 
 ```nuru
-kama (orodha.idadi() <= 1) {
-    +++rudisha orodha+++
+fanya panga = unda(orodha) {
+    kama (orodha.idadi() <= 1) {
+        +++rudisha orodha+++
+    }
+    rudisha orodha
 }
+
+andika(panga([10]))
 ```

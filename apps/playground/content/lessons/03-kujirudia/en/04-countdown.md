@@ -1,21 +1,18 @@
 ---
 title: "4. Counting Down"
-task: "Try changing `hesabu(5)` to `hesabu(10)` and watch the full countdown in action."
+task: "Try changing the starting number to `10` and watch the full countdown in action."
 initialCode: |
   fanya hesabu = unda(n) {
-      // Base Case
       kama (n <= 0) {
           andika("Rusha roketi!")
           rudisha tupu
       }
       
       andika(n)
-      
-      // Recursive Step
       hesabu(n - 1)
   }
 
-  hesabu(5)
+  hesabu()
 solution: |
   fanya hesabu = unda(n) {
       kama (n <= 0) {
@@ -39,4 +36,18 @@ Imagine a Russian nesting doll. To find the prize in the middle, you:
 2. If it's the smallest doll (**Base Case**), you take the prize.
 3. If not, you open the next smaller doll (**Recursive Step**).
 
-**Your Task:** Test the power of your function! Change the starting number by writing +++hesabu(10)+++ at the bottom. Notice how the same small amount of code can now handle much more work.
+**Your Task:** Test the power of your function! Change the starting number to `10` at the bottom.
+
+```nuru
+fanya hesabu = unda(n) {
+    kama (n <= 0) {
+        andika("Rusha roketi!")
+        rudisha tupu
+    }
+    
+    andika(n)
+    hesabu(n - 1)
+}
+
+hesabu(+++10+++)
+```

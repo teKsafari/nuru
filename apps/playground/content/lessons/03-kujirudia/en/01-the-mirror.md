@@ -4,9 +4,6 @@ task: "Run the code and see what happens when a function calls itself forever. T
 initialCode: |
   fanya kioo = unda() {
       andika("Natazama kwenye kioo...")
-      
-      // WARNING: This will loop forever!
-      // To fix it, add // in front of the next line
       kioo() 
   }
 
@@ -37,3 +34,12 @@ sema() // This will crash!
 ```
 
 **Your Task:** Run the code to see it in action. Then, fix it by adding +++//+++ in front of the `kioo()` call inside the function so it only runs once.
+
+```nuru
+fanya kioo = unda() {
+    andika("Natazama kwenye kioo...")
+    +++//+++ kioo() 
+}
+
+kioo()
+```

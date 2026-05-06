@@ -20,7 +20,7 @@ Karibu tena! Katika misingi ya Nuru, ulijifunza kuwa **Vitendakazi** (Functions)
 Tunatumia neno `unda` kutengeneza kitendakazi.
 
 ### Inavyoonekana:
-```s
+```nuru
 fanya piga_kelele = unda() {
     +++andika("AAAH!")+++
 }
@@ -34,7 +34,7 @@ Katika mfano hapo juu, `piga_kelele()` inaendesha kodi iliyo ndani ya mabano ya 
 
 **Kazi Yako:** Je, unaweza kurekebisha mashine ya `salamu` ili iandike `"Jambo!"` kwenye skrini?
 
-```s
+```nuru
 fanya salamu = unda() {
     +++andika("Jambo!")+++
 }

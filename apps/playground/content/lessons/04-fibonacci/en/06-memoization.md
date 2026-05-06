@@ -10,7 +10,7 @@ initialCode: |
       // 1. Check kama we already know the answer!
       kama (kumbukumbu[n] != tupu) {
           andika("Nakumbuka namba", n)
-          rudisha // rudisha jibu kutoka kumbukumbu
+          // Rudiasha jibu kutoka kumbukumbu hapa
       }
 
       // 2. Otherwise, calculate and SAVE IT
@@ -48,6 +48,6 @@ With memory, `fibo(30)` goes from 2 Million calls down to just **30 calls**. Tha
 
 ```nuru
 kama (kumbukumbu[n] != tupu) {
-    rudisha +++kumbukumbu[n]+++
+    +++rudisha kumbukumbu[n]+++
 }
 ```

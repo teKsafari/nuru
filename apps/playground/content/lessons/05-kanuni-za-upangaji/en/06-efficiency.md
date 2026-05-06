@@ -43,7 +43,6 @@ initialCode: |
   }
 
   andika("Sorting 100 items...")
-  andika(panga(orodha_kubwa))
 solution: |
   // Kisaidizi cha kukata orodha (Helper to slice arrays)
   fanya kata = unda(orodha, anza, mwisho = -1) {
@@ -54,7 +53,37 @@ solution: |
   }
 
 
-  andika("Sawa!")
+  fanya orodha_kubwa = []
+  fanya i = 100
+  wakati (i > 0) {
+      orodha_kubwa.sukuma(i)
+      i = i - 1
+  }
+
+  fanya unganisha = unda(a, b) {
+      fanya matokeo = []
+      wakati (a.idadi() > 0 && b.idadi() > 0) {
+          kama (a[0] < b[0]) {
+              matokeo.sukuma(a[0])
+              a = kata(a, 1)
+          } sivyo {
+              matokeo.sukuma(b[0])
+              b = kata(b, 1)
+          }
+      }
+      rudisha matokeo + a + b
+  }
+
+  fanya panga = unda(orodha) {
+      kama (orodha.idadi() <= 1) { rudisha orodha }
+      fanya kati = orodha.idadi() / 2
+      fanya kushoto = panga(kata(orodha, 0, kati))
+      fanya kulia = panga(kata(orodha, kati))
+      rudisha unganisha(kushoto, kulia)
+  }
+
+  andika("Sorting 100 items...")
+  andika(panga(orodha_kubwa))
 ---
 Why did we do all this work? Why not just use a simple loop?
 
@@ -71,5 +100,6 @@ You now understand:
 **Your Task:** Run the code and watch it effortlessly sort 100 numbers. You've just implemented a professional-grade sorting algorithm!
 
 ```nuru
+andika("Sorting 100 items...")
 +++andika(panga(orodha_kubwa))+++
 ```

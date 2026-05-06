@@ -29,4 +29,6 @@ Inaanza na **0** na **1**. Baada ya hapo, kila namba mpya ni **jumla ya namba mb
 ```nuru
 fanya namba_moja = 13
 fanya namba_mbili = +++21+++
+
+andika(namba_moja, namba_mbili)
 ```

@@ -48,8 +48,14 @@ hesabu()
 **Kazi Yako:** Ndani ya kitendakazi `salimia`, ita `tafuta_jina()` na uhifadhi matokeo kwenye kibadilika `jina`. Kisha tumia kibadilika hicho kwenye salamu!
 
 ```s
+fanya tafuta_jina = unda() {
+    rudisha "Amani"
+}
+
 fanya salimia = unda() {
     +++fanya jina = tafuta_jina()+++
     andika("Habari", jina)
 }
+
+salimia()
 ```

@@ -48,5 +48,14 @@ fanya endesha = unda(f) {
 **Kazi Yako:** Pitisha kitendakazi `kicheko` ndani ya `fanya_mara_mbili` ili kicheko hicho kirudiwe mara mbili! Kumbuka, HUTUMII `()` unapotaja jina la kitendakazi unachopitisha.
 
 ```s
+fanya kicheko = unda() {
+    andika("Hahaha!")
+}
+
+fanya fanya_mara_mbili = unda(kazi) {
+    kazi()
+    kazi()
+}
+
 +++fanya_mara_mbili(kicheko)+++
 ```

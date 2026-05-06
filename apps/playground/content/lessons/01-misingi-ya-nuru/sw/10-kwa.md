@@ -2,25 +2,17 @@
 title: "10. Vitanzi vya Kwa (Loops)"
 task: "Andika kitanzi kinachochapisha namba kutoka 0 mpaka 4 ukitumia `mfululizo(5)`."
 initialCode: |
-  kwa i ktk mfululizo(5) {
-      andika(i)
+  {
+      andika()
   }
 solution: "kwa i ktk mfululizo(5) {\n    andika(i)\n}"
 ---
 Vitanzi vinatumiwa kurudia jambo mara nyingi. Neno `kwa` linatusaidia kupita kwenye kila kitu katika safu au tungo.
 
-### Kupita kwenye Safu:
+### Zoezi:
 ```nuru
-matunda = ["Embe", "Papai", "Nanasi"]
-+++kwa t ktk matunda+++ {
-    andika("Napenda", t)
-}
-```
-
-### Kutumia mfululizo():
-```nuru
-+++kwa i ktk mfululizo(1, 6)+++ {
-    andika("Namba:", i) // Itachapisha 1, 2, 3, 4, 5
++++kwa i ktk mfululizo(5)+++ {
+    andika(+++i+++)
 }
 ```
 

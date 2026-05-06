@@ -44,7 +44,11 @@ Vitendakazi safi vinafanya kodi yako kuwa rahisi kuipima na kuielewa kwa sababu 
 **Kazi Yako:** Andika upya `ongeza_mbili` ili kiwe kitendakazi safi. Kinapaswa kuchukua namba na kurudisha namba hiyo jumlisha 2.
 
 ```s
+fanya namba_yangu = 10
+
 fanya ongeza_mbili = +++unda(x) {
     rudisha x + 2
 }+++
+
++++andika(ongeza_mbili(namba_yangu))+++
 ```

@@ -10,7 +10,7 @@ initialCode: |
       // 1. Angalia ikiwa tayari tunajua jibu!
       kama (kumbukumbu[n] != tupu) {
           andika("Nakumbuka namba", n)
-          rudisha // rudisha jibu kutoka kumbukumbu
+          // Rudiasha jibu kutoka kumbukumbu hapa
       }
 
       // 2. Kama sivyo, kokotoa && UIIFADHI
@@ -48,6 +48,6 @@ Ukiwa na kumbukumbu, `fibo(30)` inatoka kwenye wito Milioni 2 hadi wito **30** t
 
 ```nuru
 kama (kumbukumbu[n] != tupu) {
-    rudisha +++kumbukumbu[n]+++
+    +++rudisha kumbukumbu[n]+++
 }
 ```

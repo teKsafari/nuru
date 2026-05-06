@@ -2,9 +2,9 @@
 title: "9. Orodha (Safu)"
 task: "Tengeneza safu ya `rangi` yenye \"nyekundu\" na \"kijani\", ongeza \"bluu\" ukitumia `sukuma`, kisha andika idadi ya rangi."
 initialCode: |
-  rangi = ["nyekundu", "kijani"]
-  rangi.sukuma("bluu")
-  andika(rangi.idadi())
+  rangi = 
+  rangi.
+  andika(rangi.)
 solution: "rangi = [\"nyekundu\", \"kijani\"]\nrangi.sukuma(\"bluu\")\nandika(rangi.idadi())"
 ---
 Safu ni mkusanyiko wa vitu vingi katika sanduku moja. Vitu hivi huwekwa ndani ya mabano mraba `[ ]`.
@@ -15,11 +15,10 @@ Safu ni mkusanyiko wa vitu vingi katika sanduku moja. Vitu hivi huwekwa ndani ya
 - `idadi()` inakupa idadi ya vitu.
 - `sukuma(kitu)` inaongeza kitu mwishoni.
 
-### Mfano:
+### Zoezi:
 ```nuru
-fanya wanafunzi = +++["Juma", "Asha"]+++
-wanafunzi.+++sukuma("Baraka")+++
-andika(wanafunzi[0])      // Juma
-andika(wanafunzi.+++idadi()+++) // 3
+rangi = +++["nyekundu", "kijani"]+++
+rangi.+++sukuma("bluu")+++
+andika(rangi.+++idadi()+++)
 ```
 

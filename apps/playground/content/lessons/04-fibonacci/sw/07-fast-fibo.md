@@ -16,7 +16,7 @@ initialCode: |
   }
 
   andika("Inakokotoa fibo(40) kwa haraka...")
-  andika(fibo(40))
+  // andika matokeo ya fibo(40) hapa
 solution: |
   fanya kumbukumbu = {}
 
@@ -42,8 +42,9 @@ Hongera! Umemudu moja ya changamoto za kizamani zaidi katika upangaji programu.
 3. **Utendaji (Performance):** Kujirudia kunaweza kuwa polepole ikiwa kunarudia kazi.
 4. **Memoization:** Kuhifadhi matokeo kwenye kumbukumbu kunafanya kodi yako iwe na kasi mara maelfu zaidi.
 
-**Kazi Yako:** Endesha kodi kwa ajili ya `fibo(40)`. Bila memoization, hii ingechukua mabilioni ya hatua na pengine ingekwama. Kwa memoization, inamaliza kabla hata hujapepesa jicho!
+**Kazi Yako:** Endesha kodi kwa ajili ya `fibo(40)` kwa kutumia `andika(fibo(40))`. Bila memoization, hii ingechukua mabilioni ya hatua na pengine ingekwama. Kwa memoization, inamaliza kabla hata hujapepesa jicho!
 
 ```nuru
-andika(+++fibo(40)+++)
+andika("Inakokotoa fibo(40) kwa haraka...")
++++andika(fibo(40))+++
 ```

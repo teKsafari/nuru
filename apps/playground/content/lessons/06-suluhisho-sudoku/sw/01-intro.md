@@ -12,10 +12,21 @@ initialCode: |
   // 0 inamaanisha kisanduku kiko wazi (tupu).
   andika("Gridi ya Sudoku:")
   kwa i ktk mfululizo(gridi.idadi()) {
-      andika(gridi[i])
+      // andika gridi hapa
   }
 solution: |
-  andika("Sawa!")
+  fanya gridi = [
+    [1, 0, 3, 0],
+    [0, 0, 2, 1],
+    [0, 1, 0, 2],
+    [2, 4, 0, 3]
+  ]
+
+  // 0 inamaanisha kisanduku kiko wazi (tupu).
+  andika("Gridi ya Sudoku:")
+  kwa i ktk mfululizo(gridi.idadi()) {
+      andika(gridi[i])
+  }
 ---
 Karibu kwenye changamoto ya mwisho ya safari yetu ya kujirudia: **Suluhisho la Sudoku**.
 
@@ -27,5 +38,7 @@ Gridi ya Sudoku ni safu ya 2D (orodha ya orodha). Lengo ni kujaza kila `0` kwa n
 **Kazi Yako:** Angalia gridi hiyo. Tunatumia `0` kuwakilisha visanduku vilivyo wazi. Kompyuta inaanzaje kutatua fumbo hili? Tutatumia mbinu inayoitwa **Backtracking**.
 
 ```nuru
-+++andika(gridi[i])+++
+kwa i ktk mfululizo(gridi.idadi()) {
+    +++andika(gridi[i])+++
+}
 ```

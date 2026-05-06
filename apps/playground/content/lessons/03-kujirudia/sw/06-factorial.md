@@ -2,9 +2,6 @@
 title: "6. Hesabu na Kujirudia: Factorial"
 task: "Kamilisha kitendakazi `factorial`. Zidisha `n` kwa matokeo ya `factorial(n - 1)`."
 initialCode: |
-  // Factorial inaandikwa kama n! 
-  // 5! = 5 * 4 * 3 * 2 * 1
-  
   fanya factorial = unda(n) {
       // Kesi ya Msingi: 1! ni 1 tu
       kama (n <= 1) {
@@ -12,7 +9,7 @@ initialCode: |
       }
       
       // Hatua ya Kujirudia: n * (n-1)!
-      rudisha // Tunahitaji n izidishwe && factorial(n - 1)
+      rudisha 
   }
 
   andika("5! ni:", factorial(5)) // Inapaswa kuwa 120
@@ -44,3 +41,15 @@ fanya fact = unda(n) {
 ```
 
 **Kazi Yako:** Kamilisha kitendakazi cha `factorial` kwa kuandika +++rudisha n * factorial(n - 1)+++. Je, unaweza kuona jinsi inavyozidisha namba zote?
+
+```nuru
+fanya factorial = unda(n) {
+    kama (n <= 1) {
+        rudisha 1
+    }
+    
+    +++rudisha n * factorial(n - 1)+++
+}
+
+andika("5! ni:", factorial(5))
+```

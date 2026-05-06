@@ -30,11 +30,9 @@ initialCode: |
 
       fanya kati = orodha.idadi() / 2
       
-      // 1. Recursive calls: Sort each half
-      fanya kushoto = // panga the left half
-      fanya kulia = // panga the right half
+      fanya kushoto = 
+      fanya kulia = 
 
-      // 2. Merge the sorted halves back together
       rudisha unganisha(kushoto, kulia)
   }
 
@@ -84,8 +82,15 @@ It's time to put all the pieces together into one of the most famous algorithms 
 **Your Task:** Fill in the recursive calls. You must call `panga` on `kata(orodha, 0, kati)` and `panga` on `kata(orodha, kati)`.
 
 ```nuru
-fanya kushoto = +++panga(kata(orodha, 0, kati))+++
-fanya kulia = +++panga(kata(orodha, kati))+++
+fanya panga = unda(orodha) {
+    kama (orodha.idadi() <= 1) { rudisha orodha }
+    fanya kati = orodha.idadi() / 2
+    fanya kushoto = +++panga(kata(orodha, 0, kati))+++
+    fanya kulia = +++panga(kata(orodha, kati))+++
+    rudisha unganisha(kushoto, kulia)
+}
+
+andika(panga([38, 27, 43, 3, 9, 82, 10]))
 ```
 
 Wait, isn't it amazing? The function sorts the halves by calling *itself*! This is the true power of recursion.

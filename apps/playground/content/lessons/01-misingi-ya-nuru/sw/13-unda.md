@@ -2,12 +2,17 @@
 title: "13. Vitendakazi (Functions)"
 task: "Tengeneza kitendakazi `jumla` kinachochukua `a` na `b` na kurudisha jumla yao."
 initialCode: |
-  jumla = unda(a, b) {
+  fanya jumla = unda(a, b) {
+      // Andika kodi yako hapa
+  }
+  
+  andika(jumla(5, 7))
+solution: |
+  fanya jumla = unda(a, b) {
       rudisha a + b
   }
   
   andika(jumla(5, 7))
-solution: "jumla = unda(a, b) {\n    rudisha a + b\n}\n\nandika(jumla(5, 7))"
 ---
 Vitendakazi ni mapande ya msimbo unayoweza kuyaita wakati wowote. Tunatumia neno `unda` kutengeneza kitendakazi.
 
@@ -25,3 +30,10 @@ andika(mraba(5)) // 25
 andika(mraba(10)) // 100
 ```
 
+**Kazi Yako:** Tengeneza kitendakazi `jumla` kinachochukua namba mbili `a` na `b` na kurudisha jumla yao.
+
+```nuru
+fanya jumla = unda(a, b) {
+    +++rudisha a + b+++
+}
+```
