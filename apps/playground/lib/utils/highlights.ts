@@ -25,11 +25,13 @@ export function parseHighlights(code: string): { cleanedCode: string; highlights
 		cleanedCode += match[1];
 		const end = cleanedCode.length;
 		
-		highlights.push({
-			from: start,
-			to: end,
-			className: "bg-green-500/20 text-green-700 dark:text-green-300 rounded-[2px] font-bold px-0.5",
-		});
+		if (start < end) {
+			highlights.push({
+				from: start,
+				to: end,
+				className: "bg-green-500/20 text-green-700 dark:text-green-300 rounded-[2px] font-bold px-0.5",
+			});
+		}
 		lastIndex = regex.lastIndex;
 	}
 	cleanedCode += code.substring(lastIndex);
