@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import yaml from 'yaml';
-import { Lesson, LessonStep } from '@/types/playground';
+import { Lesson, LessonStep, Language } from '@/types/playground';
 
 const LESSONS_ROOT = path.join(process.cwd(), 'content/lessons');
 const HIDDEN_LESSON_ERROR = 'LESSON_HIDDEN';
@@ -23,7 +23,7 @@ function isLessonHidden(frontmatter: any) {
 	return isDraft && isProd && !showDrafts;
 }
 
-export async function getAllLessons() {
+export async function getAllLessons(): Promise<{ id: string; title: Record<Language, string> }[]> {
 	const entries = await fs.readdir(LESSONS_ROOT, { withFileTypes: true });
 	const lessonDirs = entries
 		.filter((e) => e.isDirectory())

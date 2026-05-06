@@ -2,6 +2,7 @@ import { getLesson, getAllLessons } from "@/lib/lessons.server";
 import { AnzaClient } from "../../anza-client";
 import { notFound } from "next/navigation";
 import { getDictionary, Locale } from "@/app/(main)/[lang]/dictionaries";
+import { Lesson, Language } from "@/types/playground";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,7 @@ export default async function StepPage({ params }: PageProps) {
 	const { lessonId, stepId, lang } = await params;
 	const dict = await getDictionary(lang as Locale);
 	
-	let lesson;
+	let lesson: Lesson;
 	try {
 		lesson = await getLesson(lessonId);
 	} catch (error) {
@@ -27,7 +28,7 @@ export default async function StepPage({ params }: PageProps) {
 		return notFound();
 	}
 
-	let allLessons;
+	let allLessons: { id: string; title: Record<Language, string> }[];
 	try {
 		allLessons = await getAllLessons();
 	} catch (error) {
