@@ -43,7 +43,6 @@ initialCode: |
   }
 
   andika("Inapanga vitu 100...")
-  andika(panga(orodha_kubwa))
 solution: |
   // Kisaidizi cha kukata orodha (Helper to slice arrays)
   fanya kata = unda(orodha, anza, mwisho = -1) {
@@ -54,7 +53,37 @@ solution: |
   }
 
 
-  andika("Sawa!")
+  fanya orodha_kubwa = []
+  fanya i = 100
+  wakati (i > 0) {
+      orodha_kubwa.sukuma(i)
+      i = i - 1
+  }
+
+  fanya unganisha = unda(a, b) {
+      fanya matokeo = []
+      wakati (a.idadi() > 0 && b.idadi() > 0) {
+          kama (a[0] < b[0]) {
+              matokeo.sukuma(a[0])
+              a = kata(a, 1)
+          } sivyo {
+              matokeo.sukuma(b[0])
+              b = kata(b, 1)
+          }
+      }
+      rudisha matokeo + a + b
+  }
+
+  fanya panga = unda(orodha) {
+      kama (orodha.idadi() <= 1) { rudisha orodha }
+      fanya kati = orodha.idadi() / 2
+      fanya kushoto = panga(kata(orodha, 0, kati))
+      fanya kulia = panga(kata(orodha, kati))
+      rudisha unganisha(kushoto, kulia)
+  }
+
+  andika("Inapanga vitu 100...")
+  andika(panga(orodha_kubwa))
 ---
 Kwa nini tulifanya kazi hii yote? Kwa nini tusitumie tu kitanzi (loop) rahisi?
 
@@ -69,3 +98,8 @@ Sasa unaelewa:
 3. **Ufanisi wa Algorithmic:** Kwa nini jinsi tunavyoandika kodi ni muhimu kwa kasi ya programu.
 
 **Kazi Yako:** Endesha kodi na utazame inavyopanga namba 100 bila shida. Umetoka tu kutekeleza algorithm ya kupanga ya kiwango cha juu!
+
+```nuru
+andika("Inapanga vitu 100...")
++++andika(panga(orodha_kubwa))+++
+```

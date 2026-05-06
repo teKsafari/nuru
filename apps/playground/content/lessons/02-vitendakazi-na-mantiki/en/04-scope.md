@@ -31,7 +31,7 @@ solution: |
 fanya jina = "Amani" // Global
 
 fanya siri = unda() {
-    fanya password = "123" // Local
+    +++fanya password = "123"+++ // Local
     andika(password) // This works!
 }
 
@@ -42,3 +42,10 @@ andika(password) // ERROR! The computer doesn't know what 'password' is out here
 Local variables are safer because they don't clutter up your program. 
 
 **Your Task:** Move the `siri` variable inside the `ficha` function to make it local.
+
+```s
+fanya ficha = unda() {
+    +++fanya siri = "Nywila"+++
+    andika(siri)
+}
+```

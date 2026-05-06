@@ -37,3 +37,7 @@ Ukiomba `fibo(2)`:
 3. Inazijumlisha: `1 + 0 = 1`.
 
 **Kazi Yako:** Kamilisha hatua ya kujirudia! Fanya kitendakazi kijiite mara mbili ili kupata jumla ya namba mbili zilizopita.
+
+```nuru
+rudisha +++fibo(n - 1) + fibo(n - 2)+++
+```

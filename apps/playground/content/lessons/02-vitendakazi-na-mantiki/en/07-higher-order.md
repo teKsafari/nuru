@@ -42,7 +42,20 @@ fanya endesha = unda(f) {
     f() // Execute the passed function
 }
 
-endesha(piga_kelele) // AAAH!
++++endesha(piga_kelele)+++ // AAAH!
 ```
 
 **Your Task:** Pass the `kicheko` function into `fanya_mara_mbili` so that the laughter is repeated twice! Notice you do NOT use `()` when passing the function name.
+
+```s
+fanya kicheko = unda() {
+    andika("Hahaha!")
+}
+
+fanya fanya_mara_mbili = unda(kazi) {
+    kazi()
+    kazi()
+}
+
++++fanya_mara_mbili(kicheko)+++
+```

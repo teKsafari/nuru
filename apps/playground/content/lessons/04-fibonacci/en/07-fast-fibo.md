@@ -16,7 +16,7 @@ initialCode: |
   }
 
   andika("Calculating fibo(40) instantly...")
-  andika(fibo(40))
+  // andika matokeo ya fibo(40) hapa
 solution: |
   fanya kumbukumbu = {}
 
@@ -42,4 +42,9 @@ Congratulations! You've mastered one of the most classic challenges in programmi
 3. **Performance:** Recursion can be slow if it repeats work.
 4. **Memoization:** Storing results in memory makes your code thousands of times faster.
 
-**Your Task:** Run the code for `fibo(40)`. Without memoization, this would take billions of steps and probably crash your browser. With memoization, it's finished before you can blink!
+**Your Task:** Run the code for `fibo(40)` by using `andika(fibo(40))`. Without memoization, this would take billions of steps and probably crash your browser. With memoization, it's finished before you can blink!
+
+```nuru
+andika("Calculating fibo(40) instantly...")
++++andika(fibo(40))+++
+```

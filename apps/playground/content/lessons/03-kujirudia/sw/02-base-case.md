@@ -1,19 +1,11 @@
 ---
-title: "2. Kesi ya Msingi (Base Case)"
-task: "Ongeza sentensi ya `kama` (if) ili kuangalia ikiwa `n <= 0`. Ikiwa ndivyo, `rudisha tupu` ili kusimamisha kujirudia."
+title: "2. Sharti la Kusimama (Base Case)"
+task: "Ongeza kauli ya `kama` (if) ili kuangalia ikiwa `n <= 0`. Ikiwa ni hivyo, `rudisha tupu` ili kusitisha mchakato wa kujirudia."
 initialCode: |
   fanya hesabu = unda(n) {
-      // 1. Ongeza Kesi ya Msingi hapa!
-      // kama (n <= 0) {
-      //     andika("Imekamilika!")
-      //     ?
-      // }
-
       andika(n)
-      hesabu(n) // Hii bado haina mwisho! Tutailekebisha ijayo.
+      hesabu(n)
   }
-
-  // hesabu(5)
 solution: |
   fanya hesabu = unda(n) {
       kama (n <= 0) {
@@ -24,10 +16,12 @@ solution: |
       andika(n)
       hesabu(n)
   }
----
-Ili kusimamisha kitendakazi kinachojirudia kisiharibike, lazima tukipe sharti la kusimama. Tunaita hii **Kesi ya Msingi** (Base Case).
 
-Kesi ya Msingi ni sentensi tu ya `kama` (if) inayosema: "Ikiwa tumefikia lengo letu, SIMAMISHA kuita kitendakazi na `rudisha` mara moja."
+  hesabu(5)
+---
+Ili kuzuia kitendakazi kinachojirudia kisisababishe kosa, lazima tukiishe sharti la kusimama. Tunaita hii **Sharti la Kusimama** (Base Case).
+
+Sharti la Kusimama ni kauli rahisi ya `kama` inayosema: "Ikiwa tumefikia lengo letu, SIMAMA na `rudisha` (return) mara moja."
 
 ### Inavyoonekana:
 ```s
@@ -39,6 +33,20 @@ fanya simama_kwenye_sifuri = unda(n) {
 }
 ```
 
-Bila Kesi ya Msingi, kujirudia kunakuwa kitanzi kibaya kisicho na mwisho.
+Bila Sharti la Kusimama, kujirudia ni kitanzi kisicho na mwisho chenye madhara.
 
-**Kazi Yako:** Ongeza sentensi ya `kama` kwenye kitendakazi `hesabu`. Ikiwa `n` ni 0 au chini ya hapo, andika "Imekamilika!" na urudishe `tupu` ili kusimamisha kitendakazi.
+**Kazi Yako:** Ongeza Sharti la Kusimama na uite kitendakazi ukitumia `5` ili kukijaribu.
+
+```nuru
+fanya hesabu = unda(n) {
+    +++kama (n <= 0) {
+        andika("Imekamilika!")
+        rudisha tupu
+    }+++
+
+    andika(n)
+    hesabu(n)
+}
+
++++hesabu(5)+++
+```

@@ -42,7 +42,20 @@ fanya endesha = unda(f) {
     f() // Tekeleza kitendakazi kilichopitishwa
 }
 
-endesha(piga_kelele) // AAAH!
++++endesha(piga_kelele)+++ // AAAH!
 ```
 
 **Kazi Yako:** Pitisha kitendakazi `kicheko` ndani ya `fanya_mara_mbili` ili kicheko hicho kirudiwe mara mbili! Kumbuka, HUTUMII `()` unapotaja jina la kitendakazi unachopitisha.
+
+```s
+fanya kicheko = unda() {
+    andika("Hahaha!")
+}
+
+fanya fanya_mara_mbili = unda(kazi) {
+    kazi()
+    kazi()
+}
+
++++fanya_mara_mbili(kicheko)+++
+```

@@ -20,9 +20,9 @@ Welcome back! In the basics, you learned that **Functions** are like small, reus
 We use the keyword `unda` to create a function. 
 
 ### How it looks:
-```s
+```nuru
 fanya piga_kelele = unda() {
-    andika("AAAH!")
+    +++andika("AAAH!")+++
 }
 
 // To run it, we "call" it using parentheses:
@@ -33,3 +33,9 @@ piga_kelele()
 In the example above, `piga_kelele()` runs the code inside the curly braces `{ ... }`. Since we called it twice, it would print "AAAH!" twice.
 
 **Your Task:** Can you fix the `salamu` machine so it prints `"Jambo!"` to the screen?
+
+```nuru
+fanya salamu = unda() {
+    +++andika("Jambo!")+++
+}
+```

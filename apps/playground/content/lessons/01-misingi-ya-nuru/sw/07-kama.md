@@ -2,7 +2,7 @@
 title: "7. Maamuzi (kama/au kama/sivyo)"
 task: "Badili `alama = 40` na uone kama programu itakuambia \"Umefeli\"."
 initialCode: |
-  alama = 85
+  alama = 
   kama (alama >= 50) {
       andika("Umefaulu!")
   } sivyo {
@@ -23,15 +23,13 @@ kama (hali) {
 }
 ```
 
-### Mfano:
-```s
-saatisa = 14
-kama (saatisa < 12) {
-    andika("Habari ya asubuhi")
-} au kama (saatisa < 18) {
-    andika("Habari ya mchana")
+### Zoezi:
+```nuru
+alama = +++40+++
+kama (alama >= 50) {
+    andika("Umefaulu!")
 } sivyo {
-    andika("Habari ya jioni")
+    andika("Umefeli, jaribu tena.")
 }
 ```
 

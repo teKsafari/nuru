@@ -25,3 +25,10 @@ It starts with **0** and **1**. After that, every new number is just the **sum o
 - 5 + 8 = **13**
 
 **Your Task:** Look at the pattern above. If the last number is 13, what are the next two numbers in the sequence? Write them in the code! (Hint: 8+13=?)
+
+```nuru
+fanya namba_moja = 13
+fanya namba_mbili = +++21+++
+
+andika(namba_moja, namba_mbili)
+```

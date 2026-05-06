@@ -9,7 +9,7 @@ initialCode: |
       }
       
       // Hatua ya Kujirudia: Kitu cha sasa + jumla ya vilivyosalia
-      rudisha // weka mantiki hapa
+      rudisha 
   }
 
   andika(jumla([10, 20, 30])) // Inapaswa kuwa 60
@@ -37,4 +37,16 @@ Ikiwa unataka kupata jumla ya namba zote kwenye safu (array), tunaweza kupitisha
 - `10 + (20 + jumla([10, 20], 2))`
 - `10 + (20 + 0)` = **30**
 
-**Kazi Yako:** Kamilisha mantiki ya `jumla`. Rudisha thamani ya kitu cha sasa kwenye orodha (`orodha[i]`) jumlisha matokeo ya kuita `jumla` kwenye orodha iliyosalia (`jumla(orodha, i + 1)`).
+**Kazi Yako:** Kamilisha mantiki ya `jumla` kwa kuandika +++rudisha orodha[i] + jumla(orodha, i + 1)+++. Hii itajumlisha vitu vyote kwenye orodha.
+
+```nuru
+fanya jumla = unda(orodha, i=0) {
+    kama (i == orodha.idadi()) {
+        rudisha 0
+    }
+    
+    +++rudisha orodha[i] + jumla(orodha, i + 1)+++
+}
+
+andika(jumla([10, 20, 30]))
+```

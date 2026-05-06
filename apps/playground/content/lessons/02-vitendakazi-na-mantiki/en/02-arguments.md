@@ -22,7 +22,7 @@ A machine isn't very useful if it does the exact same thing every time.
 
 ### Example:
 ```s
-fanya jumlisha = unda(a, b) {
+fanya jumlisha = unda(+++a, b+++) {
     andika(a + b)
 }
 
@@ -33,3 +33,9 @@ jumlisha(100, 1) // Prints 101
 When we create `unda(jina)`, `jina` acts as a placeholder variable. When we call `karibu("Amani")`, the computer replaces `jina` with `"Amani"` inside the function.
 
 **Your Task:** Finish the `karibu` function so it can welcome anyone by their name!
+
+```s
+fanya karibu = unda(jina) {
+    andika("Karibu,", +++jina+++)
+}
+```

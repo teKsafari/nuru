@@ -33,3 +33,7 @@ solution: |
 In Sudoku, if we place a `4` but later find out it's impossible to finish the puzzle, we must remove the `4` (set it back to `0`) and try a different number.
 
 **Your Task:** This is the most important line in backtracking. If the recursive call `tatua()` fails, we must undo our guess. Set `gridi[r][c] = 0` so we can try the next number in the loop.
+
+```nuru
++++gridi[r][c] = 0+++
+```

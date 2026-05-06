@@ -7,9 +7,13 @@ initialCode: |
   
   // No code to write yet, just run and think!
   andika("Orodha mbaya:", orodha_mbaya)
-  andika("Orodha nzuri:", orodha_nzuri)
 solution: |
-  andika("Sawa!")
+  fanya orodha_mbaya = [10, 5, 42, 3, 99, 1]
+  fanya orodha_nzuri = [1, 3, 5, 10, 42, 99]
+  
+  // No code to write yet, just run and think!
+  andika("Orodha mbaya:", orodha_mbaya)
+  andika("Orodha nzuri:", orodha_nzuri)
 ---
 Why do we care about **Sorting**? 
 
@@ -18,3 +22,12 @@ Imagine looking for a word in a dictionary where the pages were in a random orde
 In computer science, sorting is the foundation of fast searching.
 
 **Your Task:** Run the code. Notice how much easier it is for a human (and a computer) to reason about a list that is in order. We're going to learn the most powerful sorting algorithm: **Merge Sort**.
+
+```nuru
+fanya orodha_mbaya = [10, 5, 42, 3, 99, 1]
+fanya orodha_nzuri = [1, 3, 5, 10, 42, 99]
+
+// No code to write yet, just run and think!
+andika("Orodha mbaya:", orodha_mbaya)
++++andika("Orodha nzuri:", orodha_nzuri)+++
+```

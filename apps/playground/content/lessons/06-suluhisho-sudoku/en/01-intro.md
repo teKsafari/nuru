@@ -12,10 +12,21 @@ initialCode: |
   // A 0 means the cell is empty.
   andika("Sudoku Gridi:")
   kwa i ktk mfululizo(gridi.idadi()) {
-      andika(gridi[i])
+      // andika gridi hapa
   }
 solution: |
-  andika("Sawa!")
+  fanya gridi = [
+    [1, 0, 3, 0],
+    [0, 0, 2, 1],
+    [0, 1, 0, 2],
+    [2, 4, 0, 3]
+  ]
+
+  // A 0 means the cell is empty.
+  andika("Sudoku Gridi:")
+  kwa i ktk mfululizo(gridi.idadi()) {
+      andika(gridi[i])
+  }
 ---
 Welcome to the final boss of our recursion journey: **The Sudoku Solver**.
 
@@ -25,3 +36,9 @@ A Sudoku grid is a 2D array (a list of lists). The goal is to fill every `0` wit
 3. No number repeats in a **Box**.
 
 **Your Task:** Look at the grid. We use `0` to represent empty cells. How would a computer even begin to solve this? We'll use a technique called **Backtracking**.
+
+```nuru
+kwa i ktk mfululizo(gridi.idadi()) {
+    +++andika(gridi[i])+++
+}
+```

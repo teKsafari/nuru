@@ -2,7 +2,7 @@
 title: "2. Kutoa Matokeo (andika)"
 task: "Tumia `andika()` kuchapisha jina lako na mji unaoishi katika mistari miwili tofauti ukitumia `/n`."
 initialCode: |
-  andika("Jina langu ni ... /n Naishi ...")
+  andika()
 solution: "andika(\"Jina langu ni Amani /n Naishi Dar es Salaam\")"
 ---
 Kitendakazi cha `andika()` kinatumika kutoa taarifa au matokeo kwenye skrini. Ni njia yetu kuu ya kuzungumza na mtumiaji.
@@ -13,13 +13,7 @@ Kitendakazi cha `andika()` kinatumika kutoa taarifa au matokeo kwenye skrini. Ni
 3. Kwa maandishi (tungo), lazima uyaweke ndani ya alama za nukuu `" "`.
 
 ### Mfano:
-```s
-andika("Mambo", "vipi?") // Itachapisha: Mambo vipi?
-andika(2024)             // Itachapisha: 2024
-```
-
-Unaweza pia kutumia herufi maalum kama `/n` kuanza mstari mpya:
-```s
-andika("Mstari wa kwanza /n Mstari wa pili")
+```nuru
+andika(+++"Jina langu ni Amani /n Naishi Dar es Salaam"+++)
 ```
 

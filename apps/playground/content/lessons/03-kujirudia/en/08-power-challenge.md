@@ -5,11 +5,11 @@ initialCode: |
   fanya peo = unda(x, y) {
       // Base Case: Any number to the power of 0 is 1.
       kama (y == 0) {
-          // ?
+          
       }
       
       // Recursive step: Multiply x by the power of (x, y - 1)
-      rudisha // ?
+      rudisha 
   }
 
   andika("2^3 ni:", peo(2, 3)) // Should be 8 (2 * 2 * 2)
@@ -38,4 +38,17 @@ And $2^0$ is always **1**. This is your Base Case!
 ### Final Tip:
 Always make sure you are changing the argument in each step (e.g., `y - 1`) so you eventually reach the Base Case (`y == 0`).
 
-**Your Task:** Complete the function. Can you make the computer calculate powers using recursion?
+**Your Task:** Complete the `peo` function. Write +++rudisha 1+++ inside the Base Case and +++rudisha x * peo(x, y - 1)+++ for the Recursive Step.
+
+```nuru
+fanya peo = unda(x, y) {
+    kama (y == 0) {
+        +++rudisha 1+++
+    }
+    
+    +++rudisha x * peo(x, y - 1)+++
+}
+
+andika("2^3 ni:", peo(2, 3))
+andika("5^2 ni:", peo(5, 2))
+```
