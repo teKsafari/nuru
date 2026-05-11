@@ -8,14 +8,17 @@
     "secondaryCta": "Browse Lessons",
     "features": [
       {
+        "id": "swahili-syntax",
         "title": "Swahili-first syntax",
         "description": "Write code that reads naturally in Kiswahili."
       },
       {
+        "id": "interactive-learning",
         "title": "Interactive learning",
         "description": "Practice in the browser and get instant feedback."
       },
       {
+        "id": "guided-journey",
         "title": "Guided journey",
         "description": "Follow structured lessons from basics to real projects."
       }

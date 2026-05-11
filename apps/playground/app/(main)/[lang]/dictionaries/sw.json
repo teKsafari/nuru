@@ -8,14 +8,17 @@
     "secondaryCta": "Tazama Masomo",
     "features": [
       {
+        "id": "swahili-syntax",
         "title": "Sintaksia ya Kiswahili",
         "description": "Andika kodi inayosomeka kwa Kiswahili."
       },
       {
+        "id": "interactive-learning",
         "title": "Kujifunza kwa vitendo",
         "description": "Fanya mazoezi kwenye kivinjari na upate mrejesho wa haraka."
       },
       {
+        "id": "guided-journey",
         "title": "Safari iliyoongozwa",
         "description": "Fuata masomo yaliyopangwa kutoka misingi hadi miradi halisi."
       }

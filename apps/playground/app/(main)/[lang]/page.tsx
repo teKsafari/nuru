@@ -58,7 +58,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 					<div className="space-y-4">
 						{dict.landing.features.map((feature, index) => (
 							<div
-								key={feature.title}
+								key={feature.id}
 								className="rounded-2xl border border-border/60 bg-background/80 p-5 shadow-sm backdrop-blur"
 							>
 								<div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-500/15 text-sm font-bold text-yellow-600">
