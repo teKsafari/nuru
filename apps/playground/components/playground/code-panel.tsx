@@ -17,6 +17,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePlayground } from "./playground-context";
+import { ImperativePanelHandle } from "react-resizable-panels";
 
 interface CodePanelProps {
 	onRun?: () => void;
@@ -30,6 +31,8 @@ export function CodePanel({
 	mobileExtra,
 }: CodePanelProps) {
 	const {
+		lesson,
+		panels: { activeMaximizedPanel },
 		state: { code, output },
 		actions: {
 			onCodeChange,
@@ -46,6 +49,25 @@ export function CodePanel({
 		handleNextAction: onNextAction,
 		nextActionLabel,
 	} = usePlayground();
+
+	const editorPanelRef = React.useRef<ImperativePanelHandle>(null);
+	const outputPanelRef = React.useRef<ImperativePanelHandle>(null);
+
+	React.useEffect(() => {
+		if (lesson.panels?.terminal?.defaultState === "closed") {
+			outputPanelRef.current?.collapse();
+		} else {
+			outputPanelRef.current?.expand();
+		}
+	}, [lesson.id, lesson.panels?.terminal?.defaultState]);
+
+	React.useEffect(() => {
+		if (activeMaximizedPanel === "renderer") {
+			editorPanelRef.current?.collapse();
+		} else {
+			editorPanelRef.current?.expand();
+		}
+	}, [activeMaximizedPanel]);
 
 	const onRun = onRunProp || onRunAction;
 
@@ -153,14 +175,30 @@ export function CodePanel({
 	return (
 		<div className="bg-background flex h-full flex-col">
 			<ResizablePanelGroup direction="vertical" className="flex-1">
-				<ResizablePanel defaultSize={60} minSize={30}>
-					<div className="relative h-full">
-						<CodeEditor code={code} onChange={onCodeChange} theme={theme} extensions={extensions} />
-						<div className="absolute bottom-3 right-3 z-10">{actions(false)}</div>
-					</div>
-				</ResizablePanel>
-				<ResizableHandle withHandle />
-				<ResizablePanel defaultSize={40} minSize={15}>
+				{activeMaximizedPanel !== "renderer" && (
+					<>
+						<ResizablePanel 
+							ref={editorPanelRef}
+							defaultSize={60} 
+							minSize={30}
+							collapsible
+							collapsedSize={0}
+						>
+							<div className="relative h-full">
+								<CodeEditor code={code} onChange={onCodeChange} theme={theme} extensions={extensions} />
+								<div className="absolute bottom-3 right-3 z-10">{actions(false)}</div>
+							</div>
+						</ResizablePanel>
+						<ResizableHandle withHandle />
+					</>
+				)}
+				<ResizablePanel
+					ref={outputPanelRef}
+					defaultSize={activeMaximizedPanel === "renderer" ? 100 : 40}
+					minSize={15}
+					collapsible
+					collapsedSize={0}
+				>
 					<OutputPanel showToolbar={false} />
 				</ResizablePanel>
 			</ResizablePanelGroup>
