@@ -1,6 +1,25 @@
 {
   "landing": {
-    "title": "Swahili Programming Language"
+    "title": "Swahili Programming Language",
+    "badge": "Learn in Kiswahili",
+    "subtitle": "Build real programs with a Swahili-first language.",
+    "description": "Nuru makes programming approachable with guided lessons, instant feedback, and a clear learning path.",
+    "cta": "Start Learning",
+    "secondaryCta": "Browse Lessons",
+    "features": [
+      {
+        "title": "Swahili-first syntax",
+        "description": "Write code that reads naturally in Kiswahili."
+      },
+      {
+        "title": "Interactive learning",
+        "description": "Practice in the browser and get instant feedback."
+      },
+      {
+        "title": "Guided journey",
+        "description": "Follow structured lessons from basics to real projects."
+      }
+    ]
   },
   "header": {
     "home": "Home",

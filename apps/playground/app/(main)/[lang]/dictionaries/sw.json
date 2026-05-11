@@ -1,6 +1,25 @@
 {
   "landing": {
-    "title": "Lugha ya kiprogramu ya Kiswahili"
+    "title": "Lugha ya kiprogramu ya Kiswahili",
+    "badge": "Jifunze kwa Kiswahili",
+    "subtitle": "Jenga programu halisi kwa lugha ya Kiswahili.",
+    "description": "Nuru hufanya uprogramu kuwa rahisi kwa masomo yanayoongozwa, mrejesho wa papo hapo, na njia iliyo wazi ya kujifunza.",
+    "cta": "Anza Kujifunza",
+    "secondaryCta": "Tazama Masomo",
+    "features": [
+      {
+        "title": "Sintaksia ya Kiswahili",
+        "description": "Andika kodi inayosomeka kwa Kiswahili."
+      },
+      {
+        "title": "Kujifunza kwa vitendo",
+        "description": "Fanya mazoezi kwenye kivinjari na upate mrejesho wa haraka."
+      },
+      {
+        "title": "Safari iliyoongozwa",
+        "description": "Fuata masomo yaliyopangwa kutoka misingi hadi miradi halisi."
+      }
+    ]
   },
   "header": {
     "home": "Nyumbani",
