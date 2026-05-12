@@ -28,10 +28,25 @@ export function Playground(props: PlaygroundProps) {
 	} = props;
 	const isMobile = useIsMobile();
 	const [lessonDrawerOpen, setLessonDrawerOpen] = useState(false);
-	// const [lessonExpanded, setLessonExpanded] = useState(!isMobile);
-	// const lessonPanelRef = useRef<ImperativePanelHandle>(null);
-	// const codePanelRef = useRef<ImperativePanelHandle>(null);
+	
+	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
+	const codePanelRef = useRef<ImperativePanelHandle>(null);
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
+
+	const [activeMaximizedPanel, setActiveMaximizedPanel] = useState<string | null>(null);
+
+	// Automatically handle panel states from lesson config
+	useEffect(() => {
+		if (!isMobile) {
+			if (lesson.panels?.renderer?.defaultState === "maximized") {
+				setActiveMaximizedPanel("renderer");
+				lessonPanelRef.current?.collapse();
+			} else {
+				setActiveMaximizedPanel(null);
+				lessonPanelRef.current?.expand();
+			}
+		}
+	}, [isMobile, lesson.id, lesson.panels]);
 
 	// Automatically open lesson drawer on mobile if it's the first step of a lesson
 	useEffect(() => {
@@ -58,12 +73,40 @@ export function Playground(props: PlaygroundProps) {
 		}
 	};
 
+	const maximizePanel = (panelId: string) => {
+		setActiveMaximizedPanel(panelId);
+		if (panelId === "renderer") {
+			lessonPanelRef.current?.collapse();
+		}
+	};
+
+	const restorePanels = () => {
+		setActiveMaximizedPanel(null);
+		lessonPanelRef.current?.expand();
+	};
+
+	const togglePanel = (panelId: string) => {
+		if (panelId === "lesson") {
+			if (lessonPanelRef.current?.isCollapsed()) {
+				lessonPanelRef.current?.expand();
+			} else {
+				lessonPanelRef.current?.collapse();
+			}
+		}
+	};
+
 	const contextValue: PlaygroundContextValue = {
 		...props,
 		isCurrentStepCompleted,
 		isLastStep,
 		handleNextAction,
 		nextActionLabel,
+		panels: {
+			maximizePanel,
+			restorePanels,
+			togglePanel,
+			activeMaximizedPanel,
+		},
 	};
 
 	if (isMobile) {
@@ -144,12 +187,25 @@ export function Playground(props: PlaygroundProps) {
 
 	return (
 		<PlaygroundProvider value={contextValue}>
-			<div className="h-screen bg-background">
+			<div className="h-screen bg-background relative">
 				<ResizablePanelGroup direction="horizontal" className="h-full">
-					<ResizablePanel defaultSize={50} minSize={20}>
-						<LessonPanel />
-					</ResizablePanel>
-					<ResizableHandle withHandle />
+					{activeMaximizedPanel !== "renderer" && (
+						<>
+							<ResizablePanel 
+								ref={lessonPanelRef}
+								defaultSize={50} 
+								minSize={20}
+								collapsible
+								collapsedSize={0}
+								onCollapse={() => {
+									// Optional: handle state if needed when user manually collapses
+								}}
+							>
+								<LessonPanel />
+							</ResizablePanel>
+							<ResizableHandle withHandle />
+						</>
+					)}
 					<ResizablePanel defaultSize={50} minSize={25}>
 						<CodePanel />
 					</ResizablePanel>
@@ -158,4 +214,3 @@ export function Playground(props: PlaygroundProps) {
 		</PlaygroundProvider>
 	);
 }
-

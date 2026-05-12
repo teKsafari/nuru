@@ -2,6 +2,14 @@ import type { Extension } from "@codemirror/state";
 
 export type Language = "sw" | "en";
 
+export interface TestCase {
+	type: "match_output" | "match_code" | "exact_output";
+	pattern?: string;
+	flags?: string;
+	expected?: string;
+	message: string;
+}
+
 export interface LessonStep {
 	id: string;
 	title: Record<Language, string>;
@@ -9,6 +17,7 @@ export interface LessonStep {
 	initialCode: string;
 	solution?: string;
 	task?: Record<Language, string>;
+	tests?: TestCase[];
 }
 
 export interface Lesson {
@@ -16,6 +25,11 @@ export interface Lesson {
 	title: Record<Language, string>;
 	steps: LessonStep[];
 	difficulty?: string;
+	executor?: string;
+	panels?: {
+		terminal?: { defaultState?: "open" | "closed"; closable?: boolean };
+		renderer?: { defaultState?: "open" | "closed" | "maximized"; type?: string; closable?: boolean };
+	};
 }
 
 export interface PlaygroundLabels {
@@ -47,6 +61,7 @@ export interface PlaygroundProps {
 		code: string;
 		output: string;
 		completedStepIndices: Set<number>;
+		testErrors?: string[];
 	};
 	actions: {
 		onStepChange: (index: number) => void;

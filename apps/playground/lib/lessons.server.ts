@@ -109,6 +109,7 @@ export async function getLesson(id: string): Promise<Lesson> {
 			},
 			initialCode: swParsed.frontmatter.initialCode,
 			solution: swParsed.frontmatter.solution,
+			tests: swParsed.frontmatter.tests,
 		});
 	}
 
@@ -117,6 +118,8 @@ export async function getLesson(id: string): Promise<Lesson> {
 		title: frontmatter.title,
 		steps,
 		difficulty: frontmatter.difficulty,
+		executor: frontmatter.executor,
+		panels: frontmatter.panels,
 	};
 }
 

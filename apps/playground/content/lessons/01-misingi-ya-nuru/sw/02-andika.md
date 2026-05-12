@@ -3,7 +3,15 @@ title: "2. Kutoa Matokeo (andika)"
 task: "Tumia `andika()` kuchapisha jina lako na mji unaoishi katika mistari miwili tofauti ukitumia `/n`."
 initialCode: |
   andika()
-solution: "andika(\"Jina langu ni Amani /n Naishi Dar es Salaam\")"
+tests:
+  - type: match_output
+    pattern: "jina langu ni .+"
+    flags: i
+    message: "Lazima ujumuishe 'Jina langu ni [jina lako]'"
+  - type: match_output
+    pattern: "naishi .+"
+    flags: i
+    message: "Lazima ujumuishe 'Naishi [mji wako]'"
 ---
 Kitendakazi cha `andika()` kinatumika kutoa taarifa au matokeo kwenye skrini. Ni njia yetu kuu ya kuzungumza na mtumiaji.
 

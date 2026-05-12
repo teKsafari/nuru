@@ -8,6 +8,12 @@ export type PlaygroundContextValue = PlaygroundProps & {
 	isLastStep: boolean;
 	handleNextAction: () => void;
 	nextActionLabel: string;
+	panels: {
+		maximizePanel: (panelId: string) => void;
+		restorePanels: () => void;
+		togglePanel: (panelId: string) => void;
+		activeMaximizedPanel: string | null;
+	};
 };
 
 const PlaygroundContext = createContext<PlaygroundContextValue | undefined>(

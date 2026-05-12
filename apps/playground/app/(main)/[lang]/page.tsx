@@ -23,13 +23,13 @@ export default async function Home({
 		<main className="bg-background relative overflow-x-hidden">
 			{/* Hero Section */}
 			<section className="text-center/ relative z-10 mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center px-4 py-20">
-				<h1 className="text-foreground mb-2 font-serif text-6xl leading-tight font-bold text-yellow-500 md:text-6xl">
+				<h1 className="font-noto-rashi text-foreground mb-2 font-serif text-6xl leading-tight font-bold text-yellow-500 md:text-6xl">
 					Nuru
 				</h1>
-				<h2 className="text-foreground mb-4 text-3xl leading-tight font-bold md:text-4xl lg:text-5xl max-w-xl">
+				<h2 className="font-noto-rashi text-foreground mb-4 text-3xl leading-tight font-bold md:text-4xl lg:text-5xl max-w-xl">
 					{dict.landing.title}
 				</h2>
-				<p className="text-muted-foreground mb-8 text-xl md:text-2xl">
+				<p className="font-noto-rashi text-muted-foreground mb-8 text-xl md:text-2xl">
 					{dict.landing.tagline}
 				</p>
 
@@ -59,7 +59,7 @@ export default async function Home({
 							key={index}
 							className="flex flex-col rounded-2xl border bg-slate-900 p-8 shadow-sm transition-all hover:shadow-md"
 						>
-							<h3 className="mb-4 text-2xl font-bold">{feature.title}</h3>
+							<h3 className="mb-4 text-2xl font-bold font-noto-rashi">{feature.title}</h3>
 							<p className="text-muted-foreground leading-relaxed">
 								{/* Simple Markdown-like link handling for the community feature */}
 								{feature.details.includes("[Telegram]") ? (
