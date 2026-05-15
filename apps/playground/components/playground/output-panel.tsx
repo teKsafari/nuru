@@ -28,7 +28,7 @@ interface OutputPanelProps {
 
 export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
 	const {
-		lesson,
+		module,
 		panels: { maximizePanel, restorePanels, activeMaximizedPanel },
 		state: { output, testErrors },
 		actions: { onRun, onSubmit, onShowSolution },
@@ -45,7 +45,7 @@ export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
 		}
 	};
 
-	const rendererId = lesson.panels?.renderer?.type || "standard-terminal";
+	const rendererId = module.panels?.renderer?.type || "standard-terminal";
 	const RendererComponent = getRenderer(rendererId);
 
 	const renderContent = () => {

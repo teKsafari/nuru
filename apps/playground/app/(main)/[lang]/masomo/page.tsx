@@ -1,4 +1,4 @@
-import { getAllLessonsWithSteps } from "@/lib/lessons.server";
+import { getAllModulesWithLessons } from "@/lib/lessons.server";
 import { getDictionary, Locale } from "@/app/(main)/[lang]/dictionaries";
 import { LessonsMap } from "@/components/lessons-map/lessons-map";
 
@@ -10,7 +10,7 @@ export default async function MasomoPage({
 	params: Promise<{ lang: string }>;
 }) {
 	const { lang } = await params;
-	const lessons = await getAllLessonsWithSteps();
+	const modules = await getAllModulesWithLessons();
 	const dict = await getDictionary(lang as Locale);
 
 	return (
@@ -25,7 +25,7 @@ export default async function MasomoPage({
 					</p>
 				</header>
 
-				<LessonsMap lessons={lessons} lang={lang as "en" | "sw"} dict={dict} />
+				<LessonsMap modules={modules} lang={lang as "en" | "sw"} dict={dict} />
 			</div>
 		</main>
 	);

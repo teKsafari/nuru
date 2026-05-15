@@ -10,7 +10,7 @@ export interface TestCase {
 	message: string;
 }
 
-export interface LessonStep {
+export interface Lesson {
 	id: string;
 	title: Record<Language, string>;
 	description: Record<Language, string>;
@@ -20,10 +20,10 @@ export interface LessonStep {
 	tests?: TestCase[];
 }
 
-export interface Lesson {
+export interface Module {
 	id: string;
 	title: Record<Language, string>;
-	steps: LessonStep[];
+	lessons: Lesson[];
 	difficulty?: string;
 	executor?: string;
 	panels?: {
@@ -39,14 +39,14 @@ export interface PlaygroundLabels {
 	hint: string;
 	reset: string;
 	showSolution: string;
-	nextLesson: string;
-	backToLessons: string;
+	nextModule: string;
+	backToModules: string;
 	completed: string;
-	step: string;
+	lesson: string;
 	of: string;
 	terminal: string;
 	outputPlaceholder: string;
-	lessons: string;
+	modules: string;
 	incomplete: string;
 	back: string;
 	next: string;
@@ -55,23 +55,23 @@ export interface PlaygroundLabels {
 }
 
 export interface PlaygroundProps {
-	lesson: Lesson;
+	module: Module;
 	state: {
-		currentStepIndex: number;
+		currentLessonIndex: number;
 		code: string;
 		output: string;
-		completedStepIndices: Set<number>;
+		completedLessonIndices: Set<number>;
 		testErrors?: string[];
 	};
 	actions: {
-		onStepChange: (index: number) => void;
+		onLessonChange: (index: number) => void;
 		onCodeChange: (code: string) => void;
 		onRun: () => void;
 		onSubmit: () => void;
 		onShowSolution: () => void;
 		onShowHint: () => void;
 		onReset: () => void;
-		onNextLesson: () => void;
+		onNextModule: () => void;
 	};
 	labels: PlaygroundLabels;
 	theme?: "light" | "dark";

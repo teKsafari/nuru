@@ -6,7 +6,7 @@ import { NuruExecutor } from "@/lib/executors/nuru-executor";
 import { MockExecutor } from "@/lib/executors/mock-executor";
 import { IExecutor } from "@/types/executor";
 import { useTheme } from "@wrksz/themes/client";
-import { Lesson, Language, PlaygroundLabels } from "@/types/playground";
+import { Module, Lesson, Language, PlaygroundLabels } from "@/types/playground";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 import { Suspense, useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -14,60 +14,60 @@ import confetti from "canvas-confetti";
 import { nuruLanguage } from "@/lib/nuru-syntax";
 
 interface AnzaClientProps {
-	lesson: Lesson;
-	stepId: string;
-	nextLessonId?: string;
+	module: Module;
+	lessonId: string;
+	nextModuleId?: string;
 	lang: Language;
 	dict: Dictionary;
 }
 
-export function AnzaClient({ lesson, stepId, nextLessonId, lang, dict }: AnzaClientProps) {
+export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaClientProps) {
 	const { theme} = useTheme();
 	const router = useRouter();
-	const currentStepIndex = useMemo(() => {
-		const index = lesson.steps.findIndex((s) => s.id === stepId);
+	const currentLessonIndex = useMemo(() => {
+		const index = module.lessons.findIndex((s) => s.id === lessonId);
 		return index !== -1 ? index : 0;
-	}, [lesson.steps, stepId]);
+	}, [module.lessons, lessonId]);
 
-	const currentStep = lesson.steps[currentStepIndex];
+	const currentLesson = module.lessons[currentLessonIndex];
 
-	const [code, setCode] = useState(currentStep.initialCode);
+	const [code, setCode] = useState(currentLesson.initialCode);
 	const [output, setOutput] = useState("");
 	const [testErrors, setTestErrors] = useState<string[]>([]);
-	const [completedStepIndices, setCompletedStepIndices] = useState<Set<number>>(new Set());
+	const [completedLessonIndices, setCompletedLessonIndices] = useState<Set<number>>(new Set());
 
 	// Handle initial hydration from localStorage on client
 	useEffect(() => {
 		// Load code
-		const storedCode = localStorage.getItem(`nuru-code-${lesson.id}-${currentStep.id}`);
+		const storedCode = localStorage.getItem(`nuru-code-${module.id}-${currentLesson.id}`);
 		if (storedCode !== null) {
 			setCode(storedCode);
 		} else {
-			setCode(currentStep.initialCode);
+			setCode(currentLesson.initialCode);
 		}
 
 		// Load progress
-		const storedCompleted = localStorage.getItem(`nuru-completed-${lesson.id}`);
+		const storedCompleted = localStorage.getItem(`nuru-completed-${module.id}`);
 		if (storedCompleted) {
 			try {
-				setCompletedStepIndices(new Set(JSON.parse(storedCompleted)));
+				setCompletedLessonIndices(new Set(JSON.parse(storedCompleted)));
 			} catch (e) {
-				setCompletedStepIndices(new Set());
+				setCompletedLessonIndices(new Set());
 			}
 		}
-	}, [lesson.id, currentStep.id, currentStep.initialCode]);
+	}, [module.id, currentLesson.id, currentLesson.initialCode]);
 
-	// Sync code when step changes
+	// Sync code when lesson changes
 	useEffect(() => {
-		const storedCode = localStorage.getItem(`nuru-code-${lesson.id}-${currentStep.id}`);
-		setCode(storedCode !== null ? storedCode : currentStep.initialCode);
+		const storedCode = localStorage.getItem(`nuru-code-${module.id}-${currentLesson.id}`);
+		setCode(storedCode !== null ? storedCode : currentLesson.initialCode);
 		setOutput("");
-	}, [currentStepIndex, lesson.id, currentStep.id, currentStep.initialCode]);
+	}, [currentLessonIndex, module.id, currentLesson.id, currentLesson.initialCode]);
 
-	// Reset output when lesson changes
+	// Reset output when module changes
 	useEffect(() => {
 		setOutput("");
-	}, [lesson.id]);
+	}, [module.id]);
 
 	const wasmURL = useMemo(() => {
 		if (process.env.NODE_ENV === "development") {
@@ -98,22 +98,22 @@ export function AnzaClient({ lesson, stepId, nextLessonId, lang, dict }: AnzaCli
 	}, { wasmURL });
 
 	const executor = useMemo<IExecutor>(() => {
-		if (lesson.executor === "mock") {
+		if (module.executor === "mock") {
 			return new MockExecutor();
 		}
 
 		const exec = new NuruExecutor(nuruInstance);
 		nuruExecutorRef.current = exec;
 		return exec;
-	}, [nuruInstance, lesson.executor]);
+	}, [nuruInstance, module.executor]);
 
 	const checkSolution = useCallback((currentCode: string, outputText: string = "") => {
 		let isCorrect = false;
 		const errors: string[] = [];
 
-		if (currentStep.tests && currentStep.tests.length > 0) {
+		if (currentLesson.tests && currentLesson.tests.length > 0) {
 			isCorrect = true; // Assume correct until a test fails
-			for (const test of currentStep.tests) {
+			for (const test of currentLesson.tests) {
 				if (test.type === "match_output") {
 					const regex = new RegExp(test.pattern || "", test.flags || "");
 					if (!regex.test(outputText)) {
@@ -136,18 +136,18 @@ export function AnzaClient({ lesson, stepId, nextLessonId, lang, dict }: AnzaCli
 					}
 				}
 			}
-		} else if (currentStep.solution) {
+		} else if (currentLesson.solution) {
 			// Fallback to simple normalization if no tests are defined
 			const normalize = (s: string) => s.replace(/\/\/.*$/gm, "").replace(/\s/g, "");
-			isCorrect = normalize(currentCode) === normalize(currentStep.solution);
+			isCorrect = normalize(currentCode) === normalize(currentLesson.solution);
 		}
 		
 		setTestErrors(errors);
 
 		if (isCorrect) {
-			setCompletedStepIndices(prev => {
-				const next = new Set(prev).add(currentStepIndex);
-				localStorage.setItem(`nuru-completed-${lesson.id}`, JSON.stringify(Array.from(next)));
+			setCompletedLessonIndices(prev => {
+				const next = new Set(prev).add(currentLessonIndex);
+				localStorage.setItem(`nuru-completed-${module.id}`, JSON.stringify(Array.from(next)));
 				return next;
 			});
 			confetti({
@@ -158,12 +158,12 @@ export function AnzaClient({ lesson, stepId, nextLessonId, lang, dict }: AnzaCli
 			});
 		}
 		return isCorrect;
-	}, [currentStep.solution, currentStep.tests, currentStepIndex, lesson.id]);
+	}, [currentLesson.solution, currentLesson.tests, currentLessonIndex, module.id]);
 
 	const handleCodeChange = useCallback((newCode: string) => {
 		setCode(newCode);
-		localStorage.setItem(`nuru-code-${lesson.id}-${currentStep.id}`, newCode);
-	}, [lesson.id, currentStep.id]);
+		localStorage.setItem(`nuru-code-${module.id}-${currentLesson.id}`, newCode);
+	}, [module.id, currentLesson.id]);
 
 	const handleRun = async () => {
 		setOutput("");
@@ -205,9 +205,9 @@ export function AnzaClient({ lesson, stepId, nextLessonId, lang, dict }: AnzaCli
 	};
 
 	const handleShowSolution = () => {
-		if (currentStep.solution) {
-			setCode(currentStep.solution);
-			localStorage.setItem(`nuru-code-${lesson.id}-${currentStep.id}`, currentStep.solution);
+		if (currentLesson.solution) {
+			setCode(currentLesson.solution);
+			localStorage.setItem(`nuru-code-${module.id}-${currentLesson.id}`, currentLesson.solution);
 		}
 	};
 
@@ -217,14 +217,14 @@ export function AnzaClient({ lesson, stepId, nextLessonId, lang, dict }: AnzaCli
 	};
 
 	const handleReset = () => {
-		setCode(currentStep.initialCode);
+		setCode(currentLesson.initialCode);
 		setOutput("");
-		localStorage.setItem(`nuru-code-${lesson.id}-${currentStep.id}`, currentStep.initialCode);
+		localStorage.setItem(`nuru-code-${module.id}-${currentLesson.id}`, currentLesson.initialCode);
 	};
 
-	const handleNextLesson = () => {
-		if (nextLessonId) {
-			router.push(`/${lang}/anza/${nextLessonId}`);
+	const handleNextModule = () => {
+		if (nextModuleId) {
+			router.push(`/${lang}/anza/${nextModuleId}`);
 		} else {
 			router.push(`/${lang}/anza`);
 		}
@@ -237,14 +237,14 @@ export function AnzaClient({ lesson, stepId, nextLessonId, lang, dict }: AnzaCli
 		hint: dict.playground.hint,
 		reset: dict.codePanel.reset,
 		showSolution: dict.codePanel.showSolution,
-		nextLesson: dict.lessonPanel.nextLesson,
-		backToLessons: dict.lessonPanel.lessons,
+		nextModule: dict.lessonPanel.nextLesson,
+		backToModules: dict.lessonPanel.lessons,
 		completed: dict.lessonPanel.completed,
-		step: dict.lessonPanel.step,
+		lesson: dict.lessonPanel.step,
 		of: "OF",
 		terminal: "Terminal",
 		outputPlaceholder: dict.outputPanel.placeholder,
-		lessons: dict.lessonPanel.lessons,
+		modules: dict.lessonPanel.lessons,
 		incomplete: dict.lessonPanel.incomplete,
 		back: dict.lessonPanel.back,
 		next: dict.lessonPanel.next,
@@ -258,23 +258,23 @@ export function AnzaClient({ lesson, stepId, nextLessonId, lang, dict }: AnzaCli
 		<Suspense fallback={<div className="flex-1 bg-background animate-pulse" />}>
 			<Playground
 				theme={(theme) as "light" | "dark"}
-				lesson={lesson}
+				module={module}
 				state={{
-					currentStepIndex,
+					currentLessonIndex,
 					code,
 					output,
-					completedStepIndices,
+					completedLessonIndices,
 					testErrors,
 				}}
 				actions={{
-					onStepChange: (index) => router.push(`/${lang}/anza/${lesson.id}/${lesson.steps[index].id}`),
+					onLessonChange: (index) => router.push(`/${lang}/anza/${module.id}/${module.lessons[index].id}`),
 					onCodeChange: handleCodeChange,
 					onRun: handleRun,
 					onSubmit: handleSubmit,
 					onShowSolution: handleShowSolution,
 					onShowHint: handleShowHint,
 					onReset: handleReset,
-					onNextLesson: handleNextLesson,
+					onNextModule: handleNextModule,
 				}}
 				labels={labels}
 				lang={lang}
