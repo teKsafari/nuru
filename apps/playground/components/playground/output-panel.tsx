@@ -10,17 +10,17 @@ import {
 	AlertCircle,
 	XCircle,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/playground/scroll-area";
-import { usePlayground } from "./playground-context";
-import { getRenderer } from "./renderers/registry";
 import {
+	Button,
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@nuru/ui";
+import { ScrollArea } from "@/components/playground/scroll-area";
+import { usePlayground } from "./playground-context";
+import { getRenderer } from "./renderers/registry";
 
 interface OutputPanelProps {
 	showToolbar?: boolean;

@@ -13,7 +13,13 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps } from "@/types/playground";
 import { CheckCircle2, BookOpen, Terminal, ChevronDown } from "lucide-react";
-import { Drawer, DrawerContent, DrawerTrigger, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
+import {
+	Drawer,
+	DrawerContent,
+	DrawerTrigger,
+	DrawerTitle,
+	DrawerDescription,
+} from "@nuru/ui";
 import { PlaygroundProvider, PlaygroundContextValue } from "./playground-context";
 
 export function Playground(props: PlaygroundProps) {

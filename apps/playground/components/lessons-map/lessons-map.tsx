@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { Module, Lesson, Language } from "@/types/playground";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
-import { cn } from "@/lib/utils";
+import { cn } from "@nuru/ui";
 import { 
     Check, 
     Play, 

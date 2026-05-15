@@ -9,8 +9,7 @@ import {
 	ArrowRight,
 } from "lucide-react";
 import { ScrollArea } from "@/components/playground/scroll-area";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn, Button } from "@nuru/ui";
 import Markdown from "react-markdown";
 import { CodeEditor } from "./code-editor";
 import { Breadcrumbs } from "./breadcrumbs";

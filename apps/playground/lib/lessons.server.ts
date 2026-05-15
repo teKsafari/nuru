@@ -1,5 +1,4 @@
-import { db } from "../db";
-import { modules, lessons } from "../db/schema";
+import { db, modules, lessons } from "@nuru/db";
 import { asc, eq } from "drizzle-orm";
 import { Module, Lesson, Language } from "@/types/playground";
 

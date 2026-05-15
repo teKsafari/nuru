@@ -3,19 +3,19 @@ import React from "react";
 import { Play, RotateCcw, Eye, HelpCircle, ArrowRight } from "lucide-react";
 import { CodeEditor } from "./code-editor";
 import { OutputPanel } from "./output-panel";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {
+	Button,
+	cn,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@nuru/ui";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/playground/resizable";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { usePlayground } from "./playground-context";
 import { ImperativePanelHandle } from "react-resizable-panels";
 
