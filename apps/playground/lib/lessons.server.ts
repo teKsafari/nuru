@@ -7,7 +7,7 @@ export async function getAllModules(): Promise<{ id: string; title: Record<Langu
 	const allModules = await db.select({
 		id: modules.id,
 		title: modules.title,
-	}).from(modules).orderBy(asc(modules.id));
+	}).from(modules).orderBy(asc(modules.order));
 	
 	return allModules as { id: string; title: Record<Language, string> }[];
 }
@@ -51,7 +51,7 @@ export async function getAllModulesWithLessons(): Promise<Module[]> {
 				orderBy: [asc(lessons.order)],
 			},
 		},
-		orderBy: [asc(modules.id)],
+		orderBy: [asc(modules.order)],
 	});
 
 	return allModules.map(m => ({

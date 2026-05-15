@@ -33,6 +33,7 @@ export const modules = pgTable("modules", {
 	difficulty: text("difficulty"), // e.g., 'beginner', 'intermediate'
 	executorType: text("executor_type").default('nuru-wasm').notNull(),
 	layoutConfig: jsonb("layout_config").notNull(), // { terminal: boolean, canvas: boolean, etc. }
+	order: integer("order").default(0).notNull(),
 	organizationId: text("organization_id"),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, (table) => [

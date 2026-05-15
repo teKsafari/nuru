@@ -41,9 +41,9 @@ CREATE TABLE "users" (
 	CONSTRAINT "users_logto_id_unique" UNIQUE("logto_id")
 );
 --> statement-breakpoint
-DROP TABLE "verification" CASCADE;--> statement-breakpoint
-DROP TABLE "user" CASCADE;--> statement-breakpoint
-DROP TABLE "account" CASCADE;--> statement-breakpoint
-DROP TABLE "session" CASCADE;--> statement-breakpoint
+-- DROP TABLE "verification" CASCADE;--> statement-breakpoint
+-- DROP TABLE "user" CASCADE;--> statement-breakpoint
+-- DROP TABLE "account" CASCADE;--> statement-breakpoint
+-- DROP TABLE "session" CASCADE;--> statement-breakpoint
 ALTER TABLE "lessons" ADD CONSTRAINT "lessons_module_id_modules_id_fk" FOREIGN KEY ("module_id") REFERENCES "public"."modules"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "modules" ADD CONSTRAINT "modules_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE set null ON UPDATE no action;
