@@ -2,6 +2,11 @@
 	"name": "nuru-playground",
 	"version": "0.1.0",
 	"private": true,
+	"imports": {
+		"#components/*": "./components/*.tsx",
+		"#lib/*": "./lib/*.ts",
+		"#hooks/*": "./hooks/*.ts"
+	},
 	"scripts": {
 		"dev": "next dev",
 		"prebuild": "cp ../../packages/wasm/main.wasm ./public/main.wasm || echo 'Warning: main.wasm not found, skipping copy.'",
