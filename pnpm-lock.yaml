@@ -38,6 +38,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      drizzle-orm:
+        specifier: ^0.45.1
+        version: 0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(kysely@0.28.14)
       lucide-react:
         specifier: ^1.0.1
         version: 1.0.1(react@19.2.4)

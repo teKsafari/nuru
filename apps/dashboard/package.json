@@ -22,6 +22,7 @@
 		"@portabletext/toolbar": "^7.0.27",
 		"@wrksz/themes": "^0.7.9",
 		"clsx": "^2.1.1",
+		"drizzle-orm": "^0.45.1",
 		"lucide-react": "^1.0.1",
 		"next": "15.5.9",
 		"react": "^19.2.4",

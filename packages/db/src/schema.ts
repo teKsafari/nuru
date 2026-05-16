@@ -32,6 +32,7 @@ export const modules = pgTable("modules", {
 	title: jsonb("title").$type<LocalizedString>().notNull(),
 	difficulty: text("difficulty"), // e.g., 'beginner', 'intermediate'
 	executorType: text("executor_type").default('nuru-wasm').notNull(),
+	visibility: text("visibility").default('private').notNull(), // 'public', 'private', 'organization'
 	layoutConfig: jsonb("layout_config").notNull(), // { terminal: boolean, canvas: boolean, etc. }
 	order: integer("order").default(0).notNull(),
 	organizationId: text("organization_id"),
