@@ -32,6 +32,7 @@ export type LessonFormInputs = {
 	instructions: any;
 	defaultCodeTemplate: string;
 	difficulty: string;
+	visibility: string;
 	layoutConfig: {
 		terminal: boolean;
 		canvas: boolean;
@@ -67,6 +68,7 @@ export default function LessonEditor({
 			instructions: [],
 			defaultCodeTemplate: "",
 			difficulty: "medium",
+			visibility: "private",
 			layoutConfig: {
 				terminal: true,
 				canvas: false,
@@ -133,6 +135,25 @@ export default function LessonEditor({
 									<SelectItem value="easy">Easy</SelectItem>
 									<SelectItem value="medium">Medium</SelectItem>
 									<SelectItem value="hard">Hard</SelectItem>
+								</SelectContent>
+							</Select>
+						)}
+					/>
+				</div>
+				<div className="space-y-2">
+					<Label>Visibility</Label>
+					<Controller
+						control={control}
+						name="visibility"
+						render={({ field }) => (
+							<Select value={field.value} onValueChange={field.onChange}>
+								<SelectTrigger className="rounded-none w-48">
+									<SelectValue placeholder="Select visibility" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="public">Public</SelectItem>
+									<SelectItem value="private">Private</SelectItem>
+									<SelectItem value="organization">Organization</SelectItem>
 								</SelectContent>
 							</Select>
 						)}
