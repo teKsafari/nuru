@@ -2,8 +2,8 @@
 title: "7. Conditionals (kama/else if/sivyo)"
 task: "Change `alama = 40` and see if the program tells you \"You failed\"."
 initialCode: |
-  alama = 85
-  kama (alama >= 50) {
+  alama = 
+  kama ( ) {
       andika("Umefaulu!")
   } sivyo {
       andika("Umefeli, jaribu tena.")
@@ -23,15 +23,13 @@ kama (condition) {
 }
 ```
 
-### Example:
-```s
-time = 14
-kama (time < 12) {
-    andika("Good morning")
-} au kama (time < 18) {
-    andika("Good afternoon")
+### Task:
+```nuru
+alama = +++60+++
+kama (+++alama >= 50+++) {
+    andika("Umefaulu!")
 } sivyo {
-    andika("Good evening")
+    andika("Umefeli, jaribu tena.")
 }
 ```
 

@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 
 export type OutputReceiver = (content: string, isError: boolean) => void;
 
-export function useNuru(outputReceiver: OutputReceiver, interpreterConfig?: InterpreterConfig): NuruInstance {
+export function useNuru(outputReceiver: OutputReceiver, interpreterConfig?: Omit<InterpreterConfig, "outputReceiver">): NuruInstance {
 	const [nuruInstance, setNuruInstance] = useState<NuruInstance | null>(null);
 
 	const outputReceiverRef = useRef(outputReceiver);

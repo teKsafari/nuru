@@ -37,3 +37,12 @@ Kwa Fibonacci, tunahitaji **Kesi mbili za Msingi** kwa sababu hesabu hiyo kila w
 - Fibonacci ya 1 ni **1**.
 
 **Kazi Yako:** Kamilisha kesi za msingi kwa kitendakazi cha `fibo` ili kiweze kurudisha 0 na 1 kwa usahihi.
+
+```nuru
+fanya fibo = unda(n) {
+    +++kama (n == 0) { rudisha 0 }+++
+    +++kama (n == 1) { rudisha 1 }+++
+    
+    rudisha // ...
+}
+```

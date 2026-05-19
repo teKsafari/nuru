@@ -12,13 +12,18 @@ export const viewport: Viewport = {
 };
 
 import "./globals.css";
-import { JetBrains_Mono } from "next/font/google";
+
+import { JetBrains_Mono, Noto_Rashi_Hebrew } from "next/font/google";
 
 const jetbrainsMono = JetBrains_Mono({
 	subsets: ["latin"],
 	display: "swap",
 	weight: ["400", "500", "700"],
 	variable: "--font-jetbrains-mono",
+});
+const NotoRashi = Noto_Rashi_Hebrew({
+	subsets: ["latin"],
+	variable: "--font-noto-rashi",
 });
 
 export const metadata: Metadata = {
@@ -42,9 +47,9 @@ export default function RootLayout({
 		<html
 			lang="en"
 			suppressHydrationWarning
-			className={`${jetbrainsMono.variable}`}
+			className={cn(jetbrainsMono.variable, NotoRashi.variable)}
 		>
-			<head>	
+			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 				<link
 					rel="icon"
@@ -56,7 +61,7 @@ export default function RootLayout({
 				<meta name="theme-color" content="#00b4d8" />
 				<link rel="manifest" href="/manifest.json" />
 			</head>
-			<body className={cn(jetbrainsMono.className, "flex h-dvh flex-col")}>
+			<body className={"flex h-dvh flex-col"}>
 				<Suspense>
 					<CustomThemeProvider>{children}</CustomThemeProvider>
 				</Suspense>

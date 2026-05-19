@@ -3,15 +3,17 @@ title: "2. Kugawanya Tatizo"
 task: "Tumia kitanzi cha `kwa` kugawanya `orodha` katika sehemu mbili sawa: `kushoto` na `kulia`."
 initialCode: |
   fanya orodha = [1, 2, 3, 4, 5, 6]
-  
   fanya katikati = orodha.idadi() / 2
   
   fanya kushoto = []
   fanya kulia = []
   
-  // Tumia kitanzi cha kwa kuweka vitu kushoto au kulia
   kwa i, namba ktk orodha {
-      // weka mantiki hapa: kama i < katikati ...
+      kama (i < katikati) {
+          
+      } sivyo {
+          
+      }
   }
   
   andika("Kushoto:", kushoto)
@@ -41,6 +43,25 @@ Badala ya kujaribu kupanga orodha kubwa yote kwa mara moja, tunaigawanya katika 
 ### Mgawanyo:
 Tunatafuta namba ya katikati na kuikata safu (array) nusu kwa kutumia kitanzi cha `kwa`.
 
-**Kazi Yako:** Tumia kitanzi cha `kwa` kugawanya orodha katikati.
-- Ikiwa `i` ni chini ya `katikati`, sukuma namba kwenye `kushoto`.
+**Kazi Yako:** Tumia mzunguko wa `kwa` kugawanya orodha katikati.
+- Ikiwa fahirisi `i` ni chini ya `katikati`, sukuma namba kwenye `kushoto`.
 - Vinginevyo, isukume kwenye `kulia`.
+
+```nuru
+fanya orodha = [1, 2, 3, 4, 5, 6]
+fanya katikati = orodha.idadi() / 2
+
+fanya kushoto = []
+fanya kulia = []
+
+kwa i, namba ktk orodha {
+    kama (i < katikati) {
+        +++kushoto.sukuma(namba)+++
+    } sivyo {
+        +++kulia.sukuma(namba)+++
+    }
+}
+
+andika("Kushoto:", kushoto)
+andika("Kulia:", kulia)
+```

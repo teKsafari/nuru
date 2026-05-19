@@ -37,3 +37,12 @@ For Fibonacci, we actually need **two** base cases because the calculation alway
 - Fibonacci of 1 is **1**.
 
 **Your Task:** Complete the base cases for the `fibo` function so it can correctly return 0 and 1.
+
+```nuru
+fanya fibo = unda(n) {
+    +++kama (n == 0) { rudisha 0 }+++
+    +++kama (n == 1) { rudisha 1 }+++
+    
+    rudisha // ...
+}
+```

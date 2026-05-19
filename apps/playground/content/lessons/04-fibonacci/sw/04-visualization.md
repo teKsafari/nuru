@@ -14,7 +14,7 @@ initialCode: |
       rudisha fibo(n - 1) + fibo(n - 2)
   }
 
-  fanya jibu = fibo(5)
+  fanya jibu = fibo() // Weka namba hapa
   andika("------------------")
   andika("Jibu ni:", jibu)
   andika("Jumla ya mara zilizoitwa:", hesabu)
@@ -45,4 +45,8 @@ Ili kupata `fibo(5)`, kompyuta haifanyi hatua 5 tu. Inaita kitendakazi mara **15
 - `fibo(4)` inaita `fibo(3)` na `fibo(2)`.
 - Angalia jinsi `fibo(3)` inavyokokotolewa mara mbili? Kadiri `n` inavyokuwa kubwa, kompyuta inaanza kurudia kazi ile ile mara nyingi sana.
 
-**Kazi Yako:** Endesha kodi na utazame matokeo. Je, unaamini ilichukua wito 15 kwa namba 5 tu? Fikiria itachukua ngapi kwa namba 30!
+**Kazi Yako:** Endesha kodi kwa ajili ya `fibo(5)` na utazame matokeo. Je, unaamini ilichukua wito 15 kwa namba 5 tu? Fikiria itachukua ngapi kwa namba 30!
+
+```nuru
+fanya jibu = fibo(+++5+++)
+```

@@ -43,4 +43,15 @@ chora_nyekundu() // Inaandika: Kuchora kwa rangi ya Nyekundu
 
 Hii inaitwa **Kufungwa** (Closure) kwa sababu kitendakazi cha ndani "kinakumbatia" na kukumbuka vibadilika vya kitendakazi cha nje hata baada ya kitendakazi cha nje kumaliza kazi yake.
 
-**Kazi Yako:** Pata kitendakazi cha ndani kutoka kwa `tengeneza_salamu()`, kihifadhi kwenye kibadilika, na kisha kiendeshe!
+**Kazi Yako:** Pata kitendakazi cha ndani kwa kuandika `fanya sema_jambo = tengeneza_salamu()` na kisha kiendeshe kwa kuandika `sema_jambo()`!
+
+```s
+fanya tengeneza_salamu = unda() {
+    rudisha unda() {
+        andika("Jambo kutoka ndani!")
+    }
+}
+
++++fanya sema_jambo = tengeneza_salamu()+++
++++sema_jambo()+++
+```

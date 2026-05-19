@@ -29,7 +29,7 @@ fanya kwa_binadamu = unda() {
 }
 
 fanya kwa_programu = unda() {
-    rudisha 10
+    +++rudisha 10+++
 }
 
 fanya x = kwa_binadamu() // x is now 'tupu' (empty) because nothing was returned!
@@ -37,3 +37,9 @@ fanya y = kwa_programu() // y is now 10!
 ```
 
 **Your Task:** Fix the `zidisha` function so that it returns the value instead of just printing it. This allows the `jibu` variable to actually hold the result.
+
+```s
+fanya zidisha = unda(a, b) {
+    +++rudisha a * b+++
+}
+```

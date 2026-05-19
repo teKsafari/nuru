@@ -2,9 +2,6 @@
 title: "6. Math with Recursion: Factorial"
 task: "Complete the `factorial` function. Multiply `n` by the result of `factorial(n - 1)`."
 initialCode: |
-  // Factorial is written as n! 
-  // 5! = 5 * 4 * 3 * 2 * 1
-  
   fanya factorial = unda(n) {
       // Base Case: 1! is just 1
       kama (n <= 1) {
@@ -12,7 +9,7 @@ initialCode: |
       }
       
       // Recursive Step: n * (n-1)!
-      rudisha // We need n multiplied by factorial(n - 1)
+      rudisha 
   }
 
   andika("5! ni:", factorial(5)) // Should be 120
@@ -43,4 +40,16 @@ fanya fact = unda(n) {
 }
 ```
 
-**Your Task:** Complete the `factorial` function. Use `rudisha` to return the current number `n` multiplied by the result of the function calling itself for `n - 1`.
+**Your Task:** Complete the `factorial` function by writing +++rudisha n * factorial(n - 1)+++. Can you see how it multiplies all the numbers?
+
+```nuru
+fanya factorial = unda(n) {
+    kama (n <= 1) {
+        rudisha 1
+    }
+    
+    +++rudisha n * factorial(n - 1)+++
+}
+
+andika("5! ni:", factorial(5))
+```

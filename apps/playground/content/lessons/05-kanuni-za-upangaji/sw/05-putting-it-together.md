@@ -30,11 +30,9 @@ initialCode: |
 
       fanya kati = orodha.idadi() / 2
       
-      // 1. Wito wa kujirudia: Panga kila nusu
-      fanya kushoto = // panga nusu ya kushoto
-      fanya kulia = // panga nusu ya kulia
+      fanya kushoto = 
+      fanya kulia = 
 
-      // 2. Unganisha nusu zilizopangwa pamoja
       rudisha unganisha(kushoto, kulia)
   }
 
@@ -82,5 +80,17 @@ Ni wakati wa kuweka vipande vyote pamoja katika moja ya algorithms maarufu zaidi
 4. **Unganisha:** Tumia kitendakazi chetu cha `unganisha` kuunganisha nusu hizo mbili ambazo sasa zimepangwa.
 
 **Kazi Yako:** Jaza wito wa kujirudia. Lazima uite `panga` kwa `kata(orodha, 0, kati)` na `panga` kwa `kata(orodha, kati)`.
+
+```nuru
+fanya panga = unda(orodha) {
+    kama (orodha.idadi() <= 1) { rudisha orodha }
+    fanya kati = orodha.idadi() / 2
+    fanya kushoto = +++panga(kata(orodha, 0, kati))+++
+    fanya kulia = +++panga(kata(orodha, kati))+++
+    rudisha unganisha(kushoto, kulia)
+}
+
+andika(panga([38, 27, 43, 3, 9, 82, 10]))
+```
 
 Je, si jambo la kushangaza? Kitendakazi kinapanga nusu kwa kujiita *chenyewe*! Huu ndio nguvu halisi ya kujirudia.

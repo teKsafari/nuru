@@ -9,7 +9,7 @@ initialCode: |
       }
       
       // Recursive Step: Current item + sum of the rest
-      rudisha // weka mantiki hapa
+      rudisha 
   }
 
   andika(jumla([10, 20, 30])) // Should be 60
@@ -37,4 +37,16 @@ If you want to find the sum of all numbers in an array, we can pass an index `i`
 - `10 + (20 + jumla([10, 20], 2))`
 - `10 + (20 + 0)` = **30**
 
-**Your Task:** Complete the logic for `jumla`. Return the value of the current item in the list (`orodha[i]`) plus the result of calling `jumla` on the rest of the list (`jumla(orodha, i + 1)`).
+**Your Task:** Complete the logic for `jumla` by writing +++rudisha orodha[i] + jumla(orodha, i + 1)+++. This will sum up all items in the list.
+
+```nuru
+fanya jumla = unda(orodha, i=0) {
+    kama (i == orodha.idadi()) {
+        rudisha 0
+    }
+    
+    +++rudisha orodha[i] + jumla(orodha, i + 1)+++
+}
+
+andika(jumla([10, 20, 30]))
+```

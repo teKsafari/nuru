@@ -33,3 +33,7 @@ solution: |
 Katika Sudoku, ikiwa tunaweka `4` lakini baadaye tukagundua kuwa haiwezekani kumaliza fumbo, lazima tuondoe `4` (tuiweke tena kuwa `0`) na tujaribu namba tofauti.
 
 **Kazi Yako:** Huu ni mstari muhimu zaidi katika backtracking. Ikiwa wito wa kujirudia `tatua()` utashindwa, lazima tusemue kisia letu. Weka `gridi[r][c] = 0` ili tuweze kujaribu namba inayofuata kwenye kitanzi.
+
+```nuru
++++gridi[r][c] = 0+++
+```

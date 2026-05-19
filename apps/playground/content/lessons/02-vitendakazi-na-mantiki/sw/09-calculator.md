@@ -54,4 +54,27 @@ Tunatumia sentensi ya `kama` (if) ili kuangalia kile ambacho mtumiaji anataka ku
 ### Kwa nini hii ni muhimu?
 Mfumo huu unatumika kila mahali! Kuanzia kuamua ni kitufe gani mtumiaji alibonyeza kwenye tovuti hadi kuamua jinsi mhusika anavyosogea kwenye mchezo wa video (game).
 
-**Kazi Yako:** Kamilisha mantiki iliyokosekana kwa shughuli nyingine tatu za kihisabati (`toa`, `zidisha`, `gawanya`). Usisahau kutoa alama za `//` kwenye majaribio yaliyo chini kabisa!
+**Kazi Yako:** Kamilisha mantiki kwa kuandika `rudisha a - b`, `rudisha a * b`, na `rudisha a / b` ndani ya vizuizi vya `kama` husika. Pia, toa alama za `//` kwenye majaribio yaliyo chini kabisa!
+
+```s
+fanya kikokotozi = unda(a, b, tendo) {
+    kama (tendo == "jumla") {
+        rudisha a + b
+    }
+    kama (tendo == "toa") {
+        +++rudisha a - b+++
+    }
+    kama (tendo == "zidisha") {
+        +++rudisha a * b+++
+    }
+    kama (tendo == "gawanya") {
+        +++rudisha a / b+++
+    }
+    rudisha "Tendo halijulikani"
+}
+
+andika("10 + 5 =", kikokotozi(10, 5, "jumla"))
++++andika("10 - 5 =", kikokotozi(10, 5, "toa"))+++
++++andika("10 * 5 =", kikokotozi(10, 5, "zidisha"))+++
++++andika("10 / 5 =", kikokotozi(10, 5, "gawanya"))+++
+```

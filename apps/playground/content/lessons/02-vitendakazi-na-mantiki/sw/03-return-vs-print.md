@@ -29,7 +29,7 @@ fanya kwa_binadamu = unda() {
 }
 
 fanya kwa_programu = unda() {
-    rudisha 10
+    +++rudisha 10+++
 }
 
 fanya x = kwa_binadamu() // x sasa ni 'tupu' kwa sababu hakuna kilichorudishwa!
@@ -37,3 +37,9 @@ fanya y = kwa_programu() // y sasa ni 10!
 ```
 
 **Kazi Yako:** Rekebisha kitendakazi cha `zidisha` ili kirudishe thamani badala ya kuiandika tu. Hii itaruhusu kibadilika `jibu` kishike matokeo ya kweli.
+
+```s
+fanya zidisha = unda(a, b) {
+    +++rudisha a * b+++
+}
+```

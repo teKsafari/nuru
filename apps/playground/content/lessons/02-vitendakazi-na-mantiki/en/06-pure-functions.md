@@ -34,11 +34,21 @@ fanya add = unda(x) {
 }
 
 // PURE (Safe and Predictable)
-fanya add_pure = unda(x, y) {
+fanya add_pure = +++unda(x, y) {
     rudisha x + y // Just calculating and returning
-}
+}+++
 ```
 
 Pure functions make your code much easier to test and reason about because they are isolated!
 
 **Your Task:** Rewrite `ongeza_mbili` to be a pure function. It should take a number and return that number plus 2.
+
+```s
+fanya namba_yangu = 10
+
+fanya ongeza_mbili = +++unda(x) {
+    rudisha x + 2
+}+++
+
++++andika(ongeza_mbili(namba_yangu))+++
+```

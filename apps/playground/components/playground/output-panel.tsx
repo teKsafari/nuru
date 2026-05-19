@@ -1,71 +1,203 @@
-"use client"
-
-import { Play, Send, Eye, Terminal } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/playground/scroll-area"
-import { PlaygroundLabels } from "@/types/playground"
+"use client";
+import {
+	Play,
+	Send,
+	Eye,
+	Terminal,
+	Maximize2,
+	Minimize2,
+	Layout,
+	AlertCircle,
+	XCircle,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/playground/scroll-area";
+import { usePlayground } from "./playground-context";
+import { getRenderer } from "./renderers/registry";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface OutputPanelProps {
-  output: string
-  onRun?: () => void
-  onSubmit?: () => void
-  onShowSolution?: () => void
-  showToolbar?: boolean
-  labels: PlaygroundLabels
+	showToolbar?: boolean;
 }
 
-export function OutputPanel({ output, onRun, onSubmit, onShowSolution, showToolbar = true, labels }: OutputPanelProps) {
-  return (
-    <div className="flex flex-col h-full bg-background overflow-hidden border-t border-border/20">
-      <div className="flex items-center justify-between px-4 py-2 bg-muted/30 border-b border-border/50">
-        <div className="flex items-center gap-2.5">
+export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
+	const {
+		lesson,
+		panels: { maximizePanel, restorePanels, activeMaximizedPanel },
+		state: { output, testErrors },
+		actions: { onRun, onSubmit, onShowSolution },
+		labels,
+	} = usePlayground();
 
-          <div className="flex items-center gap-1.5 ml-1">
-            <Terminal className="w-3 h-3 text-muted-foreground" />
-            <span className="text-[10px] font-black tracking-widest text-muted-foreground uppercase font-mono">
-              {labels.terminal}
-            </span>
-          </div>
-        </div>
+	const isMaximized = activeMaximizedPanel === "renderer";
 
-        {showToolbar && (
-          <div className="flex items-center gap-2">
-            <Button onClick={onSubmit} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground h-6 px-2 text-[10px] font-bold">
-              <Send className="w-2.5 h-2.5 mr-1" />
-              {labels.testing}
-            </Button>
-            <Button variant="secondary" size="sm" onClick={onRun} className="h-6 px-2 text-[10px] font-bold">
-              <Play className="w-2.5 h-2.5 mr-1" />
-              {labels.run}
-            </Button>
-            <Button variant="secondary" size="sm" onClick={onShowSolution} className="h-6 px-2 text-[10px] font-bold">
-              <Eye className="w-2.5 h-2.5 mr-1" />
-              {labels.showSolution}
-            </Button>
-          </div>
-        )}
-      </div>
+	const handleMaximizeToggle = () => {
+		if (isMaximized) {
+			restorePanels();
+		} else {
+			maximizePanel("renderer");
+		}
+	};
 
-      <ScrollArea className="flex-1">
-        <div className="p-5">
-          {output ? (
-            <pre className="font-mono text-sm text-foreground/90 whitespace-pre-wrap leading-relaxed">
-              {output.split("\n").map((line, i) => {
-                const isError = line.toLowerCase().includes("error:") || line.toLowerCase().includes("hitilafu:");
-                return (
-                  <span key={i} className={isError ? "text-red-500 dark:text-red-400 block" : "block"}>
-                    {line}
-                  </span>
-                );
-              })}
-            </pre>
-          ) : (
-            <p className="text-[13px] text-muted-foreground/60 italic font-mono uppercase tracking-tight">
-              {labels.outputPlaceholder}
-            </p>
-          )}
-        </div>
-      </ScrollArea>
-    </div>
-  )
+	const rendererId = lesson.panels?.renderer?.type || "standard-terminal";
+	const RendererComponent = getRenderer(rendererId);
+
+	const renderContent = () => {
+		if (rendererId === "standard-terminal") {
+			return (
+				<ScrollArea className="flex-1">
+					<div className="p-5">
+						{output ? (
+							<pre className="text-foreground/90 font-mono text-sm leading-relaxed whitespace-pre-wrap">
+								{output.split("\n").map((line, i) => {
+									const isError =
+										line.toLowerCase().includes("error:") ||
+										line.toLowerCase().includes("hitilafu:");
+									return (
+										<span
+											key={i}
+											className={
+												isError
+													? "block text-red-500 dark:text-red-400"
+													: "block"
+											}
+										>
+											{line}
+										</span>
+									);
+								})}
+							</pre>
+						) : (
+							!testErrors?.length && (
+								<p className="text-muted-foreground/60 font-mono text-[13px] tracking-tight uppercase italic">
+									{labels.outputPlaceholder}
+								</p>
+							)
+						)}
+					</div>
+				</ScrollArea>
+			);
+		}
+
+		if (!RendererComponent) {
+			return (
+				<div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-2">
+					<AlertCircle className="h-8 w-8 opacity-20" />
+					<p className="font-mono text-xs tracking-widest uppercase opacity-50">
+						Renderer "{rendererId}" not found
+					</p>
+				</div>
+			);
+		}
+
+		return <RendererComponent />;
+	};
+
+	return (
+		<div className="bg-background border-border/20 flex h-full flex-col overflow-hidden border-t">
+			<div className="bg-muted/30 border-border/50 flex items-center justify-between border-b px-4 py-2">
+				<div className="flex items-center gap-2.5">
+					<div className="ml-1 flex items-center gap-1.5">
+						{rendererId === "standard-terminal" ? (
+							<Terminal className="text-muted-foreground h-3 w-3" />
+						) : (
+							<Layout className="text-muted-foreground h-3 w-3" />
+						)}
+						<span className="text-muted-foreground font-mono text-[10px] font-black tracking-widest uppercase">
+							{rendererId === "standard-terminal"
+								? labels.terminal
+								: rendererId}
+						</span>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-2">
+					{testErrors && testErrors.length > 0 && (
+						<Dialog>
+							<DialogTrigger asChild>
+								<Button
+									variant="outline"
+									size="sm"
+									className="border-border/50 text-muted-foreground hover:bg-muted/50 h-6 px-2 text-[10px] font-black tracking-widest uppercase transition-all active:scale-95"
+								>
+									<AlertCircle className="mr-1.5 h-2.5 w-2.5" />
+									Errors ({testErrors.length})
+								</Button>
+							</DialogTrigger>
+							<DialogContent className="border-border/50 bg-background/95 shadow-2xl backdrop-blur sm:max-w-md">
+								<DialogHeader>
+									<DialogTitle className="text-foreground flex items-center gap-2 font-mono text-sm tracking-widest uppercase">
+										Validation failed
+									</DialogTitle>
+								</DialogHeader>
+								<div className="py-4">
+									<ul className="space-y-3">
+										{testErrors.map((error, i) => (
+											<li
+												key={i}
+												className="text-foreground/80 bg-muted/30 border-border/50 flex items-start gap-3 rounded-lg border p-3 font-mono text-[13px] leading-relaxed"
+											>
+												<span>{error}</span>
+											</li>
+										))}
+									</ul>
+								</div>
+							</DialogContent>
+						</Dialog>
+					)}
+
+					{showToolbar && (
+						<>
+							<Button
+								onClick={onSubmit}
+								size="sm"
+								className="bg-primary hover:bg-primary/90 text-primary-foreground h-6 px-2 text-[10px] font-black tracking-widest uppercase shadow-sm transition-all active:scale-95"
+							>
+								<Send className="mr-1 h-2.5 w-2.5" />
+								{labels.testing}
+							</Button>
+							<Button
+								variant="secondary"
+								size="sm"
+								onClick={onRun}
+								className="h-6 px-2 text-[10px] font-black tracking-widest uppercase transition-all active:scale-95"
+							>
+								<Play className="mr-1 h-2.5 w-2.5" />
+								{labels.run}
+							</Button>
+							<Button
+								variant="secondary"
+								size="sm"
+								onClick={onShowSolution}
+								className="h-6 px-2 text-[10px] font-black tracking-widest uppercase transition-all active:scale-95"
+							>
+								<Eye className="mr-1 h-2.5 w-2.5" />
+								{labels.showSolution}
+							</Button>
+						</>
+					)}
+					<Button
+						variant="ghost"
+						size="icon"
+						className="text-muted-foreground hover:text-foreground h-6 w-6 transition-colors"
+						onClick={handleMaximizeToggle}
+					>
+						{isMaximized ? (
+							<Minimize2 className="h-3.5 w-3.5" />
+						) : (
+							<Maximize2 className="h-3.5 w-3.5" />
+						)}
+					</Button>
+				</div>
+			</div>
+
+			<div className="flex-1 overflow-hidden">{renderContent()}</div>
+		</div>
+	);
 }

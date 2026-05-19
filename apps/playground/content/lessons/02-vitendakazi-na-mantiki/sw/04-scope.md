@@ -31,7 +31,7 @@ solution: |
 fanya jina = "Amani" // Global
 
 fanya ficha_nywila = unda() {
-    fanya siri = "123" // Local
+    +++fanya siri = "123"+++ // Local
     andika(siri) // Inafanya kazi!
 }
 
@@ -42,3 +42,10 @@ andika(siri) // KOSA! Kompyuta haijui 'siri' ni nini huku nje.
 Vibadilika vya ndani ni salama zaidi kwa sababu havivurugi sehemu nyingine za programu yako.
 
 **Kazi Yako:** Sogeza kibadilika `siri` ndani ya kitendakazi `ficha` ili kukifanya kiwe cha ndani.
+
+```s
+fanya ficha = unda() {
+    +++fanya siri = "Nywila"+++
+    andika(siri)
+}
+```

@@ -7,8 +7,9 @@
 
 @theme inline {
 	--font-*: initial;
-	--font-sans: var(--font-jetbrains-mono), JetBrains Mono, monospace;
+	/* --font-sans: var(--font-jetbrains-mono), JetBrains Mono, monospace; */
 	--font-mono: var(--font-jetbrains-mono), JetBrains Mono, monospace;
+	--font-noto-rashi: var(--font-noto-rashi);
 
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -229,3 +230,7 @@
 		filter: drop-shadow(0 0 4px rgba(255, 153, 0, 0.7));
 	}
 }
+
+/* h1, h2, h3{
+	@apply font-noto-rashi
+} */

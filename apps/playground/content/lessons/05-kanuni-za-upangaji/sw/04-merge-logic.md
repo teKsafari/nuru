@@ -14,23 +14,19 @@ initialCode: |
   fanya unganisha = unda(a, b) {
       fanya matokeo = []
       
-      // Endelea wakati orodha zote mbili zina vitu
       wakati (a.idadi() > 0 && b.idadi() > 0) {
           kama (a[0] < b[0]) {
-              // Chukua ndogo kutoka 'a'
               matokeo.sukuma(a[0])
               a = kata(a, 1)
           } sivyo {
-              // Chukua ndogo kutoka 'b'
-              // ?
+              
           }
       }
       
-      // Ongeza vitu vilivyobaki
       rudisha matokeo + a + b
   }
 
-  andika(unganisha([1, 5], [2, 10])) // Inapaswa kuwa [1, 2, 5, 10]
+  andika(unganisha([1, 5], [2, 10]))
 solution: |
   // Kisaidizi cha kukata orodha (Helper to slice arrays)
   fanya kata = unda(orodha, anza, mwisho = -1) {
@@ -64,4 +60,22 @@ Baada ya kuigawanya orodha hadi ukubwa wa 1, tunahitaji kuziweka pamoja kwa mpan
 2. Chagua kile kidogo zaidi na ukiweke kwenye orodha yetu ya `matokeo`.
 3. Rudia hadi orodha moja iwe tupu!
 
-**Kazi Yako:** Kamilisha kitalu cha `sivyo`. Ikiwa `b[0]` ni ndogo (au sawa) na `a[0]`, iongeze kwenye `matokeo` na uiondoe kwenye `b`. (Kumbuka: `.sukuma()` inaongeza kitu kwenye safu, na `+` inaunganisha safu mbili).
+**Kazi Yako:** Kamilisha kizuizi cha `sivyo`. Ikiwa `b[0]` ni ndogo kuliko (au sawa na) `a[0]`, iongeze kwenye `matokeo` na uiondoe kwenye `b`. (Kumbuka: `.sukuma()` huongeza kitu kwenye safu, na `+` huunganisha safu mbili).
+
+```nuru
+fanya unganisha = unda(a, b) {
+    fanya matokeo = []
+    wakati (a.idadi() > 0 && b.idadi() > 0) {
+        kama (a[0] < b[0]) {
+            matokeo.sukuma(a[0])
+            a = kata(a, 1)
+        } sivyo {
+            +++matokeo.sukuma(b[0])+++
+            +++b = kata(b, 1)+++
+        }
+    }
+    rudisha matokeo + a + b
+}
+
+andika(unganisha([1, 5], [2, 10]))
+```

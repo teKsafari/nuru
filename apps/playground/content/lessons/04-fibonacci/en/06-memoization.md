@@ -10,7 +10,7 @@ initialCode: |
       // 1. Check kama we already know the answer!
       kama (kumbukumbu[n] != tupu) {
           andika("Nakumbuka namba", n)
-          rudisha // rudisha jibu kutoka kumbukumbu
+          // Rudiasha jibu kutoka kumbukumbu hapa
       }
 
       // 2. Otherwise, calculate and SAVE IT
@@ -45,3 +45,9 @@ In computer science, this is called **Memoization**. Every time we calculate a n
 With memory, `fibo(30)` goes from 2 Million calls down to just **30 calls**. That is a massive speed boost!
 
 **Your Task:** Finish the `if` statement to return the stored value if it exists in `kumbukumbu[n]`. (In Nuru, we use `tupu` to check if a value is missing).
+
+```nuru
+kama (kumbukumbu[n] != tupu) {
+    +++rudisha kumbukumbu[n]+++
+}
+```

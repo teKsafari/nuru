@@ -1,18 +1,13 @@
 ---
 title: "5. The Call Stack"
-task: "Move `andika(n)` to be *after* `hesabu(n - 1)`. Run it and see what happens!"
+task: "Place `andika(n)` *after* the recursive call `hesabu(n - 1)` to see how the call stack 'unwinds'."
 initialCode: |
   fanya hesabu = unda(n) {
       kama (n <= 0) {
           rudisha tupu
       }
       
-      // Move this line to the bottom!
-      andika(n) 
-      
       hesabu(n - 1)
-      
-      // Put it here instead!
   }
 
   hesabu(5)
@@ -44,6 +39,18 @@ Once the `0` function finishes (returns), the computer resumes where it left off
 - `hesabu(2)` (Paused)
 - `hesabu(1)` (Running) -> Prints 1
 - `hesabu(2)` (Resumed) -> Prints 2
-- ... and so on.
 
-**Your Task:** Swap the order of `andika(n)` and `hesabu(n-1)` to see this "unwinding" in action. It will print the numbers in reverse order (1, 2, 3, 4, 5)!
+**Your Task:** Add `andika(n)` below `hesabu(n - 1)` to see this "unwinding" in action.
+
+```nuru
+fanya hesabu = unda(n) {
+    kama (n <= 0) {
+        rudisha tupu
+    }
+    
+    hesabu(n - 1)
+    +++andika(n)+++
+}
+
+hesabu(5)
+```

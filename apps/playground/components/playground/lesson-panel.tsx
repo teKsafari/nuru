@@ -9,42 +9,37 @@ import {
 	ArrowRight,
 } from "lucide-react";
 import { ScrollArea } from "@/components/playground/scroll-area";
-import { Lesson, Language, PlaygroundLabels } from "@/types/playground";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Markdown from "react-markdown";
 import { CodeEditor } from "./code-editor";
 import { Breadcrumbs } from "./breadcrumbs";
+import { usePlayground } from "./playground-context";
+import { parseHighlights } from "@/lib/utils/highlights";
 
 interface LessonPanelProps {
-	lesson: Lesson;
-	currentStepIndex: number;
-	onStepChange: (index: number) => void;
-	lang: Language;
-	labels: PlaygroundLabels;
 	collapsible?: boolean;
 	expanded?: boolean;
 	onToggle?: () => void;
 	hideNavigation?: boolean;
-	isCompleted?: boolean;
-	completedStepIndices?: Set<number>;
-	onNextLesson?: () => void;
 }
 
 export function LessonPanel({
-	lesson,
-	currentStepIndex,
-	onStepChange,
-	lang,
-	labels,
 	collapsible,
 	expanded,
 	onToggle,
 	hideNavigation,
-	isCompleted,
-	completedStepIndices = new Set(),
-	onNextLesson,
 }: LessonPanelProps) {
+	const {
+		lesson,
+		state: { currentStepIndex, completedStepIndices },
+		actions: { onStepChange, onNextLesson },
+		lang,
+		labels,
+		isCurrentStepCompleted: isCompleted,
+		extensions,
+	} = usePlayground();
+
 	const step = lesson.steps[currentStepIndex];
 	const isLastStep = currentStepIndex === lesson.steps.length - 1;
 
@@ -68,7 +63,7 @@ export function LessonPanel({
 	const header = (
 		<div className="mb-8 flex items-start justify-between gap-4">
 			<div className="flex min-w-0 flex-1 flex-col gap-1.5">
-				<h1 className="text-foreground text-2xl leading-tight font-bold tracking-tight lg:text-3xl">
+				<h1 className="text-foreground text-2xl leading-tight font-bold tracking-tight lg:text-3xl font-mono!">
 					{step.title[lang] || step.title.sw}
 				</h1>
 				<div className="flex items-center gap-2">
@@ -179,7 +174,7 @@ export function LessonPanel({
 	// Desktop: full height scrollable panel
 	if (!collapsible) {
 		return (
-			<div className="bg-card relative flex h-full w-full flex-col">
+			<div className={cn("font-mono","bg-card relative flex h-full w-full flex-col")}>
 				<ScrollArea className="h-0 flex-1 [&>div]:h-full [&>div>div]:flex! [&>div>div]:h-full [&>div>div]:flex-col">
 					<div className="flex w-full min-w-0 flex-1 flex-col p-6 lg:p-8">
 						<div className="flex-1">
@@ -195,14 +190,22 @@ export function LessonPanel({
 											code(props) {
 												const { children, className, ...rest } = props;
 												const match = /language-(\w+)/.exec(className || "");
-												return match ? (
-													<div className="not-prose border-border bg-muted/30 my-6 overflow-hidden rounded-xl border p-2 shadow-xs">
-														<CodeEditor
-															code={String(children).replace(/\n$/, "")}
-															readOnly
-														/>
-													</div>
-												) : (
+												if (match) {
+													const { cleanedCode, highlights } = parseHighlights(
+														String(children).replace(/\n$/, ""),
+													);
+													return (
+														<div className="not-prose border-border bg-muted/30 my-6 overflow-hidden rounded-xl border p-2 shadow-xs">
+															<CodeEditor
+																code={cleanedCode}
+																highlights={highlights}
+																readOnly
+																extensions={extensions}
+															/>
+														</div>
+													);
+												}
+												return (
 													<code
 														className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[13px] font-medium"
 														{...rest}
@@ -242,7 +245,7 @@ export function LessonPanel({
 
 	// Mobile: collapsible panel inside a resizable pane
 	return (
-		<div className="bg-card flex h-full flex-col overflow-hidden">
+		<div className={cn("font-mono","bg-card flex h-full flex-col overflow-hidden")}>
 			<div
 				role="button"
 				tabIndex={0}
@@ -287,14 +290,22 @@ export function LessonPanel({
 											code(props) {
 												const { children, className, ...rest } = props;
 												const match = /language-(\w+)/.exec(className || "");
-												return match ? (
-													<div className="not-prose border-border bg-muted/30 my-4 overflow-hidden rounded-xl border">
-														<CodeEditor
-															code={String(children).replace(/\n$/, "")}
-															readOnly
-														/>
-													</div>
-												) : (
+												if (match) {
+													const { cleanedCode, highlights } = parseHighlights(
+														String(children).replace(/\n$/, ""),
+													);
+													return (
+														<div className="not-prose border-border bg-muted/30 my-4 overflow-hidden rounded-xl border">
+															<CodeEditor
+																code={cleanedCode}
+																highlights={highlights}
+																readOnly
+																extensions={extensions}
+															/>
+														</div>
+													);
+												}
+												return (
 													<code
 														className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[12px]"
 														{...rest}
@@ -332,3 +343,4 @@ export function LessonPanel({
 		</div>
 	);
 }
+

@@ -52,3 +52,7 @@ Kabla ya kuweka namba, lazima tuangalie ikiwa inaruhusiwa.
 Uwekaji ni **Salama** ikiwa namba hiyo haipo tayari kwenye mstari au safu hiyo. (Kwa mfano huu wa 4x4, tutafanya mambo kuwa rahisi na kuangalia mistari na safu tu).
 
 **Kazi Yako:** Kamilisha ukaguzi wa safu (column check). Pitia mistari yote 4 kwenye namba ya `safu` iliyotolewa. Ikiwa namba tayari ipo, rudisha `sikweli`.
+
+```nuru
++++kama (gridi[i][safu] == namba) { rudisha sikweli }+++
+```
