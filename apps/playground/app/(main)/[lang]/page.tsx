@@ -5,9 +5,8 @@ import { ArrowRight } from "lucide-react";
 
 import { hasLocale, getDictionary } from "@/app/(main)/[lang]/dictionaries";
 import contributors from "@/public/contributors.json";
-import { Button } from "@/components/ui/button";
+import { Button, cn } from "@nuru/ui";
 
-import { cn } from "@/lib/utils";
 export default async function Home({
 	params,
 }: {

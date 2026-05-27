@@ -6,15 +6,15 @@ import * as React from "react";
 
 import { Book, BookOpen, ChevronRight, CheckCircle2 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import {
+	cn,
 	Drawer,
 	DrawerContent,
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger,
 	DrawerFooter,
-} from "@/components/ui/drawer";
+} from "@nuru/ui";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface LessonsDrawerProps {

@@ -8,15 +8,15 @@ import UserMenu from "@/components/UserMenu";
 
 import { LessonsDrawer } from "@/components/lessons-drawer";
 
-import { AppLogo } from "@/components/app-logo";
-
-import { BookOpen, ChevronDown, Languages } from "lucide-react";
 import {
+	AppLogo,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@nuru/ui";
+
+import { BookOpen, ChevronDown, Languages } from "lucide-react";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface SiteHeaderProps {

@@ -5,16 +5,18 @@ import React, { useContext } from "react";
 import { signInAction, signOutAction } from "@/app/actions/auth";
 import { AuthContext } from "@/components/providers/auth-provider";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+	Button,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@nuru/ui";
 import { User, Sprout } from "lucide-react";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 
