@@ -1,0 +1,2 @@
+ALTER TABLE "modules" ADD COLUMN "created_by" text NOT NULL;--> statement-breakpoint
+ALTER TABLE "modules" ADD CONSTRAINT "modules_created_by_users_logto_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("logto_id") ON DELETE cascade ON UPDATE no action;

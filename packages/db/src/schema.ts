@@ -36,6 +36,7 @@ export const modules = pgTable("modules", {
 	layoutConfig: jsonb("layout_config").notNull(), // { terminal: boolean, canvas: boolean, etc. }
 	order: integer("order").default(0).notNull(),
 	organizationId: text("organization_id"),
+	createdBy: text("created_by").notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, (table) => [
 	foreignKey({
@@ -43,6 +44,11 @@ export const modules = pgTable("modules", {
 		foreignColumns: [organizations.id],
 		name: "modules_organization_id_organizations_id_fk"
 	}).onDelete("set null"),
+	foreignKey({
+		columns: [table.createdBy],
+		foreignColumns: [users.logtoId],
+		name: "modules_created_by_users_logto_id_fk"
+	}).onDelete("cascade"),
 ]);
 
 export const lessons = pgTable("lessons", {
