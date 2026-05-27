@@ -3,10 +3,17 @@
   "dialect": "postgresql",
   "entries": [
     {
-      "idx": 0,
+      "idx": 1,
       "version": "7",
-      "when": 1773633636879,
-      "tag": "0000_clean_eternity",
+      "when": 1778825039509,
+      "tag": "0001_magical_matthew_murdock",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778826837408,
+      "tag": "0002_violet_mantis",
       "breakpoints": true
     }
   ]

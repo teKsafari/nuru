@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import Link from "next/link";
-import { Lesson, Language } from "@/types/playground";
+import { Module, Lesson, Language } from "@/types/playground";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 import { cn } from "@/lib/utils";
 import { 
@@ -16,35 +16,35 @@ import {
 } from "lucide-react";
 
 interface LessonsMapProps {
-	lessons: Lesson[];
+	modules: Module[];
 	lang: Language;
 	dict: Dictionary;
 }
 
-export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
-	// Flatten steps to easily calculate global indices and progress
-    const allSteps = useMemo(() => {
-        return lessons.flatMap((lesson, lessonIdx) => 
-            lesson.steps.map((step, stepIdx) => ({
-                ...step,
-                lessonId: lesson.id,
-                lessonTitle: lesson.title[lang] || lesson.title.sw,
-                lessonIdx,
-                stepIdx
+export function LessonsMap({ modules, lang, dict }: LessonsMapProps) {
+	// Flatten lessons to easily calculate global indices and progress
+    const allLessons = useMemo(() => {
+        return modules.flatMap((module, moduleIdx) => 
+            module.lessons.map((lesson, lessonIdx) => ({
+                ...lesson,
+                moduleId: module.id,
+                moduleTitle: module.title[lang] || module.title.sw,
+                moduleIdx,
+                lessonIdx
             }))
-        ).map((step, i) => ({ ...step, globalIndex: i }));
-    }, [lessons, lang]);
+        ).map((lesson, i) => ({ ...lesson, globalIndex: i }));
+    }, [modules, lang]);
 
-    const totalSteps = allSteps.length;
-    // Mock progress: First 3 steps completed, 4th active
-    const completedStepsCount = 3; 
-    const currentActiveGlobalIndex = completedStepsCount;
+    const totalLessons = allLessons.length;
+    // Mock progress: First 3 lessons completed, 4th active
+    const completedLessonsCount = 3; 
+    const currentActiveGlobalIndex = completedLessonsCount;
 
-    const progressPercentage = totalSteps > 0 
-        ? Math.round((completedStepsCount / totalSteps) * 100) 
+    const progressPercentage = totalLessons > 0 
+        ? Math.round((completedLessonsCount / totalLessons) * 100) 
         : 0;
 
-    const activeStep = allSteps[currentActiveGlobalIndex] || allSteps[allSteps.length - 1];
+    const activeLesson = allLessons[currentActiveGlobalIndex] || allLessons[allLessons.length - 1];
 
 	return (
 		<div className="flex flex-col gap-10 w-full max-w-3xl mx-auto pb-24 px-4 sm:px-0">
@@ -68,7 +68,7 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
                                 {dict.map.journey}
                             </h2>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground mt-0.5">
-                                {completedStepsCount} / {totalSteps} {dict.map.completedCount}
+                                {completedLessonsCount} / {totalLessons} {dict.map.completedCount}
                             </div>
                         </div>
                     </div>
@@ -80,10 +80,10 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
                     </div>
                 </div>
 
-                {/* Recommended Next Step Card */}
-                {activeStep && (
+                {/* Recommended Next Lesson Card */}
+                {activeLesson && (
                     <Link 
-                        href={`/${lang}/anza/${activeStep.lessonId}/${activeStep.id}`}
+                        href={`/${lang}/anza/${activeLesson.moduleId}/${activeLesson.id}`}
                         className="flex items-center justify-between gap-4 rounded-2xl bg-card border border-primary/20 p-4 sm:p-5 hover:border-primary/40 hover:bg-primary/5 transition-all shadow-sm group/rec"
                     >
                         <div className="flex items-center gap-4">
@@ -95,7 +95,7 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
                                     {dict.map.continue}
                                 </p>
                                 <h3 className="text-sm sm:text-base font-bold text-foreground">
-                                    {activeStep.lessonTitle}: {activeStep.title[lang] || activeStep.title.sw}
+                                    {activeLesson.moduleTitle}: {activeLesson.title[lang] || activeLesson.title.sw}
                                 </h3>
                             </div>
                         </div>
@@ -107,20 +107,20 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
             </div>
 
 			<div className="flex flex-col gap-10">
-                {lessons.map((lesson, lessonIdx) => {
-                    const lessonTitle = lesson.title[lang] || lesson.title.sw;
-                    const difficultyKey = lesson.difficulty || "wa kati"; 
+                {modules.map((module, moduleIdx) => {
+                    const moduleTitle = module.title[lang] || module.title.sw;
+                    const difficultyKey = module.difficulty || "wa kati"; 
                     const difficultyLabel = dict.difficulty[difficultyKey as keyof typeof dict.difficulty] || difficultyKey;
 
-                    const lessonStartGlobalIndex = allSteps.find(s => s.lessonId === lesson.id)?.globalIndex || 0;
-                    const lessonCompletedCount = lesson.steps.filter((_, i) => (lessonStartGlobalIndex + i) < completedStepsCount).length;
+                    const moduleStartGlobalIndex = allLessons.find(s => s.moduleId === module.id)?.globalIndex || 0;
+                    const moduleCompletedCount = module.lessons.filter((_, i) => (moduleStartGlobalIndex + i) < completedLessonsCount).length;
 
                     return (
                         <section 
-                            key={lesson.id} 
+                            key={module.id} 
                             className="flex flex-col gap-4"
                         >
-                            {/* Lesson Header - Muted & Structured */}
+                            {/* Module Header - Muted & Structured */}
                             <div className="flex items-center justify-between gap-4 sticky top-[4rem] z-20 bg-background/95 backdrop-blur-md py-4 border-b border-border/50">
                                 <div className="flex items-center gap-4 flex-1 min-w-0">
                                     <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl bg-muted text-foreground/70">
@@ -129,7 +129,7 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className="font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                                                {dict.lessonPanel.lessons} {lessonIdx + 1}
+                                                {dict.lessonPanel.lessons} {moduleIdx + 1}
                                             </span>
                                             <span className="h-1 w-1 rounded-full bg-border" />
                                             <span className="text-[10px] font-medium text-muted-foreground capitalize">
@@ -137,39 +137,39 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
                                             </span>
                                         </div>
                                         <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-tight truncate">
-                                            {lessonTitle}
+                                            {moduleTitle}
                                         </h2>
                                     </div>
                                 </div>
                                 <div className="hidden sm:flex flex-col items-end gap-1.5 shrink-0">
                                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                                        {lessonCompletedCount} / {lesson.steps.length}
+                                        {moduleCompletedCount} / {module.lessons.length}
                                     </span>
                                     <div className="flex h-1 w-16 bg-muted rounded-full overflow-hidden">
                                         <div 
                                             className="h-full bg-foreground/30 transition-all duration-1000 ease-out" 
-                                            style={{ width: `${(lessonCompletedCount / lesson.steps.length) * 100}%` }} 
+                                            style={{ width: `${(moduleCompletedCount / module.lessons.length) * 100}%` }} 
                                         />
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Lesson Steps Timeline - Clean & Focused */}
+                            {/* Module Lessons Timeline - Clean & Focused */}
                             <div className="relative pl-4 sm:pl-5 ml-5 sm:ml-6 flex flex-col gap-2 pb-4">
                                 {/* Single subtle thread line */}
                                 <div className="absolute left-[-1px] top-6 bottom-6 w-px bg-border" />
 
-                                {lesson.steps.map((step, stepIdx) => {
-                                    const globalIndex = lessonStartGlobalIndex + stepIdx;
+                                {module.lessons.map((lesson, lessonIdx) => {
+                                    const globalIndex = moduleStartGlobalIndex + lessonIdx;
                                     const isCompleted = globalIndex < currentActiveGlobalIndex;
                                     const isActive = globalIndex === currentActiveGlobalIndex;
                                     const isLocked = globalIndex > currentActiveGlobalIndex;
 
-                                    const stepTitle = step.title[lang] || step.title.sw;
-                                    const href = `/${lang}/anza/${lesson.id}/${step.id}`;
+                                    const lessonTitle = lesson.title[lang] || lesson.title.sw;
+                                    const href = `/${lang}/anza/${module.id}/${lesson.id}`;
 
                                     return (
-                                        <div key={step.id} className="relative">
+                                        <div key={lesson.id} className="relative">
                                             <Link
                                                 href={isLocked ? "#" : href}
                                                 className={cn(
@@ -198,14 +198,14 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
                                                     </div>
                                                 </div>
 
-                                                {/* Step Content */}
+                                                {/* Lesson Content */}
                                                 <div className="flex min-w-0 flex-1 flex-col">
                                                     <div className="flex items-center gap-2 mb-0.5">
                                                         <span className={cn(
                                                             "font-mono text-[10px] font-bold uppercase",
                                                             isActive ? "text-primary" : "text-muted-foreground"
                                                         )}>
-                                                            {String(lessonIdx + 1).padStart(2, '0')}.{String(stepIdx + 1).padStart(2, '0')}
+                                                            {String(moduleIdx + 1).padStart(2, '0')}.{String(lessonIdx + 1).padStart(2, '0')}
                                                         </span>
                                                         {isActive && (
                                                             <span className="inline-flex rounded-full bg-primary/10 px-1.5 py-0.5 text-[8px] font-bold uppercase text-primary tracking-wider">
@@ -219,7 +219,7 @@ export function LessonsMap({ lessons, lang, dict }: LessonsMapProps) {
                                                         isLocked ? "text-muted-foreground" :
                                                         "text-foreground group-hover:text-foreground/80"
                                                     )}>
-                                                        {stepTitle}
+                                                        {lessonTitle}
                                                     </h3>
                                                 </div>
 

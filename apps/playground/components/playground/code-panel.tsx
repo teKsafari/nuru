@@ -31,7 +31,7 @@ export function CodePanel({
 	mobileExtra,
 }: CodePanelProps) {
 	const {
-		lesson,
+		module,
 		panels: { activeMaximizedPanel },
 		state: { code, output },
 		actions: {
@@ -45,7 +45,7 @@ export function CodePanel({
 		theme,
 		labels,
 		extensions,
-		isCurrentStepCompleted: isCompleted,
+		isCurrentLessonCompleted: isCompleted,
 		handleNextAction: onNextAction,
 		nextActionLabel,
 	} = usePlayground();
@@ -54,12 +54,12 @@ export function CodePanel({
 	const outputPanelRef = React.useRef<ImperativePanelHandle>(null);
 
 	React.useEffect(() => {
-		if (lesson.panels?.terminal?.defaultState === "closed") {
+		if (module.panels?.terminal?.defaultState === "closed") {
 			outputPanelRef.current?.collapse();
 		} else {
 			outputPanelRef.current?.expand();
 		}
-	}, [lesson.id, lesson.panels?.terminal?.defaultState]);
+	}, [module.id, module.panels?.terminal?.defaultState]);
 
 	React.useEffect(() => {
 		if (activeMaximizedPanel === "renderer") {
