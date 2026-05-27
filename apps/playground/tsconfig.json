@@ -19,7 +19,11 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@nuru/ui": ["../../packages/ui/src"],
+      "@nuru/ui/*": ["../../packages/ui/src/*"],
+      "@nuru/db": ["../../packages/db/src"],
+      "@nuru/db/*": ["../../packages/db/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
