@@ -1,0 +1,94 @@
+"use client";
+
+import { useForm, Controller } from "react-hook-form";
+import {
+	Label,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+	Input,
+	Button,
+} from "@nuru/ui";
+
+export type ModuleFormInputs = {
+	title: string;
+	difficulty: string;
+	visibility: string;
+};
+
+export default function ModuleForm({
+	onSubmit
+}: {
+	onSubmit: (data: ModuleFormInputs) => void;
+}) {
+	const {
+		register,
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<ModuleFormInputs>({
+		defaultValues: {
+			title: "",
+			difficulty: "medium",
+			visibility: "private",
+		},
+	});
+
+	return (
+		<form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full max-w-2xl mx-auto p-6 bg-background rounded-lg border">
+			<div className="flex justify-between items-center border-b pb-4">
+				<h2 className="text-2xl font-bold">Create New Module</h2>
+				<Button type="submit">Create</Button>
+			</div>
+
+			<div className="space-y-2">
+				<Label>Module Title</Label>
+				<Input {...register("title", { required: "Title is required" })} className="rounded-none" />
+				{errors.title && <p className="text-destructive text-xs">{errors.title.message}</p>}
+			</div>
+
+			<div className="grid w-fit grid-cols-1 gap-4 md:grid-cols-2">
+				<div className="space-y-2">
+					<Label>Difficulty</Label>
+					<Controller
+						control={control}
+						name="difficulty"
+						render={({ field }) => (
+							<Select value={field.value} onValueChange={field.onChange}>
+								<SelectTrigger className="rounded-none w-48">
+									<SelectValue placeholder="Select difficulty" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="easy">Easy</SelectItem>
+									<SelectItem value="medium">Medium</SelectItem>
+									<SelectItem value="hard">Hard</SelectItem>
+								</SelectContent>
+							</Select>
+						)}
+					/>
+				</div>
+				<div className="space-y-2">
+					<Label>Visibility</Label>
+					<Controller
+						control={control}
+						name="visibility"
+						render={({ field }) => (
+							<Select value={field.value} onValueChange={field.onChange}>
+								<SelectTrigger className="rounded-none w-48">
+									<SelectValue placeholder="Select visibility" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="public">Public</SelectItem>
+									<SelectItem value="private">Private</SelectItem>
+									<SelectItem value="organization">Organization</SelectItem>
+								</SelectContent>
+							</Select>
+						)}
+					/>
+				</div>
+			</div>
+		</form>
+	);
+}

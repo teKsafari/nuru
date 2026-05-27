@@ -1,42 +1,15 @@
 "use client";
 
-import {
-	Controller,
-	useForm,
-	useFieldArray,
-} from "react-hook-form";
-
-import {
-	Label,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-	Input,
-	Badge,
-	Button,
-	Textarea,
-	Switch,
-	Card,
-	CardContent,
-	cn
-} from "@nuru/ui";
+import { Controller, useForm, useFieldArray } from "react-hook-form";
+import { Label, Input, Badge, Button, Textarea, Switch, Card, CardContent, cn } from "@nuru/ui";
 import { Trash2Icon, EyeIcon, PlusIcon } from "lucide-react";
-
-import PortableTextEditor from "./PortableTextEditor";
+import TiptapEditor from "./tiptap-editor";
 
 export type LessonFormInputs = {
 	title: string;
 	description: string;
-	instructions: any;
+	task: string;
 	defaultCodeTemplate: string;
-	difficulty: string;
-	visibility: string;
-	layoutConfig: {
-		terminal: boolean;
-		canvas: boolean;
-	};
 	testCases: Array<{
 		input: string;
 		output: string;
@@ -44,35 +17,17 @@ export type LessonFormInputs = {
 	}>;
 };
 
-type Message = { message: string; type: string };
-export type TestCaseErrors = { input?: Message; output?: Message };
-
-function RenderTestCaseErrors({ errors }: { errors: TestCaseErrors }) {
-	return <>{Object.values(errors).map((val) => val.message).join(", ")}</>;
-}
-
 export default function LessonEditor({
 	onSubmit
 }: {
 	onSubmit: (data: LessonFormInputs) => void;
 }) {
-	const {
-		register,
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<LessonFormInputs>({
+	const { register, control, handleSubmit, formState: { errors } } = useForm<LessonFormInputs>({
 		defaultValues: {
 			title: "",
 			description: "",
-			instructions: [],
+			task: "",
 			defaultCodeTemplate: "",
-			difficulty: "medium",
-			visibility: "private",
-			layoutConfig: {
-				terminal: true,
-				canvas: false,
-			},
 			testCases: [],
 		},
 	});
@@ -85,7 +40,7 @@ export default function LessonEditor({
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full max-w-4xl mx-auto p-6 bg-background rounded-lg border">
 			<div className="flex justify-between items-center border-b pb-4">
-				<h2 className="text-2xl font-bold">Create Lesson</h2>
+				<h2 className="text-2xl font-bold">Lesson Content</h2>
 				<Button type="submit">Save Lesson</Button>
 			</div>
 
@@ -96,22 +51,16 @@ export default function LessonEditor({
 			</div>
 
 			<div className="space-y-2">
-				<Label>Description</Label>
-				<Textarea rows={4} {...register("description", { required: "Description is required" })} className="rounded-none" />
-				{errors.description && <p className="text-destructive text-xs">{errors.description.message}</p>}
-			</div>
-
-			<div className="space-y-2">
-				<Label>Instructions</Label>
+				<Label>Description (Concept Explanation)</Label>
 				<Controller
 					control={control}
-					name="instructions"
-					rules={{ required: "Instructions are required" }}
+					name="description"
+					rules={{ required: "Description is required" }}
 					render={({ field, fieldState }) => (
 						<>
-							<PortableTextEditor
+							<TiptapEditor
 								value={field.value}
-								onChange={(value) => field.onChange(value)}
+								onChange={field.onChange}
 								className={cn(fieldState.error && "border-destructive")}
 							/>
 							{fieldState.error && <span className="text-destructive text-xs">{fieldState.error.message}</span>}
@@ -120,76 +69,22 @@ export default function LessonEditor({
 				/>
 			</div>
 
-			<div className="grid w-fit grid-cols-1 gap-4 md:grid-cols-2">
-				<div className="space-y-2">
-					<Label>Difficulty</Label>
-					<Controller
-						control={control}
-						name="difficulty"
-						render={({ field }) => (
-							<Select value={field.value} onValueChange={field.onChange}>
-								<SelectTrigger className="rounded-none w-48">
-									<SelectValue placeholder="Select difficulty" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="easy">Easy</SelectItem>
-									<SelectItem value="medium">Medium</SelectItem>
-									<SelectItem value="hard">Hard</SelectItem>
-								</SelectContent>
-							</Select>
-						)}
-					/>
-				</div>
-				<div className="space-y-2">
-					<Label>Visibility</Label>
-					<Controller
-						control={control}
-						name="visibility"
-						render={({ field }) => (
-							<Select value={field.value} onValueChange={field.onChange}>
-								<SelectTrigger className="rounded-none w-48">
-									<SelectValue placeholder="Select visibility" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="public">Public</SelectItem>
-									<SelectItem value="private">Private</SelectItem>
-									<SelectItem value="organization">Organization</SelectItem>
-								</SelectContent>
-							</Select>
-						)}
-					/>
-				</div>
-			</div>
-
-			<div className="space-y-2 pt-4 border-t">
-				<Label className="text-lg font-semibold">Layout Configuration</Label>
-				<p className="text-muted-foreground text-sm mb-4">Toggle the panels that should be visible for this lesson.</p>
-				<div className="flex gap-8">
-					<div className="flex items-center space-x-2">
-						<Controller control={control} name="layoutConfig.terminal" render={({ field }) => (
-							<Switch id="terminal" checked={field.value} onCheckedChange={field.onChange} />
-						)} />
-						<Label htmlFor="terminal">Show Terminal / Output</Label>
-					</div>
-					<div className="flex items-center space-x-2">
-						<Controller control={control} name="layoutConfig.canvas" render={({ field }) => (
-							<Switch id="canvas" checked={field.value} onCheckedChange={field.onChange} />
-						)} />
-						<Label htmlFor="canvas">Show Canvas</Label>
-					</div>
-				</div>
+			<div className="space-y-2">
+				<Label>Task (What the student should do)</Label>
+				<Textarea rows={3} {...register("task", { required: "Task is required" })} className="rounded-none" placeholder="e.g. Create a variable called 'jina' and assign it your name." />
+				{errors.task && <p className="text-destructive text-xs">{errors.task.message}</p>}
 			</div>
 
 			<div className="space-y-2 pt-4 border-t">
 				<Label>Default Code Template</Label>
-				<Textarea rows={6} {...register("defaultCodeTemplate")} className="rounded-none font-mono text-sm" />
+				<Textarea rows={6} {...register("defaultCodeTemplate")} className="rounded-none font-mono text-sm" placeholder="// Andika msimbo wako hapa" />
 			</div>
 
 			<div className="space-y-4 pt-4 border-t">
 				<div className="flex items-center justify-between">
 					<div>
 						<Label className="text-lg font-semibold">Test Cases</Label>
-						<p className="text-muted-foreground text-sm">Manage input/output test cases.</p>
+						<p className="text-muted-foreground text-sm">Manage input/output test cases for this lesson.</p>
 					</div>
 					<Button variant="outline" size="sm" type="button" onClick={() => append({ input: "", output: "", isPublic: true })}>
 						<PlusIcon className="mr-2 h-4 w-4" /> Add Test Case
