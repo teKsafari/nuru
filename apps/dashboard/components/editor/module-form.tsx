@@ -19,9 +19,13 @@ export type ModuleFormInputs = {
 };
 
 export default function ModuleForm({
-	onSubmit
+	onSubmit,
+	initialData,
+	isUpdate = false,
 }: {
 	onSubmit: (data: ModuleFormInputs) => void;
+	initialData?: Partial<ModuleFormInputs>;
+	isUpdate?: boolean;
 }) {
 	const {
 		register,
@@ -30,17 +34,17 @@ export default function ModuleForm({
 		formState: { errors },
 	} = useForm<ModuleFormInputs>({
 		defaultValues: {
-			title: "",
-			difficulty: "medium",
-			visibility: "private",
+			title: initialData?.title || "",
+			difficulty: initialData?.difficulty || "medium",
+			visibility: initialData?.visibility || "private",
 		},
 	});
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full max-w-2xl mx-auto p-6 bg-background rounded-lg border">
 			<div className="flex justify-between items-center border-b pb-4">
-				<h2 className="text-2xl font-bold">Create New Module</h2>
-				<Button type="submit">Create</Button>
+				<h2 className="text-2xl font-bold">{isUpdate ? "Edit Module Settings" : "Create New Module"}</h2>
+				<Button type="submit">{isUpdate ? "Save Changes" : "Create"}</Button>
 			</div>
 
 			<div className="space-y-2">

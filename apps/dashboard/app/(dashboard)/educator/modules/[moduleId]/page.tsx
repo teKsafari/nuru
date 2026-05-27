@@ -89,8 +89,13 @@ export default async function ModuleBuilderPage({ params }: { params: Promise<{ 
                 <div className="space-y-6">
                     <Card>
                         <CardHeader className="bg-muted/10 border-b pb-4">
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Settings className="h-5 w-5" /> Module Settings
+                            <CardTitle className="text-lg flex items-center justify-between">
+                                <span className="flex items-center gap-2">
+                                    <Settings className="h-5 w-5" /> Module Settings
+                                </span>
+                                <Link href={`/educator/modules/${module.id}/edit`}>
+                                    <Button variant="ghost" size="sm" className="h-8 px-2">Edit</Button>
+                                </Link>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4 pt-6">
