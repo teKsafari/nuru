@@ -14,14 +14,12 @@ import {
 import { AppLogo } from "@nuru/ui";
 
 const navigation = [
-	{ name: "Overview", href: "/educator", icon: LayoutDashboard },
-	{ name: "My Lessons", href: "/educator/lessons", icon: BookOpen },
-	{ name: "Organizations", href: "/educator/organizations", icon: Users },
+	{ name: "My Modules", href: "/educator/modules", icon: BookOpen },
 	{ name: "Marketplace", href: "/marketplace", icon: ShoppingBag },
 ];
 
 const secondaryNavigation = [
-	{ name: "Settings", href: "/settings", icon: Settings },
+	// { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 export function Sidebar() {
@@ -85,10 +83,10 @@ export function Sidebar() {
 			</div>
 			
 			<div className="p-4">
-				<Link href="/educator/lessons/create">
+				<Link href="/educator/modules/create">
 					<button className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
 						<PlusCircle className="h-4 w-4" />
-						New Lesson
+						New Module
 					</button>
 				</Link>
 			</div>

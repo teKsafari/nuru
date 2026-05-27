@@ -18,9 +18,7 @@ export function Header() {
 				</div>
 			</div>
 			<div className="flex items-center gap-4">
-				<button className="rounded-full p-2 text-muted-foreground hover:bg-muted transition-colors">
-					<Bell className="h-5 w-5" />
-				</button>
+				{/* Notifications hidden for now */}
 				<UserMenu />
 			</div>
 		</header>
