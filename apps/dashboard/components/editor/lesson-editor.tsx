@@ -18,17 +18,21 @@ export type LessonFormInputs = {
 };
 
 export default function LessonEditor({
-	onSubmit
+	onSubmit,
+	initialData,
+	isUpdate = false,
 }: {
 	onSubmit: (data: LessonFormInputs) => void;
+	initialData?: Partial<LessonFormInputs>;
+	isUpdate?: boolean;
 }) {
 	const { register, control, handleSubmit, formState: { errors } } = useForm<LessonFormInputs>({
 		defaultValues: {
-			title: "",
-			description: "",
-			task: "",
-			defaultCodeTemplate: "",
-			testCases: [],
+			title: initialData?.title || "",
+			description: initialData?.description || "",
+			task: initialData?.task || "",
+			defaultCodeTemplate: initialData?.defaultCodeTemplate || "",
+			testCases: initialData?.testCases || [],
 		},
 	});
 
@@ -40,8 +44,8 @@ export default function LessonEditor({
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full max-w-4xl mx-auto p-6 bg-background rounded-lg border">
 			<div className="flex justify-between items-center border-b pb-4">
-				<h2 className="text-2xl font-bold">Lesson Content</h2>
-				<Button type="submit">Save Lesson</Button>
+				<h2 className="text-2xl font-bold">{isUpdate ? "Edit Lesson Content" : "Lesson Content"}</h2>
+				<Button type="submit">{isUpdate ? "Save Changes" : "Save Lesson"}</Button>
 			</div>
 
 			<div className="space-y-2">
