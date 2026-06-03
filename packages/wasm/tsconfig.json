@@ -2,7 +2,8 @@
 	"compilerOptions": {
 		"target": "ES2020",
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
+		"rootDir": ".",
 		"types": ["golang-wasm-exec"],
         "lib": ["dom", "dom.iterable", "esnext"],
 		"outDir": "dist",

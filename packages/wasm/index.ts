@@ -1,13 +1,13 @@
 // Entry point into the @nuru/wasm package
 // Browser only so far
 
-import "./wasm_exec";
+import "#wasm_exec";
 
 import xss from "xss";
 
 declare global {
 	var nuruOutputReceiver: (codeOutput: string, isError: boolean) => void;
-	var runCode: (code: string) => void;
+	var runCode: (code: string, stdinBuffer?: string[]) => void;
 }
 
 export type InterpreterConfig = {
@@ -26,7 +26,6 @@ let initialized = false;
 let outputReceiverRegistered = false;
 
 export let defaultConfig: Required<Omit<InterpreterConfig, "outputReceiver" | "wasmURL">> = {
-	// Ugly type shenanigans, I know.
 	xssProtection: true,
 	version: "latest",
 };
@@ -105,12 +104,17 @@ export function registerOutputReceiver(outputEffect: (codeOutput: string, isErro
 	};
 }
 
-export function execute(code: string) {
+export function execute(code: string, stdinBuffer?: string[]) {
 	if (!initialized) throw new Error("Wasm binary not initialized. Call init()");
 	if (!globalThis.runCode) throw new Error("runCode interface not found, Did you call init()?");
 	if (!outputReceiverRegistered) throw new Error("Output receiver not registered. Did you call registerOutputReceiver()?");
+	if (stdinBuffer && !Array.isArray(stdinBuffer)) throw new Error("arg 2, stdin buffer, must be an array of strings or undefined.");
 
-	globalThis.runCode(code);
+	if (stdinBuffer) {
+		globalThis.runCode(code, stdinBuffer);
+	} else {
+		globalThis.runCode(code);
+	}
 }
 
 export default async function init(config: InterpreterConfig): Promise<NuruInstance> {
@@ -143,7 +147,7 @@ export default async function init(config: InterpreterConfig): Promise<NuruInsta
 			})
 			.catch((error) => {
 				console.error(error);
-				reject("Wasm binary could not be loaded an intialized");
+				reject("Wasm binary could not be loaded and intialized");
 			});
 	});
 }
