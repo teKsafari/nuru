@@ -8,7 +8,7 @@
 		"#hooks/*": "./hooks/*.ts"
 	},
 	"scripts": {
-		"dev": "next dev",
+		"dev": "portless run next dev",
 		"prebuild": "cp ../../packages/wasm/main.wasm ./public/main.wasm || echo 'Warning: main.wasm not found, skipping copy.'",
 		"build": "next build",
 		"start": "next start",

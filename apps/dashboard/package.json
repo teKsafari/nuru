@@ -8,7 +8,7 @@
 		"#hooks/*": "./hooks/*.ts"
 	},
 	"scripts": {
-		"dev": "next dev",
+		"dev": "portless run next dev",
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint ."
