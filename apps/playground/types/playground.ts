@@ -12,6 +12,7 @@ export interface TestCase {
 
 export interface Lesson {
 	id: string;
+	slug: string;
 	title: Record<Language, string>;
 	description: Record<Language, string>;
 	initialCode: string;
@@ -22,6 +23,7 @@ export interface Lesson {
 
 export interface Module {
 	id: string;
+	slug: string;
 	title: Record<Language, string>;
 	lessons: Lesson[];
 	difficulty?: string;

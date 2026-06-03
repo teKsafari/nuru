@@ -48,7 +48,7 @@ export function LessonPanel({
 				{ label: labels.modules, href: `/${lang}/anza` },
 				{
 					label: module.title[lang] || module.title.sw,
-					href: `/${lang}/anza/${module.id}`,
+					href: `/${lang}/anza/${module.slug}`,
 				},
 				{
 					label: `${labels.lesson} ${currentLessonIndex + 1}`,

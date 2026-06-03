@@ -126,9 +126,9 @@ export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 									>
 										<Link
 											href={
-												module.id === "misingi-ya-nuru"
+												module.slug === "misingi-ya-nuru"
 													? `/${lang}/anza`
-													: `/${lang}/anza/${module.id}`
+													: `/${lang}/anza/${module.slug}`
 											}
 											className="flex items-center gap-2 py-2"
 										>

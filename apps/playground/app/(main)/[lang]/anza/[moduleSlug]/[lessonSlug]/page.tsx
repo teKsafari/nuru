@@ -1,4 +1,4 @@
-import { getModule, getAllModules } from "@/lib/lessons.server";
+import { getModuleBySlug, getAllModules } from "@/lib/lessons.server";
 import { AnzaClient } from "../../anza-client";
 import { notFound } from "next/navigation";
 import { getDictionary, Locale } from "@/app/(main)/[lang]/dictionaries";
@@ -7,28 +7,28 @@ import { Module, Language } from "@/types/playground";
 export const dynamic = "force-dynamic";
 
 interface PageProps {
-	params: Promise<{ moduleId: string; lessonId: string; lang: string }>;
+	params: Promise<{ moduleSlug: string; lessonSlug: string; lang: string }>;
 }
 
 export default async function LessonPage({ params }: PageProps) {
-	const { moduleId, lessonId, lang } = await params;
+	const { moduleSlug, lessonSlug, lang } = await params;
 	const dict = await getDictionary(lang as Locale);
 	
 	let module: Module;
 	try {
-		module = await getModule(moduleId);
+		module = await getModuleBySlug(moduleSlug);
 	} catch (error) {
-		console.error(`Error loading module ${moduleId}:`, error);
+		console.error(`Error loading module ${moduleSlug}:`, error);
 		return notFound();
 	}
 
 	// Verify lesson exists
-	const lessonExists = module.lessons.some(s => s.id === lessonId);
+	const lessonExists = module.lessons.some(s => s.slug === lessonSlug);
 	if (!lessonExists) {
 		return notFound();
 	}
 
-	let allModules: { id: string; title: Record<Language, string> }[];
+	let allModules: { id: string; slug: string; title: Record<Language, string> }[];
 	try {
 		allModules = await getAllModules();
 	} catch (error) {
@@ -36,16 +36,16 @@ export default async function LessonPage({ params }: PageProps) {
 		allModules = [];
 	}
 
-	const currentIndex = allModules.findIndex(l => l.id === moduleId);
-	const nextModuleId = currentIndex >= 0 && currentIndex < allModules.length - 1 
-		? allModules[currentIndex + 1].id 
+	const currentIndex = allModules.findIndex(l => l.slug === moduleSlug);
+	const nextModuleSlug = currentIndex >= 0 && currentIndex < allModules.length - 1 
+		? allModules[currentIndex + 1].slug 
 		: undefined;
 
 	return (
 		<AnzaClient 
 			module={module} 
-			lessonId={lessonId}
-			nextModuleId={nextModuleId} 
+			lessonSlug={lessonSlug}
+			nextModuleSlug={nextModuleSlug} 
 			lang={lang as Locale} 
 			dict={dict} 
 		/>

@@ -31,7 +31,7 @@ export function LessonsDrawer({ modules = [], lang, dict }: LessonsDrawerProps) 
 		id: module.id,
 		title: module.title[lang] || module.title.sw,
 		enTitle: lang === 'sw' ? module.title.en : module.title.sw,
-		href: module.id === "misingi-ya-nuru" ? `/${lang}/anza` : `/${lang}/anza/${module.id}`,
+		href: module.slug === "misingi-ya-nuru" ? `/${lang}/anza` : `/${lang}/anza/${module.slug}`,
 		isCompleted: index === 0, // Placeholder for actual progress logic
 	}));
 

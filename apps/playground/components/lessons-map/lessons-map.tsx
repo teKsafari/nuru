@@ -28,6 +28,7 @@ export function LessonsMap({ modules, lang, dict }: LessonsMapProps) {
             module.lessons.map((lesson, lessonIdx) => ({
                 ...lesson,
                 moduleId: module.id,
+                moduleSlug: module.slug,
                 moduleTitle: module.title[lang] || module.title.sw,
                 moduleIdx,
                 lessonIdx
@@ -83,7 +84,7 @@ export function LessonsMap({ modules, lang, dict }: LessonsMapProps) {
                 {/* Recommended Next Lesson Card */}
                 {activeLesson && (
                     <Link 
-                        href={`/${lang}/anza/${activeLesson.moduleId}/${activeLesson.id}`}
+                        href={`/${lang}/anza/${activeLesson.moduleSlug}/${activeLesson.slug}`}
                         className="flex items-center justify-between gap-4 rounded-2xl bg-card border border-primary/20 p-4 sm:p-5 hover:border-primary/40 hover:bg-primary/5 transition-all shadow-sm group/rec"
                     >
                         <div className="flex items-center gap-4">
@@ -166,7 +167,7 @@ export function LessonsMap({ modules, lang, dict }: LessonsMapProps) {
                                     const isLocked = globalIndex > currentActiveGlobalIndex;
 
                                     const lessonTitle = lesson.title[lang] || lesson.title.sw;
-                                    const href = `/${lang}/anza/${module.id}/${lesson.id}`;
+                                    const href = `/${lang}/anza/${module.slug}/${lesson.slug}`;
 
                                     return (
                                         <div key={lesson.id} className="relative">

@@ -15,19 +15,19 @@ import { nuruLanguage } from "@/lib/nuru-syntax";
 
 interface AnzaClientProps {
 	module: Module;
-	lessonId: string;
-	nextModuleId?: string;
+	lessonSlug: string;
+	nextModuleSlug?: string;
 	lang: Language;
 	dict: Dictionary;
 }
 
-export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaClientProps) {
+export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: AnzaClientProps) {
 	const { theme} = useTheme();
 	const router = useRouter();
 	const currentLessonIndex = useMemo(() => {
-		const index = module.lessons.findIndex((s) => s.id === lessonId);
+		const index = module.lessons.findIndex((s) => s.slug === lessonSlug);
 		return index !== -1 ? index : 0;
-	}, [module.lessons, lessonId]);
+	}, [module.lessons, lessonSlug]);
 
 	const currentLesson = module.lessons[currentLessonIndex];
 
@@ -38,7 +38,7 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 
 	// Handle initial hydration from localStorage on client
 	useEffect(() => {
-		// Load code
+		// Load code - Use ID for persistence to handle slug changes safely
 		const storedCode = localStorage.getItem(`nuru-code-${module.id}-${currentLesson.id}`);
 		if (storedCode !== null) {
 			setCode(storedCode);
@@ -46,7 +46,7 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 			setCode(currentLesson.initialCode);
 		}
 
-		// Load progress
+		// Load progress - Use ID for persistence
 		const storedCompleted = localStorage.getItem(`nuru-completed-${module.id}`);
 		if (storedCompleted) {
 			try {
@@ -223,8 +223,8 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 	};
 
 	const handleNextModule = () => {
-		if (nextModuleId) {
-			router.push(`/${lang}/anza/${nextModuleId}`);
+		if (nextModuleSlug) {
+			router.push(`/${lang}/anza/${nextModuleSlug}`);
 		} else {
 			router.push(`/${lang}/anza`);
 		}
@@ -267,7 +267,7 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 					testErrors,
 				}}
 				actions={{
-					onLessonChange: (index) => router.push(`/${lang}/anza/${module.id}/${module.lessons[index].id}`),
+					onLessonChange: (index) => router.push(`/${lang}/anza/${module.slug}/${module.lessons[index].slug}`),
 					onCodeChange: handleCodeChange,
 					onRun: handleRun,
 					onSubmit: handleSubmit,
