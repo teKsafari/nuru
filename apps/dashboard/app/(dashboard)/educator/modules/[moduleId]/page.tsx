@@ -1,9 +1,12 @@
 import { getModuleWithLessons } from "@/app/actions/modules";
 import { deleteLesson } from "@/app/actions/lessons";
-import { Button, Card, CardHeader, CardTitle, CardContent, Badge } from "@nuru/ui";
+import { Button } from "@nuru/ui/components/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@nuru/ui/components/card";
+import { Badge } from "@nuru/ui/components/badge";
 import Link from "next/link";
 import { PlusCircle, FileText, Settings, ArrowLeft, Trash2 } from "lucide-react";
 import { notFound } from "next/navigation";
+import { SortableLessonsList } from "@/components/editor/sortable-lessons-list";
 
 export const dynamic = "force-dynamic";
 
@@ -61,32 +64,7 @@ export default async function ModuleBuilderPage({ params }: { params: Promise<{ 
                             </Link>
                         </Card>
                     ) : (
-                        <div className="space-y-3">
-                            {module.lessons.map((lesson, index) => (
-                                <Card key={lesson.id} className="group flex items-center justify-between p-3 px-5 rounded-2xl border-slate-200 dark:border-slate-800 hover:border-primary/50 hover:shadow-md transition-all">
-                                    <div className="flex items-center gap-4">
-                                        <div className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs">
-                                            {index + 1}
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-slate-900 dark:text-white">
-                                                {typeof lesson.title === 'string' ? lesson.title : (lesson.title as any).en}
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Link href={`/educator/modules/${module.id}/lessons/${lesson.id}`}>
-                                            <Button variant="ghost" size="sm" className="rounded-lg font-bold">Edit</Button>
-                                        </Link>
-                                        <form action={deleteLesson.bind(null, lesson.id, module.id)}>
-                                            <Button type="submit" variant="ghost" size="sm" className="text-slate-400 hover:text-destructive hover:bg-destructive/10 rounded-lg px-2">
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </form>
-                                    </div>
-                                </Card>
-                            ))}
-                        </div>
+                        <SortableLessonsList lessons={module.lessons} moduleId={module.id} />
                     )}
                 </div>
 

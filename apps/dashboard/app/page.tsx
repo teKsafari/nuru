@@ -1,7 +1,9 @@
 import { getLogtoContext } from "@logto/next/server-actions";
 import { logtoConfig } from "@/app/logto";
 import { redirect } from "next/navigation";
-import { Button, Card, CardHeader, CardTitle, CardContent, AppLogo } from "@nuru/ui";
+import { Button } from "@nuru/ui/components/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@nuru/ui/components/card";
+import { AppLogo } from "@nuru/ui/components/app-logo";
 import { signInAction } from "@/app/actions/auth";
 import { ArrowRight, BookOpen, Layers } from "lucide-react";
 

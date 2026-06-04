@@ -31,6 +31,23 @@ export async function createLesson(moduleId: string, data: any) {
 	return { id: lessonId };
 }
 
+export async function reorderLessons(moduleId: string, orderedIds: string[]) {
+	const claims = await requirePermission("edit:own_lesson");
+	const module = await db.query.modules.findFirst({ where: eq(modules.id, moduleId) });
+	if (!module) throw new Error("Module not found");
+
+	verifyOwnership(module.createdBy, claims.sub, claims.roles);
+
+	// Update the order for each lesson
+	for (let i = 0; i < orderedIds.length; i++) {
+		await db.update(lessons)
+			.set({ order: i })
+			.where(eq(lessons.id, orderedIds[i]));
+	}
+	
+	revalidatePath(`/educator/modules/${moduleId}`);
+}
+
 export async function updateLesson(id: string, moduleId: string, data: any) {
 	const claims = await requirePermission("edit:own_lesson");
 	const module = await db.query.modules.findFirst({ where: eq(modules.id, moduleId) });

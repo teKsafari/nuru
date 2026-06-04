@@ -1,9 +1,11 @@
-import { Button, Card, CardHeader, CardTitle, CardContent, cn } from "@nuru/ui";
+import { Button } from "@nuru/ui/components/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@nuru/ui/components/card";
+import { cn } from "@nuru/ui/lib/utils";
 import Link from "next/link";
 import { getEducatorModules, deleteModule } from "@/app/actions/modules";
 
 import { BookOpen, MoreVertical, Plus, Trash2, ExternalLink } from "lucide-react";
-import { Badge } from "@nuru/ui";
+import { Badge } from "@nuru/ui/components/badge";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +43,7 @@ export default async function EducatorLessonsPage() {
 			) : (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{modules.map((module) => (
-						<Card key={module.id} className="group relative overflow-hidden flex flex-col rounded-3xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+						<Card key={module.id} className="group relative overflow-hidden flex flex-col rounded border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
 							<CardHeader className="py-3 px-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex flex-row items-center justify-between space-y-0">
 								<CardTitle className="text-base font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors truncate mr-4">
 									{typeof module.title === 'string' ? module.title : (module.title as any).en}
@@ -87,9 +89,6 @@ export default async function EducatorLessonsPage() {
 									</form>
 								</div>
 							</CardContent>
-							
-							{/* Hover accent line */}
-							<div className="absolute bottom-0 left-0 h-1 w-0 bg-primary group-hover:w-full transition-all duration-500" />
 						</Card>
 					))}
 				</div>

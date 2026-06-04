@@ -25,6 +25,8 @@ export default async function EditModulePage({
 
     async function updateAction(data: ModuleFormInputs) {
         "use server";
+
+        if(!module) throw new Error("What are you editing you idiot.");
         
         await updateModule(moduleId, {
             title: { en: data.title, sw: data.title }, 
