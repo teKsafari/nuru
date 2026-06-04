@@ -1,7 +1,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { ChevronRight, Folder } from "lucide-react"
-import { cn } from "@nuru/ui"
+import { cn } from "@nuru/ui/lib/utils";
 
 interface BreadcrumbsProps {
   items: {

@@ -16,14 +16,18 @@ export default async function MainLayout({
 	children: React.ReactNode;
 	params: Promise<{ lang: string }>;
 }) {
-	const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
-	
+	const { isAuthenticated, claims } = await getLogtoContext(logtoConfig, {
+		fetchUserInfo: true,
+	});
+
 	const modules = await getAllModules();
 	const { lang } = await params;
 	const dict = await getDictionary(lang as Locale);
 
 	return (
-		<AuthProvider value={getAuthContextFromClaims(isAuthenticated, claims || null)}>
+		<AuthProvider
+			value={getAuthContextFromClaims(isAuthenticated, claims || null)}
+		>
 			<SiteHeader modules={modules} dict={dict} lang={lang as Locale} />
 			{/*
 			h-0 sets an explicit height so that the height of the div is not derived from the height
