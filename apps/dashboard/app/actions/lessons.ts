@@ -1,10 +1,17 @@
 "use server";
 
-import { db, lessons } from "@/lib/db";
+import { db, modules, lessons } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { requirePermission, verifyOwnership } from "@/lib/permissions";
 
 export async function createLesson(moduleId: string, data: any) {
+	const claims = await requirePermission("create:lesson");
+	const module = await db.query.modules.findFirst({ where: eq(modules.id, moduleId) });
+	if (!module) throw new Error("Module not found");
+
+	verifyOwnership(module.createdBy, claims.sub, claims.roles);
+
 	const lessonId = crypto.randomUUID();
 	const slug = data.title.en.toLowerCase().replace(/ /g, "-");
 
@@ -20,8 +27,37 @@ export async function createLesson(moduleId: string, data: any) {
 		tests: data.tests,
 	});
 
-	revalidatePath(`/educator/lessons`);
+	revalidatePath(`/educator/modules/${moduleId}`);
 	return { id: lessonId };
+}
+
+export async function updateLesson(id: string, moduleId: string, data: any) {
+	const claims = await requirePermission("edit:own_lesson");
+	const module = await db.query.modules.findFirst({ where: eq(modules.id, moduleId) });
+	if (!module) throw new Error("Module not found");
+
+	verifyOwnership(module.createdBy, claims.sub, claims.roles);
+
+	await db.update(lessons).set({
+		title: data.title,
+		description: data.description,
+		task: data.task,
+		defaultCode: data.defaultCode,
+		solution: data.solution,
+		tests: data.tests,
+	}).where(eq(lessons.id, id));
+	revalidatePath(`/educator/modules/${moduleId}`);
+}
+
+export async function deleteLesson(id: string, moduleId: string) {
+	const claims = await requirePermission("delete:own_lesson");
+	const module = await db.query.modules.findFirst({ where: eq(modules.id, moduleId) });
+	if (!module) throw new Error("Module not found");
+
+	verifyOwnership(module.createdBy, claims.sub, claims.roles);
+
+	await db.delete(lessons).where(eq(lessons.id, id));
+	revalidatePath(`/educator/modules/${moduleId}`);
 }
 
 export async function getLessonsByModule(moduleId: string) {

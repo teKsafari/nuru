@@ -1,19 +1,22 @@
 import { db, modules, lessons } from "@nuru/db";
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { Module, Lesson, Language } from "@/types/playground";
 
 export async function getAllModules(): Promise<{ id: string; title: Record<Language, string> }[]> {
 	const allModules = await db.select({
 		id: modules.id,
 		title: modules.title,
-	}).from(modules).orderBy(asc(modules.order));
+	})
+	.from(modules)
+	.where(eq(modules.visibility, "public"))
+	.orderBy(asc(modules.order));
 	
 	return allModules as { id: string; title: Record<Language, string> }[];
 }
 
 export async function getModule(id: string): Promise<Module> {
 	const moduleResult = await db.query.modules.findFirst({
-		where: eq(modules.id, id),
+		where: sql`${modules.id} = ${id} AND ${modules.visibility} = 'public'`,
 		with: {
 			lessons: {
 				orderBy: [asc(lessons.order)],
@@ -22,7 +25,7 @@ export async function getModule(id: string): Promise<Module> {
 	});
 
 	if (!moduleResult) {
-		throw new Error(`Module ${id} not found`);
+		throw new Error(`Module ${id} not found or is private`);
 	}
 
 	return {
@@ -45,6 +48,7 @@ export async function getModule(id: string): Promise<Module> {
 
 export async function getAllModulesWithLessons(): Promise<Module[]> {
 	const allModules = await db.query.modules.findMany({
+		where: eq(modules.visibility, "public"),
 		with: {
 			lessons: {
 				orderBy: [asc(lessons.order)],

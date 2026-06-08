@@ -14,7 +14,7 @@ export default async function Home() {
 		console.log({claims});
 		
 		if (roles.includes("Educator") || roles.includes("Super Admin")) {
-			redirect("/educator/lessons");
+			redirect("/educator/modules");
 		}
 	}
 

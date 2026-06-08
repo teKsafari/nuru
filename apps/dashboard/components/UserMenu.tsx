@@ -53,7 +53,7 @@ export default function UserMenu() {
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem asChild className="rounded-lg mb-1">
-							<Link href="/educator/lessons" className="flex items-center gap-2 cursor-pointer py-2">
+							<Link href="/educator/modules" className="flex items-center gap-2 cursor-pointer py-2">
 								<LayoutDashboard className="h-4 w-4" />
 								<span>Dashboard</span>
 							</Link>

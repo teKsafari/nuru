@@ -33,13 +33,13 @@ export default async function MarketplacePage() {
 					</div>
 				) : (
 					modules.map((module) => (
-						<Card key={module.id} className="group hover:shadow-lg transition-shadow overflow-hidden flex flex-col border-2">
-							<CardHeader className="pb-3 bg-muted/30">
+						<Card key={module.id} className="group hover:shadow-md transition-all overflow-hidden flex flex-col border-muted/60">
+							<CardHeader className="pb-4 border-b bg-muted/10">
 								<div className="flex justify-between items-start">
 									<CardTitle className="text-xl group-hover:text-primary transition-colors">
 										{typeof module.title === 'string' ? module.title : (module.title as any).en}
 									</CardTitle>
-									<Badge>{module.difficulty}</Badge>
+									<Badge className="capitalize">{module.difficulty}</Badge>
 								</div>
 							</CardHeader>
 							<CardContent className="flex-1 py-6 flex flex-col">
@@ -56,13 +56,10 @@ export default async function MarketplacePage() {
 								</div>
 
 								<div className="mt-auto flex gap-3">
-									<Button className="flex-1">
-										View Details
-									</Button>
-									<Button variant="outline" size="icon" asChild>
-										<a href={`https://nuru.teksafari.org/sw/anza/${module.slug}`} target="_blank" rel="noopener noreferrer">
-											<ExternalLink className="h-4 w-4" />
-										</a>
+									<Button className="flex-1" asChild>
+										<Link href={`/marketplace/${module.id}`}>
+											View Details
+										</Link>
 									</Button>
 								</div>
 							</CardContent>
