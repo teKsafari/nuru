@@ -15,6 +15,20 @@
       "when": 1778826837408,
       "tag": "0002_violet_mantis",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778889780010,
+      "tag": "0003_fuzzy_randall",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1778960783779,
+      "tag": "0004_chief_hannibal_king",
+      "breakpoints": true
     }
   ]
 }
