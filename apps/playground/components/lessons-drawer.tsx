@@ -6,19 +6,17 @@ import * as React from "react";
 
 import { Book, BookOpen, ChevronRight, CheckCircle2 } from "lucide-react";
 
-import {
-	cn,
-	Drawer,
-	DrawerContent,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger,
-	DrawerFooter,
-} from "@nuru/ui";
+import { cn } from "@nuru/ui/lib/utils";
+import { Drawer } from "@nuru/ui/components/drawer";
+import { DrawerContent } from "@nuru/ui/components/drawer";
+import { DrawerHeader } from "@nuru/ui/components/drawer";
+import { DrawerTitle } from "@nuru/ui/components/drawer";
+import { DrawerTrigger } from "@nuru/ui/components/drawer";
+import { DrawerFooter } from "@nuru/ui/components/drawer";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface LessonsDrawerProps {
-	modules?: { id: string; title: { sw: string; en: string } }[];
+	modules?: { id: string; slug: string; title: { sw: string; en: string } }[];
 	lang: "en" | "sw";
 	dict: Dictionary;
 }
@@ -31,7 +29,7 @@ export function LessonsDrawer({ modules = [], lang, dict }: LessonsDrawerProps) 
 		id: module.id,
 		title: module.title[lang] || module.title.sw,
 		enTitle: lang === 'sw' ? module.title.en : module.title.sw,
-		href: module.id === "misingi-ya-nuru" ? `/${lang}/anza` : `/${lang}/anza/${module.id}`,
+		href: module.slug === "misingi-ya-nuru" ? `/${lang}/anza` : `/${lang}/anza/${module.slug}`,
 		isCompleted: index === 0, // Placeholder for actual progress logic
 	}));
 

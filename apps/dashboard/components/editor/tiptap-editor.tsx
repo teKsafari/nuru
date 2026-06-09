@@ -3,7 +3,8 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Markdown } from 'tiptap-markdown';
-import { Button, cn } from '@nuru/ui';
+import { Button } from "@nuru/ui/components/button";
+import { cn } from "@nuru/ui/lib/utils";
 import { Bold, Italic, List, ListOrdered, Code, Quote } from 'lucide-react';
 
 interface TiptapEditorProps {

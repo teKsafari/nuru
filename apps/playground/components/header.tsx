@@ -8,19 +8,19 @@ import UserMenu from "@/components/UserMenu";
 
 import { LessonsDrawer } from "@/components/lessons-drawer";
 
+import {AppLogo} from "@nuru/ui/components/app-logo"
 import {
-	AppLogo,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@nuru/ui";
+} from "@nuru/ui/components/dropdown-menu";
 
 import { BookOpen, ChevronDown, Languages } from "lucide-react";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface SiteHeaderProps {
-	modules?: { id: string; title: { sw: string; en: string } }[];
+	modules?: { id: string; slug: string; title: { sw: string; en: string } }[];
 	lang: "en" | "sw";
 	dict: Dictionary;
 }
@@ -126,9 +126,9 @@ export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 									>
 										<Link
 											href={
-												module.id === "misingi-ya-nuru"
+												module.slug === "misingi-ya-nuru"
 													? `/${lang}/anza`
-													: `/${lang}/anza/${module.id}`
+													: `/${lang}/anza/${module.slug}`
 											}
 											className="flex items-center gap-2 py-2"
 										>

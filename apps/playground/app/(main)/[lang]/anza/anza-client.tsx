@@ -6,39 +6,41 @@ import { NuruExecutor } from "@/lib/executors/nuru-executor";
 import { MockExecutor } from "@/lib/executors/mock-executor";
 import { IExecutor } from "@/types/executor";
 import { useTheme } from "@wrksz/themes/client";
-import { Module, Lesson, Language, PlaygroundLabels } from "@/types/playground";
-import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
+import { Module, Language, PlaygroundLabels, TestResult } from "@/types/playground";
+import type { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 import { Suspense, useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
-import { nuruLanguage } from "@/lib/nuru-syntax";
+import { nuruLanguage } from "@nuru/ui/lib/nuru-syntax";
 
 interface AnzaClientProps {
 	module: Module;
-	lessonId: string;
-	nextModuleId?: string;
+	lessonSlug: string;
+	nextModuleSlug?: string;
 	lang: Language;
 	dict: Dictionary;
 }
 
-export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaClientProps) {
+export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: AnzaClientProps) {
 	const { theme} = useTheme();
 	const router = useRouter();
 	const currentLessonIndex = useMemo(() => {
-		const index = module.lessons.findIndex((s) => s.id === lessonId);
+		const index = module.lessons.findIndex((s) => s.slug === lessonSlug);
 		return index !== -1 ? index : 0;
-	}, [module.lessons, lessonId]);
+	}, [module.lessons, lessonSlug]);
 
 	const currentLesson = module.lessons[currentLessonIndex];
 
 	const [code, setCode] = useState(currentLesson.initialCode);
 	const [output, setOutput] = useState("");
 	const [testErrors, setTestErrors] = useState<string[]>([]);
+	const [testResults, setTestResults] = useState<Record<string, TestResult>>({});
+	const [isTesting, setIsTesting] = useState(false);
 	const [completedLessonIndices, setCompletedLessonIndices] = useState<Set<number>>(new Set());
 
 	// Handle initial hydration from localStorage on client
 	useEffect(() => {
-		// Load code
+		// Load code - Use ID for persistence to handle slug changes safely
 		const storedCode = localStorage.getItem(`nuru-code-${module.id}-${currentLesson.id}`);
 		if (storedCode !== null) {
 			setCode(storedCode);
@@ -46,7 +48,7 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 			setCode(currentLesson.initialCode);
 		}
 
-		// Load progress
+		// Load progress - Use ID for persistence
 		const storedCompleted = localStorage.getItem(`nuru-completed-${module.id}`);
 		if (storedCompleted) {
 			try {
@@ -62,6 +64,8 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 		const storedCode = localStorage.getItem(`nuru-code-${module.id}-${currentLesson.id}`);
 		setCode(storedCode !== null ? storedCode : currentLesson.initialCode);
 		setOutput("");
+		setTestResults({});
+		setTestErrors([]);
 	}, [currentLessonIndex, module.id, currentLesson.id, currentLesson.initialCode]);
 
 	// Reset output when module changes
@@ -82,16 +86,10 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 	const nuruExecutorRef = useRef<NuruExecutor | null>(null);
 	
 	const nuruInstance = useNuru((text, isError) => {
-		// If an execution is active, the executor will handle it via the event queue.
-		// Otherwise, we fallback to direct output for initialization messages.
 		if (nuruExecutorRef.current) {
 			nuruExecutorRef.current.handleOutput(text, isError);
 		}
 		
-		// Always append to output for real-time feedback, 
-		// but NuruExecutor will also yield it for the specific execution loop.
-		// To avoid double-printing during handleRun, we could refine this, 
-		// but for initialization it's necessary.
 		if (!nuruExecutorRef.current || !nuruExecutorRef.current.isExecuting()) {
 			setOutput((prev) => (prev ? prev + `\n${text}` : text));
 		}
@@ -107,44 +105,78 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 		return exec;
 	}, [nuruInstance, module.executor]);
 
-	const checkSolution = useCallback((currentCode: string, outputText: string = "") => {
-		let isCorrect = false;
+	const runSingleTest = useCallback(async (testCode: string, test: any): Promise<TestResult> => {
+		let testOutput = "";
+		try {
+			const execution = executor.execute(testCode, test.input);
+			for await (const event of execution) {
+				if (event.type === "stdout" || event.type === "stderr") {
+					testOutput += event.data + "\n";
+				}
+			}
+			testOutput = testOutput.trim();
+
+			let passed = false;
+			if (test.type === "io" || test.type === "exact_output") {
+				passed = testOutput === (test.expectedOutput || "").trim();
+			} else if (test.type === "match_output") {
+				const regex = new RegExp(test.pattern || "", test.flags || "");
+				passed = regex.test(testOutput);
+			} else if (test.type === "match_code") {
+				const regex = new RegExp(test.pattern || "", test.flags || "");
+				passed = regex.test(testCode);
+			}
+
+			return { passed, actualOutput: testOutput };
+		} catch (error: any) {
+			return { passed: false, error: error.toString(), actualOutput: testOutput };
+		}
+	}, [executor]);
+
+	const checkSolution = useCallback(async (currentCode: string, lastRunOutput: string = "") => {
+		setIsTesting(true);
+		let allPassed = true;
 		const errors: string[] = [];
+		const results: Record<string, TestResult> = {};
 
 		if (currentLesson.tests && currentLesson.tests.length > 0) {
-			isCorrect = true; // Assume correct until a test fails
 			for (const test of currentLesson.tests) {
-				if (test.type === "match_output") {
-					const regex = new RegExp(test.pattern || "", test.flags || "");
-					if (!regex.test(outputText)) {
-						errors.push(test.message);
-						isCorrect = false;
-						break;
-					}
-				} else if (test.type === "exact_output") {
-					if (outputText.trim() !== (test.expected || "").trim()) {
-						errors.push(test.message);
-						isCorrect = false;
-						break;
-					}
+				const testId = test.id || Math.random().toString();
+				
+				let result: TestResult;
+				if (test.type === "io") {
+					result = await runSingleTest(currentCode, test);
 				} else if (test.type === "match_code") {
 					const regex = new RegExp(test.pattern || "", test.flags || "");
-					if (!regex.test(currentCode)) {
-						errors.push(test.message);
-						isCorrect = false;
-						break;
-					}
+					const passed = regex.test(currentCode);
+					result = { passed };
+				} else if (test.type === "match_output") {
+					const regex = new RegExp(test.pattern || "", test.flags || "");
+					const passed = regex.test(lastRunOutput);
+					result = { passed, actualOutput: lastRunOutput };
+				} else if (test.type === "exact_output") {
+					const passed = lastRunOutput === (test.expectedOutput || "").trim();
+					result = { passed, actualOutput: lastRunOutput };
+				} else {
+					result = { passed: false, error: "Unknown test type" };
+				}
+
+				results[testId] = result;
+				if (!result.passed) {
+					allPassed = false;
+					errors.push(test.message);
 				}
 			}
 		} else if (currentLesson.solution) {
-			// Fallback to simple normalization if no tests are defined
 			const normalize = (s: string) => s.replace(/\/\/.*$/gm, "").replace(/\s/g, "");
-			isCorrect = normalize(currentCode) === normalize(currentLesson.solution);
+			allPassed = normalize(currentCode) === normalize(currentLesson.solution);
 		}
 		
+		setTestResults(results);
 		setTestErrors(errors);
+		setIsTesting(false);
 
-		if (isCorrect) {
+		if (allPassed) {
 			setCompletedLessonIndices(prev => {
 				const next = new Set(prev).add(currentLessonIndex);
 				localStorage.setItem(`nuru-completed-${module.id}`, JSON.stringify(Array.from(next)));
@@ -157,8 +189,8 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 				colors: ["#22c55e", "#10b981", "#3b82f6"]
 			});
 		}
-		return isCorrect;
-	}, [currentLesson.solution, currentLesson.tests, currentLessonIndex, module.id]);
+		return allPassed;
+	}, [currentLesson.solution, currentLesson.tests, currentLessonIndex, module.id, runSingleTest]);
 
 	const handleCodeChange = useCallback((newCode: string) => {
 		setCode(newCode);
@@ -168,6 +200,7 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 	const handleRun = async () => {
 		setOutput("");
 		setTestErrors([]);
+		setTestResults({});
 		let fullOutput = "";
 		try {
 			const execution = executor.execute(code);
@@ -177,7 +210,10 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 					setOutput((prev) => (prev ? prev + `\n${event.data}` : event.data));
 				}
 			}
-			checkSolution(code, fullOutput.trim());
+			// Just run evaluation for non-IO tests if we want immediate feedback, 
+			// or just let the student see their output.
+			// The plan says "checkSolution" is called in handleRun too.
+			await checkSolution(code, fullOutput.trim());
 		} catch (error) {
 			setOutput(`${dict.playground.error}${error}`);
 		}
@@ -186,8 +222,10 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 	const handleSubmit = async () => {
 		setOutput(dict.playground.testing);
 		setTestErrors([]);
+		setTestResults({});
 		let fullOutput = "";
 		try {
+			// First run without stdin to get default output (for non-IO tests)
 			const execution = executor.execute(code);
 			for await (const event of execution) {
 				if (event.type === "stdout" || event.type === "stderr") {
@@ -195,7 +233,7 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 					setOutput((prev) => (prev === dict.playground.testing ? event.data : prev + `\n${event.data}`));
 				}
 			}
-			const passed = checkSolution(code, fullOutput.trim());
+			const passed = await checkSolution(code, fullOutput.trim());
 			if (passed) {
 				setOutput((prev) => prev + "\n✓ Submitted!");
 			}
@@ -219,12 +257,14 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 	const handleReset = () => {
 		setCode(currentLesson.initialCode);
 		setOutput("");
+		setTestResults({});
+		setTestErrors([]);
 		localStorage.setItem(`nuru-code-${module.id}-${currentLesson.id}`, currentLesson.initialCode);
 	};
 
 	const handleNextModule = () => {
-		if (nextModuleId) {
-			router.push(`/${lang}/anza/${nextModuleId}`);
+		if (nextModuleSlug) {
+			router.push(`/${lang}/anza/${nextModuleSlug}`);
 		} else {
 			router.push(`/${lang}/anza`);
 		}
@@ -250,6 +290,11 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 		next: dict.lessonPanel.next,
 		finish: dict.lessonPanel.finish,
 		yourTask: dict.lessonPanel.yourTask,
+		showTests: "Show Test Cases",
+		hideTests: "Hide Test Cases",
+		testPassed: "Passed",
+		testFailed: "Failed",
+		hiddenTest: "Hidden Test",
 	};
 
 	const extensions = useMemo(() => [nuruLanguage], []);
@@ -265,9 +310,11 @@ export function AnzaClient({ module, lessonId, nextModuleId, lang, dict }: AnzaC
 					output,
 					completedLessonIndices,
 					testErrors,
+					testResults,
+					isTesting,
 				}}
 				actions={{
-					onLessonChange: (index) => router.push(`/${lang}/anza/${module.id}/${module.lessons[index].id}`),
+					onLessonChange: (index) => router.push(`/${lang}/anza/${module.slug}/${module.lessons[index].slug}`),
 					onCodeChange: handleCodeChange,
 					onRun: handleRun,
 					onSubmit: handleSubmit,

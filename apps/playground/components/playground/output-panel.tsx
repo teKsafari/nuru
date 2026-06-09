@@ -10,14 +10,12 @@ import {
 	AlertCircle,
 	XCircle,
 } from "lucide-react";
-import {
-	Button,
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@nuru/ui";
+import { Button } from "@nuru/ui/components/button";
+import { Dialog } from "@nuru/ui/components/dialog";
+import { DialogContent } from "@nuru/ui/components/dialog";
+import { DialogHeader } from "@nuru/ui/components/dialog";
+import { DialogTitle } from "@nuru/ui/components/dialog";
+import { DialogTrigger } from "@nuru/ui/components/dialog";
 import { ScrollArea } from "@/components/playground/scroll-area";
 import { usePlayground } from "./playground-context";
 import { getRenderer } from "./renderers/registry";
@@ -45,7 +43,7 @@ export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
 		}
 	};
 
-	const rendererId = module.panels?.renderer?.type || "standard-terminal";
+	const rendererId = module?.panels?.renderer?.type || "standard-terminal";
 	const RendererComponent = getRenderer(rendererId);
 
 	const renderContent = () => {
@@ -154,14 +152,16 @@ export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
 
 					{showToolbar && (
 						<>
-							<Button
-								onClick={onSubmit}
-								size="sm"
-								className="bg-primary hover:bg-primary/90 text-primary-foreground h-6 px-2 text-[10px] font-black tracking-widest uppercase shadow-sm transition-all active:scale-95"
-							>
-								<Send className="mr-1 h-2.5 w-2.5" />
-								{labels.testing}
-							</Button>
+							{onSubmit && (
+								<Button
+									onClick={onSubmit}
+									size="sm"
+									className="bg-primary hover:bg-primary/90 text-primary-foreground h-6 px-2 text-[10px] font-black tracking-widest uppercase shadow-sm transition-all active:scale-95"
+								>
+									<Send className="mr-1 h-2.5 w-2.5" />
+									{labels.testing}
+								</Button>
+							)}
 							<Button
 								variant="secondary"
 								size="sm"
@@ -171,15 +171,17 @@ export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
 								<Play className="mr-1 h-2.5 w-2.5" />
 								{labels.run}
 							</Button>
-							<Button
-								variant="secondary"
-								size="sm"
-								onClick={onShowSolution}
-								className="h-6 px-2 text-[10px] font-black tracking-widest uppercase transition-all active:scale-95"
-							>
-								<Eye className="mr-1 h-2.5 w-2.5" />
-								{labels.showSolution}
-							</Button>
+							{onShowSolution && (
+								<Button
+									variant="secondary"
+									size="sm"
+									onClick={onShowSolution}
+									className="h-6 px-2 text-[10px] font-black tracking-widest uppercase transition-all active:scale-95"
+								>
+									<Eye className="mr-1 h-2.5 w-2.5" />
+									{labels.showSolution}
+								</Button>
+							)}
 						</>
 					)}
 					<Button

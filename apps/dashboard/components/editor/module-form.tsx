@@ -1,16 +1,14 @@
 "use client";
 
 import { useForm, Controller } from "react-hook-form";
-import {
-	Label,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-	Input,
-	Button,
-} from "@nuru/ui";
+import { Label } from "@nuru/ui/components/label";
+import { Select } from "@nuru/ui/components/select";
+import { SelectContent } from "@nuru/ui/components/select";
+import { SelectItem } from "@nuru/ui/components/select";
+import { SelectTrigger } from "@nuru/ui/components/select";
+import { SelectValue } from "@nuru/ui/components/select";
+import { Input } from "@nuru/ui/components/input";
+import { Button } from "@nuru/ui/components/button";
 
 export type ModuleFormInputs = {
 	title: string;

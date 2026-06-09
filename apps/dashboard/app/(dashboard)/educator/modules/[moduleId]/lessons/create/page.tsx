@@ -4,7 +4,7 @@ import LessonEditor, { type LessonFormInputs } from "@/components/editor/lesson-
 import { createLesson } from "@/app/actions/lessons";
 import { useRouter } from "next/navigation";
 import { useTransition, use } from "react";
-import { Button } from "@nuru/ui";
+import { Button } from "@nuru/ui/components/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
