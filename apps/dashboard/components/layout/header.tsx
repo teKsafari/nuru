@@ -2,7 +2,7 @@
 
 import UserMenu from "@/components/UserMenu";
 import { Search, Bell } from "lucide-react";
-import { Input } from "@nuru/ui";
+import { Input } from "@nuru/ui/components/input";
 
 export function Header() {
 	return (

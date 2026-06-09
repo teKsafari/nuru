@@ -3,7 +3,7 @@ import { eq, and } from "drizzle-orm";
 import { notFound, redirect } from "next/navigation";
 import LessonEditor, { type LessonFormInputs } from "@/components/editor/lesson-editor";
 import { updateLesson } from "@/app/actions/lessons";
-import { Button } from "@nuru/ui";
+import { Button } from "@nuru/ui/components/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 

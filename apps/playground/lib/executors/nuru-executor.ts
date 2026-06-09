@@ -30,14 +30,15 @@ export class NuruExecutor implements IExecutor {
 		}
 	}
 
-	async *execute(code: string): AsyncGenerator<ExecutionEvent, void, unknown> {
+	async *execute(code: string, stdin?: string): AsyncGenerator<ExecutionEvent, void, unknown> {
 		this.eventQueue = [];
 		this.isExecutionDone = false;
 		this._isExecuting = true;
 
 		const executionPromise = (async () => {
 			try {
-				await this.nuruInstance.execute(code);
+				const stdinBuffer = stdin ? stdin.split("\n") : undefined;
+				await this.nuruInstance.execute(code, stdinBuffer);
 				this.pushEvent({ type: "finished", exitCode: 0 });
 			} catch (error: any) {
 				this.pushEvent({ type: "stderr", data: error.toString() });

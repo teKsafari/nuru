@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useContext } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useContext, useState, useEffect } from "react";
 
 import { signInAction, signOutAction } from "@/app/actions/auth";
 import { AuthContext } from "@/components/providers/auth-provider";
@@ -9,20 +10,33 @@ import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
-	Button,
+} from "@nuru/ui/components/avatar";
+import { Button } from "@nuru/ui/components/button";
+import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@nuru/ui";
+} from "@nuru/ui/components/dropdown-menu";
 import { User, Sprout, UserCogIcon, LogOutIcon } from "lucide-react";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import Link from "next/link";
 
 export default function UserMenu() {
 	const { isAuthenticated, claims } = useContext(AuthContext);
+
+	const [postAuthRedirectUri, setRedirectUri] = useState("");
+
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			setRedirectUri(window.location.href);
+		}
+	}, [pathname, searchParams]);
 
 	return (
 		<DropdownMenu>
@@ -87,6 +101,13 @@ export default function UserMenu() {
 							</DropdownMenuItem>
 						</Link>
 						<form action={signOutAction}>
+							<input
+								type="text"
+								className="hidden"
+								name="redirectURI"
+								readOnly
+								value={postAuthRedirectUri}
+							/>
 							<Button
 								className="h-auto w-full justify-start rounded-lg px-2 py-1.5 font-normal"
 								type="submit"
@@ -99,6 +120,13 @@ export default function UserMenu() {
 					</>
 				) : (
 					<form action={signInAction}>
+						<input
+							type="text"
+							className="hidden"
+							name="postRedirectUri"
+							readOnly
+							value={postAuthRedirectUri}
+						/>
 						<Button
 							className="h-auto w-full justify-start rounded-lg px-2 py-1.5 font-normal"
 							type="submit"

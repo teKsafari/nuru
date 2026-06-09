@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@nuru/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@nuru/ui/components/card";
 import { Settings } from "lucide-react";
 
 export default function SettingsPage() {

@@ -1,16 +1,14 @@
 "use client";
 import React from "react";
 import { Play, RotateCcw, Eye, HelpCircle, ArrowRight } from "lucide-react";
-import { CodeEditor } from "./code-editor";
+import { CodeEditor } from "@nuru/ui/components/code-editor";
 import { OutputPanel } from "./output-panel";
-import {
-	Button,
-	cn,
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@nuru/ui";
+import { Button } from "@nuru/ui/components/button";
+import { cn } from "@nuru/ui/lib/utils";
+import { Tooltip } from "@nuru/ui/components/tooltip";
+import { TooltipContent } from "@nuru/ui/components/tooltip";
+import { TooltipProvider } from "@nuru/ui/components/tooltip";
+import { TooltipTrigger } from "@nuru/ui/components/tooltip";
 import {
 	ResizableHandle,
 	ResizablePanel,
@@ -54,12 +52,12 @@ export function CodePanel({
 	const outputPanelRef = React.useRef<ImperativePanelHandle>(null);
 
 	React.useEffect(() => {
-		if (module.panels?.terminal?.defaultState === "closed") {
+		if (module?.panels?.terminal?.defaultState === "closed") {
 			outputPanelRef.current?.collapse();
 		} else {
 			outputPanelRef.current?.expand();
 		}
-	}, [module.id, module.panels?.terminal?.defaultState]);
+	}, [module?.id, module?.panels?.terminal?.defaultState]);
 
 	React.useEffect(() => {
 		if (activeMaximizedPanel === "renderer") {
@@ -95,6 +93,7 @@ export function CodePanel({
 					</TooltipContent>
 				</Tooltip>
 
+				{onShowHint && (
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Button
@@ -110,8 +109,9 @@ export function CodePanel({
 						{labels.hint}
 					</TooltipContent>
 				</Tooltip>
+				)}
 
-				{isDev && (
+				{isDev && onShowSolution && (
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<Button

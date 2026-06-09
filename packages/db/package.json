@@ -18,6 +18,7 @@
 	},
 	"dependencies": {
 		"@neondatabase/serverless": "^1.0.2",
+		"@nuru/ui": "workspace:^",
 		"drizzle-orm": "^0.45.1",
 		"server-only": "^0.0.1"
 	},

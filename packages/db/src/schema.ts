@@ -1,5 +1,6 @@
 import { pgTable, text, timestamp, integer, jsonb, uuid, foreignKey } from "drizzle-orm/pg-core";
 import { sql, relations } from "drizzle-orm";
+import type { TestCaseV1 } from "@nuru/ui/validation/test-cases";
 
 // i18n structure for localized fields
 export type LocalizedString = {
@@ -60,7 +61,7 @@ export const lessons = pgTable("lessons", {
 	task: jsonb("task").$type<LocalizedString>(),
 	defaultCode: text("default_code"),
 	solution: text("solution"),
-	tests: jsonb("tests").notNull(), // Array of TestCase
+	tests: jsonb("tests").$type<TestCaseV1[]>().notNull(), // Array of TestCase
 	order: integer("order").default(0).notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, (table) => [

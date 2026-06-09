@@ -7,8 +7,7 @@ import * as lezerHighlight from "@lezer/highlight";
 const { tags: t } = lezerHighlight;
 import { createTheme } from "@uiw/codemirror-themes";
 import type { CreateThemeOptions } from "@uiw/codemirror-themes";
-import { useTheme } from "@wrksz/themes/client";
-import { Highlight, getHighlightExtension } from "@/lib/utils/highlights";
+import { cn, Highlight, getHighlightExtension } from "#lib/utils";
 
 interface CodeEditorProps {
 	code: string;
@@ -17,6 +16,7 @@ interface CodeEditorProps {
 	readOnly?: boolean;
 	extensions?: Extension[];
 	highlights?: Highlight[];
+	className?: string;
 }
 
 // Custom dark theme matching our design
@@ -103,24 +103,17 @@ const editorBaseTheme = EditorView.baseTheme({
 	".cm-content": {
 		// padding: "0 16px 0 0",
 	},
-	
+
 	// "&.cm-focused": {
 	// 	outline: "none",
 	// },
 });
 
-export function CodeEditor({
-	code,
-	onChange,
-	theme: themeProp,
-	readOnly = false,
-	extensions = [],
-	highlights = [],
-}: CodeEditorProps) {
+export function CodeEditor({ code, onChange, theme, readOnly = false, extensions = [], highlights = [], className }: CodeEditorProps) {
 	// console.log({themeProp})
 
-	const { theme: currentTheme } = useTheme();
-	const theme = (themeProp || currentTheme) as "light" | "dark" || "dark";
+	// const { theme: currentTheme } = useTheme();
+	// const theme = (themeProp || currentTheme) as "light" | "dark" || "dark";
 
 	const allExtensions = [...extensions, editorBaseTheme, EditorView.lineWrapping];
 	if (highlights && highlights.length > 0) {
@@ -128,7 +121,7 @@ export function CodeEditor({
 	}
 
 	return (
-		<div className="h-full overflow-hidden">
+		<div className={cn(className, "h-full overflow-hidden")}>
 			<CodeMirror
 				value={code}
 				height="100%"

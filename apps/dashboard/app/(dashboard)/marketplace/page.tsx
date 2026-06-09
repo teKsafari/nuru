@@ -1,4 +1,6 @@
-import { Button, Card, CardHeader, CardTitle, CardContent, Badge } from "@nuru/ui";
+import { Button } from "@nuru/ui/components/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@nuru/ui/components/card";
+import { Badge } from "@nuru/ui/components/badge";
 
 import Link from "next/link";
 
