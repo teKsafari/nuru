@@ -2,17 +2,21 @@
 	"name": "nuru-playground",
 	"version": "0.1.0",
 	"private": true,
+	"imports": {
+		"#components/*": "./components/*.tsx",
+		"#lib/*": "./lib/*.ts",
+		"#hooks/*": "./hooks/*.ts"
+	},
 	"scripts": {
-		"dev": "next dev",
+		"dev": "portless run next dev",
 		"prebuild": "cp ../../packages/wasm/main.wasm ./public/main.wasm || echo 'Warning: main.wasm not found, skipping copy.'",
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint .",
 		"test": "echo \"Mocktest Playground  🟢 🟢 🟢 🟢\" && exit 0 >> /dev/null",
-		"db:generate": "drizzle-kit generate --config ./drizzle.config.ts",
-		"db:migrate": "drizzle-kit migrate --config ./drizzle.config.ts",
-		"db:push": "drizzle-kit push --config ./drizzle.config.ts",
-		"db:studio": "drizzle-kit studio --config ./drizzle.config.ts"
+		"db:generate": "pnpm --filter @nuru/db db:generate",
+		"db:push": "pnpm --filter @nuru/db db:push",
+		"db:studio": "pnpm --filter @nuru/db db:studio"
 	},
 	"prettier": {
 		"useTabs": true,
@@ -34,6 +38,8 @@
 		"@icons-pack/react-simple-icons": "^13.13.0",
 		"@lezer/highlight": "^1.1.6",
 		"@logto/next": "^4.2.9",
+		"@nuru/db": "workspace:*",
+		"@nuru/ui": "workspace:*",
 		"@neondatabase/serverless": "^1.0.2",
 		"@next/third-parties": "^16.2.2",
 		"@radix-ui/react-accordion": "^1.2.12",

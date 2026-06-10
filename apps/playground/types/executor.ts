@@ -6,6 +6,6 @@ export type ExecutionEvent =
 	| { type: "finished"; exitCode?: number };
 
 export interface IExecutor {
-	execute(code: string): AsyncGenerator<ExecutionEvent, void, unknown>;
+	execute(code: string, stdin?: string): AsyncGenerator<ExecutionEvent, void, unknown>;
 	stop(): void;
 }

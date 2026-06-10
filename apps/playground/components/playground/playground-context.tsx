@@ -4,10 +4,10 @@ import { createContext, useContext, ReactNode } from "react";
 import { PlaygroundProps } from "@/types/playground";
 
 export type PlaygroundContextValue = PlaygroundProps & {
-	isCurrentStepCompleted: boolean;
-	isLastStep: boolean;
-	handleNextAction: () => void;
-	nextActionLabel: string;
+	isCurrentLessonCompleted?: boolean;
+	isLastLesson?: boolean;
+	handleNextAction?: () => void;
+	nextActionLabel?: string;
 	panels: {
 		maximizePanel: (panelId: string) => void;
 		restorePanels: () => void;

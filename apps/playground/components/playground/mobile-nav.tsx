@@ -1,7 +1,7 @@
 "use client"
 
 import { BookOpen, Code2, Terminal } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@nuru/ui/lib/utils";
 import { PlaygroundLabels } from "@/types/playground"
 
 interface MobileNavProps {

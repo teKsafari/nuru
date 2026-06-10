@@ -8,24 +8,24 @@ import UserMenu from "@/components/UserMenu";
 
 import { LessonsDrawer } from "@/components/lessons-drawer";
 
-import { AppLogo } from "@/components/app-logo";
-
-import { BookOpen, ChevronDown, Languages } from "lucide-react";
+import {AppLogo} from "@nuru/ui/components/app-logo"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@nuru/ui/components/dropdown-menu";
+
+import { BookOpen, ChevronDown, Languages } from "lucide-react";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface SiteHeaderProps {
-	lessons?: { id: string; title: { sw: string; en: string } }[];
+	modules?: { id: string; slug: string; title: { sw: string; en: string } }[];
 	lang: "en" | "sw";
 	dict: Dictionary;
 }
 
-export function SiteHeader({ lessons = [], lang, dict }: SiteHeaderProps) {
+export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 	const pathname = usePathname();
 	const router = useRouter();
 
@@ -118,26 +118,26 @@ export function SiteHeader({ lessons = [], lang, dict }: SiteHeaderProps) {
 										<span>{dict.map.title}</span>
 									</Link>
 								</DropdownMenuItem>
-								{lessons.map((lesson) => (
+								{modules.map((module) => (
 									<DropdownMenuItem
-										key={lesson.id}
+										key={module.id}
 										asChild
 										className="rounded-lg"
 									>
 										<Link
 											href={
-												lesson.id === "misingi-ya-nuru"
+												module.slug === "misingi-ya-nuru"
 													? `/${lang}/anza`
-													: `/${lang}/anza/${lesson.id}`
+													: `/${lang}/anza/${module.slug}`
 											}
 											className="flex items-center gap-2 py-2"
 										>
 											<div className="flex flex-col">
 												<span className="text-sm font-medium">
-													{lesson.title[lang] || lesson.title.sw}
+													{module.title[lang] || module.title.sw}
 												</span>
 												<span className="text-muted-foreground text-[10px]">
-													{lang === "sw" ? lesson.title.en : lesson.title.sw}
+													{lang === "sw" ? module.title.en : module.title.sw}
 												</span>
 											</div>
 										</Link>
@@ -162,7 +162,7 @@ export function SiteHeader({ lessons = [], lang, dict }: SiteHeaderProps) {
 
 						{/* Mobile Lessons Drawer Trigger */}
 						<div className="md:hidden">
-							<LessonsDrawer lessons={lessons} lang={lang} dict={dict} />
+							<LessonsDrawer modules={modules} lang={lang} dict={dict} />
 						</div>
 						<UserMenu />
 					</div>

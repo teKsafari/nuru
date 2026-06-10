@@ -19,9 +19,13 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@nuru/ui": ["../../packages/ui/src"],
+      "@nuru/ui/*": ["../../packages/ui/src/*"],
+      "@nuru/db": ["../../packages/db/src"],
+      "@nuru/db/*": ["../../packages/db/src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../../packages/ui/src/lib/nuru-syntax.ts"],
   "exclude": ["node_modules"]
 }

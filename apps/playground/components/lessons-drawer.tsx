@@ -6,32 +6,30 @@ import * as React from "react";
 
 import { Book, BookOpen, ChevronRight, CheckCircle2 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import {
-	Drawer,
-	DrawerContent,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger,
-	DrawerFooter,
-} from "@/components/ui/drawer";
+import { cn } from "@nuru/ui/lib/utils";
+import { Drawer } from "@nuru/ui/components/drawer";
+import { DrawerContent } from "@nuru/ui/components/drawer";
+import { DrawerHeader } from "@nuru/ui/components/drawer";
+import { DrawerTitle } from "@nuru/ui/components/drawer";
+import { DrawerTrigger } from "@nuru/ui/components/drawer";
+import { DrawerFooter } from "@nuru/ui/components/drawer";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 
 interface LessonsDrawerProps {
-	lessons?: { id: string; title: { sw: string; en: string } }[];
+	modules?: { id: string; slug: string; title: { sw: string; en: string } }[];
 	lang: "en" | "sw";
 	dict: Dictionary;
 }
 
-export function LessonsDrawer({ lessons = [], lang, dict }: LessonsDrawerProps) {
+export function LessonsDrawer({ modules = [], lang, dict }: LessonsDrawerProps) {
 	const [open, setOpen] = React.useState(false);
 	const pathname = usePathname();
 
-	const lessonItems = lessons.map((lesson, index) => ({
-		id: lesson.id,
-		title: lesson.title[lang] || lesson.title.sw,
-		enTitle: lang === 'sw' ? lesson.title.en : lesson.title.sw,
-		href: lesson.id === "misingi-ya-nuru" ? `/${lang}/anza` : `/${lang}/anza/${lesson.id}`,
+	const moduleItems = modules.map((module, index) => ({
+		id: module.id,
+		title: module.title[lang] || module.title.sw,
+		enTitle: lang === 'sw' ? module.title.en : module.title.sw,
+		href: module.slug === "misingi-ya-nuru" ? `/${lang}/anza` : `/${lang}/anza/${module.slug}`,
 		isCompleted: index === 0, // Placeholder for actual progress logic
 	}));
 
@@ -66,39 +64,39 @@ export function LessonsDrawer({ lessons = [], lang, dict }: LessonsDrawerProps) 
 					</DrawerHeader>
 					<div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
 						<div className="grid grid-cols-1 gap-3 pb-8">
-							{lessonItems.map((lesson, index) => (
+							{moduleItems.map((module, index) => (
 								<Link
-									key={lesson.id}
-									href={lesson.href}
+									key={module.id}
+									href={module.href}
 									onClick={() => setOpen(false)}
 									className={cn(
 										"group relative flex items-center gap-4 rounded-xl border p-4 transition-all duration-300 overflow-hidden",
-										pathname === lesson.href
+										pathname === module.href
 											? "border-primary/50 bg-primary/5 ring-1 ring-primary/20 shadow-xs"
 											: "border-border hover:border-primary/30 hover:bg-muted/50 hover:shadow-md",
 									)}
 								>
 									<div className={cn(
 										"flex items-center justify-center w-8 h-8 rounded-full shrink-0 font-mono text-sm font-bold transition-colors",
-										lesson.isCompleted ? "bg-green-500/10 text-green-500" : "bg-muted/50 text-muted-foreground group-hover:text-foreground"
+										module.isCompleted ? "bg-green-500/10 text-green-500" : "bg-muted/50 text-muted-foreground group-hover:text-foreground"
 									)}>
-										{lesson.isCompleted ? <CheckCircle2 className="h-4 w-4" /> : index + 1}
+										{module.isCompleted ? <CheckCircle2 className="h-4 w-4" /> : index + 1}
 									</div>
 									<div className="flex-1 min-w-0">
 										<h3 className={cn(
 											"text-sm font-bold truncate leading-tight transition-colors",
-											pathname === lesson.href ? "text-primary" : "group-hover:text-primary"
+											pathname === module.href ? "text-primary" : "group-hover:text-primary"
 										)}>
-											{lesson.title}
+											{module.title}
 										</h3>
 										<p className="text-[10px] text-muted-foreground italic truncate">
-											{lesson.enTitle}
+											{module.enTitle}
 										</p>
 									</div>
 									<div className="flex items-center gap-2 shrink-0">
 										<ChevronRight className={cn(
 											"h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1",
-											pathname === lesson.href ? "text-primary" : ""
+											pathname === module.href ? "text-primary" : ""
 										)} />
 									</div>
 									

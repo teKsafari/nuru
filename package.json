@@ -4,7 +4,9 @@
 	"scripts": {
 		"preinstall": "npx only-allow pnpm",
 		"build": "turbo run build",
+		"predev":"portless proxy start --no-tls --port 3941",
 		"dev": "turbo run dev",
+		"clean": "portless proxy stop",
 		"start": "turbo run start",
 		"test": "turbo run test --output-logs=new-only",
 		"lint": "turbo run lint",

@@ -1,17 +1,11 @@
 import type { Extension } from "@codemirror/state";
+import type { TestCaseV1 as TestCase } from "@nuru/ui/validation/test-cases";
 
 export type Language = "sw" | "en";
 
-export interface TestCase {
-	type: "match_output" | "match_code" | "exact_output";
-	pattern?: string;
-	flags?: string;
-	expected?: string;
-	message: string;
-}
-
-export interface LessonStep {
+export interface Lesson {
 	id: string;
+	slug: string;
 	title: Record<Language, string>;
 	description: Record<Language, string>;
 	initialCode: string;
@@ -20,10 +14,11 @@ export interface LessonStep {
 	tests?: TestCase[];
 }
 
-export interface Lesson {
+export interface Module {
 	id: string;
+	slug: string;
 	title: Record<Language, string>;
-	steps: LessonStep[];
+	lessons: Lesson[];
 	difficulty?: string;
 	executor?: string;
 	panels?: {
@@ -39,39 +34,52 @@ export interface PlaygroundLabels {
 	hint: string;
 	reset: string;
 	showSolution: string;
-	nextLesson: string;
-	backToLessons: string;
+	nextModule: string;
+	backToModules: string;
 	completed: string;
-	step: string;
+	lesson: string;
 	of: string;
 	terminal: string;
 	outputPlaceholder: string;
-	lessons: string;
+	modules: string;
 	incomplete: string;
 	back: string;
 	next: string;
 	finish: string;
 	yourTask: string;
+	showTests: string;
+	hideTests: string;
+	testPassed: string;
+	testFailed: string;
+	hiddenTest: string;
+}
+
+export interface TestResult {
+	passed: boolean;
+	actualOutput?: string;
+	error?: string;
 }
 
 export interface PlaygroundProps {
-	lesson: Lesson;
+	module?: Module;
 	state: {
-		currentStepIndex: number;
+		currentLessonIndex?: number;
 		code: string;
 		output: string;
-		completedStepIndices: Set<number>;
+		completedLessonIndices?: Set<number>;
 		testErrors?: string[];
+		testResults?: Record<string, TestResult>;
+		isTesting?: boolean;
 	};
 	actions: {
-		onStepChange: (index: number) => void;
+		onLessonChange?: (index: number) => void;
 		onCodeChange: (code: string) => void;
 		onRun: () => void;
-		onSubmit: () => void;
-		onShowSolution: () => void;
-		onShowHint: () => void;
+		onSubmit?: () => void;
+		onShowSolution?: () => void;
+		onShowHint?: () => void;
 		onReset: () => void;
-		onNextLesson: () => void;
+		onNextModule?: () => void;
 	};
 	labels: PlaygroundLabels;
 	theme?: "light" | "dark";

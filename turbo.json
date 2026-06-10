@@ -12,9 +12,8 @@
 		"nuru-playground#build": {
 			"dependsOn": ["@nuru/wasm#build"]
 		},
-		"dev": {
-			"persistent": true,
-			"cache": false
+		"//#predev": {
+			"cache":false
 		},
 		"dev:wasm": {
 			"persistent": true,
@@ -27,6 +26,11 @@
 		"dev:serve": {
 			"persistent": true,
 			"cache": false
+		},
+		"dev": {
+			"persistent": true,
+			"cache": false,
+			"dependsOn":["//#predev"]
 		},
 		"test": {
 			"dependsOn": ["^test"],

@@ -1,0 +1,1 @@
+ALTER TABLE "modules" ADD COLUMN "visibility" text DEFAULT 'private' NOT NULL;

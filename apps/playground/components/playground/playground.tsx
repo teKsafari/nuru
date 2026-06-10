@@ -13,12 +13,16 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps } from "@/types/playground";
 import { CheckCircle2, BookOpen, Terminal, ChevronDown } from "lucide-react";
-import { Drawer, DrawerContent, DrawerTrigger, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
+import { Drawer } from "@nuru/ui/components/drawer";
+import { DrawerContent } from "@nuru/ui/components/drawer";
+import { DrawerTrigger } from "@nuru/ui/components/drawer";
+import { DrawerTitle } from "@nuru/ui/components/drawer";
+import { DrawerDescription } from "@nuru/ui/components/drawer";
 import { PlaygroundProvider, PlaygroundContextValue } from "./playground-context";
 
 export function Playground(props: PlaygroundProps) {
 	const {
-		lesson,
+		module,
 		state,
 		actions,
 		labels,
@@ -27,7 +31,7 @@ export function Playground(props: PlaygroundProps) {
 		extensions,
 	} = props;
 	const isMobile = useIsMobile();
-	const [lessonDrawerOpen, setLessonDrawerOpen] = useState(false);
+	const [moduleDrawerOpen, setModuleDrawerOpen] = useState(false);
 	
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
@@ -35,10 +39,10 @@ export function Playground(props: PlaygroundProps) {
 
 	const [activeMaximizedPanel, setActiveMaximizedPanel] = useState<string | null>(null);
 
-	// Automatically handle panel states from lesson config
+	// Automatically handle panel states from module config
 	useEffect(() => {
 		if (!isMobile) {
-			if (lesson.panels?.renderer?.defaultState === "maximized") {
+			if (module?.panels?.renderer?.defaultState === "maximized") {
 				setActiveMaximizedPanel("renderer");
 				lessonPanelRef.current?.collapse();
 			} else {
@@ -46,24 +50,27 @@ export function Playground(props: PlaygroundProps) {
 				lessonPanelRef.current?.expand();
 			}
 		}
-	}, [isMobile, lesson.id, lesson.panels]);
+	}, [isMobile, module?.id, module?.panels]);
 
-	// Automatically open lesson drawer on mobile if it's the first step of a lesson
+	// Automatically open module drawer on mobile if it's the first lesson of a module
 	useEffect(() => {
-		if (isMobile && state.currentStepIndex === 0) {
+		if (isMobile && module && state.currentLessonIndex === 0) {
 			// Small delay to ensure smooth entry
-			const timer = setTimeout(() => setLessonDrawerOpen(true), 500);
+			const timer = setTimeout(() => setModuleDrawerOpen(true), 500);
 			return () => clearTimeout(timer);
 		}
-	}, [isMobile, lesson.id]); // Only run when lesson changes or on mount
+	}, [isMobile, module?.id, state.currentLessonIndex]); // Only run when module changes or on mount
 
-	const currentStep = lesson.steps[state.currentStepIndex];
-	const isCurrentStepCompleted = state.completedStepIndices.has(state.currentStepIndex);
-	const isLastStep = state.currentStepIndex === lesson.steps.length - 1;
-	const nextActionLabel = isLastStep ? labels.nextLesson : labels.next;
-	const handleNextAction = isLastStep
-		? actions.onNextLesson
-		: () => actions.onStepChange(state.currentStepIndex + 1);
+	const currentLesson = module?.lessons[state.currentLessonIndex ?? 0];
+	const isCurrentLessonCompleted = module ? (state.completedLessonIndices?.has(state.currentLessonIndex ?? 0) ?? false) : undefined;
+	const isLastLesson = module ? (state.currentLessonIndex === module.lessons.length - 1) : undefined;
+	const nextActionLabel = isLastLesson ? labels.nextModule : labels.next;
+	let handleNextAction: (() => void) | undefined = undefined;
+	if (module) {
+		handleNextAction = isLastLesson
+			? actions.onNextModule
+			: (actions.onLessonChange ? () => actions.onLessonChange!((state.currentLessonIndex ?? 0) + 1) : undefined);
+	}
 
 	const handleRun = () => {
 		actions.onRun();
@@ -97,8 +104,8 @@ export function Playground(props: PlaygroundProps) {
 
 	const contextValue: PlaygroundContextValue = {
 		...props,
-		isCurrentStepCompleted,
-		isLastStep,
+		isCurrentLessonCompleted,
+		isLastLesson,
 		handleNextAction,
 		nextActionLabel,
 		panels: {
@@ -113,7 +120,7 @@ export function Playground(props: PlaygroundProps) {
 		return (
 			<PlaygroundProvider value={contextValue}>
 				<div className="flex max-h-full flex-1 flex-col overflow-hidden bg-background relative">
-					<Drawer open={lessonDrawerOpen} onOpenChange={setLessonDrawerOpen}>
+					<Drawer open={moduleDrawerOpen} onOpenChange={setModuleDrawerOpen}>
 						<DrawerTrigger asChild>
 							<button className="flex w-full shrink-0 items-center justify-between border-b border-border bg-muted/5 px-4 py-3 text-left hover:bg-muted/10 transition-colors shadow-sm z-10">
 								<div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
@@ -121,9 +128,9 @@ export function Playground(props: PlaygroundProps) {
 										<BookOpen className="h-4.5 w-4.5 text-primary shrink-0" />
 									</div>
 									<div className="flex flex-col min-w-0">
-										<span className="text-[9px] font-black uppercase tracking-widest text-primary/70">{labels.step} {state.currentStepIndex + 1}</span>
+										<span className="text-[9px] font-black uppercase tracking-widest text-primary/70">{labels.lesson} {(state.currentLessonIndex ?? 0) + 1}</span>
 										<h1 className="truncate text-sm font-bold text-foreground tracking-tight">
-											{currentStep.title[lang] || currentStep.title.sw}
+											{currentLesson?.title[lang] || currentLesson?.title.sw}
 										</h1>
 									</div>
 								</div>
@@ -132,7 +139,7 @@ export function Playground(props: PlaygroundProps) {
 										<span>View</span>
 										<ChevronDown className="h-3 w-3" />
 									</div>
-									{isCurrentStepCompleted ? (
+									{isCurrentLessonCompleted ? (
 										<CheckCircle2 className="h-5 w-5 text-green-500" />
 									) : (
 										<div className="h-2 w-2 rounded-full bg-muted-foreground/40" />
@@ -142,10 +149,10 @@ export function Playground(props: PlaygroundProps) {
 						</DrawerTrigger>
 						<DrawerContent className="max-h-[85vh]">
 							<DrawerTitle className="sr-only">
-								{currentStep.title[lang] || currentStep.title.sw}
+								{currentLesson?.title[lang] || currentLesson?.title.sw}
 							</DrawerTitle>
 							<DrawerDescription className="sr-only">
-								Lesson instructions for {currentStep.title[lang] || currentStep.title.sw}
+								Lesson instructions for {currentLesson?.title[lang] || currentLesson?.title.sw}
 							</DrawerDescription>
 							<div className="overflow-y-auto px-4 pb-8 pt-2 h-full">
 								<LessonPanel
@@ -189,7 +196,7 @@ export function Playground(props: PlaygroundProps) {
 		<PlaygroundProvider value={contextValue}>
 			<div className="h-screen bg-background relative">
 				<ResizablePanelGroup direction="horizontal" className="h-full">
-					{activeMaximizedPanel !== "renderer" && (
+					{module && activeMaximizedPanel !== "renderer" && (
 						<>
 							<ResizablePanel 
 								ref={lessonPanelRef}
@@ -206,7 +213,7 @@ export function Playground(props: PlaygroundProps) {
 							<ResizableHandle withHandle />
 						</>
 					)}
-					<ResizablePanel defaultSize={50} minSize={25}>
+					<ResizablePanel defaultSize={module ? 50 : 100} minSize={25}>
 						<CodePanel />
 					</ResizablePanel>
 				</ResizablePanelGroup>
