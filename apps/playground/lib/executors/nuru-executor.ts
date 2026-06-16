@@ -11,6 +11,10 @@ export class NuruExecutor implements IExecutor {
 		this.nuruInstance = nuruInstance;
 	}
 
+	setInstance(nuruInstance: any) {
+		this.nuruInstance = nuruInstance;
+	}
+
 	isExecuting() {
 		return this._isExecuting;
 	}
