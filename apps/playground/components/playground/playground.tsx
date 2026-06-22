@@ -18,7 +18,10 @@ import { DrawerContent } from "@nuru/ui/components/drawer";
 import { DrawerTrigger } from "@nuru/ui/components/drawer";
 import { DrawerTitle } from "@nuru/ui/components/drawer";
 import { DrawerDescription } from "@nuru/ui/components/drawer";
-import { PlaygroundProvider, PlaygroundContextValue } from "./playground-context";
+import {
+	PlaygroundProvider,
+	PlaygroundContextValue,
+} from "./playground-context";
 
 export function Playground(props: PlaygroundProps) {
 	const {
@@ -32,12 +35,14 @@ export function Playground(props: PlaygroundProps) {
 	} = props;
 	const isMobile = useIsMobile();
 	const [moduleDrawerOpen, setModuleDrawerOpen] = useState(false);
-	
+
 	const lessonPanelRef = useRef<ImperativePanelHandle>(null);
 	const codePanelRef = useRef<ImperativePanelHandle>(null);
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
-	const [activeMaximizedPanel, setActiveMaximizedPanel] = useState<string | null>(null);
+	const [activeMaximizedPanel, setActiveMaximizedPanel] = useState<
+		string | null
+	>(null);
 
 	// Automatically handle panel states from module config
 	useEffect(() => {
@@ -62,14 +67,21 @@ export function Playground(props: PlaygroundProps) {
 	}, [isMobile, module?.id, state.currentLessonIndex]); // Only run when module changes or on mount
 
 	const currentLesson = module?.lessons[state.currentLessonIndex ?? 0];
-	const isCurrentLessonCompleted = module ? (state.completedLessonIndices?.has(state.currentLessonIndex ?? 0) ?? false) : undefined;
-	const isLastLesson = module ? (state.currentLessonIndex === module.lessons.length - 1) : undefined;
+	const isCurrentLessonCompleted = module
+		? (state.completedLessonIndices?.has(state.currentLessonIndex ?? 0) ??
+			false)
+		: undefined;
+	const isLastLesson = module
+		? state.currentLessonIndex === module.lessons.length - 1
+		: undefined;
 	const nextActionLabel = isLastLesson ? labels.nextModule : labels.next;
 	let handleNextAction: (() => void) | undefined = undefined;
 	if (module) {
 		handleNextAction = isLastLesson
 			? actions.onNextModule
-			: (actions.onLessonChange ? () => actions.onLessonChange!((state.currentLessonIndex ?? 0) + 1) : undefined);
+			: actions.onLessonChange
+				? () => actions.onLessonChange!((state.currentLessonIndex ?? 0) + 1)
+				: undefined;
 	}
 
 	const handleRun = () => {
@@ -119,30 +131,32 @@ export function Playground(props: PlaygroundProps) {
 	if (isMobile) {
 		return (
 			<PlaygroundProvider value={contextValue}>
-				<div className="flex max-h-full flex-1 flex-col overflow-hidden bg-background relative">
+				<div className="bg-background relative flex max-h-full flex-1 flex-col overflow-hidden">
 					<Drawer open={moduleDrawerOpen} onOpenChange={setModuleDrawerOpen}>
 						<DrawerTrigger asChild>
-							<button className="flex w-full shrink-0 items-center justify-between border-b border-border bg-muted/5 px-4 py-3 text-left hover:bg-muted/10 transition-colors shadow-sm z-10">
-								<div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
-									<div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 shadow-inner">
-										<BookOpen className="h-4.5 w-4.5 text-primary shrink-0" />
+							<button className="border-border bg-muted/5 hover:bg-muted/10 z-10 flex w-full shrink-0 items-center justify-between border-b px-4 py-3 text-left shadow-sm transition-colors">
+								<div className="mr-4 flex min-w-0 flex-1 items-center gap-3">
+									<div className="bg-primary/10 flex h-9 w-9 items-center justify-center rounded-lg shadow-inner">
+										<BookOpen className="text-primary h-4.5 w-4.5 shrink-0" />
 									</div>
-									<div className="flex flex-col min-w-0">
-										<span className="text-[9px] font-black uppercase tracking-widest text-primary/70">{labels.lesson} {(state.currentLessonIndex ?? 0) + 1}</span>
-										<h1 className="truncate text-sm font-bold text-foreground tracking-tight">
+									<div className="flex min-w-0 flex-col">
+										<span className="text-primary/70 text-[9px] font-black tracking-widest uppercase">
+											{labels.lesson} {(state.currentLessonIndex ?? 0) + 1}
+										</span>
+										<h1 className="text-foreground truncate text-sm font-bold tracking-tight">
 											{currentLesson?.title[lang] || currentLesson?.title.sw}
 										</h1>
 									</div>
 								</div>
-								<div className="flex items-center gap-3 shrink-0">
-									<div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-95 transition-transform">
-										<span>View</span>
+								<div className="flex shrink-0 items-center gap-3">
+									<div className="bg-primary text-primary-foreground flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[10px] font-black tracking-wider uppercase shadow-sm transition-transform active:scale-95">
+										<span>Lesson</span>
 										<ChevronDown className="h-3 w-3" />
 									</div>
 									{isCurrentLessonCompleted ? (
 										<CheckCircle2 className="h-5 w-5 text-green-500" />
 									) : (
-										<div className="h-2 w-2 rounded-full bg-muted-foreground/40" />
+										<div className="bg-muted-foreground/40 h-2 w-2 rounded-full" />
 									)}
 								</div>
 							</button>
@@ -152,24 +166,19 @@ export function Playground(props: PlaygroundProps) {
 								{currentLesson?.title[lang] || currentLesson?.title.sw}
 							</DrawerTitle>
 							<DrawerDescription className="sr-only">
-								Lesson instructions for {currentLesson?.title[lang] || currentLesson?.title.sw}
+								Lesson instructions for{" "}
+								{currentLesson?.title[lang] || currentLesson?.title.sw}
 							</DrawerDescription>
-							<div className="overflow-y-auto px-4 pb-8 pt-2 h-full">
-								<LessonPanel
-									collapsible={false}
-									expanded={true}
-								/>
+							<div className="h-full overflow-y-auto px-4 pt-2 pb-8">
+								<LessonPanel collapsible={false} expanded={true} />
 							</div>
 						</DrawerContent>
 					</Drawer>
 
-					<div className="flex-1 overflow-hidden relative">
+					<div className="relative flex-1 overflow-hidden">
 						<ResizablePanelGroup direction="vertical">
 							<ResizablePanel defaultSize={80} minSize={20}>
-								<CodePanel
-									onRun={handleRun}
-									isMobile
-								/>
+								<CodePanel onRun={handleRun} isMobile />
 							</ResizablePanel>
 							<ResizableHandle withHandle />
 							<ResizablePanel
@@ -179,7 +188,7 @@ export function Playground(props: PlaygroundProps) {
 								collapsible
 								collapsedSize={0}
 							>
-								<div className="flex h-full flex-col bg-background">
+								<div className="bg-background flex h-full flex-col">
 									<div className="flex-1 overflow-hidden">
 										<OutputPanel showToolbar={false} />
 									</div>
@@ -194,13 +203,13 @@ export function Playground(props: PlaygroundProps) {
 
 	return (
 		<PlaygroundProvider value={contextValue}>
-			<div className="h-screen bg-background relative">
+			<div className="bg-background relative h-screen">
 				<ResizablePanelGroup direction="horizontal" className="h-full">
 					{module && activeMaximizedPanel !== "renderer" && (
 						<>
-							<ResizablePanel 
+							<ResizablePanel
 								ref={lessonPanelRef}
-								defaultSize={50} 
+								defaultSize={50}
 								minSize={20}
 								collapsible
 								collapsedSize={0}
