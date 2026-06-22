@@ -4,7 +4,7 @@ A high-performance WebAssembly (Wasm) interpreter for [Nuru](https://github.com/
 
 ## Overview
 
-This project compiles the core Go-based Nuru interpreter into WebAssembly, allowing it to interface with JavaScript. It bridges the gap between Nuru's backend logic and frontend applications, providing a seamless execution environment on the web.
+This project compiles the core Go-based Nuru interpreter into WebAssembly, allowing it to interface with JavaScript. It bridges the gap between Nuru's backend logic and frontend applications, providing a  execution environment on the web.
 
 ## Features
 
@@ -34,49 +34,35 @@ npm install -g pnpm
    cd packages/wasm
    ```
 
-2. **Install Go dependencies:**
+2. **Initialize Submodules:**
+   The core Nuru codebase is included as a git submodule in `core/Nuru`. Make sure it is initialized and up to date:
    ```bash
-   go mod tidy
-   ```
-
-3. **Vendor the dependencies:**
-   We use vendoring to allow us to inject modified core files.
-  ```bash
-  pnpm run setup
-  ```
-
-4. **Apply Custom Modifications:**
-   Copy the browser-optimized `builtins.go` into the vendored Nuru evaluator package.
-
-   **macOS / Linux:**
-   ```bash
-   pnpm run replace
-   ```
-
-   **Windows:**
-   ```powershell
-   copy -r ./modified/* ./vendor/github.com/NuruProgramming/Nuru/
+   npm run update-core
    ```
 
 ## Building the WASM Binary
 
-To compile the Go code into a `.wasm` binary:
+We build the WebAssembly binary using [TinyGo](https://tinygo.org/) for optimized production builds and standard Go for development.
+
+To compile the core code into a `.wasm` binary using TinyGo (as configured in our package script):
 
 ```bash
-GOOS=js GOARCH=wasm go build -mod=vendor -o main.wasm
+cd core/Nuru && GOOS=js GOARCH=wasm tinygo build -o ../../main.wasm
 ```
 
-This generates a `main.wasm` file.
+Alternatively, run the build script from the package directory:
 
-> **Note:** The `-mod=vendor` flag is essential to ensure the build uses our modified `builtins.go`.
+```bash
+npm run build:wasm
+```
 
 ## Usage
 
-This package exports a TypeScript wrapper that handles the WASM initialization and execution.
+This package provides a TypeScript wrapper to initialize and run the Nuru interpreter WebAssembly binary in a browser environment.
 
 ### Installation
 
-Since this is a workspace package, add it to your `package.json` in the monorepo:
+Add the package to your `package.json` dependencies:
 
 ```json
 {
@@ -86,45 +72,103 @@ Since this is a workspace package, add it to your `package.json` in the monorepo
 }
 ```
 
-### API
+### JavaScript API
 
 #### `init(config)`
 
-Initializes the Nuru interpreter.
+Initializes the Nuru interpreter and returns a promise that resolves to a `NuruInstance`.
 
-- **Arguments**:
-  - `config` (object): Configuration object.
-    - `outputReceiver` (function): Callback for handling output. `(text: string, isError: boolean) => void`.
-    - `xssProtection` (boolean, optional): Whether to sanitize output. Default `true`.
-    - `version` (string, optional): Version of the WASM binary to load. Default `"latest"`.
+- **Parameters**:
+  - `config` (`InterpreterConfig`):
+    - `outputReceiver` (`(text: string, isError: boolean) => void`): Required callback for handling interpreter prints and errors.
+    - `xssProtection` (`boolean`, optional): Sanitizes the output before sending it to `outputReceiver`. Default is `true`.
+    - `version` (`string`, optional): The version of the WASM binary to load from the CDN. Default is `"latest"`.
+    - `wasmURL` (`string`, optional): A custom URL to load the WASM binary from (e.g. for self-hosting).
 
 - **Returns**: `Promise<NuruInstance>`
 
 #### `NuruInstance`
 
-The object returned by `init`.
+- `initialized`: `boolean` indicating if the WASM binary is loaded and initialized.
+- `execute(code: string, stdinBuffer?: string[])`: Executes the provided Nuru code.
+  - `code` (`string`): The Nuru source code to run.
+  - `stdinBuffer` (`string[]`, optional): An array of strings containing preloaded inputs. Each call to Nuru's `jaza()` built-in will shift an item from this array. If empty or undefined, `jaza()` falls back to the browser's native `prompt()` dialog.
 
-- `execute(code: string)`: Executes Nuru code.
-- `initialized`: Boolean indicating if WASM is ready.
-
-### Example
+#### JavaScript Example
 
 ```javascript
 import init from '@nuru/wasm';
 
 // 1. Initialize the interpreter
 const nuru = await init({
-    outputReceiver: (text, isError) => {
-        if (isError) {
-            console.error("Nuru Error:", text);
-        } else {
-            console.log("Nuru Output:", text);
-        }
+  outputReceiver: (text, isError) => {
+    if (isError) {
+      console.error("Nuru Error:", text);
+    } else {
+      console.log("Nuru Output:", text);
     }
+  }
 });
 
-// 2. Execute code
-nuru.execute('andika("Hujambo Dunia!")'); 
+// 2. Execute code with predefined inputs
+const code = `
+mambo = jaza("Mambo vipi?")
+andika("Umesema:", mambo)
+`;
+
+nuru.execute(code, ["Safi sana!"]);
+```
+
+### React Integration
+
+The package exports a React hook `useNuru` to simplify state and lifecycle management.
+
+#### Import Path
+
+```typescript
+import { useNuru } from "@nuru/wasm/react";
+```
+
+#### `useNuru(outputReceiver, interpreterConfig?)`
+
+- **Parameters**:
+  - `outputReceiver` (`(text: string, isError: boolean) => void`): Callback for output and errors.
+  - `interpreterConfig` (`Omit<InterpreterConfig, "outputReceiver">`, optional): Config options to pass to the underlying `init` call.
+
+- **Returns**: `NuruInstance` (either the active instance, or a stub instance if still initializing).
+
+#### React Example
+
+```tsx
+import React, { useState } from "react";
+import { useNuru } from "@nuru/wasm/react";
+
+export function NuruPlayground() {
+  const [code, setCode] = useState('andika("Mambo!")');
+  const [output, setOutput] = useState<string[]>([]);
+
+  const nuru = useNuru((text, isError) => {
+    setOutput((prev) => [...prev, `${isError ? "Error: " : ""}${text}`]);
+  });
+
+  const handleRun = () => {
+    if (nuru.initialized) {
+      nuru.execute(code);
+    }
+  };
+
+  return (
+    <div>
+      <textarea value={code} onChange={(e) => setCode(e.target.value)} />
+      <button onClick={handleRun} disabled={!nuru.initialized}>
+        {nuru.initialized ? "Run Code" : "Loading Interpreter..."}
+      </button>
+      <pre>
+        {output.join("\n")}
+      </pre>
+    </div>
+  );
+}
 ```
 
 ## Scripts
@@ -143,13 +187,8 @@ This project is part of a monorepo managed by **Turborepo**. You should run scri
   turbo run build --filter=@nuru/wasm
   ```
 
-- **Vendor Replacements**:
-  ```bash
-  turbo run replace --filter=@nuru/wasm
-  ```
-
-> Note: The underlying npm scripts (e.g. running `npm run build:wasm` from this package directory) will also work, but they bypass Turborepo's caching and cross-package orchestration. For consistent monorepo workflows, prefer running these commands via `turbo` from the repository root.
+> Note: The underlying npm scripts (e.g. running `npm run build:wasm` from this package directory) will also work, but they bypass Turborepo's caching. For consistent monorepo workflows, prefer running these commands via `turbo` from the repository root.
 
 ## Contributing
 
-Contributions are welcome! Please ensure you run `go mod vendor` and re-apply the `modified/builtins.go` patch if you update dependencies.
+Contributions are welcome! If you make modifications to the core interpreter, make sure to test changes across both dev (`go`) and production (`tinygo`) compilation paths before submitting a pull request.
