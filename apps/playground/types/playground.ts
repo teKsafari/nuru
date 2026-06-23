@@ -11,6 +11,9 @@ export interface Lesson {
 	initialCode: string;
 	solution?: string;
 	task?: Record<Language, string>;
+	hint?: Record<Language, string>;
+	commonMistakes?: Record<Language, string[]>;
+	requirements?: Record<Language, string[]>;
 	tests?: TestCase[];
 }
 

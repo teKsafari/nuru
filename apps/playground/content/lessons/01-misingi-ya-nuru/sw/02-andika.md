@@ -1,6 +1,6 @@
 ---
 title: "2. Kutoa Matokeo (andika)"
-task: "Tumia `andika()` kuchapisha jina lako na mji unaoishi katika mistari miwili tofauti ukitumia `/n`."
+task: "Tumia `andika()` kuchapisha jina lako na mji unaoishi katika mistari miwili tofauti ukitumia `\n`."
 initialCode: |
   andika()
 tests:
@@ -22,6 +22,6 @@ Kitendakazi cha `andika()` kinatumika kutoa taarifa au matokeo kwenye skrini. Ni
 
 ### Mfano:
 ```nuru
-andika(+++"Jina langu ni Amani /n Naishi Dar es Salaam"+++)
+andika(+++"Jina langu ni Amani \n Naishi Dar es Salaam"+++)
 ```
 
