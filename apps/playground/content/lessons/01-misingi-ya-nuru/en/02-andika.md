@@ -1,6 +1,6 @@
 ---
 title: "2. Outputting Results (andika)"
-task: "Use `andika()` to print your name and the city you live in on two different lines using `/n`."
+task: "Use `andika()` to print your name and the city you live in on two different lines using `\n`."
 initialCode: |
   andika()
 tests:
@@ -22,6 +22,6 @@ The `andika()` function is used to display information or results on the screen.
 
 ### Example:
 ```nuru
-andika(+++"Jina langu ni Amani /n Naishi Dar es Salaam"+++)
+andika(+++"Jina langu ni Amani \n Naishi Dar es Salaam"+++)
 ```
 
