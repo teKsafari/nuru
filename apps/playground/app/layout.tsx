@@ -13,8 +13,20 @@ export const viewport: Viewport = {
 
 import "./globals.css";
 
-import { JetBrains_Mono, Noto_Rashi_Hebrew } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, JetBrains_Mono, Noto_Rashi_Hebrew } from "next/font/google";
 
+const inter = Inter({
+	subsets: ["latin"],
+	display: "swap",
+	weight: ["400", "500", "600", "700"],
+	variable: "--font-inter",
+});
+const jakarta = Plus_Jakarta_Sans({
+	subsets: ["latin"],
+	display: "swap",
+	weight: ["500", "600", "700", "800"],
+	variable: "--font-jakarta",
+});
 const jetbrainsMono = JetBrains_Mono({
 	subsets: ["latin"],
 	display: "swap",
@@ -47,7 +59,7 @@ export default function RootLayout({
 		<html
 			lang="en"
 			suppressHydrationWarning
-			className={cn(jetbrainsMono.variable, NotoRashi.variable)}
+			className={cn(inter.variable, jakarta.variable, jetbrainsMono.variable, NotoRashi.variable)}
 		>
 			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -61,7 +73,8 @@ export default function RootLayout({
 				<meta name="theme-color" content="#00b4d8" />
 				<link rel="manifest" href="/manifest.json" />
 			</head>
-			<body className={"flex h-dvh flex-col"}>
+			<body className={"flex h-dvh flex-col font-sans antialiased"}>
+
 				<Suspense>
 					<CustomThemeProvider>{children}</CustomThemeProvider>
 				</Suspense>
