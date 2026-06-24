@@ -11,6 +11,9 @@ export interface Lesson {
 	initialCode: string;
 	solution?: string;
 	task?: Record<Language, string>;
+	hint?: Record<Language, string>;
+	commonMistakes?: Record<Language, string[]>;
+	requirements?: Record<Language, string[]>;
 	tests?: TestCase[];
 }
 
@@ -62,6 +65,7 @@ export interface TestResult {
 
 export interface PlaygroundProps {
 	module?: Module;
+	allModules?: Module[];
 	state: {
 		currentLessonIndex?: number;
 		code: string;
@@ -71,6 +75,7 @@ export interface PlaygroundProps {
 		testResults?: Record<string, TestResult>;
 		isTesting?: boolean;
 	};
+
 	actions: {
 		onLessonChange?: (index: number) => void;
 		onCodeChange: (code: string) => void;
