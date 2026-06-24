@@ -346,100 +346,94 @@ export function LessonPanel({
 		);
 	}
 
-	// Mobile: collapsible panel inside a resizable pane
+	// Mobile: white lesson sheet with collapsible content.
 	return (
-		<div className={cn("font-mono","bg-card flex h-full flex-col overflow-hidden")}>
-			<div
-				role="button"
-				tabIndex={0}
-				onClick={onToggle}
-				onKeyDown={(e) => {
-					if (e.key === "Enter" || e.key === " ") {
-						onToggle?.();
-					}
-				}}
-				className="border-border bg-muted/30 hover:bg-muted/50 flex w-full shrink-0 cursor-pointer items-center justify-between border-b px-4 py-3 text-left transition-colors"
-			>
-				<div className="flex items-center gap-2.5 truncate">
-					<h1 className="text-foreground truncate text-sm font-bold tracking-tight">
+		<div className="flex h-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-white text-slate-900 shadow-sm">
+			<div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+				<div className="min-w-0 text-[12px] text-slate-500">
+					Step {currentLessonIndex + 1} of {module.lessons.length}
+					<span className="mx-2 text-slate-300">•</span>
+					{labels.lesson}
+					<div className="mt-1 truncate text-[15px] font-semibold text-slate-900">
 						{lesson.title[lang] || lesson.title.sw}
-					</h1>
+					</div>
 				</div>
-				<div className="flex shrink-0 items-center gap-3">
-					{isCompleted ? (
-						<CheckCircle2 className="h-4 w-4 text-green-500" />
-					) : (
-						<div className="bg-muted-foreground/40 h-1.5 w-1.5 animate-pulse rounded-full" />
-					)}
-					<ChevronDown
-						className={cn(
-							"text-muted-foreground h-4 w-4 shrink-0 transition-transform duration-300",
-							expanded && "rotate-180",
-						)}
-					/>
-				</div>
+				<button
+					type="button"
+					onClick={onToggle}
+					className="shrink-0 rounded-full p-1.5 text-slate-500 transition-transform hover:bg-slate-100 hover:text-slate-900"
+					aria-label={expanded ? "Collapse lesson" : "Expand lesson"}
+				>
+					<ChevronDown className={cn("h-5 w-5 transition-transform", expanded && "rotate-180")} />
+				</button>
 			</div>
+
 			{expanded && (
 				<ScrollArea className="flex-1 [&>div>div]:h-full">
-					<div className="flex min-h-full w-full min-w-0 flex-col px-4 pt-4 pb-6 text-sm">
+					<div className="flex min-h-full w-full min-w-0 flex-col px-4 pb-5 text-sm">
 						<div className="flex-1">
-							<div
-								key={currentLessonIndex}
-								className="animate-in fade-in slide-in-from-bottom-2 duration-300"
-							>
-								<div className="text-muted-foreground/90 mb-6 leading-relaxed">
+							<div key={currentLessonIndex} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+								<div className="mb-5">
+									<h1 className="text-[20px] font-semibold leading-tight text-slate-950">
+										{lesson.title[lang] || lesson.title.sw}
+									</h1>
+									<div className="mt-4 max-w-[180px]">
+										<div className="mb-2 text-[12px] text-slate-500">
+											Step {currentLessonIndex + 1} of {module.lessons.length}
+										</div>
+										<div className="h-2 overflow-hidden rounded-full bg-slate-100">
+											<div className="h-full rounded-full bg-blue-500" style={{ width: `${((currentLessonIndex + 1) / module.lessons.length) * 100}%` }} />
+										</div>
+									</div>
+								</div>
+
+								<div className="mb-5 text-[14px] leading-7 text-slate-700">
 									<Markdown
 										components={{
 											code(props) {
 												const { children, className, ...rest } = props;
 												const match = /language-(\w+)/.exec(className || "");
 												if (match) {
-													const { cleanedCode, highlights } = parseHighlights(
-														String(children).replace(/\n$/, ""),
-													);
+													const { cleanedCode, highlights } = parseHighlights(String(children).replace(/\n$/, ""));
 													return (
-														<div className="not-prose border-border bg-muted/30 my-4 overflow-hidden rounded-xl border">
-															<CodeEditor
-																code={cleanedCode}
-																highlights={highlights}
-																readOnly
-																extensions={extensions}
-															/>
+												<div className="not-prose my-5 overflow-hidden rounded-2xl border border-slate-800 bg-[#071225]">
+															<CodeEditor code={cleanedCode} highlights={highlights} readOnly extensions={extensions} />
 														</div>
 													);
 												}
 												return (
-													<code
-														className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[12px]"
-														{...rest}
-													>
+										<code className="rounded-md bg-blue-50 px-1.5 py-0.5 font-mono text-[0.9em] text-blue-700" {...rest}>
 														{children}
 													</code>
 												);
 											},
+											p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
 										}}
 									>
 										{lesson.description[lang] || lesson.description.sw}
 									</Markdown>
 								</div>
+
 								{lesson.task && (
-									<div className="mb-6 overflow-hidden rounded-xl border border-yellow-500/20 bg-yellow-500/3 shadow-xs">
-										<div className="flex items-center justify-between border-b border-yellow-500/10 bg-yellow-500/10 px-3 py-2">
-											<h4 className="flex items-center gap-1.5 text-[10px] font-black tracking-widest text-yellow-600 uppercase dark:text-yellow-500">
-												<Lightbulb className="h-3 w-3" />
-												{labels.yourTask}
-											</h4>
-										</div>
-										<div className="p-4">
-											<p className="text-foreground/90 text-[13px] leading-relaxed italic">
-												{lesson.task[lang] || lesson.task.sw}
-											</p>
+									<div className="mb-5 overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 shadow-sm">
+										<div className="flex items-start gap-3 px-4 py-4">
+											<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-500">
+												<Lightbulb className="h-5 w-5" />
+											</div>
+											<div className="min-w-0 flex-1">
+												<h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-600">
+													{labels.yourTask}
+												</h4>
+												<p className="text-[14px] leading-7 text-slate-700">
+													{lesson.task[lang] || lesson.task.sw}
+												</p>
+											</div>
 										</div>
 									</div>
 								)}
 
 								{testCasesSection}
-							</div>{" "}
+							</div>
 						</div>
 						{navigation}
 					</div>
