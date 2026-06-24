@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/playground/scroll-area";
 import { usePlayground } from "./playground-context";
 import { Button } from "@nuru/ui/components/button";
 
-export function CurriculumSidebar() {
+export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) {
 	const {
 		module,
 		allModules,
@@ -82,6 +82,133 @@ export function CurriculumSidebar() {
 		return n + (completedByModuleSafe[m.id]?.size ?? 0);
 	}, 0);
 	const pctAll = totalAll === 0 ? 0 : Math.round((doneAll / totalAll) * 100);
+
+	const setAllOpen = (value: boolean) => {
+		const next: Record<string, boolean> = {};
+		for (const m of modules) next[m.id] = value;
+		setOpen(next);
+	};
+
+	if (isMobile) {
+		return (
+			<aside className="flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-sm">
+				<div className="shrink-0 border-b border-slate-200 px-4 py-4">
+					<div className="mb-2 flex items-center justify-between text-[12px] text-slate-500">
+						<span>{pctAll}% complete</span>
+						<span className="font-medium">{doneAll}/{totalAll}</span>
+					</div>
+					<div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+						<div
+							className="h-full rounded-full bg-blue-600 transition-all duration-500"
+							style={{ width: `${pctAll}%` }}
+						/>
+					</div>
+					<div className="mt-4 flex items-center justify-between text-[13px] font-medium">
+						<button type="button" onClick={() => setAllOpen(true)} className="text-blue-600">
+							Expand all
+						</button>
+						<button type="button" onClick={() => setAllOpen(false)} className="text-slate-500">
+							Collapse all
+						</button>
+					</div>
+				</div>
+
+				<ScrollArea className="min-h-0 flex-1">
+					<div className="space-y-2 px-3 py-3">
+						{modules.map((m, mi) => {
+							const isCurrent = m.id === module.id;
+							const isOpen = open[m.id] ?? isCurrent;
+							const moduleDone = isCurrent
+								? currentCompleted ?? new Set<number>()
+								: completedByModuleSafe[m.id] ?? new Set<number>();
+							const moduleTotal = m.lessons.length;
+							const moduleDoneCount = moduleDone.size;
+							const prev = modules[mi - 1];
+							const prevDone = prev
+								? (prev.id === module.id
+									? (currentCompleted?.size ?? 0)
+									: (completedByModuleSafe[prev.id]?.size ?? 0))
+								: 0;
+							const isUnlocked =
+								mi === 0 ||
+								isCurrent ||
+								moduleDoneCount > 0 ||
+								(prev && prevDone === prev.lessons.length);
+
+							return (
+								<div key={m.id} className="overflow-hidden rounded-2xl bg-white">
+									<button
+										type="button"
+										onClick={() => setOpen((s) => ({ ...s, [m.id]: !isOpen }))}
+										className={cn(
+											"grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-2xl px-3 py-3 text-left",
+											isCurrent ? "bg-blue-50 text-blue-700" : "text-slate-900 hover:bg-slate-50",
+											!isUnlocked && "opacity-70",
+										)}
+									>
+										<span className="min-w-0">
+											<span className="block truncate text-[15px] font-semibold">
+												{m.slug || m.title[lang] || m.title.sw}
+											</span>
+											<span className="mt-1 block text-[12px] font-medium text-slate-500">
+												{moduleDoneCount}/{moduleTotal} · {moduleTotal ? Math.round((moduleDoneCount / moduleTotal) * 100) : 0}%
+											</span>
+										</span>
+										<span className="flex shrink-0 items-center gap-2">
+											{!isUnlocked && <Lock className="h-3.5 w-3.5 text-slate-400" />}
+											<ChevronDown className={cn("h-5 w-5 text-slate-400 transition-transform", !isOpen && "-rotate-90")} />
+										</span>
+									</button>
+
+									{isOpen && (
+										<ul className="space-y-1 px-1 py-1">
+											{m.lessons.map((lesson, i) => {
+												const isActive = isCurrent && i === currentLessonIndex;
+												const isDone = moduleDone.has(i);
+												return (
+													<li key={lesson.id}>
+														<button
+															disabled={!isUnlocked}
+															onClick={() => {
+																setViewMode("lesson");
+																if (isCurrent) {
+																	onLessonChange?.(i);
+																} else {
+																	router.push(`/${lang}/anza/${m.slug}/${lesson.slug}`);
+																}
+															}}
+															className={cn(
+																"grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl px-3 py-3 text-left text-[14px] transition-colors disabled:cursor-not-allowed",
+																isActive ? "bg-blue-50 text-blue-700" : "text-slate-700 hover:bg-slate-50",
+															)}
+														>
+															<span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold", isActive || isDone ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-500")}>
+																{isDone ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
+															</span>
+															<span className="min-w-0 truncate">{lesson.title[lang] || lesson.title.sw}</span>
+															<span className="shrink-0">
+																{isActive ? (
+																	<CircleDot className="h-5 w-5 text-blue-500" />
+																) : !isUnlocked ? (
+																	<Lock className="h-3.5 w-3.5 text-slate-300" />
+																) : (
+																	<span className="block h-4 w-4 rounded-full border border-slate-300" />
+																)}
+															</span>
+														</button>
+													</li>
+												);
+											})}
+										</ul>
+									)}
+								</div>
+							);
+						})}
+					</div>
+				</ScrollArea>
+			</aside>
+		);
+	}
 
 	return (
 		<aside className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">

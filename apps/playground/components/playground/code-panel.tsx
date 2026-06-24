@@ -1,6 +1,17 @@
 "use client";
 import React from "react";
-import { Play, RotateCcw, Maximize2, MoreVertical, AlignLeft, CircleDot, ArrowRight, Eye, HelpCircle } from "lucide-react";
+import {
+	Play,
+	RotateCcw,
+	Maximize2,
+	MoreVertical,
+	AlignLeft,
+	ArrowRight,
+	Eye,
+	HelpCircle,
+	BookOpen,
+	TerminalSquare,
+} from "lucide-react";
 import { CodeEditor } from "@nuru/ui/components/code-editor";
 import { OutputPanel } from "./output-panel";
 import { Button } from "@nuru/ui/components/button";
@@ -37,12 +48,13 @@ export function CodePanel({
 			onShowHint,
 			onReset,
 		},
-		theme,
 		labels,
 		extensions,
 		isCurrentLessonCompleted: isCompleted,
 		handleNextAction: onNextAction,
 		nextActionLabel,
+		viewMode,
+		setViewMode,
 	} = usePlayground();
 
 	const editorPanelRef = React.useRef<ImperativePanelHandle>(null);
@@ -67,15 +79,112 @@ export function CodePanel({
 	const onRun = onRunProp || onRunAction;
 	const isMaximized = activeMaximizedPanel === "editor";
 	const isDev = process.env.NODE_ENV === "development";
-
 	const fileExt = module?.executor === "python" ? "py" : "nr";
 
-	const editor = (
+	const mobileEditor = (
+		<div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-[#071225] shadow-[0_18px_46px_-30px_rgba(15,23,42,0.55)]">
+			<div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-700/70 px-4">
+				<div className="flex min-w-0 items-center gap-2.5">
+					<span className="truncate font-mono text-[14px] font-medium text-blue-400">
+						main.{fileExt}
+					</span>
+					<span className="block h-2.5 w-2.5 shrink-0 rounded-full bg-blue-500" />
+				</div>
+				<div className="flex items-center gap-1.5">
+					<button
+						onClick={() =>
+							isMaximized ? restorePanels() : maximizePanel("editor")
+						}
+						aria-label="Maximize editor"
+						className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+					>
+						<Maximize2 className="h-4 w-4" />
+					</button>
+					<button
+						aria-label="More"
+						className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+					>
+						<MoreVertical className="h-4 w-4" />
+					</button>
+				</div>
+			</div>
+
+			<div className="relative min-h-0 flex-1">
+				<CodeEditor
+					code={code}
+					onChange={onCodeChange}
+					theme="dark"
+					extensions={extensions}
+					className="[&_.cm-content]:text-[13px] [&_.cm-gutters]:text-[12px]"
+				/>
+			</div>
+
+			<div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-700/70 px-3 py-3">
+				<div className="grid grid-cols-3 gap-1.5">
+					<button
+						type="button"
+						onClick={() => setViewMode("lesson")}
+						className={cn(
+							"flex h-12 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[10.5px] font-medium transition-colors",
+							viewMode === "lesson"
+								? "bg-slate-800/90 text-blue-400"
+								: "text-slate-300 hover:bg-slate-800/70",
+						)}
+					>
+						<BookOpen className="h-4 w-4" />
+						<span>Lesson</span>
+					</button>
+					<button
+						type="button"
+						onClick={() => setViewMode("output")}
+						className={cn(
+							"flex h-12 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[10.5px] font-medium transition-colors",
+							viewMode === "output"
+								? "bg-slate-800/90 text-blue-400"
+								: "text-slate-300 hover:bg-slate-800/70",
+						)}
+					>
+						<TerminalSquare className="h-4 w-4" />
+						<span>Output</span>
+					</button>
+					<button
+						type="button"
+						onClick={onReset}
+						className="flex h-12 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[10.5px] font-medium text-slate-300 transition-colors hover:bg-slate-800/70"
+					>
+						<RotateCcw className="h-4 w-4" />
+						<span>{labels.reset}</span>
+					</button>
+				</div>
+
+				<div className="flex items-center gap-2">
+					{onShowHint && (
+						<button
+							onClick={onShowHint}
+							aria-label={labels.hint}
+							className="hidden h-12 rounded-2xl border border-slate-600/80 px-4 text-[12px] font-medium text-blue-300 shadow-sm hover:bg-slate-800/70 sm:inline-flex sm:items-center sm:gap-2"
+						>
+							<HelpCircle className="h-4 w-4" />
+							<span>{labels.hint}</span>
+						</button>
+					)}
+					<Button
+						onClick={onRun}
+						className="h-12 min-w-[104px] rounded-2xl bg-blue-500 px-4 text-[14px] font-semibold text-white shadow-[0_14px_34px_-18px_rgba(59,130,246,0.9)] hover:bg-blue-600"
+					>
+						<Play className="mr-2 h-5 w-5 fill-current" />
+						<span>{labels.run}</span>
+					</Button>
+				</div>
+			</div>
+		</div>
+	);
+
+	const desktopEditor = (
 		<div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#0b1220] shadow-sm">
-			{/* File tab header */}
 			<div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-800/80 bg-[#0b1220] pl-4 pr-2">
 				<div className="flex items-center gap-2">
-					<div className="flex items-center gap-2 border-b-2 border-blue-500 px-1 pb-[10px] pt-[10px] -mb-px">
+					<div className="-mb-px flex items-center gap-2 border-b-2 border-blue-500 px-1 pb-[10px] pt-[10px]">
 						<span className="text-[12.5px] font-medium text-slate-200">
 							main.{fileExt}
 						</span>
@@ -101,7 +210,6 @@ export function CodePanel({
 				</div>
 			</div>
 
-			{/* Editor */}
 			<div className="relative min-h-0 flex-1">
 				<CodeEditor
 					code={code}
@@ -111,14 +219,11 @@ export function CodePanel({
 				/>
 			</div>
 
-			{/* Action bar */}
 			<div className="flex h-12 shrink-0 items-center justify-between border-t border-slate-800/80 bg-[#0b1220] px-3">
 				<div className="flex items-center gap-1">
 					<button
 						type="button"
 						onClick={() => {
-							// Basic format: convert tabs to 2 spaces, strip trailing whitespace,
-							// collapse 3+ blank lines, ensure trailing newline.
 							const formatted = code
 								.replace(/\t/g, "  ")
 								.split("\n")
@@ -189,21 +294,14 @@ export function CodePanel({
 		</div>
 	);
 
-	// Editor-only: parent renders OutputPanel separately
 	if (editorOnly) {
-		return <div className="h-full w-full">{editor}</div>;
+		return <div className="h-full w-full">{desktopEditor}</div>;
 	}
 
-	// Mobile
 	if (isMobile) {
-		return (
-			<div className="relative flex h-full flex-col overflow-hidden bg-slate-50 text-sm">
-				<div className="min-h-0 flex-1 p-2">{editor}</div>
-			</div>
-		);
+		return <div className="h-full w-full">{mobileEditor}</div>;
 	}
 
-	// Fallback desktop: stacked editor + output (used when no module / no sidebar)
 	return (
 		<div className="flex h-full flex-col bg-slate-50">
 			<ResizablePanelGroup direction="vertical" className="flex-1">
@@ -216,7 +314,7 @@ export function CodePanel({
 							collapsible
 							collapsedSize={0}
 						>
-							<div className="h-full p-3 pb-2">{editor}</div>
+							<div className="h-full p-3 pb-2">{desktopEditor}</div>
 						</ResizablePanel>
 						<ResizableHandle />
 					</>

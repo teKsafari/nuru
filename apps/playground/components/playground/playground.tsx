@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import type { ImperativePanelHandle } from "react-resizable-panels";
+import { useState, useEffect } from "react";
 import { LessonPanel } from "./lesson-panel";
 import { LessonContentPanel } from "./lesson-content-panel";
 import { CurriculumSidebar } from "./curriculum-sidebar";
@@ -15,12 +14,18 @@ import {
 } from "@/components/playground/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps } from "@/types/playground";
-import { CheckCircle2, BookOpen, ChevronDown } from "lucide-react";
-import { Drawer } from "@nuru/ui/components/drawer";
-import { DrawerContent } from "@nuru/ui/components/drawer";
-import { DrawerTrigger } from "@nuru/ui/components/drawer";
-import { DrawerTitle } from "@nuru/ui/components/drawer";
-import { DrawerDescription } from "@nuru/ui/components/drawer";
+import { AppLogo } from "@nuru/ui/components/app-logo";
+import {
+	BarChart3,
+	BookOpen,
+	ChevronLeft,
+	Code2,
+	ListTree,
+	Map,
+	TerminalSquare,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { cn } from "@nuru/ui/lib/utils";
 import {
 	PlaygroundProvider,
 	PlaygroundContextValue,
@@ -30,6 +35,7 @@ import {
 
 export function Playground(props: PlaygroundProps) {
 	const { module, state, actions, labels, lang } = props;
+	const router = useRouter();
 	const isMobileRaw = useIsMobile();
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => {
@@ -39,14 +45,12 @@ export function Playground(props: PlaygroundProps) {
 	// the server HTML and the first client render match. Switch to the mobile
 	// tree only AFTER hydration.
 	const isMobile = mounted && isMobileRaw;
-	const [moduleDrawerOpen, setModuleDrawerOpen] = useState(false);
-
-	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
 
 	const [activeMaximizedPanel, setActiveMaximizedPanel] = useState<
 		string | null
 	>(null);
 	const [viewMode, setViewMode] = useState<PlaygroundViewMode>("lesson");
+	const [lessonExpanded, setLessonExpanded] = useState(true);
 
 	// Return to lesson view whenever the lesson changes (e.g. user clicked a node).
 	useEffect(() => {
@@ -64,17 +68,9 @@ export function Playground(props: PlaygroundProps) {
 		}
 	}, [isMobile, module?.id, module?.panels]);
 
-	useEffect(() => {
-		if (isMobile && module && state.currentLessonIndex === 0) {
-			const timer = setTimeout(() => setModuleDrawerOpen(true), 500);
-			return () => clearTimeout(timer);
-		}
-	}, [isMobile, module?.id, state.currentLessonIndex]);
-
 	const currentLesson = module?.lessons[state.currentLessonIndex ?? 0];
 	const isCurrentLessonCompleted = module
-		? (state.completedLessonIndices?.has(state.currentLessonIndex ?? 0) ??
-			false)
+		? (state.completedLessonIndices?.has(state.currentLessonIndex ?? 0) ?? false)
 		: undefined;
 	const isLastLesson = module
 		? state.currentLessonIndex === module.lessons.length - 1
@@ -92,8 +88,7 @@ export function Playground(props: PlaygroundProps) {
 	const handleRun = () => {
 		actions.onRun();
 		if (isMobile) {
-			bottomPanelRef.current?.expand();
-			bottomPanelRef.current?.resize(20);
+			setViewMode("output");
 		}
 	};
 
@@ -118,70 +113,108 @@ export function Playground(props: PlaygroundProps) {
 
 	};
 
-	// ---------- Mobile (unchanged behavior, light surfaces) ----------
+	// ---------- Mobile: mockup-driven shell; desktop untouched ----------
 	if (isMobile) {
+		const progressWidth = module
+			? `${(((state.currentLessonIndex ?? 0) + 1) / module.lessons.length) * 100}%`
+			: "0%";
+		const mobileTabs: Array<{
+			mode: PlaygroundViewMode;
+			label: string;
+			Icon: typeof BookOpen;
+		}> = [
+			{ mode: "lesson", label: "Lesson", Icon: BookOpen },
+			{ mode: "code", label: "Code", Icon: Code2 },
+			{ mode: "output", label: "Output", Icon: TerminalSquare },
+			{ mode: "lesson-map", label: "Map", Icon: Map },
+			{ mode: "progress", label: "Progress", Icon: BarChart3 },
+			{ mode: "curriculum", label: "Modules", Icon: ListTree },
+		];
+
 		return (
 			<PlaygroundProvider value={contextValue}>
-				<div className="relative flex max-h-full flex-1 flex-col overflow-hidden bg-slate-50">
-					{module && (
-						<Drawer open={moduleDrawerOpen} onOpenChange={setModuleDrawerOpen}>
-							<DrawerTrigger asChild>
-								<button className="z-10 flex w-full shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 py-3 text-left shadow-sm">
-									<div className="mr-4 flex min-w-0 flex-1 items-center gap-3">
-										<div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
-											<BookOpen className="h-4 w-4 text-blue-600" />
-										</div>
-										<div className="flex min-w-0 flex-col">
-											<span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-												{labels.lesson} {(state.currentLessonIndex ?? 0) + 1}
-											</span>
-											<h1 className="truncate text-sm font-semibold text-slate-900">
-												{currentLesson?.title[lang] || currentLesson?.title.sw}
-											</h1>
-										</div>
-									</div>
-									<div className="flex shrink-0 items-center gap-2">
-										{isCurrentLessonCompleted ? (
-											<CheckCircle2 className="h-5 w-5 text-emerald-500" />
-										) : (
-											<div className="h-2 w-2 rounded-full bg-slate-300" />
-										)}
-										<ChevronDown className="h-4 w-4 text-slate-400" />
-									</div>
+				<div className="relative flex h-full max-h-full flex-1 flex-col overflow-hidden bg-white">
+					<div className="shrink-0 border-b border-slate-200 bg-white px-4 pb-3 pt-4">
+						<div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
+							<div className="flex min-w-0 items-center gap-3">
+								<button
+									type="button"
+									onClick={() => router.push(`/${lang}/anza`)}
+									className="shrink-0 rounded-full p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+									aria-label="Back"
+								>
+									<ChevronLeft className="h-5 w-5" />
 								</button>
-							</DrawerTrigger>
-							<DrawerContent className="max-h-[85vh]">
-								<DrawerTitle className="sr-only">
-									{currentLesson?.title[lang] || currentLesson?.title.sw}
-								</DrawerTitle>
-								<DrawerDescription className="sr-only">
-									Lesson instructions
-								</DrawerDescription>
-								<div className="h-full overflow-y-auto px-4 pt-2 pb-8">
-									<LessonPanel collapsible={false} expanded={true} />
+								<AppLogo size={30} className="shrink-0" />
+								<div className="min-w-0">
+									<div className="truncate text-[17px] font-semibold text-slate-900">Nuru</div>
 								</div>
-							</DrawerContent>
-						</Drawer>
-					)}
-
-					<div className="relative flex-1 overflow-hidden">
-						<ResizablePanelGroup direction="vertical">
-							<ResizablePanel defaultSize={80} minSize={20}>
-								<CodePanel onRun={handleRun} isMobile />
-							</ResizablePanel>
-							<ResizableHandle withHandle />
-							<ResizablePanel
-								ref={bottomPanelRef}
-								defaultSize={20}
-								minSize={10}
-								collapsible
-								collapsedSize={0}
+							</div>
+							<button
+								type="button"
+								onClick={() => setViewMode(viewMode === "lesson" ? "code" : "lesson")}
+								className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 text-[13px] font-medium text-slate-700"
 							>
-								<div className="h-full bg-slate-50 p-2">
-									<OutputPanel showToolbar={false} />
+								{viewMode === "lesson" ? (
+									<Code2 className="h-4 w-4 text-slate-600" />
+								) : (
+									<BookOpen className="h-4 w-4 text-slate-600" />
+								)}
+								<span>{viewMode === "lesson" ? "Code" : "Lesson"}</span>
+							</button>
+						</div>
+
+						{module && (
+							<div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+								<div className="min-w-0">
+									<div className="mb-2 text-[12px] text-slate-500">
+										Step {(state.currentLessonIndex ?? 0) + 1} of {module.lessons.length}
+									</div>
+									<div className="h-2 overflow-hidden rounded-full bg-slate-200">
+										<div className="h-full rounded-full bg-blue-500" style={{ width: progressWidth }} />
+									</div>
 								</div>
-							</ResizablePanel>
-						</ResizablePanelGroup>
+								<div className="text-right text-[12px] text-slate-400">
+									{isCurrentLessonCompleted ? "Completed" : "In progress"}
+								</div>
+							</div>
+						)}
+
+						<div className="mt-3 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+							{mobileTabs.map(({ mode, label, Icon }) => (
+								<button
+									key={mode}
+									type="button"
+									onClick={() => setViewMode(mode)}
+									className={cn(
+										"inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[12px] font-semibold transition-colors",
+										viewMode === mode
+											? "border-blue-600 bg-blue-600 text-white"
+											: "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+									)}
+								>
+									<Icon className="h-3.5 w-3.5" />
+									<span>{label}</span>
+								</button>
+							))}
+						</div>
+					</div>
+
+					<div className="min-h-0 flex-1 overflow-hidden bg-white px-3 pb-3 pt-3">
+						<div className="h-full min-h-0 overflow-hidden">
+							{viewMode === "lesson" && (
+								<LessonPanel
+									collapsible
+									expanded={lessonExpanded}
+									onToggle={() => setLessonExpanded((value) => !value)}
+								/>
+							)}
+							{viewMode === "code" && <CodePanel onRun={handleRun} isMobile />}
+							{viewMode === "output" && <OutputPanel isMobile />}
+							{viewMode === "lesson-map" && <MergedView isMobile />}
+							{viewMode === "progress" && <MergedView isMobile />}
+							{viewMode === "curriculum" && <CurriculumSidebar isMobile />}
+						</div>
 					</div>
 				</div>
 			</PlaygroundProvider>
@@ -190,7 +223,7 @@ export function Playground(props: PlaygroundProps) {
 
 	// ---------- Desktop: 3-column shell matching the mockups ----------
 	const showSidebar = !!module;
-	const isMerged = showSidebar && viewMode !== "lesson";
+	const isMerged = showSidebar && (viewMode === "lesson-map" || viewMode === "progress");
 
 	return (
 		<PlaygroundProvider value={contextValue}>
