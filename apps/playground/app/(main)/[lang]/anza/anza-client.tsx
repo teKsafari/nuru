@@ -15,13 +15,15 @@ import { nuruLanguage } from "@nuru/ui/lib/nuru-syntax";
 
 interface AnzaClientProps {
 	module: Module;
+	allModules?: Module[];
 	lessonSlug: string;
 	nextModuleSlug?: string;
 	lang: Language;
 	dict: Dictionary;
 }
 
-export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: AnzaClientProps) {
+export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lang, dict }: AnzaClientProps) {
+
 	const { theme} = useTheme();
 	const router = useRouter();
 	const currentLessonIndex = useMemo(() => {
@@ -304,7 +306,9 @@ export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: A
 			<Playground
 				theme={(theme) as "light" | "dark"}
 				module={module}
+				allModules={allModules}
 				state={{
+
 					currentLessonIndex,
 					code,
 					output,

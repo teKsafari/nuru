@@ -3,11 +3,15 @@
 import { createContext, useContext, ReactNode } from "react";
 import { PlaygroundProps } from "@/types/playground";
 
+export type PlaygroundViewMode = "lesson" | "lesson-map" | "progress";
+
 export type PlaygroundContextValue = PlaygroundProps & {
 	isCurrentLessonCompleted?: boolean;
 	isLastLesson?: boolean;
 	handleNextAction?: () => void;
 	nextActionLabel?: string;
+	viewMode: PlaygroundViewMode;
+	setViewMode: (mode: PlaygroundViewMode) => void;
 	panels: {
 		maximizePanel: (panelId: string) => void;
 		restorePanels: () => void;
