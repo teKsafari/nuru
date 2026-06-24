@@ -33,6 +33,7 @@ import { ScrollArea } from "@/components/playground/scroll-area";
 import { usePlayground } from "./playground-context";
 import { AuthContext } from "@/components/providers/auth-provider";
 import type { Module } from "@/types/playground";
+import { cn } from "@nuru/ui/lib/utils";
 
 /* ------------ shared completion hook ------------ */
 
@@ -60,7 +61,7 @@ function useCompletedMap(modules: Module[] | undefined) {
 
 /* ------------ shell ------------ */
 
-export function MergedView() {
+export function MergedView({ isMobile = false }: { isMobile?: boolean }) {
 	const {
 		viewMode,
 		setViewMode,
@@ -74,7 +75,13 @@ export function MergedView() {
 	const crumbTail = viewMode === "lesson-map" ? "Curriculum Map" : "My Progress";
 
 	return (
-		<div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+		<div
+			className={cn(
+				"flex h-full w-full flex-col overflow-hidden bg-white",
+				isMobile ? "rounded-[20px] border border-slate-200 shadow-sm" : "rounded-2xl border border-slate-200 shadow-sm",
+			)}
+		>
+			{!isMobile && (
 			<div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-5 py-3">
 				<nav className="flex min-w-0 items-center gap-1.5 text-[12px] text-slate-500">
 					<button onClick={() => setViewMode("lesson")} className="hover:text-slate-900">
@@ -96,7 +103,8 @@ export function MergedView() {
 					Back to lesson
 				</Button>
 			</div>
-			<ScrollArea className="flex-1 bg-slate-50">
+			)}
+			<ScrollArea className={cn("flex-1", isMobile ? "bg-white" : "bg-slate-50")}>
 				{viewMode === "lesson-map" ? <LessonMapView /> : <ProgressView />}
 			</ScrollArea>
 		</div>
