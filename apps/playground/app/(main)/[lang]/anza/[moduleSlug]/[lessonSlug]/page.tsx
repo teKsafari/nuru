@@ -27,18 +27,17 @@ export default async function LessonPage({ params }: PageProps) {
 		return notFound();
 	}
 
-	let allModules: { id: string; slug: string; title: Record<Language, string> }[];
+	let allModules: { id: string; slug: string; title: Record<Language, string> }[] = [];
 	let allModulesFull: Module[] = [];
-	try {
-		[allModules, allModulesFull] = await Promise.all([
-			getAllModules(),
-			getAllModulesWithLessons(),
-		]);
-	} catch (error) {
-		console.error("Error loading all modules:", error);
-		allModules = [];
-		allModulesFull = [];
-	}
+	// Fetch independently so a failure in one does NOT empty the sidebar list.
+	await Promise.all([
+		getAllModules()
+			.then((r) => { allModules = r; })
+			.catch((e) => { console.error("getAllModules failed:", e); }),
+		getAllModulesWithLessons()
+			.then((r) => { allModulesFull = r; })
+			.catch((e) => { console.error("getAllModulesWithLessons failed:", e); }),
+	]);
 
 	const currentIndex = allModules.findIndex(l => l.slug === moduleSlug);
 	const nextModuleSlug = currentIndex >= 0 && currentIndex < allModules.length - 1

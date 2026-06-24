@@ -139,33 +139,23 @@ function LessonMapView() {
 
 	// Pad to 8 to match mockup track. Real modules first, then placeholders.
 	const modules: Array<{ id: string; slug: string; title: string; lessons: string[]; status: Status; real: boolean }> = [];
-	for (let i = 0; i < 8; i++) {
+	// Show ONLY real modules — must match the sidebar exactly. No padding placeholders.
+	for (let i = 0; i < realModules.length; i++) {
 		const source = realModules[i];
-		if (source) {
-			const done = completedMap[source.id] ?? new Set<number>();
-			const status: Status = done.size === source.lessons.length && source.lessons.length > 0
-				? "completed"
-				: done.size > 0 || i === 0
-					? (i === 0 ? "completed" : "in-progress")
-					: "locked";
-			modules.push({
-				id: source.id,
-				slug: source.slug,
-				title: source.title[lang] || source.title.sw,
-				lessons: source.lessons.map((l) => l.title[lang] || l.title.sw),
-				status,
-				real: true,
-			});
-		} else {
-			modules.push({
-				id: `placeholder-${i}`,
-				slug: "",
-				title: moduleTitlesFallback[i] || `Module ${i + 1}`,
-				lessons: ["Lesson one", "Lesson two", "Lesson three", "Lesson four"],
-				status: "locked",
-				real: false,
-			});
-		}
+		const done = completedMap[source.id] ?? new Set<number>();
+		const status: Status = done.size === source.lessons.length && source.lessons.length > 0
+			? "completed"
+			: done.size > 0 || i === 0
+				? (i === 0 ? "completed" : "in-progress")
+				: "locked";
+		modules.push({
+			id: source.id,
+			slug: source.slug,
+			title: source.title[lang] || source.title.sw,
+			lessons: source.lessons.map((l) => l.title[lang] || l.title.sw),
+			status,
+			real: true,
+		});
 	}
 
 	const totalLessons = realModules.reduce((n, m) => n + m.lessons.length, 0);
