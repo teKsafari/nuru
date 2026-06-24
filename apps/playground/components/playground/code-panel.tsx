@@ -68,7 +68,7 @@ export function CodePanel({
 	const isMaximized = activeMaximizedPanel === "editor";
 	const isDev = process.env.NODE_ENV === "development";
 
-	const fileExt = module?.executor === "python" ? "py" : "nuru";
+	const fileExt = module?.executor === "python" ? "py" : "nr";
 
 	const editor = (
 		<div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#0b1220] shadow-sm">

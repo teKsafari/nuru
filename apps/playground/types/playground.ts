@@ -65,6 +65,7 @@ export interface TestResult {
 
 export interface PlaygroundProps {
 	module?: Module;
+	allModules?: Module[];
 	state: {
 		currentLessonIndex?: number;
 		code: string;
@@ -74,6 +75,7 @@ export interface PlaygroundProps {
 		testResults?: Record<string, TestResult>;
 		isTesting?: boolean;
 	};
+
 	actions: {
 		onLessonChange?: (index: number) => void;
 		onCodeChange: (code: string) => void;

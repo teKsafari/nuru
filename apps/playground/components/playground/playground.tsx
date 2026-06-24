@@ -7,6 +7,7 @@ import { LessonContentPanel } from "./lesson-content-panel";
 import { CurriculumSidebar } from "./curriculum-sidebar";
 import { CodePanel } from "./code-panel";
 import { OutputPanel } from "./output-panel";
+import { MergedView } from "./merged-view";
 import {
 	ResizableHandle,
 	ResizablePanel,
@@ -23,11 +24,21 @@ import { DrawerDescription } from "@nuru/ui/components/drawer";
 import {
 	PlaygroundProvider,
 	PlaygroundContextValue,
+	PlaygroundViewMode,
 } from "./playground-context";
+
 
 export function Playground(props: PlaygroundProps) {
 	const { module, state, actions, labels, lang } = props;
-	const isMobile = useIsMobile();
+	const isMobileRaw = useIsMobile();
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+	// Until mounted on the client, render the deterministic desktop shell so
+	// the server HTML and the first client render match. Switch to the mobile
+	// tree only AFTER hydration.
+	const isMobile = mounted && isMobileRaw;
 	const [moduleDrawerOpen, setModuleDrawerOpen] = useState(false);
 
 	const bottomPanelRef = useRef<ImperativePanelHandle>(null);
@@ -35,6 +46,13 @@ export function Playground(props: PlaygroundProps) {
 	const [activeMaximizedPanel, setActiveMaximizedPanel] = useState<
 		string | null
 	>(null);
+	const [viewMode, setViewMode] = useState<PlaygroundViewMode>("lesson");
+
+	// Return to lesson view whenever the lesson changes (e.g. user clicked a node).
+	useEffect(() => {
+		setViewMode("lesson");
+	}, [module?.id, state.currentLessonIndex]);
+
 
 	useEffect(() => {
 		if (!isMobile) {
@@ -89,12 +107,15 @@ export function Playground(props: PlaygroundProps) {
 		isLastLesson,
 		handleNextAction,
 		nextActionLabel,
+		viewMode,
+		setViewMode,
 		panels: {
 			maximizePanel,
 			restorePanels,
 			togglePanel,
 			activeMaximizedPanel,
 		},
+
 	};
 
 	// ---------- Mobile (unchanged behavior, light surfaces) ----------
@@ -169,11 +190,12 @@ export function Playground(props: PlaygroundProps) {
 
 	// ---------- Desktop: 3-column shell matching the mockups ----------
 	const showSidebar = !!module;
+	const isMerged = showSidebar && viewMode !== "lesson";
 
 	return (
 		<PlaygroundProvider value={contextValue}>
-			<div className="relative h-screen bg-slate-100/70">
-				<ResizablePanelGroup direction="horizontal" className="h-full">
+			<div className="relative h-full min-h-0 overflow-hidden bg-slate-50 p-3">
+				<ResizablePanelGroup direction="horizontal" className="h-full min-h-0 overflow-hidden">
 					{showSidebar && (
 						<>
 							<ResizablePanel
@@ -182,6 +204,7 @@ export function Playground(props: PlaygroundProps) {
 								maxSize={30}
 								collapsible
 								collapsedSize={0}
+								className="min-h-0 overflow-hidden"
 							>
 								<CurriculumSidebar />
 							</ResizablePanel>
@@ -189,37 +212,47 @@ export function Playground(props: PlaygroundProps) {
 						</>
 					)}
 
-					{showSidebar && (
+					{isMerged ? (
+						<ResizablePanel defaultSize={80} minSize={40} className="min-h-0 overflow-hidden">
+							<MergedView />
+						</ResizablePanel>
+					) : (
 						<>
-							<ResizablePanel defaultSize={38} minSize={24}>
-								<LessonContentPanel />
+							{showSidebar && (
+								<>
+									<ResizablePanel defaultSize={38} minSize={24} className="min-h-0 overflow-hidden">
+										<LessonContentPanel />
+									</ResizablePanel>
+									<ResizableHandle />
+								</>
+							)}
+
+							<ResizablePanel defaultSize={showSidebar ? 42 : 100} minSize={28} className="min-h-0 overflow-hidden">
+								<ResizablePanelGroup direction="vertical" className="h-full min-h-0 overflow-hidden">
+									<ResizablePanel defaultSize={62} minSize={25} className="min-h-0 overflow-hidden">
+										<div className="h-full pb-1.5">
+											<CodePanel editorOnly />
+										</div>
+									</ResizablePanel>
+									<ResizableHandle className="!bg-transparent" />
+									<ResizablePanel
+										defaultSize={38}
+										minSize={15}
+										collapsible
+										collapsedSize={0}
+										className="min-h-0 overflow-hidden"
+									>
+										<div className="h-full pt-1.5">
+											<OutputPanel showToolbar={false} />
+										</div>
+									</ResizablePanel>
+								</ResizablePanelGroup>
 							</ResizablePanel>
-							<ResizableHandle />
 						</>
 					)}
-
-					<ResizablePanel defaultSize={showSidebar ? 42 : 100} minSize={28}>
-						<div className="flex h-full flex-col bg-slate-100/60 p-3">
-							<ResizablePanelGroup direction="vertical">
-								<ResizablePanel defaultSize={62} minSize={25}>
-									<CodePanel editorOnly />
-								</ResizablePanel>
-								<ResizableHandle />
-								<ResizablePanel
-									defaultSize={38}
-									minSize={15}
-									collapsible
-									collapsedSize={0}
-								>
-									<div className="h-full pt-3">
-										<OutputPanel showToolbar={false} />
-									</div>
-								</ResizablePanel>
-							</ResizablePanelGroup>
-						</div>
-					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
 		</PlaygroundProvider>
+
 	);
 }
