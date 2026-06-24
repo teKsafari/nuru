@@ -3,7 +3,13 @@
 import { createContext, useContext, ReactNode } from "react";
 import { PlaygroundProps } from "@/types/playground";
 
-export type PlaygroundViewMode = "lesson" | "lesson-map" | "progress";
+export type PlaygroundViewMode =
+	| "lesson"
+	| "code"
+	| "output"
+	| "lesson-map"
+	| "progress"
+	| "curriculum";
 
 export type PlaygroundContextValue = PlaygroundProps & {
 	isCurrentLessonCompleted?: boolean;
