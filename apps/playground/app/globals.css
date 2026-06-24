@@ -182,6 +182,56 @@
 	}
 }
 
+/* Hide scrollbars globally but keep scrollability */
+
+html,
+body {
+	overflow: hidden;
+}
+
+*,
+*::before,
+*::after {
+	scrollbar-width: none !important;
+	-ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+	width: 0 !important;
+	height: 0 !important;
+	display: none !important;
+	background: transparent !important;
+}
+
+.scrollbar-none,
+.scrollbar-none * {
+	scrollbar-width: none !important;
+	-ms-overflow-style: none !important;
+}
+
+.scrollbar-none::-webkit-scrollbar,
+.scrollbar-none *::-webkit-scrollbar {
+	width: 0 !important;
+	height: 0 !important;
+	display: none !important;
+	background: transparent !important;
+}
+
+[data-radix-scroll-area-scrollbar] {
+	width: 0 !important;
+	height: 0 !important;
+	min-width: 0 !important;
+	min-height: 0 !important;
+	overflow: hidden !important;
+	visibility: hidden !important;
+	opacity: 0 !important;
+	pointer-events: none !important;
+}
+
+[data-radix-scroll-area-corner] {
+	display: none !important;
+}
+
 @keyframes sprout-glow {
 	0% {
 		opacity: 0.5;

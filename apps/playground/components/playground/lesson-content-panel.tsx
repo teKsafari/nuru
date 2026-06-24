@@ -35,7 +35,9 @@ export function LessonContentPanel() {
 		labels,
 		extensions,
 		isCurrentLessonCompleted,
+		setViewMode,
 	} = usePlayground();
+
 
 	const [dismissedAt, setDismissedAt] = useState<number | null>(null);
 	useEffect(() => {
@@ -88,7 +90,8 @@ export function LessonContentPanel() {
 	const mistakes = lesson.commonMistakes?.[lang] || lesson.commonMistakes?.sw;
 
 	return (
-		<div className="relative flex h-full w-full flex-col bg-slate-50/40">
+		<div className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
 			{showOverlay && (
 				<LessonCompleteOverlay
 					onDismiss={() => setDismissedAt(currentLessonIndex)}
@@ -98,21 +101,26 @@ export function LessonContentPanel() {
 			{/* Sub-header: breadcrumbs + language pill */}
 			<div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-8 py-3">
 				<nav className="flex min-w-0 items-center gap-1.5 text-[12px] text-slate-500">
-					<Link href={`/${lang}/anza`} className="hover:text-slate-900">
+					<button
+						onClick={() => setViewMode("lesson-map")}
+						className="hover:text-slate-900"
+					>
 						{labels.modules}
-					</Link>
+					</button>
 					<Crumb className="h-3 w-3 text-slate-300" />
-					<Link
-						href={`/${lang}/anza/${module.slug}`}
+					<button
+						onClick={() => setViewMode("lesson-map")}
 						className="max-w-[180px] truncate hover:text-slate-900"
+						title="Open Lesson Map"
 					>
 						{moduleTitle}
-					</Link>
+					</button>
 					<Crumb className="h-3 w-3 text-slate-300" />
 					<span className="max-w-[240px] truncate font-medium text-slate-900">
 						{lessonTitle}
 					</span>
 				</nav>
+
 				<div className="flex shrink-0 items-center gap-2">
 					<Link
 						href={`/${lang === "en" ? "sw" : "en"}/anza/${module.slug}/${lesson.slug}`}
