@@ -10,10 +10,13 @@ import {
 	ArrowRight,
 	Eye,
 	EyeOff,
-	XCircle,
 	Lock,
+	Circle,
+	AlertCircle,
+	Play,
 } from "lucide-react";
 import { ScrollArea } from "@/components/playground/scroll-area";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@nuru/ui/lib/utils";
 import { Button } from "@nuru/ui/components/button";
 import Markdown from "react-markdown";
@@ -37,7 +40,12 @@ export function LessonPanel({
 }: LessonPanelProps) {
 	const {
 		module,
-		state: { currentLessonIndex, completedLessonIndices, testResults, isTesting },
+		state: {
+			currentLessonIndex,
+			completedLessonIndices,
+			testResults,
+			isTesting,
+		},
 		actions: { onLessonChange, onNextModule },
 		lang,
 		labels,
@@ -46,8 +54,18 @@ export function LessonPanel({
 	} = usePlayground();
 
 	const [showTests, setShowTests] = useState(false);
+	const isMobile = useIsMobile();
 
-	if (!module || currentLessonIndex === undefined || !completedLessonIndices || !onLessonChange) {
+	// A run has happened once we have at least one result; until then, checks sit in a
+	// neutral "awaiting run" state rather than looking like they're loading forever.
+	const hasRun = !!testResults && Object.keys(testResults).length > 0;
+
+	if (
+		!module ||
+		currentLessonIndex === undefined ||
+		!completedLessonIndices ||
+		!onLessonChange
+	) {
 		return null;
 	}
 
@@ -74,39 +92,36 @@ export function LessonPanel({
 	const header = (
 		<div className="mb-8 flex items-start justify-between gap-4">
 			<div className="flex min-w-0 flex-1 flex-col gap-1.5">
-				<h1 className="text-foreground text-2xl leading-tight font-bold tracking-tight lg:text-3xl font-mono!">
+				<h1 className="text-foreground text-2xl leading-tight font-bold tracking-tight lg:text-3xl">
 					{lesson.title[lang] || lesson.title.sw}
 				</h1>
-				<div className="flex items-center gap-2">
-					<div className="bg-primary/30 h-px w-8" />
-					<span className="text-muted-foreground font-mono text-[10px] tracking-widest uppercase">
-						{labels.lesson} {currentLessonIndex + 1} {labels.of}{" "}
-						{module.lessons.length}
-					</span>
-				</div>
 			</div>
-			<div className="flex shrink-0 flex-row items-center gap-2 md:flex-col md:items-end">
-				<div
-					className={cn(
-						"flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black tracking-wider uppercase transition-all duration-500",
-						isCompleted
-							? "border border-green-500/30 bg-green-500/10 text-green-500 shadow-[0_0_10px_-2px_rgba(34,197,94,0.2)]"
-							: "bg-muted/50 text-muted-foreground border border-transparent",
-					)}
-				>
-					{isCompleted ? (
-						<>
-							<CheckCircle2 className="h-3 w-3 stroke-3" />
-							{labels.completed}
-						</>
-					) : (
-						<>
-							<div className="bg-muted-foreground/40 h-1.5 w-1.5 animate-pulse rounded-full" />
-							{labels.incomplete}
-						</>
-					)}
+			{/* Completion status lives in the sidebar on desktop; only surface a badge on
+			    mobile, where there is no persistent sidebar. There it earns a green highlight. */}
+			{isMobile && (
+				<div className="flex shrink-0 flex-row items-center gap-2 md:flex-col md:items-end">
+					<div
+						className={cn(
+							"flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black tracking-wider uppercase transition-all duration-500",
+							isCompleted
+								? "border-success/30 bg-success/10 text-success border"
+								: "bg-muted/50 text-muted-foreground border border-transparent",
+						)}
+					>
+						{isCompleted ? (
+							<>
+								<CheckCircle2 className="h-3 w-3 stroke-3" />
+								{labels.completed}
+							</>
+						) : (
+							<>
+								<div className="bg-muted-foreground/40 h-1.5 w-1.5 animate-pulse rounded-full" />
+								{labels.incomplete}
+							</>
+						)}
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 
@@ -119,12 +134,13 @@ export function LessonPanel({
 				autoComplete="off"
 				disabled={currentLessonIndex == 0}
 				onClick={() => onLessonChange(currentLessonIndex - 1)}
-				className="border-border/50 bg-background/50 hover:bg-muted h-9 px-3 text-xs font-bold transition-all shrink-0"
+				className="border-border/50 bg-background/50 hover:bg-muted h-9 shrink-0 px-3 text-xs font-bold transition-all"
 			>
 				<ChevronLeft className="mr-1.5 h-4 w-4" />
 				<span className="hidden @[300px]:inline">{labels.back}</span>
 			</Button>
 
+			{/* 
 			<div className="flex flex-col items-center gap-1.5 overflow-hidden">
 				<div className="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full px-2">
 					{module.lessons.map((_, i) => (
@@ -134,9 +150,9 @@ export function LessonPanel({
 							className={cn(
 								"h-1.5 rounded-full transition-all duration-300 shrink-0",
 								i === currentLessonIndex
-									? "bg-primary w-4 shadow-[0_0_8px_rgba(var(--primary),0.4)]"
+									? "bg-primary w-4"
 									: completedLessonIndices.has(i)
-										? "w-2 bg-green-500 hover:w-3"
+										? "bg-primary/60 w-2 hover:w-3"
 										: i < currentLessonIndex
 											? "bg-primary/40 w-1.5 hover:w-2"
 											: "bg-muted w-1.5 hover:w-2",
@@ -148,15 +164,18 @@ export function LessonPanel({
 					{currentLessonIndex + 1} / {module.lessons.length}
 				</span>
 			</div>
+			*/}
 
 			{isLastLesson && isCompleted && onNextModule ? (
 				<Button
 					variant="default"
 					size="sm"
 					onClick={onNextModule}
-					className="h-9 animate-pulse bg-green-600 px-3 text-xs font-bold text-white shadow-lg shadow-green-600/20 hover:bg-green-700 shrink-0"
+					className="bg-primary hover:bg-primary/90 text-primary-foreground h-9 shrink-0 animate-pulse px-3 text-xs font-bold"
 				>
-					<span className="hidden @[300px]:inline mr-1.5">{labels.nextModule}</span>
+					<span className="mr-1.5 hidden @[300px]:inline">
+						{labels.nextModule}
+					</span>
 					<ArrowRight className="h-4 w-4" />
 				</Button>
 			) : (
@@ -169,9 +188,9 @@ export function LessonPanel({
 							onLessonChange(currentLessonIndex + 1);
 						}
 					}}
-					className="bg-primary hover:bg-primary/90 h-9 px-3 text-xs font-bold shadow-md transition-all hover:translate-x-0.5 active:translate-x-0 shrink-0"
+					className="bg-primary hover:bg-primary/90 h-9 shrink-0 px-3 text-xs font-bold transition-all hover:translate-x-0.5 active:translate-x-0"
 				>
-					<span className="hidden @[300px]:inline mr-1.5">
+					<span className="mr-1.5 hidden @[300px]:inline">
 						{currentLessonIndex === module.lessons.length - 1
 							? labels.finish
 							: labels.next}
@@ -185,79 +204,101 @@ export function LessonPanel({
 	const testCasesSection = lesson.tests && lesson.tests.length > 0 && (
 		<div className="mt-8 space-y-4">
 			<div className="flex items-center justify-between">
-				<h4 className="text-foreground text-sm font-bold tracking-tight uppercase flex items-center gap-2">
-					Test Cases
-					{isTesting && <div className="h-1.5 w-1.5 bg-primary animate-pulse rounded-full" />}
+				<h4 className="text-foreground flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
+					{labels.testsTitle}
+					{isTesting && (
+						<div className="bg-primary h-1.5 w-1.5 animate-pulse rounded-full" />
+					)}
 				</h4>
-				<Button 
-					variant="ghost" 
-					size="sm" 
+				<Button
+					variant="ghost"
+					size="sm"
 					onClick={() => setShowTests(!showTests)}
-					className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider"
+					className="h-7 px-2 text-[10px] font-bold tracking-wider uppercase"
 				>
 					{showTests ? (
-						<><EyeOff className="mr-1.5 h-3.5 w-3.5" /> {labels.hideTests}</>
+						<>
+							<EyeOff className="mr-1.5 h-3.5 w-3.5" /> {labels.hideTests}
+						</>
 					) : (
-						<><Eye className="mr-1.5 h-3.5 w-3.5" /> {labels.showTests}</>
+						<>
+							<Eye className="mr-1.5 h-3.5 w-3.5" /> {labels.showTests}
+						</>
 					)}
 				</Button>
 			</div>
 
 			{showTests && (
-				<div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+				<div className="animate-in fade-in slide-in-from-top-2 space-y-2 duration-300">
+					{!hasRun && !isTesting && (
+						<div className="text-muted-foreground bg-muted/30 border-border/50 flex items-center gap-2 rounded-lg border border-dashed px-3 py-2.5 text-xs">
+							<Play className="h-3.5 w-3.5 shrink-0" />
+							<span>{labels.runFirst}</span>
+						</div>
+					)}
 					{lesson.tests.map((test) => {
-						const testId = test.id || 'missing-id';
+						const testId = test.id || "missing-id";
 						const result = testResults?.[testId];
+						const passed = result?.passed === true;
+						const notYet = hasRun && result?.passed === false;
 						return (
-							<div 
-								key={testId} 
+							<div
+								key={testId}
 								className={cn(
 									"rounded-lg border p-3 text-[13px] transition-all",
-									result?.passed === true ? "bg-green-500/5 border-green-500/20" : 
-									result?.passed === false ? "bg-red-500/5 border-red-500/20" : 
-									"bg-muted/30 border-border/50"
+									passed
+										? "bg-success/10 border-success/30"
+										: notYet
+											? "bg-warning/10 border-warning/30"
+											: "bg-muted/40 border-border",
 								)}
 							>
 								<div className="flex items-center justify-between gap-3">
-									<div className="flex items-center gap-2 min-w-0">
+									<div className="flex min-w-0 items-center gap-2">
 										{test.isPublic ? (
 											<div className="flex items-center gap-1.5 truncate">
-												<span className="font-bold text-foreground shrink-0 uppercase text-[10px] tracking-widest text-muted-foreground">
-													{test.type === 'io' ? 'Input/Output' : 'Validation'}
+												<span className="text-muted-foreground shrink-0 text-[10px] font-bold tracking-widest uppercase">
+													{test.type === "io"
+														? labels.inputOutputLabel
+														: labels.validationLabel}
 												</span>
 												{test.input && (
-													<code className="bg-muted px-1.5 py-0.5 rounded text-[11px] font-mono truncate">
+													<code className="bg-muted truncate rounded px-1.5 py-0.5 font-mono text-[11px]">
 														{test.input}
 													</code>
 												)}
 											</div>
 										) : (
-											<div className="flex items-center gap-1.5 text-muted-foreground italic text-xs">
+											<div className="text-muted-foreground flex items-center gap-1.5 text-xs italic">
 												<Lock className="h-3 w-3" />
 												{labels.hiddenTest}
 											</div>
 										)}
 									</div>
 									<div className="shrink-0">
-										{result?.passed === true ? (
-											<CheckCircle2 className="h-4 w-4 text-green-500" />
-										) : result?.passed === false ? (
-											<XCircle className="h-4 w-4 text-red-500" />
+										{isTesting ? (
+											<div className="border-muted border-t-primary/40 h-4 w-4 animate-spin rounded-full border-2" />
+										) : passed ? (
+											<CheckCircle2 className="text-success h-4 w-4" />
+										) : notYet ? (
+											<AlertCircle className="text-warning h-4 w-4" />
 										) : (
-											<div className="h-4 w-4 rounded-full border-2 border-muted border-t-primary/30 animate-spin" />
+											<Circle className="text-muted-foreground/40 h-3.5 w-3.5" />
 										)}
 									</div>
 								</div>
-								
-								{test.isPublic && result?.passed === false && (
-									<div className="mt-2 space-y-2 pt-2 border-t border-red-500/10">
-										<p className="text-red-500 font-medium text-xs">
+
+								{test.isPublic && notYet && (
+									<div className="border-border mt-2 space-y-2 border-t pt-2">
+										<p className="text-foreground/90 text-xs font-medium">
 											{test.message}
 										</p>
-										{result.actualOutput !== undefined && (
+										{result?.actualOutput !== undefined && (
 											<div className="space-y-1">
-												<span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Your Output:</span>
-												<pre className="bg-slate-950 p-2 rounded border border-white/5 font-mono text-[11px] overflow-x-auto">
+												<span className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase">
+													{labels.yourOutput}
+												</span>
+												<pre className="bg-muted text-foreground border-border overflow-x-auto rounded border p-2 font-mono text-[11px]">
 													{result.actualOutput || "(no output)"}
 												</pre>
 											</div>
@@ -275,7 +316,7 @@ export function LessonPanel({
 	// Desktop: full height scrollable panel
 	if (!collapsible) {
 		return (
-			<div className={cn("font-mono","bg-card relative flex h-full w-full flex-col")}>
+			<div className={cn("bg-card relative flex h-full w-full flex-col")}>
 				<ScrollArea className="h-0 flex-1 [&>div]:h-full [&>div>div]:flex! [&>div>div]:h-full [&>div>div]:flex-col">
 					<div className="flex w-full min-w-0 flex-1 flex-col p-6 lg:p-8">
 						<div className="flex-1">
@@ -285,7 +326,7 @@ export function LessonPanel({
 								className="animate-in fade-in slide-in-from-right-4 flex flex-col duration-300"
 							>
 								{header}
-								<div className="prose prose-sm dark:prose-invert text-muted-foreground/90 max-w-none leading-relaxed">
+								<div className="prose prose-sm dark:prose-invert text-foreground/80 max-w-none leading-relaxed">
 									<Markdown
 										components={{
 											code(props) {
@@ -325,9 +366,9 @@ export function LessonPanel({
 								</div>
 
 								{lesson.task && (
-									<div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-sm">
+									<div className="border-warning/30 bg-warning/10 mt-6 rounded-xl border p-4 shadow-sm">
 										<h4 className="text-foreground mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
-											<Lightbulb className="h-4 w-4 text-yellow-500" />
+											<Lightbulb className="text-warning h-4 w-4" />
 											{labels.yourTask}
 										</h4>
 										<p className="text-muted-foreground text-sm leading-normal italic">
@@ -348,7 +389,7 @@ export function LessonPanel({
 
 	// Mobile: collapsible panel inside a resizable pane
 	return (
-		<div className={cn("font-mono","bg-card flex h-full flex-col overflow-hidden")}>
+		<div className={cn("bg-card flex h-full flex-col overflow-hidden")}>
 			<div
 				role="button"
 				tabIndex={0}
@@ -367,7 +408,7 @@ export function LessonPanel({
 				</div>
 				<div className="flex shrink-0 items-center gap-3">
 					{isCompleted ? (
-						<CheckCircle2 className="h-4 w-4 text-green-500" />
+						<CheckCircle2 className="text-success h-4 w-4" />
 					) : (
 						<div className="bg-muted-foreground/40 h-1.5 w-1.5 animate-pulse rounded-full" />
 					)}
@@ -387,7 +428,7 @@ export function LessonPanel({
 								key={currentLessonIndex}
 								className="animate-in fade-in slide-in-from-bottom-2 duration-300"
 							>
-								<div className="text-muted-foreground/90 mb-6 leading-relaxed">
+								<div className="text-foreground/80 mb-6 leading-relaxed">
 									<Markdown
 										components={{
 											code(props) {
@@ -423,9 +464,9 @@ export function LessonPanel({
 									</Markdown>
 								</div>
 								{lesson.task && (
-									<div className="mb-6 overflow-hidden rounded-xl border border-yellow-500/20 bg-yellow-500/3 shadow-xs">
-										<div className="flex items-center justify-between border-b border-yellow-500/10 bg-yellow-500/10 px-3 py-2">
-											<h4 className="flex items-center gap-1.5 text-[10px] font-black tracking-widest text-yellow-600 uppercase dark:text-yellow-500">
+									<div className="border-warning/30 bg-warning/10 mb-6 overflow-hidden rounded-xl border shadow-xs">
+										<div className="border-warning/20 bg-warning/15 flex items-center justify-between border-b px-3 py-2">
+											<h4 className="text-warning flex items-center gap-1.5 text-[10px] font-black tracking-widest uppercase">
 												<Lightbulb className="h-3 w-3" />
 												{labels.yourTask}
 											</h4>

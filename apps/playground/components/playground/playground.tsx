@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { LessonPanel } from "./lesson-panel";
+import { LessonsSidebar } from "./lessons-sidebar";
 import { CodePanel } from "./code-panel";
 import { OutputPanel } from "./output-panel";
 import {
@@ -140,7 +141,7 @@ export function Playground(props: PlaygroundProps) {
 										<ChevronDown className="h-3 w-3" />
 									</div>
 									{isCurrentLessonCompleted ? (
-										<CheckCircle2 className="h-5 w-5 text-green-500" />
+										<CheckCircle2 className="h-5 w-5 text-success" />
 									) : (
 										<div className="h-2 w-2 rounded-full bg-muted-foreground/40" />
 									)}
@@ -194,29 +195,32 @@ export function Playground(props: PlaygroundProps) {
 
 	return (
 		<PlaygroundProvider value={contextValue}>
-			<div className="h-screen bg-background relative">
-				<ResizablePanelGroup direction="horizontal" className="h-full">
-					{module && activeMaximizedPanel !== "renderer" && (
-						<>
-							<ResizablePanel 
-								ref={lessonPanelRef}
-								defaultSize={50} 
-								minSize={20}
-								collapsible
-								collapsedSize={0}
-								onCollapse={() => {
-									// Optional: handle state if needed when user manually collapses
-								}}
-							>
-								<LessonPanel />
-							</ResizablePanel>
-							<ResizableHandle withHandle />
-						</>
-					)}
-					<ResizablePanel defaultSize={module ? 50 : 100} minSize={25}>
-						<CodePanel />
-					</ResizablePanel>
-				</ResizablePanelGroup>
+			<div className="h-screen bg-background relative flex">
+				{module && activeMaximizedPanel !== "renderer" && <LessonsSidebar />}
+				<div className="h-full min-w-0 flex-1">
+					<ResizablePanelGroup direction="horizontal" className="h-full">
+						{module && activeMaximizedPanel !== "renderer" && (
+							<>
+								<ResizablePanel
+									ref={lessonPanelRef}
+									defaultSize={50}
+									minSize={20}
+									collapsible
+									collapsedSize={0}
+									onCollapse={() => {
+										// Optional: handle state if needed when user manually collapses
+									}}
+								>
+									<LessonPanel />
+								</ResizablePanel>
+								<ResizableHandle withHandle />
+							</>
+						)}
+						<ResizablePanel defaultSize={module ? 50 : 100} minSize={25}>
+							<CodePanel />
+						</ResizablePanel>
+					</ResizablePanelGroup>
+				</div>
 			</div>
 		</PlaygroundProvider>
 	);

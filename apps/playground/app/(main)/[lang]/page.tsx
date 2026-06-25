@@ -23,7 +23,7 @@ export default async function Home({
 		<main className="bg-background relative overflow-x-hidden">
 			{/* Hero Section */}
 			<section className="text-center/ relative z-10 mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center px-4 py-20">
-				<h1 className="font-noto-rashi text-foreground mb-2 font-serif text-6xl leading-tight font-bold text-yellow-500 md:text-6xl">
+				<h1 className="font-noto-rashi text-foreground mb-2 font-serif text-6xl leading-tight font-bold md:text-6xl">
 					Nuru
 				</h1>
 				<h2 className="font-noto-rashi text-foreground mb-4 text-3xl leading-tight font-bold md:text-4xl lg:text-5xl max-w-xl">
@@ -57,7 +57,7 @@ export default async function Home({
 					{dict.landing.features.map((feature, index) => (
 						<div
 							key={index}
-							className="flex flex-col rounded-2xl border bg-slate-900 p-8 shadow-sm transition-all hover:shadow-md"
+							className="bg-card flex flex-col rounded-2xl border p-8 shadow-sm transition-all hover:shadow-md"
 						>
 							<h3 className="mb-4 text-2xl font-bold font-noto-rashi">{feature.title}</h3>
 							<p className="text-muted-foreground leading-relaxed">
@@ -69,7 +69,7 @@ export default async function Home({
 											href="https://t.me/NuruProgrammingChat"
 											target="_blank"
 											rel="noopener noreferrer"
-											className="text-yellow-500 hover:underline"
+											className="text-foreground font-medium underline hover:no-underline"
 										>
 											Telegram
 										</a>
@@ -99,7 +99,7 @@ export default async function Home({
 							className="group relative"
 							title={contributor.username}
 						>
-							<div className="relative h-16 w-16 overflow-hidden rounded-full border-2 border-transparent transition-all group-hover:scale-110 group-hover:border-yellow-500">
+							<div className="relative h-16 w-16 overflow-hidden rounded-full border-2 border-transparent transition-all group-hover:scale-110 group-hover:border-foreground/40">
 								<Image
 									src={contributor.profile_picture}
 									alt={contributor.username}

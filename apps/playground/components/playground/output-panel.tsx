@@ -8,14 +8,8 @@ import {
 	Minimize2,
 	Layout,
 	AlertCircle,
-	XCircle,
 } from "lucide-react";
 import { Button } from "@nuru/ui/components/button";
-import { Dialog } from "@nuru/ui/components/dialog";
-import { DialogContent } from "@nuru/ui/components/dialog";
-import { DialogHeader } from "@nuru/ui/components/dialog";
-import { DialogTitle } from "@nuru/ui/components/dialog";
-import { DialogTrigger } from "@nuru/ui/components/dialog";
 import { ScrollArea } from "@/components/playground/scroll-area";
 import { usePlayground } from "./playground-context";
 import { getRenderer } from "./renderers/registry";
@@ -28,7 +22,7 @@ export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
 	const {
 		module,
 		panels: { maximizePanel, restorePanels, activeMaximizedPanel },
-		state: { output, testErrors },
+		state: { output },
 		actions: { onRun, onSubmit, onShowSolution },
 		labels,
 	} = usePlayground();
@@ -62,7 +56,7 @@ export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
 											key={i}
 											className={
 												isError
-													? "block text-red-500 dark:text-red-400"
+													? "block text-destructive"
 													: "block"
 											}
 										>
@@ -72,11 +66,9 @@ export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
 								})}
 							</pre>
 						) : (
-							!testErrors?.length && (
-								<p className="text-muted-foreground/60 font-mono text-[13px] tracking-tight uppercase italic">
-									{labels.outputPlaceholder}
-								</p>
-							)
+							<p className="text-muted-foreground font-mono text-[13px] tracking-tight uppercase italic">
+								{labels.outputPlaceholder}
+							</p>
 						)}
 					</div>
 				</ScrollArea>
@@ -116,40 +108,6 @@ export function OutputPanel({ showToolbar = true }: OutputPanelProps) {
 				</div>
 
 				<div className="flex items-center gap-2">
-					{testErrors && testErrors.length > 0 && (
-						<Dialog>
-							<DialogTrigger asChild>
-								<Button
-									variant="outline"
-									size="sm"
-									className="border-border/50 text-muted-foreground hover:bg-muted/50 h-6 px-2 text-[10px] font-black tracking-widest uppercase transition-all active:scale-95"
-								>
-									<AlertCircle className="mr-1.5 h-2.5 w-2.5" />
-									Errors ({testErrors.length})
-								</Button>
-							</DialogTrigger>
-							<DialogContent className="border-border/50 bg-background/95 shadow-2xl backdrop-blur sm:max-w-md">
-								<DialogHeader>
-									<DialogTitle className="text-foreground flex items-center gap-2 font-mono text-sm tracking-widest uppercase">
-										Validation failed
-									</DialogTitle>
-								</DialogHeader>
-								<div className="py-4">
-									<ul className="space-y-3">
-										{testErrors.map((error, i) => (
-											<li
-												key={i}
-												className="text-foreground/80 bg-muted/30 border-border/50 flex items-start gap-3 rounded-lg border p-3 font-mono text-[13px] leading-relaxed"
-											>
-												<span>{error}</span>
-											</li>
-										))}
-									</ul>
-								</div>
-							</DialogContent>
-						</Dialog>
-					)}
-
 					{showToolbar && (
 						<>
 							{onSubmit && (

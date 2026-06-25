@@ -78,7 +78,7 @@ export function LessonsDrawer({ modules = [], lang, dict }: LessonsDrawerProps) 
 								>
 									<div className={cn(
 										"flex items-center justify-center w-8 h-8 rounded-full shrink-0 font-mono text-sm font-bold transition-colors",
-										module.isCompleted ? "bg-green-500/10 text-green-500" : "bg-muted/50 text-muted-foreground group-hover:text-foreground"
+										module.isCompleted ? "bg-success/10 text-success" : "bg-muted/50 text-muted-foreground group-hover:text-foreground"
 									)}>
 										{module.isCompleted ? <CheckCircle2 className="h-4 w-4" /> : index + 1}
 									</div>
