@@ -148,7 +148,7 @@ Within this monorepo, depend on the workspace version instead:
 }
 ```
 
-### API
+### JavaScript API
 
 #### `init(config): Promise<NuruInstance>`
 
