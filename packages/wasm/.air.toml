@@ -8,7 +8,7 @@ tmp_dir = "tmp"
 [build]
   args_bin = []
   bin = "main.wasm"
-  cmd = "cd core/Nuru/ && GOOS=js GOARCH=wasm go build -o ../../main.wasm main_wasm.go"
+  cmd = "cd core/Nuru/ && GOOS=js GOARCH=wasm go build -o ../../main_go.wasm main_wasm.go"
   delay = 1000
   entrypoint = ["core/Nuru/main_wasm.go"]
   exclude_dir = ["node_modules", "dist", "react", "tmp", "vendor", "testdata"]
