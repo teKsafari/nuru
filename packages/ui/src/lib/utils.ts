@@ -33,7 +33,7 @@ export function parseHighlights(code: string): { cleanedCode: string; highlights
 				to: end,
 				// className: "bg-green-500/40 text-green-700 dark:text-green-300 rounded-[2px] font-bold px-0.5",
 				// className: "bg-emerald-500/20 rounded-[2px] px-1"
-				className: "bg-green-500/10 border-l-[2px] border-green-500 rounded-r-[2px] pl-1 pr-1"
+				className: "bg-green-500/20 dark:bg-green-500/10 border-l-[2px] border-green-500 rounded-r-[2px] pl-1 pr-1"
 				// className: "bg-teal-500/20 rounded-[2px] px-1"
 			});
 		}

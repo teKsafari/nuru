@@ -7,6 +7,7 @@ import Link from "next/link";
 import UserMenu from "@/components/UserMenu";
 
 import { LessonsDrawer } from "@/components/lessons-drawer";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 import {AppLogo} from "@nuru/ui/components/app-logo"
 import {
@@ -159,6 +160,9 @@ export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 								{lang === "sw" ? "English" : "Kiswahili"}
 							</p>
 						</button>
+
+						{/* Theme Toggle */}
+						<ThemeToggle label={dict.header.toggleTheme} />
 
 						{/* Mobile Lessons Drawer Trigger */}
 						<div className="md:hidden">

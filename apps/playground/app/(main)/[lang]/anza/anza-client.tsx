@@ -20,7 +20,7 @@ interface AnzaClientProps {
 }
 
 export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: AnzaClientProps) {
-	const { theme} = useTheme();
+	const { resolvedTheme } = useTheme();
 	const router = useRouter();
 	const currentLessonIndex = useMemo(() => {
 		const index = module.lessons.findIndex((s) => s.slug === lessonSlug);
@@ -118,12 +118,13 @@ export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: A
 		setIsTesting(true);
 		let allPassed = true;
 		const errors: string[] = [];
+		let hiddenFailed = false;
 		const results: Record<string, TestResult> = {};
 
 		if (currentLesson.tests && currentLesson.tests.length > 0) {
 			for (const test of currentLesson.tests) {
 				const testId = test.id || Math.random().toString();
-				
+
 				let result: TestResult;
 				if (test.type === "io") {
 					result = await runSingleTest(currentCode, test);
@@ -145,8 +146,17 @@ export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: A
 				results[testId] = result;
 				if (!result.passed) {
 					allPassed = false;
-					errors.push(test.message);
+					// Never surface private/hidden test details to the learner. Only public
+					// test messages are shown; hidden failures collapse to one generic note.
+					if (test.isPublic) {
+						errors.push(test.message);
+					} else {
+						hiddenFailed = true;
+					}
 				}
+			}
+			if (hiddenFailed) {
+				errors.push(dict.tests.hiddenFailed);
 			}
 		} else {
 			// Legacy string comparison fallback is deprecated.
@@ -172,7 +182,7 @@ export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: A
 			});
 		}
 		return allPassed;
-	}, [currentLesson.solution, currentLesson.tests, currentLessonIndex, module.id, runSingleTest]);
+	}, [currentLesson.solution, currentLesson.tests, currentLessonIndex, module.id, runSingleTest, dict.tests.hiddenFailed]);
 
 	const handleCodeChange = useCallback((newCode: string) => {
 		setCode(newCode);
@@ -278,11 +288,18 @@ export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: A
 		next: dict.lessonPanel.next,
 		finish: dict.lessonPanel.finish,
 		yourTask: dict.lessonPanel.yourTask,
-		showTests: "Show Test Cases",
-		hideTests: "Hide Test Cases",
-		testPassed: "Passed",
-		testFailed: "Failed",
-		hiddenTest: "Hidden Test",
+		showTests: dict.tests.show,
+		hideTests: dict.tests.hide,
+		testPassed: dict.tests.passed,
+		testFailed: dict.tests.failed,
+		hiddenTest: dict.tests.hidden,
+		testsTitle: dict.tests.title,
+		yourOutput: dict.tests.yourOutput,
+		validationFailedTitle: dict.tests.validationFailedTitle,
+		inputOutputLabel: dict.tests.inputOutput,
+		validationLabel: dict.tests.validation,
+		runFirst: dict.tests.runFirst,
+		notYet: dict.tests.notYet,
 	};
 
 	const extensions = useMemo(() => [nuruLanguage], []);
@@ -290,7 +307,7 @@ export function AnzaClient({ module, lessonSlug, nextModuleSlug, lang, dict }: A
 	return (
 		<Suspense fallback={<div className="flex-1 bg-background animate-pulse" />}>
 			<Playground
-				theme={(theme) as "light" | "dark"}
+				theme={(resolvedTheme) as "light" | "dark"}
 				module={module}
 				state={{
 					currentLessonIndex,

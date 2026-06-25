@@ -25,7 +25,8 @@
   "header": {
     "home": "Nyumbani",
     "anza": "Anza Kujifunza",
-    "masomo": "Masomo"
+    "masomo": "Masomo",
+    "toggleTheme": "Badilisha mwonekano"
   },
   "mobileMenu": {
     "home": "Nyumbani",
@@ -42,6 +43,21 @@
     "hint": "Dokezo: Angalia maelezo ya kazi na ujaribu kulinganisha kodi yako na mifano iliyotolewa.",
     "testing": "Inapima...",
     "error": "Hitilafu: "
+  },
+  "tests": {
+    "title": "Tunachoangalia",
+    "show": "Onyesha vigezo",
+    "hide": "Ficha vigezo",
+    "passed": "Imekamilika",
+    "failed": "Endelea kujaribu",
+    "hidden": "Kigezo kilichofichwa",
+    "yourOutput": "Matokeo yako",
+    "validationFailedTitle": "Hebu turekebishe machache",
+    "hiddenFailed": "Kuna kigezo kilichofichwa hakijatimia bado — rejea kazi kisha ujaribu tena.",
+    "inputOutput": "Ingizo na matokeo",
+    "validation": "Kigezo",
+    "runFirst": "Endesha kodi yako kwanza uone inavyofanya kwenye kila kigezo.",
+    "notYet": "Bado"
   },
   "lessonPanel": {
     "lessons": "Mafunzo",

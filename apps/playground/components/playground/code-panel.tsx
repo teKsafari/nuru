@@ -75,7 +75,7 @@ export function CodePanel({
 		<TooltipProvider>
 			<div className={cn(
 				"flex items-center gap-1.5 transition-all",
-				!isMobileLayout && "rounded-xl border border-border/50 bg-background/60 p-1.5 backdrop-blur-md shadow-lg"
+				!isMobileLayout && "rounded-xl border border-border/50 bg-background/80 p-1.5 backdrop-blur-md shadow-sm"
 			)}>
 				<Tooltip>
 					<TooltipTrigger asChild>
@@ -134,7 +134,7 @@ export function CodePanel({
 				<Button
 					onClick={onRun}
 					size="sm"
-					className="h-8 bg-primary px-3 text-[11px] tracking-wider uppercase text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+					className="h-8 bg-primary px-3 text-[11px] tracking-wider uppercase text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all flex items-center gap-2"
 				>
 					<Play className="h-3 w-3 fill-current" />
 					{labels.run}
@@ -146,7 +146,7 @@ export function CodePanel({
 						<Button
 							onClick={onNextAction}
 							size="sm"
-							className="h-8 bg-green-600 px-3 text-[11px] tracking-wider uppercase text-white shadow-lg shadow-green-600/20 hover:bg-green-700 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 animate-pulse"
+							className="h-8 bg-primary px-3 text-[11px] tracking-wider uppercase text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all flex items-center gap-2 animate-pulse"
 						>
 							{nextActionLabel}
 							<ArrowRight className="h-3 w-3" />

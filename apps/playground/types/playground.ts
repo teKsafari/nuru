@@ -52,6 +52,13 @@ export interface PlaygroundLabels {
 	testPassed: string;
 	testFailed: string;
 	hiddenTest: string;
+	testsTitle: string;
+	yourOutput: string;
+	validationFailedTitle: string;
+	inputOutputLabel: string;
+	validationLabel: string;
+	runFirst: string;
+	notYet: string;
 }
 
 export interface TestResult {

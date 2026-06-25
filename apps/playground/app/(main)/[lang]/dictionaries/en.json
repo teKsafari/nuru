@@ -25,7 +25,8 @@
   "header": {
     "home": "Home",
     "anza": "Start Learning",
-    "masomo": "Lessons"
+    "masomo": "Lessons",
+    "toggleTheme": "Switch appearance"
   },
   "mobileMenu": {
     "home": "Home",
@@ -42,6 +43,21 @@
     "hint": "Hint: Check the task description and try to match your code with the provided examples.",
     "testing": "Testing...",
     "error": "Error: "
+  },
+  "tests": {
+    "title": "What we check",
+    "show": "Show checks",
+    "hide": "Hide checks",
+    "passed": "Done",
+    "failed": "Keep trying",
+    "hidden": "Hidden check",
+    "yourOutput": "Your output",
+    "validationFailedTitle": "Let's fix a few things",
+    "hiddenFailed": "A hidden check didn't pass yet — revisit the task and try again.",
+    "inputOutput": "Input and output",
+    "validation": "Check",
+    "runFirst": "Run your code first to see how it does against each check.",
+    "notYet": "Not yet"
   },
   "lessonPanel": {
     "lessons": "Lessons",

@@ -36,11 +36,18 @@ export default function Page() {
 		next: "Next",
 		finish: "Finish",
 		yourTask: "Your Task",
-		showTests: "Show Test Cases",
-		hideTests: "Hide Test Cases",
-		testPassed: "Passed",
-		testFailed: "Failed",
-		hiddenTest: "Hidden Test",
+		showTests: "Show checks",
+		hideTests: "Hide checks",
+		testPassed: "Done",
+		testFailed: "Keep trying",
+		hiddenTest: "Hidden check",
+		testsTitle: "What we check",
+		yourOutput: "Your output",
+		validationFailedTitle: "Let's fix a few things",
+		inputOutputLabel: "Input and output",
+		validationLabel: "Check",
+		runFirst: "Run your code first to see how it does against each check.",
+		notYet: "Not yet",
 	};
 
 	const wasmURL = useMemo(() => {

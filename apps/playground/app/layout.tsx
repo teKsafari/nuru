@@ -13,8 +13,13 @@ export const viewport: Viewport = {
 
 import "./globals.css";
 
-import { JetBrains_Mono, Noto_Rashi_Hebrew } from "next/font/google";
+import { Inter, JetBrains_Mono, Noto_Rashi_Hebrew } from "next/font/google";
 
+const inter = Inter({
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-inter",
+});
 const jetbrainsMono = JetBrains_Mono({
 	subsets: ["latin"],
 	display: "swap",
@@ -47,7 +52,7 @@ export default function RootLayout({
 		<html
 			lang="en"
 			suppressHydrationWarning
-			className={cn(jetbrainsMono.variable, NotoRashi.variable)}
+			className={cn(inter.variable, jetbrainsMono.variable, NotoRashi.variable)}
 		>
 			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
