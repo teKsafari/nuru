@@ -1,3 +1,6 @@
 # Ignore binary files, if any
 main
 main.exe
+
+# ignore dev binary
+main_go.wasm

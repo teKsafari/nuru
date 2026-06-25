@@ -10,7 +10,7 @@
 		"wasm_exec_go.js"
 	],
 	"scripts": {
-		"update-core": "git submodule update --remote deps/nuru",
+		"update-core": "git submodule update --remote core/Nuru",
 		"test": "echo \"Mocktest Wasm-core  🟢 🟢 🟢 🟢\" && exit 0 >> /dev/null",
 		"build:wasm": "cd core/Nuru && GOOS=js GOARCH=wasm tinygo build -o ../../main.wasm",
 		"build": "tsc",
