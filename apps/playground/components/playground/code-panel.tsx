@@ -82,113 +82,95 @@ export function CodePanel({
 	const fileExt = module?.executor === "python" ? "py" : "nr";
 
 	const mobileEditor = (
-		<div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-[#071225] shadow-[0_18px_46px_-30px_rgba(15,23,42,0.55)]">
-			<div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-700/70 px-4">
-				<div className="flex min-w-0 items-center gap-2.5">
-					<span className="truncate font-mono text-[14px] font-medium text-blue-400">
+		<div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+			<div className="flex h-9 shrink-0 items-center justify-between border-b border-slate-200 px-3">
+				<div className="flex min-w-0 items-center gap-2">
+					<span className="truncate font-mono text-[12px] font-medium text-blue-600">
 						main.{fileExt}
 					</span>
-					<span className="block h-2.5 w-2.5 shrink-0 rounded-full bg-blue-500" />
+					<span className="block h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
 				</div>
-				<div className="flex items-center gap-1.5">
+				<div className="flex items-center gap-1">
 					<button
 						onClick={() =>
 							isMaximized ? restorePanels() : maximizePanel("editor")
 						}
 						aria-label="Maximize editor"
-						className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+						className="rounded-md p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
 					>
-						<Maximize2 className="h-4 w-4" />
-					</button>
-					<button
-						aria-label="More"
-						className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
-					>
-						<MoreVertical className="h-4 w-4" />
+						<Maximize2 className="h-3.5 w-3.5" />
 					</button>
 				</div>
 			</div>
 
-			<div className="relative min-h-0 flex-1">
+			<div className="relative min-h-0 flex-1 bg-white">
 				<CodeEditor
 					code={code}
 					onChange={onCodeChange}
-					theme="dark"
+					theme="light"
 					extensions={extensions}
-					className="[&_.cm-content]:text-[13px] [&_.cm-gutters]:text-[12px]"
+					className="[&_.cm-content]:text-[12px] [&_.cm-gutters]:text-[11px]"
 				/>
 			</div>
 
-			<div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-700/70 px-3 py-3">
-				<div className="grid grid-cols-3 gap-1.5">
+			<div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 px-2 py-2">
+				<div className="flex items-center gap-1">
 					<button
 						type="button"
 						onClick={() => setViewMode("lesson")}
 						className={cn(
-							"flex h-12 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[10.5px] font-medium transition-colors",
+							"inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-medium transition-colors",
 							viewMode === "lesson"
-								? "bg-slate-800/90 text-blue-400"
-								: "text-slate-300 hover:bg-slate-800/70",
+								? "bg-blue-50 text-blue-600"
+								: "text-slate-600 hover:bg-slate-100",
 						)}
 					>
-						<BookOpen className="h-4 w-4" />
+						<BookOpen className="h-3.5 w-3.5" />
 						<span>Lesson</span>
 					</button>
 					<button
 						type="button"
 						onClick={() => setViewMode("output")}
 						className={cn(
-							"flex h-12 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[10.5px] font-medium transition-colors",
+							"inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-medium transition-colors",
 							viewMode === "output"
-								? "bg-slate-800/90 text-blue-400"
-								: "text-slate-300 hover:bg-slate-800/70",
+								? "bg-blue-50 text-blue-600"
+								: "text-slate-600 hover:bg-slate-100",
 						)}
 					>
-						<TerminalSquare className="h-4 w-4" />
+						<TerminalSquare className="h-3.5 w-3.5" />
 						<span>Output</span>
 					</button>
 					<button
 						type="button"
 						onClick={onReset}
-						className="flex h-12 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[10.5px] font-medium text-slate-300 transition-colors hover:bg-slate-800/70"
+						className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-100"
 					>
-						<RotateCcw className="h-4 w-4" />
+						<RotateCcw className="h-3.5 w-3.5" />
 						<span>{labels.reset}</span>
 					</button>
 				</div>
 
-				<div className="flex items-center gap-2">
-					{onShowHint && (
-						<button
-							onClick={onShowHint}
-							aria-label={labels.hint}
-							className="hidden h-12 rounded-2xl border border-slate-600/80 px-4 text-[12px] font-medium text-blue-300 shadow-sm hover:bg-slate-800/70 sm:inline-flex sm:items-center sm:gap-2"
-						>
-							<HelpCircle className="h-4 w-4" />
-							<span>{labels.hint}</span>
-						</button>
-					)}
-					<Button
-						onClick={onRun}
-						className="h-12 min-w-[104px] rounded-2xl bg-blue-500 px-4 text-[14px] font-semibold text-white shadow-[0_14px_34px_-18px_rgba(59,130,246,0.9)] hover:bg-blue-600"
-					>
-						<Play className="mr-2 h-5 w-5 fill-current" />
-						<span>{labels.run}</span>
-					</Button>
-				</div>
+				<Button
+					onClick={onRun}
+					className="h-8 gap-1.5 rounded-lg bg-blue-600 px-3 text-[12px] font-semibold text-white shadow-sm hover:bg-blue-700"
+				>
+					<Play className="h-3.5 w-3.5 fill-current" />
+					<span>{labels.run}</span>
+				</Button>
 			</div>
 		</div>
 	);
 
 	const desktopEditor = (
-		<div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#0b1220] shadow-sm">
-			<div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-800/80 bg-[#0b1220] pl-4 pr-2">
+		<div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+			<div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-200 bg-white pl-4 pr-2">
 				<div className="flex items-center gap-2">
 					<div className="-mb-px flex items-center gap-2 border-b-2 border-blue-500 px-1 pb-[10px] pt-[10px]">
-						<span className="text-[12.5px] font-medium text-slate-200">
+						<span className="text-[12.5px] font-medium text-slate-800">
 							main.{fileExt}
 						</span>
-						<span className="block h-1.5 w-1.5 rounded-full bg-blue-400" />
+						<span className="block h-1.5 w-1.5 rounded-full bg-blue-500" />
 					</div>
 				</div>
 				<div className="flex items-center gap-1">
@@ -197,29 +179,29 @@ export function CodePanel({
 							isMaximized ? restorePanels() : maximizePanel("editor")
 						}
 						aria-label="Maximize editor"
-						className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+						className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
 					>
 						<Maximize2 className="h-4 w-4" />
 					</button>
 					<button
 						aria-label="More"
-						className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+						className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
 					>
 						<MoreVertical className="h-4 w-4" />
 					</button>
 				</div>
 			</div>
 
-			<div className="relative min-h-0 flex-1">
+			<div className="relative min-h-0 flex-1 bg-white">
 				<CodeEditor
 					code={code}
 					onChange={onCodeChange}
-					theme="dark"
+					theme="light"
 					extensions={extensions}
 				/>
 			</div>
 
-			<div className="flex h-12 shrink-0 items-center justify-between border-t border-slate-800/80 bg-[#0b1220] px-3">
+			<div className="flex h-12 shrink-0 items-center justify-between border-t border-slate-200 bg-white px-3">
 				<div className="flex items-center gap-1">
 					<button
 						type="button"
@@ -233,11 +215,11 @@ export function CodePanel({
 								.replace(/\s*$/, "\n");
 							if (formatted !== code) onCodeChange(formatted);
 						}}
-						className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[12px] text-slate-300 hover:bg-slate-800"
+						className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[12px] text-slate-600 hover:bg-slate-100"
 					>
 						<AlignLeft className="h-3.5 w-3.5" />
 						<span>Format Code</span>
-						<span className="ml-1 rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">
+						<span className="ml-1 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">
 							Ctrl+Shift+F
 						</span>
 					</button>
@@ -247,7 +229,7 @@ export function CodePanel({
 						<button
 							onClick={onShowHint}
 							aria-label={labels.hint}
-							className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+							className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
 						>
 							<HelpCircle className="h-4 w-4" />
 						</button>
@@ -256,14 +238,14 @@ export function CodePanel({
 						<button
 							onClick={onShowSolution}
 							aria-label={labels.showSolution}
-							className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+							className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
 						>
 							<Eye className="h-4 w-4" />
 						</button>
 					)}
 					<button
 						onClick={onReset}
-						className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12.5px] text-slate-300 hover:bg-slate-800"
+						className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12.5px] text-slate-600 hover:bg-slate-100"
 					>
 						<RotateCcw className="h-3.5 w-3.5" />
 						<span>{labels.reset}</span>

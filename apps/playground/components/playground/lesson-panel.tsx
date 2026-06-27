@@ -346,15 +346,20 @@ export function LessonPanel({
 		);
 	}
 
-	// Mobile: white lesson sheet with collapsible content.
+	// Mobile: white lesson sheet with collapsible content + upcoming lessons.
+	const upcoming = module.lessons
+		.map((l, i) => ({ l, i }))
+		.filter(({ i }) => i > currentLessonIndex)
+		.slice(0, 5);
+
 	return (
 		<div className="flex h-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-white text-slate-900 shadow-sm">
 			<div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-				<div className="min-w-0 text-[12px] text-slate-500">
+				<div className="min-w-0 text-[11px] text-slate-500">
 					Step {currentLessonIndex + 1} of {module.lessons.length}
 					<span className="mx-2 text-slate-300">•</span>
 					{labels.lesson}
-					<div className="mt-1 truncate text-[15px] font-semibold text-slate-900">
+					<div className="mt-0.5 truncate text-[15px] font-semibold text-slate-900">
 						{lesson.title[lang] || lesson.title.sw}
 					</div>
 				</div>
@@ -368,22 +373,17 @@ export function LessonPanel({
 				</button>
 			</div>
 
-			{expanded && (
+			{expanded ? (
 				<ScrollArea className="flex-1 [&>div>div]:h-full">
-					<div className="flex min-h-full w-full min-w-0 flex-col px-4 pb-5 text-sm">
+					<div className="flex min-h-full w-full min-w-0 flex-col px-4 pb-5 pt-4 text-sm">
 						<div className="flex-1">
 							<div key={currentLessonIndex} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-								<div className="mb-5">
-									<h1 className="text-[20px] font-semibold leading-tight text-slate-950">
-										{lesson.title[lang] || lesson.title.sw}
-									</h1>
-									<div className="mt-4 max-w-[180px]">
-										<div className="mb-2 text-[12px] text-slate-500">
-											Step {currentLessonIndex + 1} of {module.lessons.length}
-										</div>
-										<div className="h-2 overflow-hidden rounded-full bg-slate-100">
-											<div className="h-full rounded-full bg-blue-500" style={{ width: `${((currentLessonIndex + 1) / module.lessons.length) * 100}%` }} />
-										</div>
+								<div className="mb-4">
+									<div className="mb-2 text-[11px] text-slate-500">
+										Step {currentLessonIndex + 1} of {module.lessons.length}
+									</div>
+									<div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+										<div className="h-full rounded-full bg-blue-500" style={{ width: `${((currentLessonIndex + 1) / module.lessons.length) * 100}%` }} />
 									</div>
 								</div>
 
@@ -438,7 +438,55 @@ export function LessonPanel({
 						{navigation}
 					</div>
 				</ScrollArea>
+			) : (
+				<ScrollArea className="flex-1">
+					<div className="px-4 py-4">
+						<div className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+							Up next
+						</div>
+						{upcoming.length === 0 ? (
+							<div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center text-[12.5px] text-slate-500">
+								You're on the last lesson. Finish strong! 🎉
+							</div>
+						) : (
+							<ul className="space-y-2">
+								{upcoming.map(({ l, i }) => {
+									const done = completedLessonIndices.has(i);
+									return (
+										<li key={l.id}>
+											<button
+												type="button"
+												onClick={() => onLessonChange(i)}
+												className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-left hover:bg-slate-50"
+											>
+												<div className="flex min-w-0 items-center gap-3">
+													<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[12px] font-semibold text-blue-600">
+														{i + 1}
+													</span>
+													<div className="min-w-0">
+														<div className="truncate text-[13px] font-semibold text-slate-900">
+															{l.title[lang] || l.title.sw}
+														</div>
+														<div className="text-[11px] text-slate-500">
+															{done ? "Completed" : "Upcoming"}
+														</div>
+													</div>
+												</div>
+												{done ? (
+													<CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+												) : (
+													<ChevronDown className="h-4 w-4 -rotate-90 shrink-0 text-slate-400" />
+												)}
+											</button>
+										</li>
+									);
+								})}
+							</ul>
+						)}
+					</div>
+				</ScrollArea>
 			)}
 		</div>
 	);
 }
+

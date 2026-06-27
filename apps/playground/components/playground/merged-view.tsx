@@ -105,7 +105,7 @@ export function MergedView({ isMobile = false }: { isMobile?: boolean }) {
 			</div>
 			)}
 			<ScrollArea className={cn("flex-1", isMobile ? "bg-white" : "bg-slate-50")}>
-				{viewMode === "lesson-map" ? <LessonMapView /> : <ProgressView />}
+				{viewMode === "lesson-map" ? <LessonMapView isMobile={isMobile} /> : <ProgressView isMobile={isMobile} />}
 			</ScrollArea>
 		</div>
 	);
@@ -134,7 +134,7 @@ const trackTints = [
 	"border-slate-100 bg-slate-100 text-slate-400 shadow-slate-500/5",
 ];
 
-function LessonMapView() {
+function LessonMapView({ isMobile = false }: { isMobile?: boolean }) {
 	const router = useRouter();
 	const { allModules, module: currentModule, lang, setViewMode } = usePlayground();
 	const auth = useContext(AuthContext);
@@ -190,56 +190,64 @@ function LessonMapView() {
 	};
 
 	return (
-		<div className="w-full p-4">
-			<div className="grid w-full grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_286px]">
+		<div className={cn("w-full", isMobile ? "p-3" : "p-4")}>
+			<div className={cn("grid w-full grid-cols-1 gap-4", !isMobile && "xl:grid-cols-[minmax(0,1fr)_286px]")}>
 				{/* Middle column — journey track */}
-				<section className="rounded-[10px] border border-slate-200 bg-white p-6 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+				<section className={cn("rounded-[10px] border border-slate-200 bg-white shadow-[0_8px_18px_rgba(15,23,42,0.04)]", isMobile ? "p-4" : "p-6")}>
 					<div className="mb-4">
-						<h1 className="text-[22px] font-extrabold text-[#111a44]">{title}</h1>
-						<p className="mt-1 text-[13px] text-slate-500">Your journey to becoming confident with Nuru.</p>
+						<h1 className={cn("font-extrabold text-[#111a44]", isMobile ? "text-[18px]" : "text-[22px]")}>{title}</h1>
+						<p className="mt-1 text-[12px] text-slate-500">Your journey to becoming confident with Nuru.</p>
 					</div>
 
 					<div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-						<div className="flex flex-wrap items-center gap-5 rounded-[6px] border border-slate-200 bg-white px-3 py-2 text-[11.5px] text-slate-500">
-							<Legend icon={CheckCircle2} label="Completed" color="text-emerald-500" />
-							<Legend icon={CircleDot} label="In Progress" color="text-blue-500" />
+						<div className="flex flex-wrap items-center gap-3 rounded-[6px] border border-slate-200 bg-white px-3 py-2 text-[11px] text-slate-500">
+							<Legend icon={CheckCircle2} label="Done" color="text-emerald-500" />
+							<Legend icon={CircleDot} label="Doing" color="text-blue-500" />
 							<Legend icon={Lock} label="Locked" color="text-slate-400" />
-							<Legend icon={CircleDot} label="Next" color="text-amber-400" />
 						</div>
-						<button className="inline-flex h-9 items-center gap-2 rounded-[6px] border border-slate-200 bg-white px-4 text-[12px] font-semibold text-slate-600 hover:bg-slate-50">
-							<Expand className="h-3.5 w-3.5" /> Expand All
-						</button>
+						{!isMobile && (
+							<button className="inline-flex h-9 items-center gap-2 rounded-[6px] border border-slate-200 bg-white px-4 text-[12px] font-semibold text-slate-600 hover:bg-slate-50">
+								<Expand className="h-3.5 w-3.5" /> Expand All
+							</button>
+						)}
 					</div>
 
+
 					<div className="relative pl-2">
-						<div className="absolute top-11 bottom-0 left-8 w-px border-l border-dashed border-slate-300" />
-						<div className="space-y-6">
+						<div className={cn("absolute bottom-0 w-px border-l border-dashed border-slate-300", isMobile ? "top-9 left-6" : "top-11 left-8")} />
+						<div className="space-y-5">
 							{modules.map((m, i) => {
 								const Icon = trackIcons[i] ?? Sparkles;
 								const realDone = m.real ? completedMap[m.id]?.size ?? 0 : 0;
 								const doneCount = m.real ? realDone : (i === 0 ? m.lessons.length : 0);
 								return (
-									<div key={m.id} className="relative flex gap-5">
-										<div className={`relative z-10 flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-full border-4 shadow-lg ${trackTints[i] ?? trackTints[trackTints.length - 1]}`}>
-											<Icon className="h-5 w-5" />
+									<div key={m.id} className={cn("relative flex", isMobile ? "gap-3" : "gap-5")}>
+										<div className={cn(
+											"relative z-10 flex shrink-0 items-center justify-center rounded-full border-4 shadow-lg",
+											isMobile ? "h-9 w-9" : "h-[48px] w-[48px]",
+											trackTints[i] ?? trackTints[trackTints.length - 1],
+										)}>
+											<Icon className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} />
 										</div>
-										<div className="flex-1 rounded-[10px] border border-slate-200 bg-white p-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-											<div className="mb-4 flex items-start justify-between gap-4">
-												<div>
-													<h3 className="text-[16px] font-extrabold text-[#111a44]">{i + 1}. {m.title}</h3>
-													<p className="mt-1 text-[12px] text-slate-500">
-														{i === 0 ? "Karibu kwenye dunia ya Nuru. Anza safari yako hapa."
-															: i === 1 ? "Jifunze misingi ya kuandika na kuona matokeo."
-															: i === 2 ? "Hifadhi na tumia taarifa kwa kutumia variables."
-															: "Aina za data na jinsi ya kuzitumia."}
-													</p>
+										<div className={cn("min-w-0 flex-1 rounded-[10px] border border-slate-200 bg-white shadow-[0_8px_18px_rgba(15,23,42,0.04)]", isMobile ? "p-3" : "p-4")}>
+											<div className="mb-3 flex items-start justify-between gap-3">
+												<div className="min-w-0">
+													<h3 className={cn("font-extrabold text-[#111a44]", isMobile ? "text-[14px]" : "text-[16px]")}>{i + 1}. {m.title}</h3>
+													{!isMobile && (
+														<p className="mt-1 text-[12px] text-slate-500">
+															{i === 0 ? "Karibu kwenye dunia ya Nuru. Anza safari yako hapa."
+																: i === 1 ? "Jifunze misingi ya kuandika na kuona matokeo."
+																: i === 2 ? "Hifadhi na tumia taarifa kwa kutumia variables."
+																: "Aina za data na jinsi ya kuzitumia."}
+														</p>
+													)}
 												</div>
-												<div className="flex shrink-0 items-center gap-3">
-													<span className="text-[12px] font-medium text-slate-500">{doneCount} / {m.lessons.length} lessons</span>
-													<StatusBadge status={m.status} />
+												<div className="flex shrink-0 items-center gap-2">
+													<span className={cn("font-medium text-slate-500", isMobile ? "text-[11px]" : "text-[12px]")}>{doneCount}/{m.lessons.length}</span>
+													{!isMobile && <StatusBadge status={m.status} />}
 												</div>
 											</div>
-											<div className="flex flex-wrap items-center gap-4">
+											<div className={cn("flex flex-wrap", isMobile ? "gap-2" : "items-center gap-4")}>
 												{m.lessons.map((lesson, j) => {
 													const locked = m.status === "locked";
 													const realModule = m.real ? realModules.find((rm) => rm.id === m.id) : undefined;
@@ -252,17 +260,21 @@ function LessonMapView() {
 															key={`${m.id}-${j}`}
 															disabled={locked || !lessonSlug}
 															onClick={() => lessonSlug && go(m.slug, lessonSlug)}
-															className={`relative flex h-[54px] min-w-[128px] max-w-[160px] items-center gap-2 rounded-[7px] border px-3 text-left text-[10.5px] font-semibold disabled:cursor-not-allowed ${
+															className={cn(
+																"relative flex items-center gap-2 rounded-[7px] border px-2.5 text-left font-semibold disabled:cursor-not-allowed",
+																isMobile
+																	? "h-auto min-h-[42px] min-w-[44%] flex-1 basis-[44%] text-[10.5px] py-2"
+																	: "h-[54px] min-w-[128px] max-w-[160px] text-[10.5px] px-3",
 																active ? "border-blue-500 bg-white text-[#111a44] shadow-[0_0_0_2px_rgba(37,99,235,0.1)]"
 																: locked ? "border-slate-200 bg-white text-slate-400"
-																: "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-															}`}
+																: "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+															)}
 														>
 															{complete ? <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
 																: locked ? <Lock className="h-3.5 w-3.5 shrink-0 text-slate-400" />
 																: <CircleDot className="h-4 w-4 shrink-0 text-blue-500" />}
 															<span className="line-clamp-2">{i + 1}.{j + 1} {lesson}</span>
-															{j < m.lessons.length - 1 && !locked && <span className="absolute top-1/2 -right-4 h-px w-4 bg-emerald-300" />}
+															{!isMobile && j < m.lessons.length - 1 && !locked && <span className="absolute top-1/2 -right-4 h-px w-4 bg-emerald-300" />}
 														</button>
 													);
 												})}
@@ -274,6 +286,7 @@ function LessonMapView() {
 						</div>
 					</div>
 				</section>
+
 
 				{/* Right rail */}
 				<aside className="space-y-4">
@@ -426,7 +439,7 @@ function ProgressRing({ pct }: { pct: number }) {
    MY PROGRESS  — mirrors mockup 3
    ============================================================ */
 
-function ProgressView() {
+function ProgressView({ isMobile: _isMobile = false }: { isMobile?: boolean } = {}) {
 	const router = useRouter();
 	const { allModules, module: currentModule, lang, setViewMode } = usePlayground();
 	const auth = useContext(AuthContext);

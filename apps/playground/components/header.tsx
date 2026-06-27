@@ -39,14 +39,14 @@ export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 
 	return (
 		<header className="sticky top-0 right-0 left-0 z-40 border-b border-slate-200 bg-white/95 shadow-[0_1px_0_rgba(15,23,42,0.02)] backdrop-blur-md">
-			<div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-4 px-5">
+			<div className="mx-auto flex h-10 max-w-[1280px] items-center justify-between gap-4 px-5">
 				<Link
 					href={`/${lang}`}
 					title="Home"
 					className="group flex shrink-0 items-center gap-2.5"
 				>
-					<AppLogo size={32} className="rounded-lg" />
-					<span className="text-[20px] font-bold tracking-tight text-slate-900">Nuru</span>
+					<AppLogo size={22} className="rounded-md" />
+					<span className="text-[15px] font-bold tracking-tight text-slate-900">Nuru</span>
 				</Link>
 
 				<nav className="hidden h-full min-w-0 flex-1 items-center justify-center gap-8 md:flex">

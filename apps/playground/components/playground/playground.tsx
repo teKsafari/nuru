@@ -14,7 +14,7 @@ import {
 } from "@/components/playground/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlaygroundProps } from "@/types/playground";
-import { AppLogo } from "@nuru/ui/components/app-logo";
+
 import {
 	BarChart3,
 	BookOpen,
@@ -134,71 +134,61 @@ export function Playground(props: PlaygroundProps) {
 		return (
 			<PlaygroundProvider value={contextValue}>
 				<div className="relative flex h-full max-h-full flex-1 flex-col overflow-hidden bg-white">
-					<div className="shrink-0 border-b border-slate-200 bg-white px-4 pb-3 pt-4">
-						<div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
-							<div className="flex min-w-0 items-center gap-3">
-								<button
-									type="button"
-									onClick={() => router.push(`/${lang}/anza`)}
-									className="shrink-0 rounded-full p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-									aria-label="Back"
-								>
-									<ChevronLeft className="h-5 w-5" />
-								</button>
-								<AppLogo size={30} className="shrink-0" />
-								<div className="min-w-0">
-									<div className="truncate text-[17px] font-semibold text-slate-900">Nuru</div>
-								</div>
-							</div>
-							<button
-								type="button"
-								onClick={() => setViewMode(viewMode === "lesson" ? "code" : "lesson")}
-								className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 text-[13px] font-medium text-slate-700"
-							>
-								{viewMode === "lesson" ? (
-									<Code2 className="h-4 w-4 text-slate-600" />
-								) : (
-									<BookOpen className="h-4 w-4 text-slate-600" />
-								)}
-								<span>{viewMode === "lesson" ? "Code" : "Lesson"}</span>
-							</button>
-						</div>
-
+				<div className="shrink-0 border-b border-slate-200 bg-white px-3 pb-2 pt-2">
+					<div className="flex items-center justify-between gap-3">
+						<button
+							type="button"
+							onClick={() => router.push(`/${lang}/anza`)}
+							className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2 text-[12px] font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+							aria-label="Back"
+						>
+							<ChevronLeft className="h-4 w-4" />
+							<span>Back</span>
+						</button>
 						{module && (
-							<div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
-								<div className="min-w-0">
-									<div className="mb-2 text-[12px] text-slate-500">
-										Step {(state.currentLessonIndex ?? 0) + 1} of {module.lessons.length}
-									</div>
-									<div className="h-2 overflow-hidden rounded-full bg-slate-200">
-										<div className="h-full rounded-full bg-blue-500" style={{ width: progressWidth }} />
-									</div>
-								</div>
-								<div className="text-right text-[12px] text-slate-400">
-									{isCurrentLessonCompleted ? "Completed" : "In progress"}
-								</div>
+							<div className="min-w-0 flex-1 text-center text-[11px] font-medium text-slate-500">
+								Step {(state.currentLessonIndex ?? 0) + 1} / {module.lessons.length}
 							</div>
 						)}
-
-						<div className="mt-3 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-							{mobileTabs.map(({ mode, label, Icon }) => (
-								<button
-									key={mode}
-									type="button"
-									onClick={() => setViewMode(mode)}
-									className={cn(
-										"inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[12px] font-semibold transition-colors",
-										viewMode === mode
-											? "border-blue-600 bg-blue-600 text-white"
-											: "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
-									)}
-								>
-									<Icon className="h-3.5 w-3.5" />
-									<span>{label}</span>
-								</button>
-							))}
-						</div>
+						<button
+							type="button"
+							onClick={() => setViewMode(viewMode === "lesson" ? "code" : "lesson")}
+							className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-700"
+						>
+							{viewMode === "lesson" ? (
+								<Code2 className="h-3.5 w-3.5 text-slate-600" />
+							) : (
+								<BookOpen className="h-3.5 w-3.5 text-slate-600" />
+							)}
+							<span>{viewMode === "lesson" ? "Code" : "Lesson"}</span>
+						</button>
 					</div>
+
+					{module && (
+						<div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
+							<div className="h-full rounded-full bg-blue-500" style={{ width: progressWidth }} />
+						</div>
+					)}
+
+					<div className="mt-2 flex gap-1.5 overflow-x-auto pb-0.5 no-scrollbar">
+						{mobileTabs.map(({ mode, label, Icon }) => (
+							<button
+								key={mode}
+								type="button"
+								onClick={() => setViewMode(mode)}
+								className={cn(
+									"inline-flex h-7 shrink-0 items-center gap-1 rounded-full border px-2.5 text-[11px] font-semibold transition-colors",
+									viewMode === mode
+										? "border-blue-600 bg-blue-600 text-white"
+										: "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+								)}
+							>
+								<Icon className="h-3 w-3" />
+								<span>{label}</span>
+							</button>
+						))}
+					</div>
+				</div>
 
 					<div className="min-h-0 flex-1 overflow-hidden bg-white px-3 pb-3 pt-3">
 						<div className="h-full min-h-0 overflow-hidden">

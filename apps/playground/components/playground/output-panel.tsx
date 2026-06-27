@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	Copy,
 	Trash2,
@@ -22,18 +22,42 @@ interface OutputPanelProps {
 export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPanelProps) {
 	const {
 		module,
-		state: { output, testErrors, testResults },
+		state: { output, testErrors, testResults, currentLessonIndex },
 		labels,
 		isCurrentLessonCompleted,
 	} = usePlayground();
 
 	const [tab, setTab] = useState<"output" | "tests">("output");
+	const [expandedTest, setExpandedTest] = useState<string | null>(null);
+
+	// When the user runs code (output or test results change), force the tab
+	// back to "output" so they see results. Skip the initial mount.
+	const prevOutput = useRef<string | undefined>(output);
+	const prevTestKey = useRef<string>(JSON.stringify(testResults || {}));
+	const firstRender = useRef(true);
+	useEffect(() => {
+		const nextKey = JSON.stringify(testResults || {});
+		if (firstRender.current) {
+			firstRender.current = false;
+			prevOutput.current = output;
+			prevTestKey.current = nextKey;
+			return;
+		}
+		if (output !== prevOutput.current || nextKey !== prevTestKey.current) {
+			setTab("output");
+		}
+		prevOutput.current = output;
+		prevTestKey.current = nextKey;
+	}, [output, testResults]);
+
 	const rendererId = module?.panels?.renderer?.type || "standard-terminal";
 	const RendererComponent = getRenderer(rendererId);
 	const tests = Object.entries(testResults || {});
 	const passedCount = tests.filter(([, r]) => r.passed).length;
 	const totalTests = tests.length;
 	const allPassed = totalTests > 0 && passedCount === totalTests;
+	const lessonTests = module?.lessons?.[currentLessonIndex ?? 0]?.tests || [];
+	const findTestDef = (id: string) => lessonTests.find((t) => t.id === id);
 
 	const handleCopy = () => {
 		if (output) navigator.clipboard?.writeText(output).catch(() => {});
@@ -137,16 +161,16 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 								</div>
 
 								{testErrors && testErrors.length > 0 && (
-									<div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3">
-										<div className="mb-1 flex items-center gap-2 text-[13px] font-semibold text-red-300">
-											<AlertCircle className="h-4 w-4" />
-											{labels.error}
+									<div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3">
+										<AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+										<div className="min-w-0 flex-1">
+											<div className="mb-1 text-[13px] font-semibold text-red-700">{labels.error}</div>
+											<ul className="space-y-1 text-[12.5px] leading-relaxed text-red-700/90">
+												{testErrors.map((e, i) => (
+													<li key={i}>{e}</li>
+												))}
+											</ul>
 										</div>
-										<ul className="space-y-1 text-[12.5px] text-red-200/90">
-											{testErrors.map((e, i) => (
-												<li key={i}>{e}</li>
-											))}
-										</ul>
 									</div>
 								)}
 
@@ -156,37 +180,78 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 											Run the code to see test results.
 										</li>
 									)}
-									{tests.map(([id, r], i) => (
-										<li
-											key={id}
-										className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4"
-										>
-											<div className="flex min-w-0 items-center gap-3">
-												<span className="shrink-0">
-													{r.passed ? (
-														<CheckCircle2 className="h-6 w-6 text-emerald-400" />
-													) : r.passed === false ? (
-														<XCircle className="h-6 w-6 text-red-400" />
-													) : (
-														<MinusCircle className="h-6 w-6 text-slate-500" />
-													)}
-												</span>
-												<div className="min-w-0">
-											<div className="text-[13px] font-medium text-slate-900">Test {i + 1}</div>
-													<div className="truncate text-[12px] text-slate-400">
-														{r.error || "Expected output"}
+									{tests.map(([id, r], i) => {
+										const def = findTestDef(id);
+										const isOpen = expandedTest === id;
+										return (
+											<li
+												key={id}
+												className={cn(
+													"overflow-hidden rounded-2xl border bg-white",
+													r.passed === false ? "border-red-200" : r.passed ? "border-emerald-200" : "border-slate-200",
+												)}
+											>
+												<button
+													type="button"
+													onClick={() => setExpandedTest(isOpen ? null : id)}
+													className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+												>
+													<div className="flex min-w-0 items-center gap-3">
+														<span className="shrink-0">
+															{r.passed ? (
+																<CheckCircle2 className="h-5 w-5 text-emerald-500" />
+															) : r.passed === false ? (
+																<XCircle className="h-5 w-5 text-red-500" />
+															) : (
+																<MinusCircle className="h-5 w-5 text-slate-400" />
+															)}
+														</span>
+														<div className="min-w-0">
+															<div className="text-[13px] font-semibold text-slate-900">Test {i + 1}</div>
+															<div className="truncate text-[12px] text-slate-500">
+																{def?.isPublic === false ? labels.hiddenTest : "Expected output"}
+															</div>
+														</div>
 													</div>
-												</div>
-											</div>
-											<div className="flex items-center gap-3">
-												<span className={cn("text-[14px] font-medium", r.passed ? "text-emerald-400" : r.passed === false ? "text-red-400" : "text-slate-500")}>
-													{r.passed ? labels.testPassed : r.passed === false ? labels.testFailed : "—"}
-												</span>
-												<ChevronDown className="h-4 w-4 text-slate-500" />
-											</div>
-										</li>
-									))}
+													<div className="flex items-center gap-2">
+														<span className={cn("text-[12px] font-semibold", r.passed ? "text-emerald-600" : r.passed === false ? "text-red-600" : "text-slate-400")}>
+															{r.passed ? labels.testPassed : r.passed === false ? labels.testFailed : "—"}
+														</span>
+														<ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
+													</div>
+												</button>
+												{isOpen && (
+													<div className="space-y-3 border-t border-slate-100 bg-slate-50/60 px-4 py-3">
+														{r.error && (
+															<div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[12px] leading-relaxed text-red-700">
+																{r.error}
+															</div>
+														)}
+														{def?.isPublic !== false && def?.expectedOutput !== undefined && (
+															<div>
+																<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Expected output</div>
+																<pre className="overflow-x-auto rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-[12px] text-slate-800">{def.expectedOutput || "(empty)"}</pre>
+															</div>
+														)}
+														{r.actualOutput !== undefined && (
+															<div>
+																<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Your output</div>
+																<pre className="overflow-x-auto rounded-lg border border-slate-200 bg-[#071225] px-3 py-2 font-mono text-[12px] text-slate-100">{r.actualOutput || "(no output)"}</pre>
+															</div>
+														)}
+														{def?.isPublic !== false && def?.input && (
+															<div>
+																<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Input</div>
+																<pre className="overflow-x-auto rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-[12px] text-slate-800">{def.input}</pre>
+															</div>
+														)}
+													</div>
+												)}
+											</li>
+										);
+									})}
 								</ul>
+
 							</div>
 						</ScrollArea>
 					)}
