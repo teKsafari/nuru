@@ -52,15 +52,15 @@ export default async function Home({
 			</section>
 
 			{/* Features Section */}
-			<section className="mx-auto max-w-6xl px-4 py-20">
-				<div className="grid gap-8 md:grid-cols-3">
+			<section className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 md:py-20">
+				<div className="grid gap-5 sm:gap-6 md:grid-cols-3 md:gap-8">
 					{dict.landing.features.map((feature, index) => (
 						<div
 							key={index}
-							className="flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md"
+							className="flex w-full flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:shadow-md sm:p-8"
 						>
-							<h3 className="mb-4 text-2xl font-bold font-noto-rashi">{feature.title}</h3>
-							<p className="text-muted-foreground leading-relaxed">
+							<h3 className="mb-3 text-xl font-bold font-noto-rashi sm:mb-4 sm:text-2xl">{feature.title}</h3>
+							<p className="text-muted-foreground text-[15px] leading-relaxed sm:text-base">
 								{/* Simple Markdown-like link handling for the community feature */}
 								{feature.details.includes("[Telegram]") ? (
 									<>

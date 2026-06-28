@@ -233,12 +233,17 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 																<pre className="overflow-x-auto rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-[12px] text-slate-800">{def.expectedOutput || "(empty)"}</pre>
 															</div>
 														)}
-														{r.actualOutput !== undefined && (
-															<div>
-																<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Your output</div>
-																<pre className="overflow-x-auto rounded-lg border border-slate-200 bg-[#071225] px-3 py-2 font-mono text-[12px] text-slate-100">{r.actualOutput || "(no output)"}</pre>
-															</div>
-														)}
+														{(() => {
+															const shown = (r.actualOutput && r.actualOutput.length > 0)
+																? r.actualOutput
+																: (output && output.length > 0 ? output : "");
+															return (
+																<div>
+																	<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Your output</div>
+																	<pre className="overflow-x-auto rounded-lg border border-slate-200 bg-[#071225] px-3 py-2 font-mono text-[12px] text-slate-100">{shown || "(no output)"}</pre>
+																</div>
+															);
+														})()}
 														{def?.isPublic !== false && def?.input && (
 															<div>
 																<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Input</div>

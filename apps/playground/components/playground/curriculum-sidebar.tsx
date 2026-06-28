@@ -148,7 +148,7 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 									>
 										<span className="min-w-0">
 											<span className="block truncate text-[15px] font-semibold">
-												{m.slug || m.title[lang] || m.title.sw}
+												{mi + 1}. {m.title[lang] || m.title.sw}
 											</span>
 											<span className="mt-1 block text-[12px] font-medium text-slate-500">
 												{moduleDoneCount}/{moduleTotal} · {moduleTotal ? Math.round((moduleDoneCount / moduleTotal) * 100) : 0}%

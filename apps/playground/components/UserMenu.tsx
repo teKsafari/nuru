@@ -20,12 +20,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@nuru/ui/components/dropdown-menu";
-import { User, Sprout, UserCogIcon, LogOutIcon } from "lucide-react";
+import { User, Sprout, UserCogIcon, LogOutIcon, ChevronDown } from "lucide-react";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import Link from "next/link";
 
 export default function UserMenu() {
 	const { isAuthenticated, claims } = useContext(AuthContext);
+	const firstName = claims?.name?.split(" ")?.[0] || claims?.username || "";
 
 	const [postAuthRedirectUri, setRedirectUri] = useState("");
 
@@ -41,9 +42,12 @@ export default function UserMenu() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+				<Button
+					variant="ghost"
+					className="h-8 gap-1.5 rounded-full px-1 hover:bg-slate-100"
+				>
 					{isAuthenticated && claims ? (
-						<Avatar className="h-8 w-8">
+						<Avatar className="h-7 w-7">
 							<AvatarImage src={claims.picture || undefined} />
 							<AvatarFallback>
 								{claims.name
@@ -55,6 +59,12 @@ export default function UserMenu() {
 					) : (
 						<User className="text-muted-foreground h-5 w-5" />
 					)}
+					{isAuthenticated && firstName && (
+						<span className="hidden text-[13px] font-semibold text-slate-600 md:inline">
+							{firstName}
+						</span>
+					)}
+					<ChevronDown className="hidden h-3.5 w-3.5 text-slate-400 md:block" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-48 rounded-xl p-2">

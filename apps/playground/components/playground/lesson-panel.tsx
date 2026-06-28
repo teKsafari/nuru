@@ -37,7 +37,7 @@ export function LessonPanel({
 }: LessonPanelProps) {
 	const {
 		module,
-		state: { currentLessonIndex, completedLessonIndices, testResults, isTesting },
+		state: { currentLessonIndex, completedLessonIndices, testResults, isTesting, output },
 		actions: { onLessonChange, onNextModule },
 		lang,
 		labels,
@@ -254,11 +254,11 @@ export function LessonPanel({
 										<p className="text-red-500 font-medium text-xs">
 											{test.message}
 										</p>
-										{result.actualOutput !== undefined && (
+										{(result?.actualOutput !== undefined || output) && (
 											<div className="space-y-1">
 												<span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Your Output:</span>
-												<pre className="bg-slate-950 p-2 rounded border border-white/5 font-mono text-[11px] overflow-x-auto">
-													{result.actualOutput || "(no output)"}
+												<pre className="bg-slate-950 p-2 rounded border border-white/5 font-mono text-[11px] overflow-x-auto text-slate-100">
+													{(result?.actualOutput && result.actualOutput.length > 0) ? result.actualOutput : (output || "(no output)")}
 												</pre>
 											</div>
 										)}

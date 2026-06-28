@@ -9,7 +9,6 @@ import UserMenu from "@/components/UserMenu";
 import { LessonsDrawer } from "@/components/lessons-drawer";
 
 import { AppLogo } from "@nuru/ui/components/app-logo";
-import { ChevronDown } from "lucide-react";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 import { AuthContext } from "@/components/providers/auth-provider";
 
@@ -21,8 +20,7 @@ interface SiteHeaderProps {
 
 export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 	const pathname = usePathname();
-	const { claims } = useContext(AuthContext);
-	const firstName = claims?.name?.split(" ")?.[0] || claims?.username || "";
+	useContext(AuthContext);
 
 	const navItems = [
 		{
@@ -71,15 +69,7 @@ export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 					<div className="md:hidden">
 						<LessonsDrawer modules={modules} lang={lang} dict={dict} />
 					</div>
-					<div className="flex items-center gap-1.5">
-						<UserMenu />
-						{firstName && (
-							<>
-								<span className="hidden text-[13px] font-semibold text-slate-600 md:inline">{firstName}</span>
-								<ChevronDown className="hidden h-3.5 w-3.5 text-slate-400 md:block" />
-							</>
-						)}
-					</div>
+					<UserMenu />
 				</div>
 
 			</div>
