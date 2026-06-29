@@ -22,10 +22,21 @@ export default async function MainLayout({
 		const ctx = await getLogtoContext(logtoConfig, { fetchUserInfo: true });
 		isAuthenticated = ctx.isAuthenticated;
 		claims = ctx.claims ?? null;
-	} catch (err) {
+	} catch {
 		// Stale/invalid Logto grant (e.g. expired refresh token after a language
-		// switch). Treat the user as signed out instead of crashing the layout.
-		console.warn("[layout] getLogtoContext failed, treating as signed out:", err);
+		// switch). Clear the stale Logto cookie so the next render starts clean,
+		// and treat the user as signed out instead of crashing the layout.
+		try {
+			const { cookies } = await import("next/headers");
+			const store = await cookies();
+			for (const c of store.getAll()) {
+				if (c.name.startsWith("logto")) {
+					store.delete(c.name);
+				}
+			}
+		} catch {
+			// no-op
+		}
 	}
 
 	const modules = await getAllModules();
