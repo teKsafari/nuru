@@ -16,9 +16,17 @@ export default async function MainLayout({
 	children: React.ReactNode;
 	params: Promise<{ lang: string }>;
 }) {
-	const { isAuthenticated, claims } = await getLogtoContext(logtoConfig, {
-		fetchUserInfo: true,
-	});
+	let isAuthenticated = false;
+	let claims: Awaited<ReturnType<typeof getLogtoContext>>["claims"] = null;
+	try {
+		const ctx = await getLogtoContext(logtoConfig, { fetchUserInfo: true });
+		isAuthenticated = ctx.isAuthenticated;
+		claims = ctx.claims ?? null;
+	} catch (err) {
+		// Stale/invalid Logto grant (e.g. expired refresh token after a language
+		// switch). Treat the user as signed out instead of crashing the layout.
+		console.warn("[layout] getLogtoContext failed, treating as signed out:", err);
+	}
 
 	const modules = await getAllModules();
 	const { lang } = await params;
