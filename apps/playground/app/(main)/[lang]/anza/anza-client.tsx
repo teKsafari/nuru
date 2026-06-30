@@ -86,8 +86,32 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 	}, []);
 
 	const nuruExecutorRef = useRef<NuruExecutor | null>(null);
+	const outputCaptureRef = useRef<{ chunks: string[] } | null>(null);
+
+	const readCapturedOutput = useCallback((capture: { chunks: string[] }) => {
+		return capture.chunks.join("\n").trim();
+	}, []);
+
+	const waitForCapturedOutput = useCallback(async (capture: { chunks: string[] }, fallbackOutput: string) => {
+		let previous = readCapturedOutput(capture);
+
+		for (let i = 0; i < 12; i++) {
+			await new Promise<void>((resolve) => setTimeout(resolve, 50));
+			const next = readCapturedOutput(capture);
+
+			if (next && next === previous) {
+				return next;
+			}
+
+			previous = next;
+		}
+
+		return previous || fallbackOutput.trim();
+	}, [readCapturedOutput]);
 	
 	const nuruInstance = useNuru((text, isError) => {
+		outputCaptureRef.current?.chunks.push(text);
+
 		if (nuruExecutorRef.current) {
 			nuruExecutorRef.current.handleOutput(text, isError);
 		}
@@ -107,16 +131,35 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 		return exec;
 	}, [nuruInstance, module.executor]);
 
-	const runSingleTest = useCallback(async (testCode: string, test: any): Promise<TestResult> => {
-		let testOutput = "";
+	const runCodeAndCollectOutput = useCallback(async (
+		sourceCode: string,
+		stdin?: string,
+		onOutput?: (text: string) => void,
+	) => {
+		let eventOutput = "";
+		const outputCapture = { chunks: [] as string[] };
+		outputCaptureRef.current = outputCapture;
+
 		try {
-			const execution = executor.execute(testCode, test.input);
+			const execution = executor.execute(sourceCode, stdin);
 			for await (const event of execution) {
 				if (event.type === "stdout" || event.type === "stderr") {
-					testOutput += event.data + "\n";
+					eventOutput += event.data + "\n";
+					onOutput?.(event.data);
 				}
 			}
-			testOutput = testOutput.trim();
+
+			return await waitForCapturedOutput(outputCapture, eventOutput);
+		} finally {
+			if (outputCaptureRef.current === outputCapture) {
+				outputCaptureRef.current = null;
+			}
+		}
+	}, [executor, waitForCapturedOutput]);
+
+	const runSingleTest = useCallback(async (testCode: string, test: any): Promise<TestResult> => {
+		try {
+			const testOutput = await runCodeAndCollectOutput(testCode, test.input);
 
 			let passed = false;
 			if (test.type === "io" || test.type === "exact_output") {
@@ -131,9 +174,9 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 
 			return { passed, actualOutput: testOutput };
 		} catch (error: any) {
-			return { passed: false, error: error.toString(), actualOutput: testOutput };
+			return { passed: false, error: error.toString(), actualOutput: "" };
 		}
-	}, [executor]);
+	}, [runCodeAndCollectOutput]);
 
 	const checkSolution = useCallback(async (currentCode: string, lastRunOutput: string = "") => {
 		setIsTesting(true);
@@ -203,19 +246,14 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 		setOutput("");
 		setTestErrors([]);
 		setTestResults({});
-		let fullOutput = "";
 		try {
-			const execution = executor.execute(code);
-			for await (const event of execution) {
-				if (event.type === "stdout" || event.type === "stderr") {
-					fullOutput += event.data + "\n";
-					setOutput((prev) => (prev ? prev + `\n${event.data}` : event.data));
-				}
-			}
+			const validationOutput = await runCodeAndCollectOutput(code, undefined, (text) => {
+				setOutput((prev) => (prev ? prev + `\n${text}` : text));
+			});
 			// Just run evaluation for non-IO tests if we want immediate feedback, 
 			// or just let the student see their output.
 			// The plan says "checkSolution" is called in handleRun too.
-			await checkSolution(code, fullOutput.trim());
+			await checkSolution(code, validationOutput);
 		} catch (error) {
 			setOutput(`${dict.playground.error}${error}`);
 		}
@@ -225,17 +263,12 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 		setOutput(dict.playground.testing);
 		setTestErrors([]);
 		setTestResults({});
-		let fullOutput = "";
 		try {
 			// First run without stdin to get default output (for non-IO tests)
-			const execution = executor.execute(code);
-			for await (const event of execution) {
-				if (event.type === "stdout" || event.type === "stderr") {
-					fullOutput += event.data + "\n";
-					setOutput((prev) => (prev === dict.playground.testing ? event.data : prev + `\n${event.data}`));
-				}
-			}
-			const passed = await checkSolution(code, fullOutput.trim());
+			const validationOutput = await runCodeAndCollectOutput(code, undefined, (text) => {
+				setOutput((prev) => (prev === dict.playground.testing ? text : prev + `\n${text}`));
+			});
+			const passed = await checkSolution(code, validationOutput);
 			if (passed) {
 				setOutput((prev) => prev + "\n✓ Submitted!");
 			}
