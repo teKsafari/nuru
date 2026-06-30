@@ -8,4 +8,6 @@ Lessons are located in `content/lessons/`. If you'd like to submit a new lesson 
 
 ### Healthchecks
 
-For deployments with docker, healthcheks must be run against `/${locale}` eg `/sw/` not `/` which will return a redirect. Redirects are 'bad' as far as healthchecks are concerned. 
+For deployments with docker, healthchecks must be run against `/api/health`, which returns a static `200 ok` without touching the database or redirecting.
+
+Do **not** point healthchecks at `/` (returns a redirect, which is 'bad' for healthchecks) or at a locale path like `/en/` or `/sw/`. Those routes render the layout, which queries the database on every request — a monitor pinging them keeps the Neon serverless compute permanently awake (it never autosuspends), burning compute hours even with zero real users. 
