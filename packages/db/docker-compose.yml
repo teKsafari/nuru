@@ -1,8 +1,13 @@
 services:
-  db:
+  postgres:
     image: postgres:18
     restart: always
     environment:
       POSTGRES_PASSWORD: ${DEV_POSTGRES_PASSWORD:?}
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready", "-U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 2
