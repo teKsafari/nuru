@@ -10,7 +10,12 @@
 		"start": "turbo run start",
 		"test": "turbo run test --output-logs=new-only",
 		"lint": "turbo run lint",
-		"format": "turbo run format"
+		"format": "turbo run format",
+		"db:generate": "turbo run db:generate",
+		"db:migrate": "turbo run db:migrate",
+		"db:push": "turbo run db:push",
+		"db:seed": "turbo run db:seed",
+		"db:studio": "turbo run db:studio"
 	},
 	"packageManager": "pnpm@9.0.0",
 	"engines": {
