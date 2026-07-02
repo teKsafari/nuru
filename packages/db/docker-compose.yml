@@ -1,0 +1,8 @@
+services:
+  db:
+    image: postgres:18
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DEV_POSTGRES_PASSWORD:?}
+    ports:
+      - 5432:5432
