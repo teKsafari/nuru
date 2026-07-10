@@ -146,22 +146,10 @@ export function Playground(props: PlaygroundProps) {
 							<span>Back</span>
 						</button>
 						{module && (
-							<div className="min-w-0 flex-1 text-center text-[11px] font-medium text-slate-500">
+							<div className="min-w-0 flex-1 text-right text-[11px] font-medium text-slate-500">
 								Step {(state.currentLessonIndex ?? 0) + 1} / {module.lessons.length}
 							</div>
 						)}
-						<button
-							type="button"
-							onClick={() => setViewMode(viewMode === "lesson" ? "code" : "lesson")}
-							className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-700"
-						>
-							{viewMode === "lesson" ? (
-								<Code2 className="h-3.5 w-3.5 text-slate-600" />
-							) : (
-								<BookOpen className="h-3.5 w-3.5 text-slate-600" />
-							)}
-							<span>{viewMode === "lesson" ? "Code" : "Lesson"}</span>
-						</button>
 					</div>
 
 					{module && (

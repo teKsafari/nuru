@@ -66,18 +66,8 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 	if (isMobile) {
 		return (
 			<div className="flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-white text-slate-900 shadow-sm">
-				<div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4 py-3">
-					<h2 className="text-[15px] font-semibold text-slate-900">Output</h2>
-					{isCurrentLessonCompleted && (
-						<div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-medium text-emerald-600">
-							<CheckCircle2 className="h-3.5 w-3.5" />
-							<span>Passed</span>
-						</div>
-					)}
-				</div>
-
-				<div className="px-4 py-3">
-					<div className="grid grid-cols-2 rounded-2xl border border-slate-200 bg-slate-50 p-1">
+				<div className="flex shrink-0 items-center gap-3 px-4 py-3">
+					<div className="grid flex-1 grid-cols-2 rounded-2xl border border-slate-200 bg-slate-50 p-1">
 						{(["output", "tests"] as const).map((t) => (
 							<button
 								key={t}
@@ -93,6 +83,12 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 							</button>
 						))}
 					</div>
+					{isCurrentLessonCompleted && (
+						<div className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-medium text-emerald-600">
+							<CheckCircle2 className="h-3.5 w-3.5" />
+							<span>Passed</span>
+						</div>
+					)}
 				</div>
 
 				<div className="min-h-0 flex-1">

@@ -9,8 +9,6 @@ import {
 	ArrowRight,
 	Eye,
 	HelpCircle,
-	BookOpen,
-	TerminalSquare,
 } from "lucide-react";
 import { CodeEditor } from "@nuru/ui/components/code-editor";
 import { OutputPanel } from "./output-panel";
@@ -53,8 +51,6 @@ export function CodePanel({
 		isCurrentLessonCompleted: isCompleted,
 		handleNextAction: onNextAction,
 		nextActionLabel,
-		viewMode,
-		setViewMode,
 	} = usePlayground();
 
 	const editorPanelRef = React.useRef<ImperativePanelHandle>(null);
@@ -114,42 +110,14 @@ export function CodePanel({
 			</div>
 
 			<div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 px-2 py-2">
-				<div className="flex items-center gap-1">
-					<button
-						type="button"
-						onClick={() => setViewMode("lesson")}
-						className={cn(
-							"inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-medium transition-colors",
-							viewMode === "lesson"
-								? "bg-blue-50 text-blue-600"
-								: "text-slate-600 hover:bg-slate-100",
-						)}
-					>
-						<BookOpen className="h-3.5 w-3.5" />
-						<span>Lesson</span>
-					</button>
-					<button
-						type="button"
-						onClick={() => setViewMode("output")}
-						className={cn(
-							"inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-medium transition-colors",
-							viewMode === "output"
-								? "bg-blue-50 text-blue-600"
-								: "text-slate-600 hover:bg-slate-100",
-						)}
-					>
-						<TerminalSquare className="h-3.5 w-3.5" />
-						<span>Output</span>
-					</button>
-					<button
-						type="button"
-						onClick={onReset}
-						className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-100"
-					>
-						<RotateCcw className="h-3.5 w-3.5" />
-						<span>{labels.reset}</span>
-					</button>
-				</div>
+				<button
+					type="button"
+					onClick={onReset}
+					className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-100"
+				>
+					<RotateCcw className="h-3.5 w-3.5" />
+					<span>{labels.reset}</span>
+				</button>
 
 				<Button
 					onClick={onRun}
