@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTheme } from "@wrksz/themes/client";
 import {
 	ChevronDown,
 	ChevronLeft,
@@ -46,6 +47,13 @@ export function LessonPanel({
 	} = usePlayground();
 
 	const [showTests, setShowTests] = useState(false);
+
+	// Embedded code blocks follow the active theme (light until mounted, to match SSR).
+	const { resolvedTheme } = useTheme();
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => setMounted(true), []);
+	const editorTheme: "dark" | "light" =
+		mounted && resolvedTheme === "dark" ? "dark" : "light";
 
 	if (!module || currentLessonIndex === undefined || !completedLessonIndices || !onLessonChange) {
 		return null;
@@ -296,11 +304,12 @@ export function LessonPanel({
 														String(children).replace(/\n$/, ""),
 													);
 													return (
-														<div className="not-prose border-border bg-muted/30 my-6 overflow-hidden rounded-xl border p-2 shadow-xs">
+														<div className="not-prose my-4 overflow-hidden rounded-lg border border-border bg-muted/30">
 															<CodeEditor
 																code={cleanedCode}
 																highlights={highlights}
 																readOnly
+																theme={editorTheme}
 																extensions={extensions}
 															/>
 														</div>
@@ -387,8 +396,8 @@ export function LessonPanel({
 												if (match) {
 													const { cleanedCode, highlights } = parseHighlights(String(children).replace(/\n$/, ""));
 													return (
-												<div className="not-prose my-5 overflow-hidden rounded-2xl border border-slate-800 bg-[#071225]">
-															<CodeEditor code={cleanedCode} highlights={highlights} readOnly extensions={extensions} />
+												<div className="not-prose my-4 overflow-hidden rounded-lg border border-border bg-muted/30">
+															<CodeEditor code={cleanedCode} highlights={highlights} readOnly theme={editorTheme} extensions={extensions} />
 														</div>
 													);
 												}

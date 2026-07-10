@@ -16,6 +16,7 @@ import { cn } from "@nuru/ui/lib/utils";
 import { Button } from "@nuru/ui/components/button";
 import Markdown from "react-markdown";
 import { CodeEditor } from "@nuru/ui/components/code-editor";
+import { useTheme } from "@wrksz/themes/client";
 import { ScrollArea } from "@/components/playground/scroll-area";
 import { usePlayground } from "./playground-context";
 import { parseHighlights } from "@/lib/utils/highlights";
@@ -43,6 +44,13 @@ export function LessonContentPanel() {
 	useEffect(() => {
 		setDismissedAt(null);
 	}, [currentLessonIndex]);
+
+	// Embedded code blocks follow the active theme (light until mounted, to match SSR).
+	const { resolvedTheme } = useTheme();
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => setMounted(true), []);
+	const editorTheme: "dark" | "light" =
+		mounted && resolvedTheme === "dark" ? "dark" : "light";
 	const showOverlay =
 		!!isCurrentLessonCompleted && dismissedAt !== currentLessonIndex;
 
@@ -196,11 +204,12 @@ export function LessonContentPanel() {
 												String(children).replace(/\n$/, ""),
 											);
 											return (
-												<div className="not-prose my-5 overflow-hidden rounded-xl border border-slate-800 bg-slate-900 shadow-sm">
+												<div className="not-prose my-4 overflow-hidden rounded-lg border border-border bg-muted/30">
 													<CodeEditor
 														code={cleanedCode}
 														highlights={highlights}
 														readOnly
+														theme={editorTheme}
 														extensions={extensions}
 													/>
 												</div>

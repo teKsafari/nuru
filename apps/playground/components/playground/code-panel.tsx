@@ -11,6 +11,7 @@ import {
 	HelpCircle,
 } from "lucide-react";
 import { CodeEditor } from "@nuru/ui/components/code-editor";
+import { useTheme } from "@wrksz/themes/client";
 import { OutputPanel } from "./output-panel";
 import { Button } from "@nuru/ui/components/button";
 import { cn } from "@nuru/ui/lib/utils";
@@ -52,6 +53,13 @@ export function CodePanel({
 		handleNextAction: onNextAction,
 		nextActionLabel,
 	} = usePlayground();
+
+	// Follow the active theme; fall back to light until mounted to match SSR.
+	const { resolvedTheme } = useTheme();
+	const [mounted, setMounted] = React.useState(false);
+	React.useEffect(() => setMounted(true), []);
+	const editorTheme: "dark" | "light" =
+		mounted && resolvedTheme === "dark" ? "dark" : "light";
 
 	const editorPanelRef = React.useRef<ImperativePanelHandle>(null);
 	const outputPanelRef = React.useRef<ImperativePanelHandle>(null);
@@ -103,7 +111,7 @@ export function CodePanel({
 				<CodeEditor
 					code={code}
 					onChange={onCodeChange}
-					theme="light"
+					theme={editorTheme}
 					extensions={extensions}
 					className="[&_.cm-content]:text-[12px] [&_.cm-gutters]:text-[11px]"
 				/>
@@ -164,7 +172,7 @@ export function CodePanel({
 				<CodeEditor
 					code={code}
 					onChange={onCodeChange}
-					theme="light"
+					theme={editorTheme}
 					extensions={extensions}
 				/>
 			</div>
