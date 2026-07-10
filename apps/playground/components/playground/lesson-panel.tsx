@@ -265,7 +265,7 @@ export function LessonPanel({
 										{(result?.actualOutput !== undefined || output) && (
 											<div className="space-y-1">
 												<span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Your Output:</span>
-												<pre className="bg-slate-950 p-2 rounded border border-white/5 font-mono text-[11px] overflow-x-auto text-slate-100">
+												<pre className="bg-muted/40 p-2 rounded border border-border font-mono text-[11px] overflow-x-auto text-foreground">
 													{(result?.actualOutput && result.actualOutput.length > 0) ? result.actualOutput : (output || "(no output)")}
 												</pre>
 											</div>
@@ -459,7 +459,7 @@ export function LessonPanel({
 												className="flex w-full items-center justify-between gap-3 rounded-2xl border border-border bg-card px-3 py-3 text-left hover:bg-muted"
 											>
 												<div className="flex min-w-0 items-center gap-3">
-													<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[12px] font-semibold text-blue-600">
+													<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-[12px] font-semibold text-blue-600 dark:text-blue-400">
 														{i + 1}
 													</span>
 													<div className="min-w-0">

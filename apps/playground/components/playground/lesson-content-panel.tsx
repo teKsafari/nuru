@@ -135,7 +135,7 @@ export function LessonContentPanel() {
 						className="inline-flex h-7 items-center gap-1.5 rounded-full border border-border bg-card px-2.5 text-[11px] font-semibold text-foreground hover:bg-muted"
 						aria-label="Toggle language"
 					>
-						<span className="rounded-full bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-700">
+						<span className="rounded-full bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-400">
 							{lang.toUpperCase()}
 						</span>
 						<span className="text-muted-foreground">/ {lang === "en" ? "SW" : "EN"}</span>
@@ -298,9 +298,9 @@ export function LessonContentPanel() {
 
 						{/* Hint card — only if lesson actually provides a hint */}
 						{hintText && (
-							<div className="mt-4 flex items-start gap-3 rounded-2xl border border-amber-100 bg-amber-50/50 px-5 py-4">
-								<div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100">
-									<Lightbulb className="h-3.5 w-3.5 text-amber-600" />
+							<div className="mt-4 flex items-start gap-3 rounded-2xl border border-warning/25 bg-warning/10 px-5 py-4">
+								<div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-warning/15">
+									<Lightbulb className="h-3.5 w-3.5 text-warning" />
 								</div>
 								<div className="text-[13px] leading-relaxed text-foreground">
 									<span className="mr-1 font-semibold text-foreground">
