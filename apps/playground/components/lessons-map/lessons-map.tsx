@@ -37,12 +37,44 @@ export function LessonsMap({ modules, lang, dict }: LessonsMapProps) {
     }, [modules, lang]);
 
     const totalLessons = allLessons.length;
-    // Mock progress: First 3 lessons completed, 4th active
-    const completedLessonsCount = 3; 
-    const currentActiveGlobalIndex = completedLessonsCount;
 
-    const progressPercentage = totalLessons > 0 
-        ? Math.round((completedLessonsCount / totalLessons) * 100) 
+    // Track client mount so localStorage-backed progress is applied only after
+    // hydration; SSR and first client paint render the zero-progress state.
+    const [mounted, setMounted] = React.useState(false);
+    React.useEffect(() => setMounted(true), []);
+
+    // Real per-lesson completion, read from the same per-module localStorage keys
+    // the playground writes (nuru-completed-<moduleId> = number[] of lesson indices).
+    const completedSet = useMemo(() => {
+        const set = new Set<number>();
+        if (!mounted || typeof window === "undefined") return set;
+        let offset = 0;
+        for (const module of modules) {
+            try {
+                const raw = window.localStorage.getItem(`nuru-completed-${module.id}`);
+                if (raw) {
+                    for (const idx of JSON.parse(raw) as number[]) {
+                        if (idx >= 0 && idx < module.lessons.length) set.add(offset + idx);
+                    }
+                }
+            } catch {}
+            offset += module.lessons.length;
+        }
+        return set;
+    }, [modules, mounted]);
+
+    const completedLessonsCount = completedSet.size;
+    // The active lesson is the first one not yet completed, in course order.
+    let currentActiveGlobalIndex = totalLessons;
+    for (let i = 0; i < totalLessons; i++) {
+        if (!completedSet.has(i)) {
+            currentActiveGlobalIndex = i;
+            break;
+        }
+    }
+
+    const progressPercentage = totalLessons > 0
+        ? Math.round((completedLessonsCount / totalLessons) * 100)
         : 0;
 
     const activeLesson = allLessons[currentActiveGlobalIndex] || allLessons[allLessons.length - 1];
@@ -114,7 +146,7 @@ export function LessonsMap({ modules, lang, dict }: LessonsMapProps) {
                     const difficultyLabel = dict.difficulty[difficultyKey as keyof typeof dict.difficulty] || difficultyKey;
 
                     const moduleStartGlobalIndex = allLessons.find(s => s.moduleId === module.id)?.globalIndex || 0;
-                    const moduleCompletedCount = module.lessons.filter((_, i) => (moduleStartGlobalIndex + i) < completedLessonsCount).length;
+                    const moduleCompletedCount = module.lessons.filter((_, i) => completedSet.has(moduleStartGlobalIndex + i)).length;
 
                     return (
                         <section 
@@ -162,9 +194,9 @@ export function LessonsMap({ modules, lang, dict }: LessonsMapProps) {
 
                                 {module.lessons.map((lesson, lessonIdx) => {
                                     const globalIndex = moduleStartGlobalIndex + lessonIdx;
-                                    const isCompleted = globalIndex < currentActiveGlobalIndex;
+                                    const isCompleted = completedSet.has(globalIndex);
                                     const isActive = globalIndex === currentActiveGlobalIndex;
-                                    const isLocked = globalIndex > currentActiveGlobalIndex;
+                                    const isLocked = !isCompleted && globalIndex > currentActiveGlobalIndex;
 
                                     const lessonTitle = lesson.title[lang] || lesson.title.sw;
                                     const href = `/${lang}/anza/${module.slug}/${lesson.slug}`;
