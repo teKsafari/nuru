@@ -195,9 +195,6 @@ export function CodePanel({
 					>
 						<AlignLeft className="h-3.5 w-3.5" />
 						<span>Format Code</span>
-						<span className="ml-1 rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
-							Ctrl+Shift+F
-						</span>
 					</button>
 				</div>
 				<div className="flex items-center gap-2">
@@ -233,9 +230,6 @@ export function CodePanel({
 					>
 						<Play className="h-3.5 w-3.5 fill-current" />
 						<span>{labels.run}</span>
-						<span className="ml-1 rounded bg-blue-700/60 px-1.5 py-0.5 text-[10px] font-medium text-blue-50">
-							Ctrl+Enter
-						</span>
 					</Button>
 					{isCompleted && onNextAction && (
 						<Button
