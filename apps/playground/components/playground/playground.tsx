@@ -178,7 +178,7 @@ export function Playground(props: PlaygroundProps) {
 					</div>
 				</div>
 
-					<div className="min-h-0 flex-1 overflow-hidden bg-white px-3 pb-3 pt-3">
+					<div className="min-h-0 flex-1 overflow-hidden bg-white px-2 pb-2 pt-2">
 						<div className="h-full min-h-0 overflow-hidden">
 							{viewMode === "lesson" && (
 								<LessonPanel

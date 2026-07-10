@@ -111,7 +111,7 @@ export function LessonPanel({
 	);
 
 	const navigation = !hideNavigation && (
-		<div className="border-border bg-card/50 @container sticky bottom-0 mt-auto flex items-center justify-between gap-2 border-t pt-6 pb-2 backdrop-blur-xs">
+		<div className="border-border bg-card/50 @container sticky bottom-0 mt-auto flex items-center justify-between gap-2 border-t pt-3 pb-2 backdrop-blur-xs">
 			<Button
 				variant="outline"
 				size="sm"
@@ -355,10 +355,10 @@ export function LessonPanel({
 	return (
 		<div className="flex h-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-white text-slate-900 shadow-sm">
 			<div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-				<div className="min-w-0 text-[11px] text-slate-500">
-					Step {currentLessonIndex + 1} of {module.lessons.length}
-					<span className="mx-2 text-slate-300">•</span>
-					{labels.lesson}
+				<div className="min-w-0">
+					<div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+						{labels.lesson}
+					</div>
 					<div className="mt-0.5 truncate text-[15px] font-semibold text-slate-900">
 						{lesson.title[lang] || lesson.title.sw}
 					</div>
@@ -378,15 +378,6 @@ export function LessonPanel({
 					<div className="flex min-h-full w-full min-w-0 flex-col px-4 pb-5 pt-4 text-sm">
 						<div className="flex-1">
 							<div key={currentLessonIndex} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-								<div className="mb-4">
-									<div className="mb-2 text-[11px] text-slate-500">
-										Step {currentLessonIndex + 1} of {module.lessons.length}
-									</div>
-									<div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
-										<div className="h-full rounded-full bg-blue-500" style={{ width: `${((currentLessonIndex + 1) / module.lessons.length) * 100}%` }} />
-									</div>
-								</div>
-
 								<div className="mb-5 text-[14px] leading-7 text-slate-700">
 									<Markdown
 										components={{

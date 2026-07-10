@@ -1,6 +1,6 @@
 export default function LessonLoading() {
 	return (
-		<div className="h-[calc(100vh-40px)] w-full bg-slate-50 p-3">
+		<div className="h-full w-full bg-slate-50 p-3">
 			<div className="grid h-full grid-cols-1 gap-3 md:grid-cols-[20%_38%_42%]">
 				{/* Sidebar skeleton */}
 				<div className="hidden h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm md:flex">
