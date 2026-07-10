@@ -7,6 +7,7 @@ import Link from "next/link";
 import UserMenu from "@/components/UserMenu";
 
 import { LessonsDrawer } from "@/components/lessons-drawer";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 import { AppLogo } from "@nuru/ui/components/app-logo";
 import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
@@ -65,10 +66,11 @@ export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 				</nav>
 
 
-				<div className="flex shrink-0 items-center gap-5">
+				<div className="flex shrink-0 items-center gap-3">
 					<div className="md:hidden">
 						<LessonsDrawer modules={modules} lang={lang} dict={dict} />
 					</div>
+					<ThemeToggle />
 					<UserMenu />
 				</div>
 
