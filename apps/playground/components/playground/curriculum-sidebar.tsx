@@ -91,13 +91,13 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 
 	if (isMobile) {
 		return (
-			<aside className="flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-sm">
-				<div className="shrink-0 border-b border-slate-200 px-4 py-4">
-					<div className="mb-2 flex items-center justify-between text-[12px] text-slate-500">
+			<aside className="flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-border bg-card shadow-sm">
+				<div className="shrink-0 border-b border-border px-4 py-4">
+					<div className="mb-2 flex items-center justify-between text-[12px] text-muted-foreground">
 						<span>{pctAll}% complete</span>
 						<span className="font-medium">{doneAll}/{totalAll}</span>
 					</div>
-					<div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+					<div className="h-2 w-full overflow-hidden rounded-full bg-muted">
 						<div
 							className="h-full rounded-full bg-blue-600 transition-all duration-500"
 							style={{ width: `${pctAll}%` }}
@@ -107,7 +107,7 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 						<button type="button" onClick={() => setAllOpen(true)} className="text-blue-600">
 							Expand all
 						</button>
-						<button type="button" onClick={() => setAllOpen(false)} className="text-slate-500">
+						<button type="button" onClick={() => setAllOpen(false)} className="text-muted-foreground">
 							Collapse all
 						</button>
 					</div>
@@ -136,13 +136,13 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 								(prev && prevDone === prev.lessons.length);
 
 							return (
-								<div key={m.id} className="overflow-hidden rounded-2xl bg-white">
+								<div key={m.id} className="overflow-hidden rounded-2xl bg-card">
 									<button
 										type="button"
 										onClick={() => setOpen((s) => ({ ...s, [m.id]: !isOpen }))}
 										className={cn(
 											"grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-2xl px-3 py-3 text-left",
-											isCurrent ? "bg-blue-50 text-blue-700" : "text-slate-900 hover:bg-slate-50",
+											isCurrent ? "bg-blue-50 text-blue-700" : "text-foreground hover:bg-muted",
 											!isUnlocked && "opacity-70",
 										)}
 									>
@@ -150,13 +150,13 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 											<span className="block truncate text-[15px] font-semibold">
 												{mi + 1}. {m.title[lang] || m.title.sw}
 											</span>
-											<span className="mt-1 block text-[12px] font-medium text-slate-500">
+											<span className="mt-1 block text-[12px] font-medium text-muted-foreground">
 												{moduleDoneCount}/{moduleTotal} · {moduleTotal ? Math.round((moduleDoneCount / moduleTotal) * 100) : 0}%
 											</span>
 										</span>
 										<span className="flex shrink-0 items-center gap-2">
-											{!isUnlocked && <Lock className="h-3.5 w-3.5 text-slate-400" />}
-											<ChevronDown className={cn("h-5 w-5 text-slate-400 transition-transform", !isOpen && "-rotate-90")} />
+											{!isUnlocked && <Lock className="h-3.5 w-3.5 text-muted-foreground" />}
+											<ChevronDown className={cn("h-5 w-5 text-muted-foreground transition-transform", !isOpen && "-rotate-90")} />
 										</span>
 									</button>
 
@@ -179,10 +179,10 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 															}}
 															className={cn(
 																"grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl px-3 py-3 text-left text-[14px] transition-colors disabled:cursor-not-allowed",
-																isActive ? "bg-blue-50 text-blue-700" : "text-slate-700 hover:bg-slate-50",
+																isActive ? "bg-blue-50 text-blue-700" : "text-foreground hover:bg-muted",
 															)}
 														>
-															<span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold", isActive || isDone ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-500")}>
+															<span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold", isActive || isDone ? "bg-blue-600 text-white" : "bg-muted text-muted-foreground")}>
 																{isDone ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
 															</span>
 															<span className="min-w-0 truncate">{lesson.title[lang] || lesson.title.sw}</span>
@@ -190,9 +190,9 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 																{isActive ? (
 																	<CircleDot className="h-5 w-5 text-blue-500" />
 																) : !isUnlocked ? (
-																	<Lock className="h-3.5 w-3.5 text-slate-300" />
+																	<Lock className="h-3.5 w-3.5 text-muted-foreground/60" />
 																) : (
-																	<span className="block h-4 w-4 rounded-full border border-slate-300" />
+																	<span className="block h-4 w-4 rounded-full border border-border" />
 																)}
 															</span>
 														</button>
@@ -211,23 +211,23 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 	}
 
 	return (
-		<aside className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+		<aside className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
 			{/* Header card */}
-			<div className="border-b border-slate-200 px-5 pt-5 pb-4">
+			<div className="border-b border-border px-5 pt-5 pb-4">
 				<div className="flex items-center gap-2.5">
 					<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
 						<BookOpen className="h-4 w-4" />
 					</div>
-					<h2 className="truncate text-[15px] font-semibold text-slate-900">
+					<h2 className="truncate text-[15px] font-semibold text-foreground">
 						Nuru Basics
 					</h2>
 				</div>
 				<div className="mt-4">
-					<div className="mb-1.5 flex items-center justify-between text-[11px] text-slate-500">
+					<div className="mb-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
 						<span>{pctAll}% complete</span>
 						<span className="font-medium">{doneAll}/{totalAll}</span>
 					</div>
-					<div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+					<div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
 						<div
 							className="h-full rounded-full bg-blue-600 transition-all duration-500"
 							style={{ width: `${pctAll}%` }}
@@ -264,7 +264,7 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 							<div
 								key={m.id}
 								className={cn(
-									"border-b border-slate-100 py-1 last:border-b-0",
+									"border-b border-border py-1 last:border-b-0",
 									!isUnlocked && "opacity-70",
 								)}
 							>
@@ -273,25 +273,25 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 										setOpen((s) => ({ ...s, [m.id]: !isOpen }))
 									}
 									className={cn(
-										"flex w-full items-center justify-between gap-2 rounded-lg px-2 py-2 text-left text-[13px] font-semibold hover:bg-slate-50",
-										isCurrent ? "text-blue-700" : "text-slate-800",
+										"flex w-full items-center justify-between gap-2 rounded-lg px-2 py-2 text-left text-[13px] font-semibold hover:bg-muted",
+										isCurrent ? "text-blue-700" : "text-foreground",
 									)}
 								>
 									<span className="flex min-w-0 items-center gap-2">
 										{!isUnlocked && (
-											<Lock className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+											<Lock className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
 										)}
 										<span className="truncate">
 											{mi + 1}. {m.title[lang] || m.title.sw}
 										</span>
 									</span>
 									<span className="flex shrink-0 items-center gap-2">
-										<span className="text-[10.5px] font-medium text-slate-400">
+										<span className="text-[10.5px] font-medium text-muted-foreground">
 											{moduleDoneCount}/{moduleTotal}
 										</span>
 										<ChevronDown
 											className={cn(
-												"h-4 w-4 text-slate-400 transition-transform",
+												"h-4 w-4 text-muted-foreground transition-transform",
 												!isOpen && "-rotate-90",
 											)}
 										/>
@@ -322,7 +322,7 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 															"group flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors disabled:cursor-not-allowed",
 															isActive
 																? "bg-blue-50 text-blue-700"
-																: "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+																: "text-muted-foreground hover:bg-muted hover:text-foreground",
 														)}
 													>
 														<span
@@ -330,7 +330,7 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 																"flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold",
 																isActive
 																	? "bg-blue-600 text-white"
-																	: "bg-slate-100 text-slate-500",
+																	: "bg-muted text-muted-foreground",
 															)}
 														>
 															{i + 1}
@@ -344,9 +344,9 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 															) : isActive ? (
 																<CircleDot className="h-4 w-4 text-blue-500" />
 															) : !isUnlocked ? (
-																<Lock className="h-3 w-3 text-slate-300" />
+																<Lock className="h-3 w-3 text-muted-foreground/60" />
 															) : (
-																<span className="block h-3.5 w-3.5 rounded-full border border-slate-300" />
+																<span className="block h-3.5 w-3.5 rounded-full border border-border" />
 															)}
 														</span>
 													</button>
@@ -362,17 +362,17 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 			</ScrollArea>
 
 			{/* Footer CTA */}
-			<div className="border-t border-slate-200 p-3">
+			<div className="border-t border-border p-3">
 				<Button
 					variant="outline"
 					onClick={() => setViewMode("progress")}
-					className="h-10 w-full justify-between rounded-xl border-slate-200 bg-white text-[13px] font-medium text-slate-700 hover:bg-slate-50"
+					className="h-10 w-full justify-between rounded-xl border-border bg-card text-[13px] font-medium text-foreground hover:bg-muted"
 				>
 					<span className="flex items-center gap-2">
 						<BarChart3 className="h-4 w-4 text-blue-500" />
 						View Progress
 					</span>
-					<ChevronDown className="h-4 w-4 -rotate-90 text-slate-400" />
+					<ChevronDown className="h-4 w-4 -rotate-90 text-muted-foreground" />
 				</Button>
 			</div>
 		</aside>
