@@ -66,15 +66,15 @@ export default async function KoziModulePage({
 	];
 
 	return (
-		<main className="min-h-screen bg-white">
+		<main className="min-h-screen bg-background">
 			<div className="mx-auto max-w-[1220px] px-8 pt-6 pb-8">
 				{/* Breadcrumbs */}
-				<nav className="mb-6 flex items-center gap-2 text-[12px] font-medium text-slate-500">
-					<Link href={`/${lang}`} className="hover:text-slate-900">Dashboard</Link>
-					<ChevronRight className="h-3.5 w-3.5 text-slate-300" />
-					<Link href={`/${lang}/kozi/${mod.slug}`} className="hover:text-slate-900">Courses</Link>
-					<ChevronRight className="h-3.5 w-3.5 text-slate-300" />
-					<span className="font-semibold text-slate-900">{title}</span>
+				<nav className="mb-6 flex items-center gap-2 text-[12px] font-medium text-muted-foreground">
+					<Link href={`/${lang}`} className="hover:text-foreground">Dashboard</Link>
+					<ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
+					<Link href={`/${lang}/kozi/${mod.slug}`} className="hover:text-foreground">Courses</Link>
+					<ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
+					<span className="font-semibold text-foreground">{title}</span>
 				</nav>
 
 				<div className="grid grid-cols-1 gap-[26px] lg:grid-cols-[1fr_322px]">
@@ -89,10 +89,10 @@ export default async function KoziModulePage({
 									<GraduationCap className="h-4 w-4" />
 									Course
 								</div>
-								<h1 className="mb-4 text-[40px] leading-none font-extrabold tracking-tight text-[#111a44]">
+								<h1 className="mb-4 text-[40px] leading-none font-extrabold tracking-tight text-foreground">
 									{title}
 								</h1>
-								<p className="mb-8 max-w-[430px] text-[13.5px] leading-7 text-slate-500">
+								<p className="mb-8 max-w-[430px] text-[13.5px] leading-7 text-muted-foreground">
 									Jifunze misingi ya Nuru hatua kwa hatua. Kozi hii itakusaidia
 									kujenga uelewa thabiti wa programu kutoka mwanzo hadi mwisho.
 								</p>
@@ -111,7 +111,7 @@ export default async function KoziModulePage({
 									</Link>
 									<Link
 										href={`/${lang}/playground`}
-										className="inline-flex h-10 items-center gap-2 rounded-[6px] border border-slate-200 bg-white px-5 text-[13px] font-semibold text-slate-500 shadow-sm hover:bg-slate-50"
+										className="inline-flex h-10 items-center gap-2 rounded-[6px] border border-border bg-card px-5 text-[13px] font-semibold text-muted-foreground shadow-sm hover:bg-muted"
 									>
 										<Code2 className="h-4 w-4" />
 										View Playground
@@ -137,8 +137,8 @@ export default async function KoziModulePage({
 						<section>
 							<div className="mb-4 flex items-center justify-between">
 								<div className="flex items-center gap-3">
-									<h2 className="text-[17px] font-extrabold text-[#111a44]">Course Content</h2>
-									<span className="rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-[11px] font-semibold text-slate-500">
+									<h2 className="text-[17px] font-extrabold text-foreground">Course Content</h2>
+									<span className="rounded-full border border-border bg-card px-2.5 py-0.5 text-[11px] font-semibold text-muted-foreground">
 										{totalLessons} Lessons
 									</span>
 								</div>
@@ -155,33 +155,33 @@ export default async function KoziModulePage({
 										<Link
 											key={lesson.number}
 											href={source ? `/${lang}/anza/${mod.slug}/${source.slug}` : firstLessonHref}
-											className="group rounded-[10px] border border-slate-200 bg-white p-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)] transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
+											className="group rounded-[10px] border border-border bg-card p-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)] transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
 										>
 											<div className="mb-5 flex items-start gap-4">
 												<div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] text-[18px] font-bold ${lesson.tint}`}>
 													{Icon ? <Icon className="h-5 w-5" /> : lesson.label}
 												</div>
 												<div className="min-w-0 flex-1">
-													<h3 className="truncate text-[13.5px] font-extrabold text-[#111a44]">
+													<h3 className="truncate text-[13.5px] font-extrabold text-foreground">
 														{lesson.number}. {lesson.title}
 													</h3>
-													<p className="mt-1.5 line-clamp-2 text-[11.5px] leading-5 text-slate-500">
+													<p className="mt-1.5 line-clamp-2 text-[11.5px] leading-5 text-muted-foreground">
 														{lesson.description}
 													</p>
 												</div>
 											</div>
 											<div className="flex items-center gap-2">
-												<div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+												<div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
 													<div
 														className="h-full rounded-full bg-blue-600"
 														style={{ width: `${lesson.pct}%` }}
 													/>
 												</div>
-												<span className="w-8 text-right text-[11px] font-semibold text-slate-500">{lesson.pct}%</span>
+												<span className="w-8 text-right text-[11px] font-semibold text-muted-foreground">{lesson.pct}%</span>
 												{isDone ? (
 													<CheckCircle2 className="h-4 w-4 text-emerald-500" />
 												) : (
-													<Circle className="h-4 w-4 text-slate-300" />
+													<Circle className="h-4 w-4 text-muted-foreground/60" />
 												)}
 											</div>
 										</Link>
@@ -191,23 +191,23 @@ export default async function KoziModulePage({
 						</section>
 
 						{/* Practice CTA */}
-						<section className="flex flex-col items-start justify-between gap-4 rounded-[10px] border border-slate-200 bg-white px-5 py-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)] sm:flex-row sm:items-center">
+						<section className="flex flex-col items-start justify-between gap-4 rounded-[10px] border border-border bg-card px-5 py-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)] sm:flex-row sm:items-center">
 							<div className="flex items-center gap-4">
 								<div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-blue-600 text-white">
 									<Code2 className="h-5 w-5" />
 								</div>
 								<div>
-									<h3 className="text-[13.5px] font-extrabold text-[#111a44]">
+									<h3 className="text-[13.5px] font-extrabold text-foreground">
 										Practice in the Playground
 									</h3>
-									<p className="text-[12px] text-slate-500">
+									<p className="text-[12px] text-muted-foreground">
 										Tumia maarifa yako kwenye Nuru Playground. Jaribu, cheza na jifunze zaidi!
 									</p>
 								</div>
 							</div>
 							<Link
 								href={`/${lang}/playground`}
-								className="inline-flex h-9 min-w-[140px] items-center justify-center gap-2 rounded-[6px] border border-slate-200 bg-white px-4 text-[12.5px] font-semibold text-slate-600 shadow-sm hover:bg-slate-50"
+								className="inline-flex h-9 min-w-[140px] items-center justify-center gap-2 rounded-[6px] border border-border bg-card px-4 text-[12.5px] font-semibold text-muted-foreground shadow-sm hover:bg-muted"
 							>
 								<Code2 className="h-4 w-4" />
 								Open Playground
@@ -218,20 +218,20 @@ export default async function KoziModulePage({
 					{/* RIGHT SIDEBAR */}
 					<aside className="space-y-4">
 						{/* Streak */}
-						<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+						<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
 							<div className="flex items-center gap-3">
 								<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50">
 									<Flame className="h-6 w-6 text-orange-500" />
 								</div>
 								<div>
-									<div className="text-[12px] font-medium text-slate-500">Current Streak</div>
+									<div className="text-[12px] font-medium text-muted-foreground">Current Streak</div>
 									<div className="flex items-baseline gap-1">
-										<span className="text-3xl font-extrabold text-slate-900">{streakDays}</span>
-										<span className="text-[12px] text-slate-500">days</span>
+										<span className="text-3xl font-extrabold text-foreground">{streakDays}</span>
+										<span className="text-[12px] text-muted-foreground">days</span>
 									</div>
 								</div>
 							</div>
-							<p className="mt-3 text-[12px] leading-relaxed text-slate-500">
+							<p className="mt-3 text-[12px] leading-relaxed text-muted-foreground">
 								Keep it up! You're building an amazing habit.
 							</p>
 							<div className="mt-4 flex items-center justify-between">
@@ -241,23 +241,23 @@ export default async function KoziModulePage({
 											className={`flex h-7 w-7 items-center justify-center rounded-full ${
 												streakWeek[i]
 													? "bg-blue-600 text-white"
-													: "border border-slate-200 bg-white text-slate-300"
+													: "border border-border bg-card text-muted-foreground/60"
 											}`}
 										>
 											{streakWeek[i] && <CheckCircle2 className="h-4 w-4" />}
 										</div>
-										<span className="text-[10px] font-semibold text-slate-400">{d}</span>
+										<span className="text-[10px] font-semibold text-muted-foreground">{d}</span>
 									</div>
 								))}
 							</div>
 						</div>
 
 						{/* Recent activity */}
-						<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+						<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
 							<div className="mb-4 flex items-center justify-between">
 								<div className="flex items-center gap-2">
-									<Activity className="h-4 w-4 text-slate-400" />
-									<h3 className="text-[13px] font-bold text-slate-900">Recent Activity</h3>
+									<Activity className="h-4 w-4 text-muted-foreground" />
+									<h3 className="text-[13px] font-bold text-foreground">Recent Activity</h3>
 								</div>
 								<Link
 									href={`/${lang}/masomo/progress`}
@@ -271,10 +271,10 @@ export default async function KoziModulePage({
 									<li key={i} className="flex items-start gap-3">
 										<CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
 										<div className="min-w-0 flex-1">
-											<div className="text-[12.5px] text-slate-700">
-												<span className="font-semibold text-slate-900">Completed:</span> {a.title}
+											<div className="text-[12.5px] text-foreground">
+												<span className="font-semibold text-foreground">Completed:</span> {a.title}
 											</div>
-											<div className="text-[11px] text-slate-400">{a.time}</div>
+											<div className="text-[11px] text-muted-foreground">{a.time}</div>
 										</div>
 									</li>
 								))}
@@ -282,18 +282,18 @@ export default async function KoziModulePage({
 						</div>
 
 						{/* Milestones */}
-						<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+						<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
 							<div className="mb-4 flex items-center gap-2">
-								<Flag className="h-4 w-4 text-slate-400" />
-								<h3 className="text-[13px] font-bold text-slate-900">Upcoming Milestones</h3>
+								<Flag className="h-4 w-4 text-muted-foreground" />
+								<h3 className="text-[13px] font-bold text-foreground">Upcoming Milestones</h3>
 							</div>
 							<ul className="space-y-3">
 								{milestones.map((m, i) => (
 									<li key={i} className="flex items-center gap-3">
-										<Circle className="h-4 w-4 text-slate-300" />
+										<Circle className="h-4 w-4 text-muted-foreground/60" />
 										<div className="min-w-0 flex-1">
-											<div className="text-[12.5px] font-semibold text-slate-800">{m.label}</div>
-											<div className="text-[11px] text-slate-400">{m.meta}</div>
+											<div className="text-[12.5px] font-semibold text-foreground">{m.label}</div>
+											<div className="text-[11px] text-muted-foreground">{m.meta}</div>
 										</div>
 										<div className={`flex h-8 w-8 items-center justify-center rounded-lg ${m.tint}`}>
 											<Flag className="h-4 w-4" />
@@ -327,15 +327,15 @@ function Stat({
 	tint: string;
 }) {
 	return (
-		<div className="flex items-center gap-3 border-r border-slate-200 pr-8 last:border-r-0 last:pr-0">
-			<div className={`flex h-8 w-8 items-center justify-center rounded-full border border-blue-600/20 bg-white ${tint}`}>
+		<div className="flex items-center gap-3 border-r border-border pr-8 last:border-r-0 last:pr-0">
+			<div className={`flex h-8 w-8 items-center justify-center rounded-full border border-blue-600/20 bg-card ${tint}`}>
 				<Icon className="h-5 w-5" />
 			</div>
 			<div>
-				<div className="text-[10.5px] font-semibold text-slate-500">
+				<div className="text-[10.5px] font-semibold text-muted-foreground">
 					{label}
 				</div>
-				<div className="text-[18px] leading-tight font-extrabold text-[#111a44]">{value}</div>
+				<div className="text-[18px] leading-tight font-extrabold text-foreground">{value}</div>
 			</div>
 		</div>
 	);
