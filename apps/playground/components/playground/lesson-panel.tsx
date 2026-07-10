@@ -9,10 +9,6 @@ import {
 	Lightbulb,
 	CheckCircle2,
 	ArrowRight,
-	Eye,
-	EyeOff,
-	XCircle,
-	Lock,
 } from "lucide-react";
 import { ScrollArea } from "@/components/playground/scroll-area";
 import { cn } from "@nuru/ui/lib/utils";
@@ -21,6 +17,7 @@ import Markdown from "react-markdown";
 import { CodeEditor } from "@nuru/ui/components/code-editor";
 import { Breadcrumbs } from "./breadcrumbs";
 import { usePlayground } from "./playground-context";
+import { RequirementsChecklist } from "./requirements-checklist";
 import { parseHighlights } from "@/lib/utils/highlights";
 
 interface LessonPanelProps {
@@ -38,15 +35,13 @@ export function LessonPanel({
 }: LessonPanelProps) {
 	const {
 		module,
-		state: { currentLessonIndex, completedLessonIndices, testResults, isTesting, output },
+		state: { currentLessonIndex, completedLessonIndices },
 		actions: { onLessonChange, onNextModule },
 		lang,
 		labels,
 		isCurrentLessonCompleted: isCompleted,
 		extensions,
 	} = usePlayground();
-
-	const [showTests, setShowTests] = useState(false);
 
 	// Embedded code blocks follow the active theme (light until mounted, to match SSR).
 	const { resolvedTheme } = useTheme();
@@ -190,96 +185,6 @@ export function LessonPanel({
 		</div>
 	);
 
-	const testCasesSection = lesson.tests && lesson.tests.length > 0 && (
-		<div className="mt-8 space-y-4">
-			<div className="flex items-center justify-between">
-				<h4 className="text-foreground text-sm font-bold tracking-tight uppercase flex items-center gap-2">
-					Test Cases
-					{isTesting && <div className="h-1.5 w-1.5 bg-primary animate-pulse rounded-full" />}
-				</h4>
-				<Button 
-					variant="ghost" 
-					size="sm" 
-					onClick={() => setShowTests(!showTests)}
-					className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider"
-				>
-					{showTests ? (
-						<><EyeOff className="mr-1.5 h-3.5 w-3.5" /> {labels.hideTests}</>
-					) : (
-						<><Eye className="mr-1.5 h-3.5 w-3.5" /> {labels.showTests}</>
-					)}
-				</Button>
-			</div>
-
-			{showTests && (
-				<div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-					{lesson.tests.map((test) => {
-						const testId = test.id || 'missing-id';
-						const result = testResults?.[testId];
-						return (
-							<div 
-								key={testId} 
-								className={cn(
-									"rounded-lg border p-3 text-[13px] transition-all",
-									result?.passed === true ? "bg-green-500/5 border-green-500/20" : 
-									result?.passed === false ? "bg-red-500/5 border-red-500/20" : 
-									"bg-muted/30 border-border/50"
-								)}
-							>
-								<div className="flex items-center justify-between gap-3">
-									<div className="flex items-center gap-2 min-w-0">
-										{test.isPublic ? (
-											<div className="flex items-center gap-1.5 truncate">
-												<span className="font-bold text-foreground shrink-0 uppercase text-[10px] tracking-widest text-muted-foreground">
-													{test.type === 'io' ? 'Input/Output' : 'Validation'}
-												</span>
-												{test.input && (
-													<code className="bg-muted px-1.5 py-0.5 rounded text-[11px] font-mono truncate">
-														{test.input}
-													</code>
-												)}
-											</div>
-										) : (
-											<div className="flex items-center gap-1.5 text-muted-foreground italic text-xs">
-												<Lock className="h-3 w-3" />
-												{labels.hiddenTest}
-											</div>
-										)}
-									</div>
-									<div className="shrink-0">
-										{result?.passed === true ? (
-											<CheckCircle2 className="h-4 w-4 text-green-500" />
-										) : result?.passed === false ? (
-											<XCircle className="h-4 w-4 text-red-500" />
-										) : (
-											<div className="h-4 w-4 rounded-full border-2 border-muted border-t-primary/30 animate-spin" />
-										)}
-									</div>
-								</div>
-								
-								{test.isPublic && result?.passed === false && (
-									<div className="mt-2 space-y-2 pt-2 border-t border-red-500/10">
-										<p className="text-red-500 font-medium text-xs">
-											{test.message}
-										</p>
-										{(result?.actualOutput !== undefined || output) && (
-											<div className="space-y-1">
-												<span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Your Output:</span>
-												<pre className="bg-muted/40 p-2 rounded border border-border font-mono text-[11px] overflow-x-auto text-foreground">
-													{(result?.actualOutput && result.actualOutput.length > 0) ? result.actualOutput : (output || "(no output)")}
-												</pre>
-											</div>
-										)}
-									</div>
-								)}
-							</div>
-						);
-					})}
-				</div>
-			)}
-		</div>
-	);
-
 	// Desktop: full height scrollable panel
 	if (!collapsible) {
 		return (
@@ -345,7 +250,7 @@ export function LessonPanel({
 									</div>
 								)}
 
-								{testCasesSection}
+								<RequirementsChecklist className="mt-6" />
 							</div>{" "}
 						</div>
 						{navigation}
@@ -432,7 +337,7 @@ export function LessonPanel({
 									</div>
 								)}
 
-								{testCasesSection}
+								<RequirementsChecklist className="mt-6" />
 							</div>
 						</div>
 					</div>
