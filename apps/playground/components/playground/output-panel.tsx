@@ -93,9 +93,9 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 
 				<div className="min-h-0 flex-1">
 					{tab === "output" ? (
-						<div className="flex h-full flex-col px-4 pb-4">
+						<div className="flex h-full flex-col px-3 pb-3">
 							{showToolbar && (
-								<div className="mb-3 flex justify-end gap-1">
+								<div className="mb-2 flex justify-end gap-1">
 									<button
 										onClick={handleCopy}
 										aria-label="Copy output"
@@ -111,32 +111,32 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 									</button>
 								</div>
 							)}
-							<div className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-slate-800 bg-[#071225]">
+							<div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-border bg-muted/40">
 								<ScrollArea className="h-full">
-									<div className="px-5 py-4">
+									<div className="px-4 py-3">
 										{rendererId === "standard-terminal" ? (
 											output ? (
-										<pre className="whitespace-pre-wrap font-mono text-[13px] leading-7 text-slate-100">
+										<pre className="whitespace-pre-wrap font-mono text-[13px] leading-7 text-foreground">
 													{output.split("\n").map((line, i) => {
 														const isError =
 															line.toLowerCase().includes("error:") ||
 															line.toLowerCase().includes("hitilafu:");
 														return (
-															<span key={i} className={cn("block", isError && "text-red-400")}>
+															<span key={i} className={cn("block", isError && "text-red-600 dark:text-red-400")}>
 																{line}
 															</span>
 														);
 													})}
 												</pre>
 											) : (
-												<p className="font-mono text-[13px] italic text-slate-500">
+												<p className="font-mono text-[13px] italic text-muted-foreground">
 													{labels.outputPlaceholder}
 												</p>
 											)
 										) : RendererComponent ? (
 											<RendererComponent />
 										) : (
-											<p className="font-mono text-[12px] text-slate-500">
+											<p className="font-mono text-[12px] text-muted-foreground">
 												Renderer "{rendererId}" not found
 											</p>
 										)}
@@ -236,7 +236,7 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 															return (
 																<div>
 																	<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Your output</div>
-																	<pre className="overflow-x-auto rounded-lg border border-border bg-[#071225] px-3 py-2 font-mono text-[12px] text-slate-100">{shown || "(no output)"}</pre>
+																	<pre className="overflow-x-auto rounded-lg border border-border bg-muted/40 px-3 py-2 font-mono text-[12px] text-foreground">{shown || "(no output)"}</pre>
 																</div>
 															);
 														})()}
@@ -299,19 +299,19 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 				)}
 
 				{tab === "output" ? (
-					<div className="m-4 flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-800 bg-[#0b1220]">
+					<div className="m-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border bg-muted/40">
 						{showToolbar && (
 							<div className="flex items-center justify-end gap-1 px-2 py-1.5">
 								<button
 									onClick={handleCopy}
 									aria-label="Copy output"
-									className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+									className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
 								>
 									<Copy className="h-3.5 w-3.5" />
 								</button>
 								<button
 									aria-label="Clear output"
-									className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+									className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
 								>
 									<Trash2 className="h-3.5 w-3.5" />
 								</button>
@@ -321,25 +321,25 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 							<div className="px-4 pb-4">
 								{rendererId === "standard-terminal" ? (
 									output ? (
-										<pre className="whitespace-pre-wrap font-mono text-[12.5px] leading-relaxed text-slate-100">
+										<pre className="whitespace-pre-wrap font-mono text-[12.5px] leading-relaxed text-foreground">
 											{output.split("\n").map((line, i) => {
 												const isError =
 													line.toLowerCase().includes("error:") ||
 													line.toLowerCase().includes("hitilafu:");
 												return (
-													<span key={i} className={cn("block", isError && "text-red-400")}>
+													<span key={i} className={cn("block", isError && "text-red-600 dark:text-red-400")}>
 														{line}
 													</span>
 												);
 											})}
 										</pre>
 									) : (
-										<p className="font-mono text-[12px] italic text-slate-500">{labels.outputPlaceholder}</p>
+										<p className="font-mono text-[12px] italic text-muted-foreground">{labels.outputPlaceholder}</p>
 									)
 								) : RendererComponent ? (
 									<RendererComponent />
 								) : (
-									<p className="font-mono text-[12px] text-slate-500">Renderer "{rendererId}" not found</p>
+									<p className="font-mono text-[12px] text-muted-foreground">Renderer "{rendererId}" not found</p>
 								)}
 							</div>
 						</ScrollArea>
