@@ -217,7 +217,7 @@ export function LessonContentPanel() {
 										}
 										return (
 											<code
-												className="rounded-md bg-blue-50 px-1.5 py-0.5 font-mono text-[12.5px] font-medium text-blue-700"
+												className="rounded bg-blue-500/10 px-1.5 py-0.5 font-mono text-[12.5px] font-medium text-blue-600 dark:text-blue-400"
 												{...rest}
 											>
 												{children}
@@ -247,12 +247,12 @@ export function LessonContentPanel() {
 						</div>
 
 						{lesson.task && (
-							<div className="mt-6 overflow-hidden rounded-2xl border border-amber-200 bg-amber-50/70">
+							<div className="mt-6 overflow-hidden rounded-2xl border border-warning/25 bg-warning/10">
 								<div className="flex items-center gap-2 px-5 pt-4">
-									<div className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100">
-										<Target className="h-3.5 w-3.5 text-amber-600" />
+									<div className="flex h-7 w-7 items-center justify-center rounded-full bg-warning/15">
+										<Target className="h-3.5 w-3.5 text-warning" />
 									</div>
-									<h4 className="text-[14px] font-semibold text-foreground">
+									<h4 className="text-[14px] font-semibold text-warning">
 										{labels.yourTask}
 									</h4>
 								</div>

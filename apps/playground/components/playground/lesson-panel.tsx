@@ -334,9 +334,9 @@ export function LessonPanel({
 								</div>
 
 								{lesson.task && (
-									<div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-sm">
-										<h4 className="text-foreground mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
-											<Lightbulb className="h-4 w-4 text-yellow-500" />
+									<div className="mt-6 rounded-xl border border-warning/25 bg-warning/10 p-4 shadow-sm">
+										<h4 className="text-warning mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
+											<Lightbulb className="h-4 w-4 text-warning" />
 											{labels.yourTask}
 										</h4>
 										<p className="text-muted-foreground text-sm leading-normal italic">
@@ -402,7 +402,7 @@ export function LessonPanel({
 													);
 												}
 												return (
-										<code className="rounded-md bg-blue-50 px-1.5 py-0.5 font-mono text-[0.9em] text-blue-700" {...rest}>
+										<code className="rounded bg-blue-500/10 px-1.5 py-0.5 font-mono text-[0.9em] font-medium text-blue-600 dark:text-blue-400" {...rest}>
 														{children}
 													</code>
 												);
@@ -415,13 +415,13 @@ export function LessonPanel({
 								</div>
 
 								{lesson.task && (
-									<div className="mb-5 overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 shadow-sm">
+									<div className="mb-5 overflow-hidden rounded-2xl border border-warning/25 bg-warning/10 shadow-sm">
 										<div className="flex items-start gap-3 px-4 py-4">
-											<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-200 bg-card text-amber-500">
+											<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-warning/25 bg-card text-warning">
 												<Lightbulb className="h-5 w-5" />
 											</div>
 											<div className="min-w-0 flex-1">
-												<h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-600">
+												<h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-warning">
 													{labels.yourTask}
 												</h4>
 												<p className="text-[14px] leading-7 text-foreground">
