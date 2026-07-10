@@ -133,27 +133,27 @@ export function Playground(props: PlaygroundProps) {
 
 		return (
 			<PlaygroundProvider value={contextValue}>
-				<div className="relative flex h-full max-h-full flex-1 flex-col overflow-hidden bg-white">
-				<div className="shrink-0 border-b border-slate-200 bg-white px-3 pb-2 pt-2">
+				<div className="relative flex h-full max-h-full flex-1 flex-col overflow-hidden bg-background">
+				<div className="shrink-0 border-b border-border bg-background px-3 pb-2 pt-2">
 					<div className="flex items-center justify-between gap-3">
 						<button
 							type="button"
 							onClick={() => router.push(`/${lang}/anza`)}
-							className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2 text-[12px] font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+							className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2 text-[12px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
 							aria-label="Back"
 						>
 							<ChevronLeft className="h-4 w-4" />
 							<span>Back</span>
 						</button>
 						{module && (
-							<div className="min-w-0 flex-1 text-right text-[11px] font-medium text-slate-500">
+							<div className="min-w-0 flex-1 text-right text-[11px] font-medium text-muted-foreground">
 								Step {(state.currentLessonIndex ?? 0) + 1} / {module.lessons.length}
 							</div>
 						)}
 					</div>
 
 					{module && (
-						<div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
+						<div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
 							<div className="h-full rounded-full bg-blue-500" style={{ width: progressWidth }} />
 						</div>
 					)}
@@ -168,7 +168,7 @@ export function Playground(props: PlaygroundProps) {
 									"inline-flex h-7 shrink-0 items-center gap-1 rounded-full border px-2.5 text-[11px] font-semibold transition-colors",
 									viewMode === mode
 										? "border-blue-600 bg-blue-600 text-white"
-										: "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+										: "border-border bg-card text-muted-foreground hover:bg-muted",
 								)}
 							>
 								<Icon className="h-3 w-3" />
@@ -178,7 +178,7 @@ export function Playground(props: PlaygroundProps) {
 					</div>
 				</div>
 
-					<div className="min-h-0 flex-1 overflow-hidden bg-white px-2 pb-2 pt-2">
+					<div className="min-h-0 flex-1 overflow-hidden bg-background px-2 pb-2 pt-2">
 						<div className="h-full min-h-0 overflow-hidden">
 							{viewMode === "lesson" && (
 								<LessonPanel
@@ -205,7 +205,7 @@ export function Playground(props: PlaygroundProps) {
 
 	return (
 		<PlaygroundProvider value={contextValue}>
-			<div className="relative h-full min-h-0 overflow-hidden bg-slate-50 p-3">
+			<div className="relative h-full min-h-0 overflow-hidden bg-background p-3">
 				<ResizablePanelGroup direction="horizontal" className="h-full min-h-0 overflow-hidden">
 					{showSidebar && (
 						<>

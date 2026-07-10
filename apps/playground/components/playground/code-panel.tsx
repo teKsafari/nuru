@@ -78,8 +78,8 @@ export function CodePanel({
 	const fileExt = module?.executor === "python" ? "py" : "nr";
 
 	const mobileEditor = (
-		<div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-			<div className="flex h-9 shrink-0 items-center justify-between border-b border-slate-200 px-3">
+		<div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+			<div className="flex h-9 shrink-0 items-center justify-between border-b border-border px-3">
 				<div className="flex min-w-0 items-center gap-2">
 					<span className="truncate font-mono text-[12px] font-medium text-blue-600">
 						main.{fileExt}
@@ -92,14 +92,14 @@ export function CodePanel({
 							isMaximized ? restorePanels() : maximizePanel("editor")
 						}
 						aria-label="Maximize editor"
-						className="rounded-md p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+						className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
 					>
 						<Maximize2 className="h-3.5 w-3.5" />
 					</button>
 				</div>
 			</div>
 
-			<div className="relative min-h-0 flex-1 bg-white">
+			<div className="relative min-h-0 flex-1 bg-card">
 				<CodeEditor
 					code={code}
 					onChange={onCodeChange}
@@ -109,11 +109,11 @@ export function CodePanel({
 				/>
 			</div>
 
-			<div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 px-2 py-2">
+			<div className="flex shrink-0 items-center justify-between gap-2 border-t border-border px-2 py-2">
 				<button
 					type="button"
 					onClick={onReset}
-					className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-100"
+					className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-muted"
 				>
 					<RotateCcw className="h-3.5 w-3.5" />
 					<span>{labels.reset}</span>
@@ -131,11 +131,11 @@ export function CodePanel({
 	);
 
 	const desktopEditor = (
-		<div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-			<div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-200 bg-white pl-4 pr-2">
+		<div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+			<div className="flex h-11 shrink-0 items-center justify-between border-b border-border bg-card pl-4 pr-2">
 				<div className="flex items-center gap-2">
 					<div className="-mb-px flex items-center gap-2 border-b-2 border-blue-500 px-1 pb-[10px] pt-[10px]">
-						<span className="text-[12.5px] font-medium text-slate-800">
+						<span className="text-[12.5px] font-medium text-foreground">
 							main.{fileExt}
 						</span>
 						<span className="block h-1.5 w-1.5 rounded-full bg-blue-500" />
@@ -147,20 +147,20 @@ export function CodePanel({
 							isMaximized ? restorePanels() : maximizePanel("editor")
 						}
 						aria-label="Maximize editor"
-						className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+						className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
 					>
 						<Maximize2 className="h-4 w-4" />
 					</button>
 					<button
 						aria-label="More"
-						className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+						className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
 					>
 						<MoreVertical className="h-4 w-4" />
 					</button>
 				</div>
 			</div>
 
-			<div className="relative min-h-0 flex-1 bg-white">
+			<div className="relative min-h-0 flex-1 bg-card">
 				<CodeEditor
 					code={code}
 					onChange={onCodeChange}
@@ -169,7 +169,7 @@ export function CodePanel({
 				/>
 			</div>
 
-			<div className="flex h-12 shrink-0 items-center justify-between border-t border-slate-200 bg-white px-3">
+			<div className="flex h-12 shrink-0 items-center justify-between border-t border-border bg-card px-3">
 				<div className="flex items-center gap-1">
 					<button
 						type="button"
@@ -183,11 +183,11 @@ export function CodePanel({
 								.replace(/\s*$/, "\n");
 							if (formatted !== code) onCodeChange(formatted);
 						}}
-						className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[12px] text-slate-600 hover:bg-slate-100"
+						className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[12px] text-muted-foreground hover:bg-muted"
 					>
 						<AlignLeft className="h-3.5 w-3.5" />
 						<span>Format Code</span>
-						<span className="ml-1 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">
+						<span className="ml-1 rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
 							Ctrl+Shift+F
 						</span>
 					</button>
@@ -197,7 +197,7 @@ export function CodePanel({
 						<button
 							onClick={onShowHint}
 							aria-label={labels.hint}
-							className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+							className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
 						>
 							<HelpCircle className="h-4 w-4" />
 						</button>
@@ -206,14 +206,14 @@ export function CodePanel({
 						<button
 							onClick={onShowSolution}
 							aria-label={labels.showSolution}
-							className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+							className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
 						>
 							<Eye className="h-4 w-4" />
 						</button>
 					)}
 					<button
 						onClick={onReset}
-						className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12.5px] text-slate-600 hover:bg-slate-100"
+						className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12.5px] text-muted-foreground hover:bg-muted"
 					>
 						<RotateCcw className="h-3.5 w-3.5" />
 						<span>{labels.reset}</span>
@@ -253,7 +253,7 @@ export function CodePanel({
 	}
 
 	return (
-		<div className="flex h-full flex-col bg-slate-50">
+		<div className="flex h-full flex-col bg-background">
 			<ResizablePanelGroup direction="vertical" className="flex-1">
 				{activeMaximizedPanel !== "renderer" && (
 					<>

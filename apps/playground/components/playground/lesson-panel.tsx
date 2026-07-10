@@ -353,20 +353,20 @@ export function LessonPanel({
 		.slice(0, 5);
 
 	return (
-		<div className="flex h-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-white text-slate-900 shadow-sm">
-			<div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+		<div className="flex h-full flex-col overflow-hidden rounded-[20px] border border-border bg-card text-foreground shadow-sm">
+			<div className="flex items-center justify-between border-b border-border px-4 py-3">
 				<div className="min-w-0">
-					<div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+					<div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
 						{labels.lesson}
 					</div>
-					<div className="mt-0.5 truncate text-[15px] font-semibold text-slate-900">
+					<div className="mt-0.5 truncate text-[15px] font-semibold text-foreground">
 						{lesson.title[lang] || lesson.title.sw}
 					</div>
 				</div>
 				<button
 					type="button"
 					onClick={onToggle}
-					className="shrink-0 rounded-full p-1.5 text-slate-500 transition-transform hover:bg-slate-100 hover:text-slate-900"
+					className="shrink-0 rounded-full p-1.5 text-muted-foreground transition-transform hover:bg-muted hover:text-foreground"
 					aria-label={expanded ? "Collapse lesson" : "Expand lesson"}
 				>
 					<ChevronDown className={cn("h-5 w-5 transition-transform", expanded && "rotate-180")} />
@@ -378,7 +378,7 @@ export function LessonPanel({
 					<div className="flex min-h-full w-full min-w-0 flex-col px-4 pb-5 pt-4 text-sm">
 						<div className="flex-1">
 							<div key={currentLessonIndex} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-								<div className="mb-5 text-[14px] leading-7 text-slate-700">
+								<div className="mb-5 text-[14px] leading-7 text-foreground">
 									<Markdown
 										components={{
 											code(props) {
@@ -408,14 +408,14 @@ export function LessonPanel({
 								{lesson.task && (
 									<div className="mb-5 overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 shadow-sm">
 										<div className="flex items-start gap-3 px-4 py-4">
-											<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-500">
+											<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-200 bg-card text-amber-500">
 												<Lightbulb className="h-5 w-5" />
 											</div>
 											<div className="min-w-0 flex-1">
 												<h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-600">
 													{labels.yourTask}
 												</h4>
-												<p className="text-[14px] leading-7 text-slate-700">
+												<p className="text-[14px] leading-7 text-foreground">
 													{lesson.task[lang] || lesson.task.sw}
 												</p>
 											</div>
@@ -432,11 +432,11 @@ export function LessonPanel({
 			) : (
 				<ScrollArea className="flex-1">
 					<div className="px-4 py-4">
-						<div className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+						<div className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
 							Up next
 						</div>
 						{upcoming.length === 0 ? (
-							<div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center text-[12.5px] text-slate-500">
+							<div className="rounded-2xl border border-dashed border-border bg-muted px-4 py-6 text-center text-[12.5px] text-muted-foreground">
 								You're on the last lesson. Finish strong! 🎉
 							</div>
 						) : (
@@ -448,17 +448,17 @@ export function LessonPanel({
 											<button
 												type="button"
 												onClick={() => onLessonChange(i)}
-												className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-left hover:bg-slate-50"
+												className="flex w-full items-center justify-between gap-3 rounded-2xl border border-border bg-card px-3 py-3 text-left hover:bg-muted"
 											>
 												<div className="flex min-w-0 items-center gap-3">
 													<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[12px] font-semibold text-blue-600">
 														{i + 1}
 													</span>
 													<div className="min-w-0">
-														<div className="truncate text-[13px] font-semibold text-slate-900">
+														<div className="truncate text-[13px] font-semibold text-foreground">
 															{l.title[lang] || l.title.sw}
 														</div>
-														<div className="text-[11px] text-slate-500">
+														<div className="text-[11px] text-muted-foreground">
 															{done ? "Completed" : "Upcoming"}
 														</div>
 													</div>
@@ -466,7 +466,7 @@ export function LessonPanel({
 												{done ? (
 													<CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
 												) : (
-													<ChevronDown className="h-4 w-4 -rotate-90 shrink-0 text-slate-400" />
+													<ChevronDown className="h-4 w-4 -rotate-90 shrink-0 text-muted-foreground" />
 												)}
 											</button>
 										</li>

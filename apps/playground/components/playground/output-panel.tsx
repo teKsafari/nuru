@@ -65,9 +65,9 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 
 	if (isMobile) {
 		return (
-			<div className="flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-white text-slate-900 shadow-sm">
+			<div className="flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-border bg-card text-foreground shadow-sm">
 				<div className="flex shrink-0 items-center gap-3 px-4 py-3">
-					<div className="grid flex-1 grid-cols-2 rounded-2xl border border-slate-200 bg-slate-50 p-1">
+					<div className="grid flex-1 grid-cols-2 rounded-2xl border border-border bg-muted p-1">
 						{(["output", "tests"] as const).map((t) => (
 							<button
 								key={t}
@@ -75,8 +75,8 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 								className={cn(
 									"rounded-[14px] px-4 py-2.5 text-[13px] font-medium transition-all",
 									tab === t
-										? "bg-white text-blue-600 shadow-sm"
-										: "text-slate-500 hover:text-slate-700",
+										? "bg-card text-blue-600 shadow-sm"
+										: "text-muted-foreground hover:text-foreground",
 								)}
 							>
 								{t === "output" ? "Output" : "Tests"}
@@ -99,13 +99,13 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 									<button
 										onClick={handleCopy}
 										aria-label="Copy output"
-										className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+										className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
 									>
 										<Copy className="h-4 w-4" />
 									</button>
 									<button
 										aria-label="Clear output"
-										className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+										className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
 									>
 										<Trash2 className="h-4 w-4" />
 									</button>
@@ -148,10 +148,10 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 						<ScrollArea className="h-full px-4 pb-4">
 							<div className="space-y-4 pb-3">
 								<div className="flex items-center justify-between pt-1 text-[13px]">
-									<span className={cn("font-medium", allPassed ? "text-emerald-600" : "text-slate-600")}>
+									<span className={cn("font-medium", allPassed ? "text-emerald-600" : "text-muted-foreground")}>
 										{passedCount} / {totalTests || 0} tests passed
 									</span>
-									<span className="text-slate-500">
+									<span className="text-muted-foreground">
 										{allPassed ? "All tests passed! 🎉" : "Keep going"}
 									</span>
 								</div>
@@ -172,7 +172,7 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 
 								<ul className="space-y-3">
 									{tests.length === 0 && (
-									<li className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-5 text-center text-[13px] text-slate-500">
+									<li className="rounded-2xl border border-border bg-muted px-4 py-5 text-center text-[13px] text-muted-foreground">
 											Run the code to see test results.
 										</li>
 									)}
@@ -183,8 +183,8 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 											<li
 												key={id}
 												className={cn(
-													"overflow-hidden rounded-2xl border bg-white",
-													r.passed === false ? "border-red-200" : r.passed ? "border-emerald-200" : "border-slate-200",
+													"overflow-hidden rounded-2xl border bg-card",
+													r.passed === false ? "border-red-200" : r.passed ? "border-emerald-200" : "border-border",
 												)}
 											>
 												<button
@@ -199,25 +199,25 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 															) : r.passed === false ? (
 																<XCircle className="h-5 w-5 text-red-500" />
 															) : (
-																<MinusCircle className="h-5 w-5 text-slate-400" />
+																<MinusCircle className="h-5 w-5 text-muted-foreground" />
 															)}
 														</span>
 														<div className="min-w-0">
-															<div className="text-[13px] font-semibold text-slate-900">Test {i + 1}</div>
-															<div className="truncate text-[12px] text-slate-500">
+															<div className="text-[13px] font-semibold text-foreground">Test {i + 1}</div>
+															<div className="truncate text-[12px] text-muted-foreground">
 																{def?.isPublic === false ? labels.hiddenTest : "Expected output"}
 															</div>
 														</div>
 													</div>
 													<div className="flex items-center gap-2">
-														<span className={cn("text-[12px] font-semibold", r.passed ? "text-emerald-600" : r.passed === false ? "text-red-600" : "text-slate-400")}>
+														<span className={cn("text-[12px] font-semibold", r.passed ? "text-emerald-600" : r.passed === false ? "text-red-600" : "text-muted-foreground")}>
 															{r.passed ? labels.testPassed : r.passed === false ? labels.testFailed : "—"}
 														</span>
-														<ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
+														<ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", isOpen && "rotate-180")} />
 													</div>
 												</button>
 												{isOpen && (
-													<div className="space-y-3 border-t border-slate-100 bg-slate-50/60 px-4 py-3">
+													<div className="space-y-3 border-t border-border bg-muted/60 px-4 py-3">
 														{r.error && (
 															<div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[12px] leading-relaxed text-red-700">
 																{r.error}
@@ -225,8 +225,8 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 														)}
 														{def?.isPublic !== false && def?.expectedOutput !== undefined && (
 															<div>
-																<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Expected output</div>
-																<pre className="overflow-x-auto rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-[12px] text-slate-800">{def.expectedOutput || "(empty)"}</pre>
+																<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Expected output</div>
+																<pre className="overflow-x-auto rounded-lg border border-border bg-card px-3 py-2 font-mono text-[12px] text-foreground">{def.expectedOutput || "(empty)"}</pre>
 															</div>
 														)}
 														{(() => {
@@ -235,15 +235,15 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 																: (output && output.length > 0 ? output : "");
 															return (
 																<div>
-																	<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Your output</div>
-																	<pre className="overflow-x-auto rounded-lg border border-slate-200 bg-[#071225] px-3 py-2 font-mono text-[12px] text-slate-100">{shown || "(no output)"}</pre>
+																	<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Your output</div>
+																	<pre className="overflow-x-auto rounded-lg border border-border bg-[#071225] px-3 py-2 font-mono text-[12px] text-slate-100">{shown || "(no output)"}</pre>
 																</div>
 															);
 														})()}
 														{def?.isPublic !== false && def?.input && (
 															<div>
-																<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Input</div>
-																<pre className="overflow-x-auto rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-[12px] text-slate-800">{def.input}</pre>
+																<div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Input</div>
+																<pre className="overflow-x-auto rounded-lg border border-border bg-card px-3 py-2 font-mono text-[12px] text-foreground">{def.input}</pre>
 															</div>
 														)}
 													</div>
@@ -262,8 +262,8 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 	}
 
 	return (
-		<div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-			<div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4">
+		<div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+			<div className="flex shrink-0 items-center justify-between border-b border-border px-4">
 				<div className="flex items-center gap-1">
 					{(["output", "tests"] as const).map((t) => (
 						<button
@@ -271,7 +271,7 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 							onClick={() => setTab(t)}
 							className={cn(
 								"relative px-2 py-3 text-[13px] font-semibold capitalize transition-colors",
-								tab === t ? "text-blue-600" : "text-slate-500 hover:text-slate-700",
+								tab === t ? "text-blue-600" : "text-muted-foreground hover:text-foreground",
 							)}
 						>
 							{t === "output" ? "Output" : "Tests"}
@@ -348,11 +348,11 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 					<ScrollArea className="flex-1">
 						<div className="p-4">
 							{totalTests > 0 && (
-								<div className="mb-3 flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+								<div className="mb-3 flex items-center justify-between rounded-xl border border-border bg-muted px-4 py-3">
 									<div className="flex items-center gap-2 text-[13px] font-semibold">
-										{allPassed ? <><span>All tests passed!</span><span aria-hidden>🎉</span></> : <span className="text-slate-700">{passedCount} of {totalTests} tests passed</span>}
+										{allPassed ? <><span>All tests passed!</span><span aria-hidden>🎉</span></> : <span className="text-foreground">{passedCount} of {totalTests} tests passed</span>}
 									</div>
-									<div className={cn("text-[12px] font-semibold", allPassed ? "text-emerald-600" : "text-slate-500")}>
+									<div className={cn("text-[12px] font-semibold", allPassed ? "text-emerald-600" : "text-muted-foreground")}>
 										{passedCount} / {totalTests} tests passed
 									</div>
 								</div>
@@ -360,8 +360,8 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 
 							<ul className="space-y-2">
 								{tests.length === 0 && (
-									<li className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-6 text-center text-[12.5px] text-slate-500">
-										Bonyeza <strong className="font-semibold text-slate-700">{labels.run}</strong> ili kuona matokeo ya majaribio.
+									<li className="rounded-xl border border-dashed border-border bg-muted/60 px-4 py-6 text-center text-[12.5px] text-muted-foreground">
+										Bonyeza <strong className="font-semibold text-foreground">{labels.run}</strong> ili kuona matokeo ya majaribio.
 									</li>
 								)}
 								{tests.map(([id, r], i) => (
@@ -369,19 +369,19 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 										key={id}
 										className={cn(
 											"flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-[13px]",
-											r.passed ? "border-emerald-200 bg-emerald-50/50" : r.passed === false ? "border-red-200 bg-red-50/50" : "border-slate-200 bg-white",
+											r.passed ? "border-emerald-200 bg-emerald-50/50" : r.passed === false ? "border-red-200 bg-red-50/50" : "border-border bg-card",
 										)}
 									>
 										<div className="flex min-w-0 items-center gap-3">
 											<span className="shrink-0">
-												{r.passed ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : r.passed === false ? <XCircle className="h-4 w-4 text-red-500" /> : <MinusCircle className="h-4 w-4 text-slate-300" />}
+												{r.passed ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : r.passed === false ? <XCircle className="h-4 w-4 text-red-500" /> : <MinusCircle className="h-4 w-4 text-muted-foreground/60" />}
 											</span>
 											<div className="min-w-0">
-												<div className="font-semibold text-slate-800">Test {i + 1}</div>
+												<div className="font-semibold text-foreground">Test {i + 1}</div>
 												{r.error && <div className="truncate text-[12px] text-red-600">{r.error}</div>}
 											</div>
 										</div>
-										<span className={cn("shrink-0 text-[12px] font-semibold", r.passed ? "text-emerald-600" : r.passed === false ? "text-red-600" : "text-slate-400")}>
+										<span className={cn("shrink-0 text-[12px] font-semibold", r.passed ? "text-emerald-600" : r.passed === false ? "text-red-600" : "text-muted-foreground")}>
 											{r.passed ? labels.testPassed : r.passed === false ? labels.testFailed : "—"}
 										</span>
 									</li>
