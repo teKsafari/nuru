@@ -10,9 +10,7 @@ import {
 	AlertTriangle,
 	CheckCircle2,
 	ChevronRight as Crumb,
-	Circle,
 } from "lucide-react";
-import { cn } from "@nuru/ui/lib/utils";
 import { Button } from "@nuru/ui/components/button";
 import Markdown from "react-markdown";
 import { CodeEditor } from "@nuru/ui/components/code-editor";
@@ -21,6 +19,7 @@ import { ScrollArea } from "@/components/playground/scroll-area";
 import { usePlayground } from "./playground-context";
 import { parseHighlights } from "@/lib/utils/highlights";
 import { LessonCompleteOverlay } from "./lesson-complete-overlay";
+import { RequirementsChecklist } from "./requirements-checklist";
 
 /**
  * Middle column on desktop. Top sub-header carries breadcrumbs + language pill,
@@ -30,7 +29,7 @@ import { LessonCompleteOverlay } from "./lesson-complete-overlay";
 export function LessonContentPanel() {
 	const {
 		module,
-		state: { currentLessonIndex = 0, completedLessonIndices, testResults },
+		state: { currentLessonIndex = 0 },
 		actions: { onLessonChange },
 		lang,
 		labels,
@@ -68,31 +67,6 @@ export function LessonContentPanel() {
 
 	const moduleTitle = module.title[lang] || module.title.sw;
 	const lessonTitle = lesson.title[lang] || lesson.title.sw;
-
-	// Requirements derive from lesson.requirements first, otherwise from tests.
-	const requirements: { label: string; passed: boolean | undefined }[] =
-		(lesson.requirements?.[lang] || lesson.requirements?.sw || [])
-			.map((label, i) => {
-				const tid = lesson.tests?.[i]?.id;
-				const r = tid ? testResults?.[tid] : undefined;
-				return { label, passed: r?.passed };
-			});
-
-	// Fallback: derive from tests when no explicit requirements list.
-	const fallbackReqs =
-		requirements.length === 0 && lesson.tests
-			? lesson.tests
-					.filter((t: any) => t.isPublic !== false)
-					.map((t: any, i: number) => {
-						const r = testResults?.[t.id];
-						const label =
-							(t.message && (typeof t.message === "string" ? t.message : t.message[lang] || t.message.sw)) ||
-							`Requirement ${i + 1}`;
-						return { label, passed: r?.passed };
-					})
-			: [];
-
-	const reqList = requirements.length > 0 ? requirements : fallbackReqs;
 
 	const hintText = lesson.hint?.[lang] || lesson.hint?.sw;
 	const mistakes = lesson.commonMistakes?.[lang] || lesson.commonMistakes?.sw;
@@ -262,39 +236,8 @@ export function LessonContentPanel() {
 							</div>
 						)}
 
-						{/* Requirements checklist (from real test results) */}
-						{reqList.length > 0 && (
-							<div className="mt-4 overflow-hidden rounded-2xl border border-border bg-card">
-								<div className="border-b border-border px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
-									Requirements
-								</div>
-								<ul className="divide-y divide-border">
-									{reqList.map((r, i) => (
-										<li key={i} className="flex items-start gap-3 px-5 py-2.5 text-[13px]">
-											<span className="mt-0.5 shrink-0">
-												{r.passed === true ? (
-													<CheckCircle2 className="h-4 w-4 text-emerald-500" />
-												) : r.passed === false ? (
-													<Circle className="h-4 w-4 text-red-400" />
-												) : (
-													<Circle className="h-4 w-4 text-muted-foreground/60" />
-												)}
-											</span>
-											<span
-												className={cn(
-													"min-w-0 flex-1 leading-relaxed",
-													r.passed === true
-														? "text-muted-foreground line-through"
-														: "text-foreground",
-												)}
-											>
-												{r.label}
-											</span>
-										</li>
-									))}
-								</ul>
-							</div>
-						)}
+						{/* Requirements checklist — shared with the mobile lesson panel. */}
+						<RequirementsChecklist className="mt-4" />
 
 						{/* Hint card — only if lesson actually provides a hint */}
 						{hintText && (
