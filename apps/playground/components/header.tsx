@@ -6,7 +6,6 @@ import Link from "next/link";
 
 import UserMenu from "@/components/UserMenu";
 
-import { LessonsDrawer } from "@/components/lessons-drawer";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 import { AppLogo } from "@nuru/ui/components/app-logo";
@@ -19,7 +18,7 @@ interface SiteHeaderProps {
 	dict: Dictionary;
 }
 
-export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
+export function SiteHeader({ lang }: SiteHeaderProps) {
 	const pathname = usePathname();
 	useContext(AuthContext);
 
@@ -67,9 +66,6 @@ export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 
 
 				<div className="flex shrink-0 items-center gap-3">
-					<div className="md:hidden">
-						<LessonsDrawer modules={modules} lang={lang} dict={dict} />
-					</div>
 					<ThemeToggle />
 					<UserMenu />
 				</div>
