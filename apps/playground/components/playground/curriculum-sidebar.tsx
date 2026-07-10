@@ -142,7 +142,7 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 										onClick={() => setOpen((s) => ({ ...s, [m.id]: !isOpen }))}
 										className={cn(
 											"grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-2xl px-3 py-3 text-left",
-											isCurrent ? "bg-blue-50 text-blue-700" : "text-foreground hover:bg-muted",
+											isCurrent ? "bg-blue-500/10 text-blue-600 dark:text-blue-400" : "text-foreground hover:bg-muted",
 											!isUnlocked && "opacity-70",
 										)}
 									>
@@ -179,7 +179,7 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 															}}
 															className={cn(
 																"grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl px-3 py-3 text-left text-[14px] transition-colors disabled:cursor-not-allowed",
-																isActive ? "bg-blue-50 text-blue-700" : "text-foreground hover:bg-muted",
+																isActive ? "bg-blue-500/10 text-blue-600 dark:text-blue-400" : "text-foreground hover:bg-muted",
 															)}
 														>
 															<span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold", isActive || isDone ? "bg-blue-600 text-white" : "bg-muted text-muted-foreground")}>
@@ -213,16 +213,16 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 	return (
 		<aside className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
 			{/* Header card */}
-			<div className="border-b border-border px-5 pt-5 pb-4">
+			<div className="border-b border-border px-5 py-3">
 				<div className="flex items-center gap-2.5">
-					<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+					<div className="flex p-1.5 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
 						<BookOpen className="h-4 w-4" />
 					</div>
 					<h2 className="truncate text-[15px] font-semibold text-foreground">
 						Nuru Basics
 					</h2>
 				</div>
-				<div className="mt-4">
+				{/* <div className="mt-4">
 					<div className="mb-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
 						<span>{pctAll}% complete</span>
 						<span className="font-medium">{doneAll}/{totalAll}</span>
@@ -233,7 +233,7 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 							style={{ width: `${pctAll}%` }}
 						/>
 					</div>
-				</div>
+				</div> */}
 			</div>
 
 			{/* All modules */}
@@ -321,7 +321,7 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 														className={cn(
 															"group flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors disabled:cursor-not-allowed",
 															isActive
-																? "bg-blue-50 text-blue-700"
+																? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
 																: "text-muted-foreground hover:bg-muted hover:text-foreground",
 														)}
 													>
