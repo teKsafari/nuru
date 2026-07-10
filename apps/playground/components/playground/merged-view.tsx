@@ -112,7 +112,8 @@ export function MergedView({ isMobile = false }: { isMobile?: boolean }) {
 }
 
 /* ============================================================
-   CURRICULUM MAP  — mirrors ramani/page.tsx mockup
+   CURRICULUM MAP  — in-playground curriculum journey view,
+   wired to real module data and localStorage progress.
    (Left curriculum list is the existing CurriculumSidebar.)
    ============================================================ */
 
