@@ -435,7 +435,6 @@ export function LessonPanel({
 								{testCasesSection}
 							</div>
 						</div>
-						{navigation}
 					</div>
 				</ScrollArea>
 			) : (

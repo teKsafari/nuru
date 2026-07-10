@@ -19,8 +19,8 @@ import {
 	BarChart3,
 	BookOpen,
 	ChevronLeft,
+	ChevronRight,
 	Code2,
-	ListTree,
 	Map,
 	TerminalSquare,
 } from "lucide-react";
@@ -115,9 +115,7 @@ export function Playground(props: PlaygroundProps) {
 
 	// ---------- Mobile: mockup-driven shell; desktop untouched ----------
 	if (isMobile) {
-		const progressWidth = module
-			? `${(((state.currentLessonIndex ?? 0) + 1) / module.lessons.length) * 100}%`
-			: "0%";
+		const currentIndex = state.currentLessonIndex ?? 0;
 		const mobileTabs: Array<{
 			mode: PlaygroundViewMode;
 			label: string;
@@ -128,35 +126,48 @@ export function Playground(props: PlaygroundProps) {
 			{ mode: "output", label: "Output", Icon: TerminalSquare },
 			{ mode: "lesson-map", label: "Map", Icon: Map },
 			{ mode: "progress", label: "Progress", Icon: BarChart3 },
-			{ mode: "curriculum", label: "Modules", Icon: ListTree },
 		];
 
 		return (
 			<PlaygroundProvider value={contextValue}>
 				<div className="relative flex h-full max-h-full flex-1 flex-col overflow-hidden bg-background">
 				<div className="shrink-0 border-b border-border bg-background px-3 pb-2 pt-2">
-					<div className="flex items-center justify-between gap-3">
+					<div className="flex items-center justify-between gap-2">
 						<button
 							type="button"
 							onClick={() => router.push(`/${lang}/anza`)}
 							className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2 text-[12px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-							aria-label="Back"
+							aria-label="Exit to lessons"
 						>
 							<ChevronLeft className="h-4 w-4" />
-							<span>Back</span>
+							<span>Exit</span>
 						</button>
 						{module && (
-							<div className="min-w-0 flex-1 text-right text-[11px] font-medium text-muted-foreground">
-								Step {(state.currentLessonIndex ?? 0) + 1} / {module.lessons.length}
+							<div className="flex shrink-0 items-center gap-1.5">
+								<button
+									type="button"
+									onClick={() => actions.onLessonChange?.(currentIndex - 1)}
+									disabled={currentIndex === 0 || !actions.onLessonChange}
+									className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
+									aria-label="Previous lesson"
+								>
+									<ChevronLeft className="h-4 w-4" />
+								</button>
+								<span className="whitespace-nowrap text-[11px] font-medium text-muted-foreground">
+									Step {currentIndex + 1} / {module.lessons.length}
+								</span>
+								<button
+									type="button"
+									onClick={() => handleNextAction?.()}
+									disabled={!handleNextAction}
+									className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
+									aria-label={nextActionLabel || "Next lesson"}
+								>
+									<ChevronRight className="h-4 w-4" />
+								</button>
 							</div>
 						)}
 					</div>
-
-					{module && (
-						<div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
-							<div className="h-full rounded-full bg-blue-500" style={{ width: progressWidth }} />
-						</div>
-					)}
 
 					<div className="mt-2 flex gap-1.5 overflow-x-auto pb-0.5 no-scrollbar">
 						{mobileTabs.map(({ mode, label, Icon }) => (

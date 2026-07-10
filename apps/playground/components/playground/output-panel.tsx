@@ -66,14 +66,14 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 	if (isMobile) {
 		return (
 			<div className="flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-border bg-card text-foreground shadow-sm">
-				<div className="flex shrink-0 items-center gap-3 px-4 py-3">
-					<div className="grid flex-1 grid-cols-2 rounded-2xl border border-border bg-muted p-1">
+				<div className="flex shrink-0 items-center justify-between gap-3 px-3 py-2">
+					<div className="inline-flex rounded-lg border border-border bg-muted p-0.5">
 						{(["output", "tests"] as const).map((t) => (
 							<button
 								key={t}
 								onClick={() => setTab(t)}
 								className={cn(
-									"rounded-[14px] px-4 py-2.5 text-[13px] font-medium transition-all",
+									"rounded-md px-3 py-1 text-[12px] font-medium transition-all",
 									tab === t
 										? "bg-card text-blue-600 shadow-sm"
 										: "text-muted-foreground hover:text-foreground",
@@ -84,7 +84,7 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 						))}
 					</div>
 					{isCurrentLessonCompleted && (
-						<div className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-medium text-emerald-600">
+						<div className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-1 text-[12px] font-medium text-success">
 							<CheckCircle2 className="h-3.5 w-3.5" />
 							<span>Passed</span>
 						</div>
