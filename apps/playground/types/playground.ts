@@ -30,6 +30,24 @@ export interface Module {
 	};
 }
 
+/**
+ * Light curriculum shapes for navigation (sidebar, course map, header). Carry
+ * only what the tree needs — no lesson bodies (code/solution/tests/description).
+ * `Module` is a structural superset, so a full `Module` is assignable here.
+ */
+export interface CurriculumLesson {
+	id: string;
+	slug: string;
+	title: Record<Language, string>;
+}
+
+export interface CurriculumModule {
+	id: string;
+	slug: string;
+	title: Record<Language, string>;
+	lessons: CurriculumLesson[];
+}
+
 export interface PlaygroundLabels {
 	run: string;
 	testing: string;
@@ -65,7 +83,7 @@ export interface TestResult {
 
 export interface PlaygroundProps {
 	module?: Module;
-	allModules?: Module[];
+	allModules?: CurriculumModule[];
 	state: {
 		currentLessonIndex?: number;
 		code: string;
