@@ -50,8 +50,8 @@ export function LessonContentPanel() {
 	useEffect(() => setMounted(true), []);
 	const editorTheme: "dark" | "light" =
 		mounted && resolvedTheme === "dark" ? "dark" : "light";
-	const showOverlay =
-		!!isCurrentLessonCompleted && dismissedAt !== currentLessonIndex;
+	// const showOverlay =
+	// 	!!isCurrentLessonCompleted && dismissedAt !== currentLessonIndex;
 
 	if (!module) return null;
 	const lesson = module.lessons[currentLessonIndex];
@@ -74,11 +74,11 @@ export function LessonContentPanel() {
 	return (
 		<div className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
 
-			{showOverlay && (
+			{/* {showOverlay && (
 				<LessonCompleteOverlay
 					onDismiss={() => setDismissedAt(currentLessonIndex)}
 				/>
-			)}
+			)} */}
 
 			{/* Sub-header: breadcrumbs + language pill */}
 			<div className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-8 py-3">

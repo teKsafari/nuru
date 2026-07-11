@@ -6,7 +6,6 @@ export class NuruExecutor implements IExecutor {
 	private resolveNextEvent: (() => void) | null = null;
 	private isExecutionDone = false;
 	private _isExecuting = false;
-	private lastOutputAt = 0;
 
 	constructor(nuruInstance: any) {
 		this.nuruInstance = nuruInstance;
@@ -24,26 +23,7 @@ export class NuruExecutor implements IExecutor {
 	 * This method should be called by the output receiver passed to useNuru
 	 */
 	handleOutput(text: string, isError: boolean) {
-		this.lastOutputAt = Date.now();
 		this.pushEvent({ type: isError ? "stderr" : "stdout", data: text });
-	}
-
-	private async waitForOutputIdle(startedAt: number) {
-		const minWaitMs = 150;
-		const idleMs = 80;
-		const maxWaitMs = 1500;
-
-		while (Date.now() - startedAt < maxWaitMs) {
-			const elapsed = Date.now() - startedAt;
-			const lastActivityAt = Math.max(startedAt, this.lastOutputAt);
-			const quietFor = Date.now() - lastActivityAt;
-
-			if (elapsed >= minWaitMs && quietFor >= idleMs) {
-				return;
-			}
-
-			await new Promise<void>((resolve) => setTimeout(resolve, 16));
-		}
 	}
 
 	private pushEvent(event: ExecutionEvent) {
@@ -58,17 +38,11 @@ export class NuruExecutor implements IExecutor {
 		this.eventQueue = [];
 		this.isExecutionDone = false;
 		this._isExecuting = true;
-		this.lastOutputAt = 0;
 
 		const executionPromise = (async () => {
 			try {
-				const startedAt = Date.now();
 				const stdinBuffer = stdin ? stdin.split("\n") : undefined;
 				await this.nuruInstance.execute(code, stdinBuffer);
-				// The WASM runtime can deliver stdout after runCode() returns. Wait until
-				// output has been quiet briefly before closing the async iterator, so the
-				// validator receives the same text the terminal displays.
-				await this.waitForOutputIdle(startedAt);
 				this.pushEvent({ type: "finished", exitCode: 0 });
 			} catch (error: any) {
 				this.pushEvent({ type: "stderr", data: error.toString() });

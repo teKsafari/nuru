@@ -192,24 +192,14 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 	}, [module.id, currentLesson.id]);
 
 	const handleRun = async () => {
-		console.log("running")
 		setOutput("");
 		setTestErrors([]);
 		setTestResults({});
 		try {
-			const execution = executor.execute(code);
-			for await (const event of execution) {
-				if (event.type === "stdout" || event.type === "stderr") {
-					console.log({outputEvent:event})
-					fullOutput += event.data + "\n";
-					setOutput((prev) => (prev ? prev + `\n${event.data}` : event.data));
-				}
-			}
-			// Just run evaluation for non-IO tests if we want immediate feedback, 
-			// or just let the student see their output.
-			// The plan says "checkSolution" is called in handleRun too.
-			console.log({fullOutput})
-			await checkSolution(code, fullOutput.trim());
+			const fullOutput = await runCodeAndCollectOutput(code, undefined, (data) =>
+				setOutput((prev) => (prev ? prev + `\n${data}` : data)),
+			);
+			await checkSolution(code, fullOutput);
 		} catch (error) {
 			setOutput(`${dict.playground.error}${error}`);
 		}
@@ -220,18 +210,12 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 		setTestErrors([]);
 		setTestResults({});
 		try {
-			// First run without stdin to get default output (for non-IO tests)
-			const execution = executor.execute(code);
-			for await (const event of execution) {
-				if (event.type === "stdout" || event.type === "stderr") {
-					console.log({outputEvent:event})
-
-					fullOutput += event.data + "\n";
-					setOutput((prev) => (prev === dict.playground.testing ? event.data : prev + `\n${event.data}`));
-				}
-			}
-
-			const passed = await checkSolution(code, fullOutput.trim());
+			const fullOutput = await runCodeAndCollectOutput(code, undefined, (data) =>
+				setOutput((prev) =>
+					prev === dict.playground.testing ? data : prev + `\n${data}`,
+				),
+			);
+			const passed = await checkSolution(code, fullOutput);
 			if (passed) {
 				setOutput((prev) => prev + "\n✓ Submitted!");
 			}
