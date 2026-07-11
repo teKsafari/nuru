@@ -179,7 +179,7 @@ export function CodePanel({
 
 			<div className="flex h-12 shrink-0 items-center justify-between border-t border-border bg-card px-3">
 				<div className="flex items-center gap-1">
-					<button
+					{/* <button
 						type="button"
 						onClick={() => {
 							const formatted = code
@@ -195,7 +195,7 @@ export function CodePanel({
 					>
 						<AlignLeft className="h-3.5 w-3.5" />
 						<span>Format Code</span>
-					</button>
+					</button> */}
 				</div>
 				<div className="flex items-center gap-2">
 					{onShowHint && (

@@ -9,13 +9,20 @@ import {
 	CircleDot,
 	BarChart3,
 	Lock,
+	PanelLeftClose,
 } from "lucide-react";
 import { cn } from "@nuru/ui/lib/utils";
 import { ScrollArea } from "@/components/playground/scroll-area";
 import { usePlayground } from "./playground-context";
 import { Button } from "@nuru/ui/components/button";
 
-export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) {
+export function CurriculumSidebar({
+	isMobile = false,
+	onCollapse,
+}: {
+	isMobile?: boolean;
+	onCollapse?: () => void;
+}) {
 	const {
 		module,
 		allModules,
@@ -218,9 +225,20 @@ export function CurriculumSidebar({ isMobile = false }: { isMobile?: boolean }) 
 					<div className="flex p-1.5 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
 						<BookOpen className="h-4 w-4" />
 					</div>
-					<h2 className="truncate text-[15px] font-semibold text-foreground">
+					<h2 className="min-w-0 flex-1 truncate text-[15px] font-semibold text-foreground">
 						Nuru Basics
 					</h2>
+					{onCollapse && (
+						<button
+							type="button"
+							onClick={onCollapse}
+							aria-label="Collapse sidebar"
+							title="Collapse sidebar"
+							className="shrink-0 rounded-md p-1.5 text-muted transition-colors hover:bg-muted hover:text-foreground"
+						>
+							<PanelLeftClose className="h-4 w-4" />
+						</button>
+					)}
 				</div>
 				{/* <div className="mt-4">
 					<div className="mb-1.5 flex items-center justify-between text-[11px] text-muted-foreground">

@@ -109,8 +109,8 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 				<span className="text-[13px] font-semibold text-foreground">Output</span>
 				{toolbar}
 			</div>
-			<div className="min-h-0 flex-1 p-3">
-				<div className="h-full overflow-hidden rounded-lg border border-border bg-muted/40">
+			<div className="min-h-0 flex-1 ">
+				<div className="h-full overflow-hidden">
 					<ScrollArea className="h-full">
 						<div className="px-4 py-3">{terminalBody}</div>
 					</ScrollArea>
