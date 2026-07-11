@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { ImperativePanelHandle } from "react-resizable-panels";
 import { LessonPanel } from "./lesson-panel";
 import { LessonContentPanel } from "./lesson-content-panel";
 import { CurriculumSidebar } from "./curriculum-sidebar";
@@ -51,6 +52,10 @@ export function Playground(props: PlaygroundProps) {
 	>(null);
 	const [viewMode, setViewMode] = useState<PlaygroundViewMode>("lesson");
 	const [lessonExpanded, setLessonExpanded] = useState(true);
+
+	// Desktop curriculum sidebar collapse/restore.
+	const sidebarPanelRef = useRef<ImperativePanelHandle>(null);
+	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
 	// Return to lesson view whenever the lesson changes (e.g. user clicked a node).
 	useEffect(() => {
@@ -221,16 +226,21 @@ export function Playground(props: PlaygroundProps) {
 					{showSidebar && (
 						<>
 							<ResizablePanel
+								ref={sidebarPanelRef}
 								defaultSize={20}
 								minSize={14}
 								maxSize={30}
 								collapsible
 								collapsedSize={0}
+								onCollapse={() => setSidebarCollapsed(true)}
+								onExpand={() => setSidebarCollapsed(false)}
 								className="min-h-0 overflow-hidden"
 							>
-								<CurriculumSidebar />
+								<CurriculumSidebar
+									onCollapse={() => sidebarPanelRef.current?.collapse()}
+								/>
 							</ResizablePanel>
-							<ResizableHandle />
+							{!sidebarCollapsed && <ResizableHandle />}
 						</>
 					)}
 
@@ -273,6 +283,18 @@ export function Playground(props: PlaygroundProps) {
 						</>
 					)}
 				</ResizablePanelGroup>
+
+				{showSidebar && sidebarCollapsed && (
+					<button
+						type="button"
+						onClick={() => sidebarPanelRef.current?.expand()}
+						aria-label="Show sidebar"
+						title="Show sidebar"
+						className="absolute left-3 top-1/2 z-20 flex h-10 w-6 -translate-y-1/2 items-center justify-center rounded-r-md border border-l-0 border-border bg-card text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+					>
+						<ChevronRight className="h-4 w-4" />
+					</button>
+				)}
 			</div>
 		</PlaygroundProvider>
 
