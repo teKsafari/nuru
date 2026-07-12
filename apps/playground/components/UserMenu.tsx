@@ -44,7 +44,7 @@ export default function UserMenu() {
 			<DropdownMenuTrigger asChild>
 				<Button
 					variant="ghost"
-					className="h-8 gap-1.5 rounded-full px-1 hover:bg-slate-100"
+					className="h-8 gap-1.5 rounded-full px-1 hover:bg-muted"
 				>
 					{isAuthenticated && claims ? (
 						<Avatar className="h-7 w-7">
@@ -60,11 +60,11 @@ export default function UserMenu() {
 						<User className="text-muted-foreground h-5 w-5" />
 					)}
 					{isAuthenticated && firstName && (
-						<span className="hidden text-[13px] font-semibold text-slate-600 md:inline">
+						<span className="hidden text-[13px] font-semibold text-muted-foreground md:inline">
 							{firstName}
 						</span>
 					)}
-					<ChevronDown className="hidden h-3.5 w-3.5 text-slate-400 md:block" />
+					<ChevronDown className="hidden h-3.5 w-3.5 text-muted-foreground md:block" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-48 rounded-xl p-2">

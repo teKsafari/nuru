@@ -57,7 +57,7 @@ export default async function Home({
 					{dict.landing.features.map((feature, index) => (
 						<div
 							key={index}
-							className="flex w-full flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:shadow-md sm:p-8"
+							className="flex w-full flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md sm:p-8"
 						>
 							<h3 className="mb-3 text-xl font-bold font-noto-rashi sm:mb-4 sm:text-2xl">{feature.title}</h3>
 							<p className="text-muted-foreground text-[15px] leading-relaxed sm:text-base">

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { ImperativePanelHandle } from "react-resizable-panels";
 import { LessonPanel } from "./lesson-panel";
 import { LessonContentPanel } from "./lesson-content-panel";
 import { CurriculumSidebar } from "./curriculum-sidebar";
@@ -19,8 +20,8 @@ import {
 	BarChart3,
 	BookOpen,
 	ChevronLeft,
+	ChevronRight,
 	Code2,
-	ListTree,
 	Map,
 	TerminalSquare,
 } from "lucide-react";
@@ -51,6 +52,10 @@ export function Playground(props: PlaygroundProps) {
 	>(null);
 	const [viewMode, setViewMode] = useState<PlaygroundViewMode>("lesson");
 	const [lessonExpanded, setLessonExpanded] = useState(true);
+
+	// Desktop curriculum sidebar collapse/restore.
+	const sidebarPanelRef = useRef<ImperativePanelHandle>(null);
+	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
 	// Return to lesson view whenever the lesson changes (e.g. user clicked a node).
 	useEffect(() => {
@@ -115,9 +120,7 @@ export function Playground(props: PlaygroundProps) {
 
 	// ---------- Mobile: mockup-driven shell; desktop untouched ----------
 	if (isMobile) {
-		const progressWidth = module
-			? `${(((state.currentLessonIndex ?? 0) + 1) / module.lessons.length) * 100}%`
-			: "0%";
+		const currentIndex = state.currentLessonIndex ?? 0;
 		const mobileTabs: Array<{
 			mode: PlaygroundViewMode;
 			label: string;
@@ -128,47 +131,48 @@ export function Playground(props: PlaygroundProps) {
 			{ mode: "output", label: "Output", Icon: TerminalSquare },
 			{ mode: "lesson-map", label: "Map", Icon: Map },
 			{ mode: "progress", label: "Progress", Icon: BarChart3 },
-			{ mode: "curriculum", label: "Modules", Icon: ListTree },
 		];
 
 		return (
 			<PlaygroundProvider value={contextValue}>
-				<div className="relative flex h-full max-h-full flex-1 flex-col overflow-hidden bg-white">
-				<div className="shrink-0 border-b border-slate-200 bg-white px-3 pb-2 pt-2">
-					<div className="flex items-center justify-between gap-3">
+				<div className="relative flex h-full max-h-full flex-1 flex-col overflow-hidden bg-background">
+				<div className="shrink-0 border-b border-border bg-background px-3 pb-2 pt-2">
+					<div className="flex items-center justify-between gap-2">
 						<button
 							type="button"
 							onClick={() => router.push(`/${lang}/anza`)}
-							className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2 text-[12px] font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-							aria-label="Back"
+							className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2 text-[12px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+							aria-label="Exit to lessons"
 						>
 							<ChevronLeft className="h-4 w-4" />
-							<span>Back</span>
+							<span>Exit</span>
 						</button>
 						{module && (
-							<div className="min-w-0 flex-1 text-center text-[11px] font-medium text-slate-500">
-								Step {(state.currentLessonIndex ?? 0) + 1} / {module.lessons.length}
+							<div className="flex shrink-0 items-center gap-1.5">
+								<button
+									type="button"
+									onClick={() => actions.onLessonChange?.(currentIndex - 1)}
+									disabled={currentIndex === 0 || !actions.onLessonChange}
+									className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
+									aria-label="Previous lesson"
+								>
+									<ChevronLeft className="h-4 w-4" />
+								</button>
+								<span className="whitespace-nowrap text-[11px] font-medium text-muted-foreground">
+									Step {currentIndex + 1} / {module.lessons.length}
+								</span>
+								<button
+									type="button"
+									onClick={() => handleNextAction?.()}
+									disabled={!handleNextAction}
+									className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
+									aria-label={nextActionLabel || "Next lesson"}
+								>
+									<ChevronRight className="h-4 w-4" />
+								</button>
 							</div>
 						)}
-						<button
-							type="button"
-							onClick={() => setViewMode(viewMode === "lesson" ? "code" : "lesson")}
-							className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-700"
-						>
-							{viewMode === "lesson" ? (
-								<Code2 className="h-3.5 w-3.5 text-slate-600" />
-							) : (
-								<BookOpen className="h-3.5 w-3.5 text-slate-600" />
-							)}
-							<span>{viewMode === "lesson" ? "Code" : "Lesson"}</span>
-						</button>
 					</div>
-
-					{module && (
-						<div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
-							<div className="h-full rounded-full bg-blue-500" style={{ width: progressWidth }} />
-						</div>
-					)}
 
 					<div className="mt-2 flex gap-1.5 overflow-x-auto pb-0.5 no-scrollbar">
 						{mobileTabs.map(({ mode, label, Icon }) => (
@@ -180,7 +184,7 @@ export function Playground(props: PlaygroundProps) {
 									"inline-flex h-7 shrink-0 items-center gap-1 rounded-full border px-2.5 text-[11px] font-semibold transition-colors",
 									viewMode === mode
 										? "border-blue-600 bg-blue-600 text-white"
-										: "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+										: "border-border bg-card text-muted-foreground hover:bg-muted",
 								)}
 							>
 								<Icon className="h-3 w-3" />
@@ -190,7 +194,7 @@ export function Playground(props: PlaygroundProps) {
 					</div>
 				</div>
 
-					<div className="min-h-0 flex-1 overflow-hidden bg-white px-3 pb-3 pt-3">
+					<div className="min-h-0 flex-1 overflow-hidden bg-background px-2 pb-2 pt-2">
 						<div className="h-full min-h-0 overflow-hidden">
 							{viewMode === "lesson" && (
 								<LessonPanel
@@ -217,21 +221,26 @@ export function Playground(props: PlaygroundProps) {
 
 	return (
 		<PlaygroundProvider value={contextValue}>
-			<div className="relative h-full min-h-0 overflow-hidden bg-slate-50 p-3">
+			<div className="relative h-full min-h-0 overflow-hidden bg-background p-3">
 				<ResizablePanelGroup direction="horizontal" className="h-full min-h-0 overflow-hidden">
 					{showSidebar && (
 						<>
 							<ResizablePanel
+								ref={sidebarPanelRef}
 								defaultSize={20}
 								minSize={14}
 								maxSize={30}
 								collapsible
 								collapsedSize={0}
+								onCollapse={() => setSidebarCollapsed(true)}
+								onExpand={() => setSidebarCollapsed(false)}
 								className="min-h-0 overflow-hidden"
 							>
-								<CurriculumSidebar />
+								<CurriculumSidebar
+									onCollapse={() => sidebarPanelRef.current?.collapse()}
+								/>
 							</ResizablePanel>
-							<ResizableHandle />
+							{!sidebarCollapsed && <ResizableHandle />}
 						</>
 					)}
 
@@ -274,6 +283,18 @@ export function Playground(props: PlaygroundProps) {
 						</>
 					)}
 				</ResizablePanelGroup>
+
+				{showSidebar && sidebarCollapsed && (
+					<button
+						type="button"
+						onClick={() => sidebarPanelRef.current?.expand()}
+						aria-label="Show sidebar"
+						title="Show sidebar"
+						className="absolute left-3 top-1/2 z-20 flex h-10 w-6 -translate-y-1/2 items-center justify-center rounded-r-md border border-l-0 border-border bg-card text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+					>
+						<ChevronRight className="h-4 w-4" />
+					</button>
+				)}
 			</div>
 		</PlaygroundProvider>
 

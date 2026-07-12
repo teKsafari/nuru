@@ -32,9 +32,9 @@ This repository is optimized as a monorepo utilizing **pnpm workspaces** and **T
 
 Whether you want to set up the development environment, contribute code, or author interactive lesson content, we have detailed guidelines prepared:
 
-1. 🚀 **[Getting Started Locally](./contributing/getting-started.md)**: Setup prerequisites (Node.js 22, pnpm, Go, TinyGo) and start the local monorepo development pipeline.
-2. ✍️ **[Contributing Lessons](./contributing/lessons.md)**: A complete, step-by-step guide to writing and structuring interactive Nuru programming lessons in Swahili and English.
-3. 💻 **[Contributing Code](./contributing/code.md)**: Standards, architecture conventions, and the Pull Request workflow for coding contributions.
+1. **[Getting Started Locally](./contributing/getting-started.md)**: Setup prerequisites (Node.js 22, pnpm, Go, TinyGo) and start the local monorepo development pipeline.
+2. **[Contributing Lessons](./contributing/lessons.md)**: A complete, step-by-step guide to writing and structuring interactive Nuru programming lessons in Swahili and English.
+3. **[Contributing Code](./contributing/code.md)**: Standards, architecture conventions, and the Pull Request workflow for coding contributions.
 
 ---
 

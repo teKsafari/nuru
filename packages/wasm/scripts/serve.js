@@ -21,20 +21,38 @@ const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'text/css');
   }
 
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      if (err.code === 'ENOENT') {
-        res.writeHead(404);
-        res.end('File not found');
+  const sendFile = (file, onMissing) => {
+    fs.readFile(file, (err, data) => {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          if (onMissing) {
+            onMissing();
+          } else {
+            res.writeHead(404);
+            res.end('File not found');
+          }
+        } else {
+          res.writeHead(500);
+          res.end(`Server Error: ${err.code}`);
+        }
       } else {
-        res.writeHead(500);
-        res.end(`Server Error: ${err.code}`);
+        res.writeHead(200);
+        res.end(data);
       }
-    } else {
-      res.writeHead(200);
-      res.end(data);
-    }
-  });
+    });
+  };
+
+  if (req.url === '/main.wasm') {
+    const primary = path.join(DIR, 'main_go.wasm');
+    const fallback = path.join(DIR, 'main.wasm');
+    sendFile(primary, () => {
+      console.log('main_go.wasm not found, falling back to main.wasm');
+      sendFile(fallback);
+    });
+    return;
+  }
+
+  sendFile(filePath);
 });
 
 server.listen(PORT, () => {

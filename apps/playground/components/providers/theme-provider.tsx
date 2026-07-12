@@ -10,9 +10,9 @@ export function CustomThemeProvider({ children }: CustomThemeProviderProps) {
 	return (
 		<NextThemesProvider
 			attribute="class"
-			defaultTheme="light"
+			defaultTheme="system"
 			storageKey="nuru-theme"
-			enableSystem={false}
+			enableSystem
 		>
 			{children}
 		</NextThemesProvider>

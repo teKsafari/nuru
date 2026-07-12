@@ -1,14 +1,12 @@
 "use client";
 
-import { useNuru } from "@nuru/wasm/react";
+import { useExecutor } from "@/hooks/use-executor";
 import { Playground } from "@/components/playground/playground";
-import { NuruExecutor } from "@/lib/executors/nuru-executor";
-import { MockExecutor } from "@/lib/executors/mock-executor";
 import { IExecutor } from "@/types/executor";
 import { useTheme } from "@wrksz/themes/client";
 import { Module, Language, PlaygroundLabels, TestResult } from "@/types/playground";
 import type { Dictionary } from "@/app/(main)/[lang]/dictionaries";
-import { Suspense, useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { Suspense, useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import { nuruLanguage } from "@nuru/ui/lib/nuru-syntax";
@@ -85,77 +83,27 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 		return "/main.wasm";
 	}, []);
 
-	const nuruExecutorRef = useRef<NuruExecutor | null>(null);
-	const outputCaptureRef = useRef<{ chunks: string[] } | null>(null);
-
-	const readCapturedOutput = useCallback((capture: { chunks: string[] }) => {
-		return capture.chunks.join("\n").trim();
-	}, []);
-
-	const waitForCapturedOutput = useCallback(async (capture: { chunks: string[] }, fallbackOutput: string) => {
-		let previous = readCapturedOutput(capture);
-
-		for (let i = 0; i < 12; i++) {
-			await new Promise<void>((resolve) => setTimeout(resolve, 50));
-			const next = readCapturedOutput(capture);
-
-			if (next && next === previous) {
-				return next;
-			}
-
-			previous = next;
-		}
-
-		return previous || fallbackOutput.trim();
-	}, [readCapturedOutput]);
-	
-	const nuruInstance = useNuru((text, isError) => {
-		outputCaptureRef.current?.chunks.push(text);
-
-		if (nuruExecutorRef.current) {
-			nuruExecutorRef.current.handleOutput(text, isError);
-		}
-		
-		if (!nuruExecutorRef.current || !nuruExecutorRef.current.isExecuting()) {
-			setOutput((prev) => (prev ? prev + `\n${text}` : text));
-		}
-	}, { wasmURL });
-
-	const executor = useMemo<IExecutor>(() => {
-		if (module.executor === "mock") {
-			return new MockExecutor();
-		}
-
-		const exec = new NuruExecutor(nuruInstance);
-		nuruExecutorRef.current = exec;
-		return exec;
-	}, [nuruInstance, module.executor]);
+	const executor = useExecutor(module.executor || "nuru", {
+		wasmURL,
+		onUncaughtOutput: (text) => {return setOutput((prev) => (prev ? prev + `\n${text}` : text))},
+	});
 
 	const runCodeAndCollectOutput = useCallback(async (
 		sourceCode: string,
 		stdin?: string,
 		onOutput?: (text: string) => void,
 	) => {
+		// The executor's async generator yields all stdout/stderr; collect it here.
 		let eventOutput = "";
-		const outputCapture = { chunks: [] as string[] };
-		outputCaptureRef.current = outputCapture;
-
-		try {
-			const execution = executor.execute(sourceCode, stdin);
-			for await (const event of execution) {
-				if (event.type === "stdout" || event.type === "stderr") {
-					eventOutput += event.data + "\n";
-					onOutput?.(event.data);
-				}
-			}
-
-			return await waitForCapturedOutput(outputCapture, eventOutput);
-		} finally {
-			if (outputCaptureRef.current === outputCapture) {
-				outputCaptureRef.current = null;
+		const execution = executor.execute(sourceCode, stdin);
+		for await (const event of execution) {
+			if (event.type === "stdout" || event.type === "stderr") {
+				eventOutput += (eventOutput ? "\n" : "") + event.data;
+				onOutput?.(event.data);
 			}
 		}
-	}, [executor, waitForCapturedOutput]);
+		return eventOutput.trim();
+	}, [executor]);
 
 	const runSingleTest = useCallback(async (testCode: string, test: any): Promise<TestResult> => {
 		try {
@@ -212,9 +160,10 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 					errors.push(test.message);
 				}
 			}
-		} else if (currentLesson.solution) {
-			const normalize = (s: string) => s.replace(/\/\/.*$/gm, "").replace(/\s/g, "");
-			allPassed = normalize(currentCode) === normalize(currentLesson.solution);
+		} else {
+			// Legacy string comparison fallback is deprecated.
+			// All lessons must have structured test cases populated in the database.
+			allPassed = false;
 		}
 		
 		setTestResults(results);
@@ -247,13 +196,10 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 		setTestErrors([]);
 		setTestResults({});
 		try {
-			const validationOutput = await runCodeAndCollectOutput(code, undefined, (text) => {
-				setOutput((prev) => (prev ? prev + `\n${text}` : text));
-			});
-			// Just run evaluation for non-IO tests if we want immediate feedback, 
-			// or just let the student see their output.
-			// The plan says "checkSolution" is called in handleRun too.
-			await checkSolution(code, validationOutput);
+			const fullOutput = await runCodeAndCollectOutput(code, undefined, (data) =>
+				setOutput((prev) => (prev ? prev + `\n${data}` : data)),
+			);
+			await checkSolution(code, fullOutput);
 		} catch (error) {
 			setOutput(`${dict.playground.error}${error}`);
 		}
@@ -264,11 +210,12 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 		setTestErrors([]);
 		setTestResults({});
 		try {
-			// First run without stdin to get default output (for non-IO tests)
-			const validationOutput = await runCodeAndCollectOutput(code, undefined, (text) => {
-				setOutput((prev) => (prev === dict.playground.testing ? text : prev + `\n${text}`));
-			});
-			const passed = await checkSolution(code, validationOutput);
+			const fullOutput = await runCodeAndCollectOutput(code, undefined, (data) =>
+				setOutput((prev) =>
+					prev === dict.playground.testing ? data : prev + `\n${data}`,
+				),
+			);
+			const passed = await checkSolution(code, fullOutput);
 			if (passed) {
 				setOutput((prev) => prev + "\n✓ Submitted!");
 			}

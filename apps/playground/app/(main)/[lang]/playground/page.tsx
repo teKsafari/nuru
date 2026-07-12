@@ -6,11 +6,10 @@ import { useState, useMemo, useRef } from "react";
 import { Playground } from "@/components/playground/playground";
 import { nuruLanguage } from "@nuru/ui/lib/nuru-syntax";
 
-import { useNuru } from "@nuru/wasm/react";
+import { useExecutor } from "@/hooks/use-executor";
 
 import type { PlaygroundLabels } from "@/types/playground";
 import type { Locale } from "@/app/(main)/[lang]/dictionaries";
-import type { NuruExecutor } from "@/lib/executors/nuru-executor";
 
 export default function Page() {
 	const [code, setCode] = useState('andika("Jina langu ni: "+jaza("Unaitwa nani?"))');
@@ -54,32 +53,27 @@ export default function Page() {
 		return "/main.wasm";
 	}, []);
 
-	const nuruExecutorRef = useRef<NuruExecutor | null>(null);
-
-	const nuruInstance = useNuru(
-		(text, isError) => {
-			if (nuruExecutorRef.current) {
-				nuruExecutorRef.current.handleOutput(text, isError);
-			}
-
-			if (!nuruExecutorRef.current || !nuruExecutorRef.current.isExecuting()) {
-				setOutput((prev) => (prev ? prev + `\n${text}` : text));
-			}
-		},
-		{ wasmURL },
-	);
+	const executor = useExecutor("nuru", {
+		wasmURL,
+		onUncaughtOutput: (text) => setOutput((prev) => (prev ? prev + `\n${text}` : text)),
+	});
 
 	const handleRun = async () => {
 		setOutput("");
 		try {
-			nuruInstance.execute(code, ["Nehemia", "Jogn", "blenv", "wzasaewf"]);
+			const execution = executor.execute(code, "Nehemia\nJogn\nblenv\nwzasaewf");
+			for await (const event of execution) {
+				if (event.type === "stdout" || event.type === "stderr") {
+					setOutput((prev) => (prev ? prev + `\n${event.data}` : event.data));
+				}
+			}
 		} catch (error) {
 			setOutput(`error: ${error}`);
 		}
 	};
 
 	return (
-		<div className="h-[calc(100vh-64px)] w-full">
+		<div className="h-full w-full">
 			<Playground
 				labels={labels}
 				lang={lang || "sw"}

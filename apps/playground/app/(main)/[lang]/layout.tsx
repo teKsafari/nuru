@@ -17,7 +17,8 @@ export default async function MainLayout({
 	params: Promise<{ lang: string }>;
 }) {
 	let isAuthenticated = false;
-	let claims: Awaited<ReturnType<typeof getLogtoContext>>["claims"] = null;
+	let claims: Awaited<ReturnType<typeof getLogtoContext>>["claims"] | null =
+		null;
 	try {
 		const ctx = await getLogtoContext(logtoConfig, { fetchUserInfo: true });
 		isAuthenticated = ctx.isAuthenticated;
