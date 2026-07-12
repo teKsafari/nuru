@@ -14,7 +14,8 @@
 		"db:generate": "drizzle-kit generate",
 		"db:push": "drizzle-kit push",
 		"db:studio": "drizzle-kit studio",
-		"db:migrate": "drizzle-kit migrate --config ./drizzle.config.ts"
+		"db:migrate": "drizzle-kit migrate --config ./drizzle.config.ts",
+		"db:seed": "docker compose exec -T postgres psql -U postgres -d postgres -v ON_ERROR_STOP=1 < seed.sql"
 	},
 	"dependencies": {
 		"@neondatabase/serverless": "^1.0.2",
@@ -23,6 +24,8 @@
 		"server-only": "^0.0.1"
 	},
 	"devDependencies": {
+		"@types/node": "^22",
+		"@types/pg": "^8.20.0",
 		"dotenv": "^17.3.1",
 		"drizzle-kit": "^0.31.9",
 		"tsx": "^4.21.0",

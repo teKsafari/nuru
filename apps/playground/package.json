@@ -13,10 +13,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint .",
-		"test": "echo \"Mocktest Playground  🟢 🟢 🟢 🟢\" && exit 0 >> /dev/null",
-		"db:generate": "pnpm --filter @nuru/db db:generate",
-		"db:push": "pnpm --filter @nuru/db db:push",
-		"db:studio": "pnpm --filter @nuru/db db:studio"
+		"test": "echo \"Mocktest Playground  🟢 🟢 🟢 🟢\" && exit 0 >> /dev/null"
 	},
 	"prettier": {
 		"useTabs": true,
