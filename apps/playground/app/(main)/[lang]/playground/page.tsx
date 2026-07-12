@@ -73,7 +73,7 @@ export default function Page() {
 	};
 
 	return (
-		<div className="h-[calc(100vh-64px)] w-full">
+		<div className="h-full w-full">
 			<Playground
 				labels={labels}
 				lang={lang || "sw"}

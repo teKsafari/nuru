@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTheme } from "@wrksz/themes/client";
 import {
 	ChevronDown,
 	ChevronLeft,
@@ -8,10 +9,6 @@ import {
 	Lightbulb,
 	CheckCircle2,
 	ArrowRight,
-	Eye,
-	EyeOff,
-	XCircle,
-	Lock,
 } from "lucide-react";
 import { ScrollArea } from "@/components/playground/scroll-area";
 import { cn } from "@nuru/ui/lib/utils";
@@ -20,6 +17,7 @@ import Markdown from "react-markdown";
 import { CodeEditor } from "@nuru/ui/components/code-editor";
 import { Breadcrumbs } from "./breadcrumbs";
 import { usePlayground } from "./playground-context";
+import { RequirementsChecklist } from "./requirements-checklist";
 import { parseHighlights } from "@/lib/utils/highlights";
 
 interface LessonPanelProps {
@@ -37,7 +35,7 @@ export function LessonPanel({
 }: LessonPanelProps) {
 	const {
 		module,
-		state: { currentLessonIndex, completedLessonIndices, testResults, isTesting },
+		state: { currentLessonIndex, completedLessonIndices },
 		actions: { onLessonChange, onNextModule },
 		lang,
 		labels,
@@ -45,7 +43,12 @@ export function LessonPanel({
 		extensions,
 	} = usePlayground();
 
-	const [showTests, setShowTests] = useState(false);
+	// Embedded code blocks follow the active theme (light until mounted, to match SSR).
+	const { resolvedTheme } = useTheme();
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => setMounted(true), []);
+	const editorTheme: "dark" | "light" =
+		mounted && resolvedTheme === "dark" ? "dark" : "light";
 
 	if (!module || currentLessonIndex === undefined || !completedLessonIndices || !onLessonChange) {
 		return null;
@@ -111,7 +114,7 @@ export function LessonPanel({
 	);
 
 	const navigation = !hideNavigation && (
-		<div className="border-border bg-card/50 @container sticky bottom-0 mt-auto flex items-center justify-between gap-2 border-t pt-6 pb-2 backdrop-blur-xs">
+		<div className="border-border bg-card/50 @container sticky bottom-0 mt-auto flex items-center justify-between gap-2 border-t pt-3 pb-2 backdrop-blur-xs">
 			<Button
 				variant="outline"
 				size="sm"
@@ -182,96 +185,6 @@ export function LessonPanel({
 		</div>
 	);
 
-	const testCasesSection = lesson.tests && lesson.tests.length > 0 && (
-		<div className="mt-8 space-y-4">
-			<div className="flex items-center justify-between">
-				<h4 className="text-foreground text-sm font-bold tracking-tight uppercase flex items-center gap-2">
-					Test Cases
-					{isTesting && <div className="h-1.5 w-1.5 bg-primary animate-pulse rounded-full" />}
-				</h4>
-				<Button 
-					variant="ghost" 
-					size="sm" 
-					onClick={() => setShowTests(!showTests)}
-					className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider"
-				>
-					{showTests ? (
-						<><EyeOff className="mr-1.5 h-3.5 w-3.5" /> {labels.hideTests}</>
-					) : (
-						<><Eye className="mr-1.5 h-3.5 w-3.5" /> {labels.showTests}</>
-					)}
-				</Button>
-			</div>
-
-			{showTests && (
-				<div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-					{lesson.tests.map((test) => {
-						const testId = test.id || 'missing-id';
-						const result = testResults?.[testId];
-						return (
-							<div 
-								key={testId} 
-								className={cn(
-									"rounded-lg border p-3 text-[13px] transition-all",
-									result?.passed === true ? "bg-green-500/5 border-green-500/20" : 
-									result?.passed === false ? "bg-red-500/5 border-red-500/20" : 
-									"bg-muted/30 border-border/50"
-								)}
-							>
-								<div className="flex items-center justify-between gap-3">
-									<div className="flex items-center gap-2 min-w-0">
-										{test.isPublic ? (
-											<div className="flex items-center gap-1.5 truncate">
-												<span className="font-bold text-foreground shrink-0 uppercase text-[10px] tracking-widest text-muted-foreground">
-													{test.type === 'io' ? 'Input/Output' : 'Validation'}
-												</span>
-												{test.input && (
-													<code className="bg-muted px-1.5 py-0.5 rounded text-[11px] font-mono truncate">
-														{test.input}
-													</code>
-												)}
-											</div>
-										) : (
-											<div className="flex items-center gap-1.5 text-muted-foreground italic text-xs">
-												<Lock className="h-3 w-3" />
-												{labels.hiddenTest}
-											</div>
-										)}
-									</div>
-									<div className="shrink-0">
-										{result?.passed === true ? (
-											<CheckCircle2 className="h-4 w-4 text-green-500" />
-										) : result?.passed === false ? (
-											<XCircle className="h-4 w-4 text-red-500" />
-										) : (
-											<div className="h-4 w-4 rounded-full border-2 border-muted border-t-primary/30 animate-spin" />
-										)}
-									</div>
-								</div>
-								
-								{test.isPublic && result?.passed === false && (
-									<div className="mt-2 space-y-2 pt-2 border-t border-red-500/10">
-										<p className="text-red-500 font-medium text-xs">
-											{test.message}
-										</p>
-										{result.actualOutput !== undefined && (
-											<div className="space-y-1">
-												<span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Your Output:</span>
-												<pre className="bg-slate-950 p-2 rounded border border-white/5 font-mono text-[11px] overflow-x-auto">
-													{result.actualOutput || "(no output)"}
-												</pre>
-											</div>
-										)}
-									</div>
-								)}
-							</div>
-						);
-					})}
-				</div>
-			)}
-		</div>
-	);
-
 	// Desktop: full height scrollable panel
 	if (!collapsible) {
 		return (
@@ -296,11 +209,12 @@ export function LessonPanel({
 														String(children).replace(/\n$/, ""),
 													);
 													return (
-														<div className="not-prose border-border bg-muted/30 my-6 overflow-hidden rounded-xl border p-2 shadow-xs">
+														<div className="not-prose my-4 overflow-hidden rounded-lg border border-border bg-muted/30">
 															<CodeEditor
 																code={cleanedCode}
 																highlights={highlights}
 																readOnly
+																theme={editorTheme}
 																extensions={extensions}
 															/>
 														</div>
@@ -325,9 +239,9 @@ export function LessonPanel({
 								</div>
 
 								{lesson.task && (
-									<div className="mt-6 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 shadow-sm">
-										<h4 className="text-foreground mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
-											<Lightbulb className="h-4 w-4 text-yellow-500" />
+									<div className="mt-6 rounded-xl border border-warning/25 bg-warning/10 p-4 shadow-sm">
+										<h4 className="text-warning mb-2 flex items-center gap-2 text-sm font-bold tracking-tight uppercase">
+											<Lightbulb className="h-4 w-4 text-warning" />
 											{labels.yourTask}
 										</h4>
 										<p className="text-muted-foreground text-sm leading-normal italic">
@@ -336,7 +250,7 @@ export function LessonPanel({
 									</div>
 								)}
 
-								{testCasesSection}
+								<RequirementsChecklist className="mt-6" />
 							</div>{" "}
 						</div>
 						{navigation}
@@ -346,48 +260,39 @@ export function LessonPanel({
 		);
 	}
 
-	// Mobile: white lesson sheet with collapsible content.
+	// Mobile: white lesson sheet with collapsible content + upcoming lessons.
+	const upcoming = module.lessons
+		.map((l, i) => ({ l, i }))
+		.filter(({ i }) => i > currentLessonIndex)
+		.slice(0, 5);
+
 	return (
-		<div className="flex h-full flex-col overflow-hidden rounded-[20px] border border-slate-200 bg-white text-slate-900 shadow-sm">
-			<div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-				<div className="min-w-0 text-[12px] text-slate-500">
-					Step {currentLessonIndex + 1} of {module.lessons.length}
-					<span className="mx-2 text-slate-300">•</span>
-					{labels.lesson}
-					<div className="mt-1 truncate text-[15px] font-semibold text-slate-900">
+		<div className="flex h-full flex-col overflow-hidden rounded-[20px] border border-border bg-card text-foreground shadow-sm">
+			<div className="flex items-center justify-between border-b border-border px-4 py-3">
+				<div className="min-w-0">
+					<div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+						{labels.lesson}
+					</div>
+					<div className="mt-0.5 truncate text-[15px] font-semibold text-foreground">
 						{lesson.title[lang] || lesson.title.sw}
 					</div>
 				</div>
 				<button
 					type="button"
 					onClick={onToggle}
-					className="shrink-0 rounded-full p-1.5 text-slate-500 transition-transform hover:bg-slate-100 hover:text-slate-900"
+					className="shrink-0 rounded-full p-1.5 text-muted-foreground transition-transform hover:bg-muted hover:text-foreground"
 					aria-label={expanded ? "Collapse lesson" : "Expand lesson"}
 				>
 					<ChevronDown className={cn("h-5 w-5 transition-transform", expanded && "rotate-180")} />
 				</button>
 			</div>
 
-			{expanded && (
+			{expanded ? (
 				<ScrollArea className="flex-1 [&>div>div]:h-full">
-					<div className="flex min-h-full w-full min-w-0 flex-col px-4 pb-5 text-sm">
+					<div className="flex min-h-full w-full min-w-0 flex-col px-4 pb-5 pt-4 text-sm">
 						<div className="flex-1">
 							<div key={currentLessonIndex} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-								<div className="mb-5">
-									<h1 className="text-[20px] font-semibold leading-tight text-slate-950">
-										{lesson.title[lang] || lesson.title.sw}
-									</h1>
-									<div className="mt-4 max-w-[180px]">
-										<div className="mb-2 text-[12px] text-slate-500">
-											Step {currentLessonIndex + 1} of {module.lessons.length}
-										</div>
-										<div className="h-2 overflow-hidden rounded-full bg-slate-100">
-											<div className="h-full rounded-full bg-blue-500" style={{ width: `${((currentLessonIndex + 1) / module.lessons.length) * 100}%` }} />
-										</div>
-									</div>
-								</div>
-
-								<div className="mb-5 text-[14px] leading-7 text-slate-700">
+								<div className="mb-5 text-[14px] leading-7 text-foreground">
 									<Markdown
 										components={{
 											code(props) {
@@ -396,13 +301,13 @@ export function LessonPanel({
 												if (match) {
 													const { cleanedCode, highlights } = parseHighlights(String(children).replace(/\n$/, ""));
 													return (
-												<div className="not-prose my-5 overflow-hidden rounded-2xl border border-slate-800 bg-[#071225]">
-															<CodeEditor code={cleanedCode} highlights={highlights} readOnly extensions={extensions} />
+												<div className="not-prose my-4 overflow-hidden rounded-lg border border-border bg-muted/30">
+															<CodeEditor code={cleanedCode} highlights={highlights} readOnly theme={editorTheme} extensions={extensions} />
 														</div>
 													);
 												}
 												return (
-										<code className="rounded-md bg-blue-50 px-1.5 py-0.5 font-mono text-[0.9em] text-blue-700" {...rest}>
+										<code className="rounded bg-blue-500/10 px-1.5 py-0.5 font-mono text-[0.9em] font-medium text-blue-600 dark:text-blue-400" {...rest}>
 														{children}
 													</code>
 												);
@@ -415,16 +320,16 @@ export function LessonPanel({
 								</div>
 
 								{lesson.task && (
-									<div className="mb-5 overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 shadow-sm">
+									<div className="mb-5 overflow-hidden rounded-2xl border border-warning/25 bg-warning/10 shadow-sm">
 										<div className="flex items-start gap-3 px-4 py-4">
-											<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-500">
+											<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-warning/25 bg-card text-warning">
 												<Lightbulb className="h-5 w-5" />
 											</div>
 											<div className="min-w-0 flex-1">
-												<h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-600">
+												<h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-warning">
 													{labels.yourTask}
 												</h4>
-												<p className="text-[14px] leading-7 text-slate-700">
+												<p className="text-[14px] leading-7 text-foreground">
 													{lesson.task[lang] || lesson.task.sw}
 												</p>
 											</div>
@@ -432,13 +337,60 @@ export function LessonPanel({
 									</div>
 								)}
 
-								{testCasesSection}
+								<RequirementsChecklist className="mt-6" />
 							</div>
 						</div>
-						{navigation}
+					</div>
+				</ScrollArea>
+			) : (
+				<ScrollArea className="flex-1">
+					<div className="px-4 py-4">
+						<div className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+							Up next
+						</div>
+						{upcoming.length === 0 ? (
+							<div className="rounded-2xl border border-dashed border-border bg-muted px-4 py-6 text-center text-[12.5px] text-muted-foreground">
+								You're on the last lesson. Finish strong! 🎉
+							</div>
+						) : (
+							<ul className="space-y-2">
+								{upcoming.map(({ l, i }) => {
+									const done = completedLessonIndices.has(i);
+									return (
+										<li key={l.id}>
+											<button
+												type="button"
+												onClick={() => onLessonChange(i)}
+												className="flex w-full items-center justify-between gap-3 rounded-2xl border border-border bg-card px-3 py-3 text-left hover:bg-muted"
+											>
+												<div className="flex min-w-0 items-center gap-3">
+													<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-[12px] font-semibold text-blue-600 dark:text-blue-400">
+														{i + 1}
+													</span>
+													<div className="min-w-0">
+														<div className="truncate text-[13px] font-semibold text-foreground">
+															{l.title[lang] || l.title.sw}
+														</div>
+														<div className="text-[11px] text-muted-foreground">
+															{done ? "Completed" : "Upcoming"}
+														</div>
+													</div>
+												</div>
+												{done ? (
+													<CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+												) : (
+													<ChevronDown className="h-4 w-4 -rotate-90 shrink-0 text-muted-foreground" />
+												)}
+											</button>
+										</li>
+									);
+								})}
+							</ul>
+						)}
 					</div>
 				</ScrollArea>
 			)}
 		</div>
 	);
 }
+

@@ -90,14 +90,14 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 	const maxMinutes = Math.max(1, ...week.map((d) => d.minutes));
 
 	return (
-		<main className="flex-1 overflow-auto bg-slate-50 p-6 md:p-10">
+		<main className="flex-1 overflow-auto bg-background p-6 md:p-10">
 			<div className="mx-auto max-w-6xl">
 				<div className="mb-8 flex items-end justify-between gap-4">
 					<div>
-						<h1 className="text-3xl font-bold tracking-tight text-slate-900">
+						<h1 className="text-3xl font-bold tracking-tight text-foreground">
 							My Progress
 						</h1>
-						<p className="mt-1 text-sm text-slate-600">
+						<p className="mt-1 text-sm text-muted-foreground">
 							Your learning journey across Nuru Playground
 						</p>
 					</div>
@@ -142,13 +142,13 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 
 				<div className="mt-6 grid gap-4 md:grid-cols-3">
 					{/* Weekly practice */}
-					<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
+					<div className="rounded-2xl border border-border bg-card p-5 shadow-sm md:col-span-2">
 						<div className="mb-4 flex items-center justify-between">
 							<div>
-								<h2 className="text-base font-semibold text-slate-900">
+								<h2 className="text-base font-semibold text-foreground">
 									Weekly Practice
 								</h2>
-								<p className="text-xs text-slate-500">Last 7 days</p>
+								<p className="text-xs text-muted-foreground">Last 7 days</p>
 							</div>
 							<TrendingUp className="h-5 w-5 text-blue-500" />
 						</div>
@@ -162,7 +162,7 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 											style={{ height: `${Math.max(4, h)}%` }}
 											title={`${d.minutes} min`}
 										/>
-										<div className="text-[10.5px] text-slate-500">
+										<div className="text-[10.5px] text-muted-foreground">
 											{new Date(d.date).toLocaleDateString(undefined, {
 												weekday: "short",
 											})}
@@ -174,15 +174,15 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 					</div>
 
 					{/* Badges */}
-					<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+					<div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
 						<div className="mb-4 flex items-center justify-between">
-							<h2 className="text-base font-semibold text-slate-900">
+							<h2 className="text-base font-semibold text-foreground">
 								Badges Earned
 							</h2>
 							<Trophy className="h-5 w-5 text-amber-500" />
 						</div>
 						{badges.length === 0 ? (
-							<p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center text-xs text-slate-500">
+							<p className="rounded-xl border border-dashed border-border bg-muted px-4 py-6 text-center text-xs text-muted-foreground">
 								Complete lessons and pass tests to earn badges.
 							</p>
 						) : (
@@ -196,10 +196,10 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 											<Sparkles className="h-4 w-4 text-amber-600" />
 										</div>
 										<div className="min-w-0">
-											<div className="truncate text-[13px] font-semibold text-slate-900">
+											<div className="truncate text-[13px] font-semibold text-foreground">
 												{b.title}
 											</div>
-											<div className="truncate text-[11px] text-slate-500">
+											<div className="truncate text-[11px] text-muted-foreground">
 												{b.description}
 											</div>
 										</div>
@@ -212,8 +212,8 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 
 				<div className="mt-6 grid gap-4 md:grid-cols-3">
 					{/* Course progress */}
-					<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-						<h2 className="mb-4 text-base font-semibold text-slate-900">
+					<div className="rounded-2xl border border-border bg-card p-5 shadow-sm md:col-span-2">
+						<h2 className="mb-4 text-base font-semibold text-foreground">
 							Current Course Progress
 						</h2>
 						<ul className="space-y-3">
@@ -231,20 +231,20 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 								return (
 									<li
 										key={m.id}
-										className="rounded-xl border border-slate-200 bg-white px-4 py-3"
+										className="rounded-xl border border-border bg-card px-4 py-3"
 									>
 										<div className="mb-1.5 flex items-center justify-between">
 											<Link
 												href={`/${lang}/anza/${m.slug}`}
-												className="truncate text-[13.5px] font-semibold text-slate-800 hover:text-blue-600"
+												className="truncate text-[13.5px] font-semibold text-foreground hover:text-blue-600"
 											>
 												{m.title[lang] || m.title.sw}
 											</Link>
-											<span className="text-[11.5px] font-medium text-slate-500">
+											<span className="text-[11.5px] font-medium text-muted-foreground">
 												{count} / {m.lessons.length}
 											</span>
 										</div>
-										<div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+										<div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
 											<div
 												className="h-full rounded-full bg-blue-600 transition-all"
 												style={{ width: `${p}%` }}
@@ -257,15 +257,15 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 					</div>
 
 					{/* Recent activity */}
-					<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+					<div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
 						<div className="mb-4 flex items-center justify-between">
-							<h2 className="text-base font-semibold text-slate-900">
+							<h2 className="text-base font-semibold text-foreground">
 								Recent Activity
 							</h2>
 							<ActivityIcon className="h-5 w-5 text-blue-500" />
 						</div>
 						{activity.length === 0 ? (
-							<p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center text-xs text-slate-500">
+							<p className="rounded-xl border border-dashed border-border bg-muted px-4 py-6 text-center text-xs text-muted-foreground">
 								Run some code to populate your activity.
 							</p>
 						) : (
@@ -274,10 +274,10 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 									<li key={a.id} className="flex items-start gap-2.5">
 										<div className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
 										<div className="min-w-0 flex-1">
-											<div className="truncate text-[12.5px] font-medium text-slate-800">
+											<div className="truncate text-[12.5px] font-medium text-foreground">
 												{a.title}
 											</div>
-											<div className="text-[11px] text-slate-500">
+											<div className="text-[11px] text-muted-foreground">
 												{new Date(a.createdAt).toLocaleString()}
 											</div>
 										</div>
@@ -291,21 +291,21 @@ export function ProgressDashboardClient({ modules, lang }: Props) {
 				{/* Motivation banner */}
 				<div className="mt-6 overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-5">
 					<div className="flex items-center gap-4">
-						<div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm">
+						<div className="flex h-12 w-12 items-center justify-center rounded-xl bg-card shadow-sm">
 							<Clock className="h-5 w-5 text-blue-600" />
 						</div>
 						<div className="flex-1">
-							<h3 className="text-[15px] font-semibold text-slate-900">
+							<h3 className="text-[15px] font-semibold text-foreground">
 								Keep your momentum going
 							</h3>
-							<p className="text-[12.5px] text-slate-600">
+							<p className="text-[12.5px] text-muted-foreground">
 								A few minutes a day adds up fast. Every run counts.
 							</p>
 						</div>
 						{nextLesson && (
 							<Link
 								href={`/${lang}/anza/${nextLesson.module.slug}/${nextLesson.lesson.slug}`}
-								className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-white px-3.5 py-2 text-[12.5px] font-semibold text-blue-700 hover:bg-blue-50"
+								className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-card px-3.5 py-2 text-[12.5px] font-semibold text-blue-700 hover:bg-blue-50"
 							>
 								Resume lesson
 								<ArrowRight className="h-3.5 w-3.5" />
@@ -330,17 +330,17 @@ function MetricCard({
 	sub?: string;
 }) {
 	return (
-		<div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+		<div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
 			<div className="mb-2 flex items-center justify-between">
-				<span className="text-[11.5px] font-medium uppercase tracking-wider text-slate-500">
+				<span className="text-[11.5px] font-medium uppercase tracking-wider text-muted-foreground">
 					{label}
 				</span>
 				{icon}
 			</div>
-			<div className="text-2xl font-bold tracking-tight text-slate-900">
+			<div className="text-2xl font-bold tracking-tight text-foreground">
 				{value}
 			</div>
-			{sub && <div className="mt-0.5 text-[11.5px] text-slate-500">{sub}</div>}
+			{sub && <div className="mt-0.5 text-[11.5px] text-muted-foreground">{sub}</div>}
 		</div>
 	);
 }

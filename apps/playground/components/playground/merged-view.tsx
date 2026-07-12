@@ -77,22 +77,22 @@ export function MergedView({ isMobile = false }: { isMobile?: boolean }) {
 	return (
 		<div
 			className={cn(
-				"flex h-full w-full flex-col overflow-hidden bg-white",
-				isMobile ? "rounded-[20px] border border-slate-200 shadow-sm" : "rounded-2xl border border-slate-200 shadow-sm",
+				"flex h-full w-full flex-col overflow-hidden bg-card",
+				isMobile ? "rounded-[20px] border border-border shadow-sm" : "rounded-2xl border border-border shadow-sm",
 			)}
 		>
 			{!isMobile && (
-			<div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-5 py-3">
-				<nav className="flex min-w-0 items-center gap-1.5 text-[12px] text-slate-500">
-					<button onClick={() => setViewMode("lesson")} className="hover:text-slate-900">
+			<div className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-5 py-3">
+				<nav className="flex min-w-0 items-center gap-1.5 text-[12px] text-muted-foreground">
+					<button onClick={() => setViewMode("lesson")} className="hover:text-foreground">
 						Playground
 					</button>
-					<ChevronRight className="h-3 w-3 text-slate-300" />
-					<button onClick={() => setViewMode("lesson")} className="max-w-[200px] truncate hover:text-slate-900">
+					<ChevronRight className="h-3 w-3 text-muted-foreground/60" />
+					<button onClick={() => setViewMode("lesson")} className="max-w-[200px] truncate hover:text-foreground">
 						{moduleTitle}
 					</button>
-					<ChevronRight className="h-3 w-3 text-slate-300" />
-					<span className="max-w-[240px] truncate font-bold text-[#111a44]">{crumbTail}</span>
+					<ChevronRight className="h-3 w-3 text-muted-foreground/60" />
+					<span className="max-w-[240px] truncate font-bold text-foreground">{crumbTail}</span>
 				</nav>
 				<Button
 					size="sm"
@@ -104,15 +104,16 @@ export function MergedView({ isMobile = false }: { isMobile?: boolean }) {
 				</Button>
 			</div>
 			)}
-			<ScrollArea className={cn("flex-1", isMobile ? "bg-white" : "bg-slate-50")}>
-				{viewMode === "lesson-map" ? <LessonMapView /> : <ProgressView />}
+			<ScrollArea className={cn("flex-1", isMobile ? "bg-card" : "bg-muted")}>
+				{viewMode === "lesson-map" ? <LessonMapView isMobile={isMobile} /> : <ProgressView isMobile={isMobile} />}
 			</ScrollArea>
 		</div>
 	);
 }
 
 /* ============================================================
-   CURRICULUM MAP  — mirrors ramani/page.tsx mockup
+   CURRICULUM MAP  — in-playground curriculum journey view,
+   wired to real module data and localStorage progress.
    (Left curriculum list is the existing CurriculumSidebar.)
    ============================================================ */
 
@@ -128,13 +129,13 @@ const trackTints = [
 	"border-blue-100 bg-blue-500 text-white shadow-blue-500/25",
 	"border-violet-100 bg-violet-100 text-violet-600 shadow-violet-500/10",
 	"border-orange-100 bg-orange-100 text-orange-500 shadow-orange-500/10",
-	"border-slate-100 bg-slate-100 text-slate-400 shadow-slate-500/5",
-	"border-slate-100 bg-slate-100 text-slate-400 shadow-slate-500/5",
-	"border-slate-100 bg-slate-100 text-slate-400 shadow-slate-500/5",
-	"border-slate-100 bg-slate-100 text-slate-400 shadow-slate-500/5",
+	"border-border bg-muted text-muted-foreground shadow-slate-500/5",
+	"border-border bg-muted text-muted-foreground shadow-slate-500/5",
+	"border-border bg-muted text-muted-foreground shadow-slate-500/5",
+	"border-border bg-muted text-muted-foreground shadow-slate-500/5",
 ];
 
-function LessonMapView() {
+function LessonMapView({ isMobile = false }: { isMobile?: boolean }) {
 	const router = useRouter();
 	const { allModules, module: currentModule, lang, setViewMode } = usePlayground();
 	const auth = useContext(AuthContext);
@@ -190,56 +191,64 @@ function LessonMapView() {
 	};
 
 	return (
-		<div className="w-full p-4">
-			<div className="grid w-full grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_286px]">
+		<div className={cn("w-full", isMobile ? "p-3" : "p-4")}>
+			<div className={cn("grid w-full grid-cols-1 gap-4", !isMobile && "xl:grid-cols-[minmax(0,1fr)_286px]")}>
 				{/* Middle column — journey track */}
-				<section className="rounded-[10px] border border-slate-200 bg-white p-6 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+				<section className={cn("rounded-[10px] border border-border bg-card shadow-[0_8px_18px_rgba(15,23,42,0.04)]", isMobile ? "p-4" : "p-6")}>
 					<div className="mb-4">
-						<h1 className="text-[22px] font-extrabold text-[#111a44]">{title}</h1>
-						<p className="mt-1 text-[13px] text-slate-500">Your journey to becoming confident with Nuru.</p>
+						<h1 className={cn("font-extrabold text-foreground", isMobile ? "text-[18px]" : "text-[22px]")}>{title}</h1>
+						<p className="mt-1 text-[12px] text-muted-foreground">Your journey to becoming confident with Nuru.</p>
 					</div>
 
 					<div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-						<div className="flex flex-wrap items-center gap-5 rounded-[6px] border border-slate-200 bg-white px-3 py-2 text-[11.5px] text-slate-500">
-							<Legend icon={CheckCircle2} label="Completed" color="text-emerald-500" />
-							<Legend icon={CircleDot} label="In Progress" color="text-blue-500" />
-							<Legend icon={Lock} label="Locked" color="text-slate-400" />
-							<Legend icon={CircleDot} label="Next" color="text-amber-400" />
+						<div className="flex flex-wrap items-center gap-3 rounded-[6px] border border-border bg-card px-3 py-2 text-[11px] text-muted-foreground">
+							<Legend icon={CheckCircle2} label="Done" color="text-emerald-500" />
+							<Legend icon={CircleDot} label="Doing" color="text-blue-500" />
+							<Legend icon={Lock} label="Locked" color="text-muted-foreground" />
 						</div>
-						<button className="inline-flex h-9 items-center gap-2 rounded-[6px] border border-slate-200 bg-white px-4 text-[12px] font-semibold text-slate-600 hover:bg-slate-50">
-							<Expand className="h-3.5 w-3.5" /> Expand All
-						</button>
+						{!isMobile && (
+							<button className="inline-flex h-9 items-center gap-2 rounded-[6px] border border-border bg-card px-4 text-[12px] font-semibold text-muted-foreground hover:bg-muted">
+								<Expand className="h-3.5 w-3.5" /> Expand All
+							</button>
+						)}
 					</div>
 
+
 					<div className="relative pl-2">
-						<div className="absolute top-11 bottom-0 left-8 w-px border-l border-dashed border-slate-300" />
-						<div className="space-y-6">
+						<div className={cn("absolute bottom-0 w-px border-l border-dashed border-border", isMobile ? "top-9 left-6" : "top-11 left-8")} />
+						<div className="space-y-5">
 							{modules.map((m, i) => {
 								const Icon = trackIcons[i] ?? Sparkles;
 								const realDone = m.real ? completedMap[m.id]?.size ?? 0 : 0;
 								const doneCount = m.real ? realDone : (i === 0 ? m.lessons.length : 0);
 								return (
-									<div key={m.id} className="relative flex gap-5">
-										<div className={`relative z-10 flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-full border-4 shadow-lg ${trackTints[i] ?? trackTints[trackTints.length - 1]}`}>
-											<Icon className="h-5 w-5" />
+									<div key={m.id} className={cn("relative flex", isMobile ? "gap-3" : "gap-5")}>
+										<div className={cn(
+											"relative z-10 flex shrink-0 items-center justify-center rounded-full border-4 shadow-lg",
+											isMobile ? "h-9 w-9" : "h-[48px] w-[48px]",
+											trackTints[i] ?? trackTints[trackTints.length - 1],
+										)}>
+											<Icon className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} />
 										</div>
-										<div className="flex-1 rounded-[10px] border border-slate-200 bg-white p-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-											<div className="mb-4 flex items-start justify-between gap-4">
-												<div>
-													<h3 className="text-[16px] font-extrabold text-[#111a44]">{i + 1}. {m.title}</h3>
-													<p className="mt-1 text-[12px] text-slate-500">
-														{i === 0 ? "Karibu kwenye dunia ya Nuru. Anza safari yako hapa."
-															: i === 1 ? "Jifunze misingi ya kuandika na kuona matokeo."
-															: i === 2 ? "Hifadhi na tumia taarifa kwa kutumia variables."
-															: "Aina za data na jinsi ya kuzitumia."}
-													</p>
+										<div className={cn("min-w-0 flex-1 rounded-[10px] border border-border bg-card shadow-[0_8px_18px_rgba(15,23,42,0.04)]", isMobile ? "p-3" : "p-4")}>
+											<div className="mb-3 flex items-start justify-between gap-3">
+												<div className="min-w-0">
+													<h3 className={cn("font-extrabold text-foreground", isMobile ? "text-[14px]" : "text-[16px]")}>{i + 1}. {m.title}</h3>
+													{!isMobile && (
+														<p className="mt-1 text-[12px] text-muted-foreground">
+															{i === 0 ? "Karibu kwenye dunia ya Nuru. Anza safari yako hapa."
+																: i === 1 ? "Jifunze misingi ya kuandika na kuona matokeo."
+																: i === 2 ? "Hifadhi na tumia taarifa kwa kutumia variables."
+																: "Aina za data na jinsi ya kuzitumia."}
+														</p>
+													)}
 												</div>
-												<div className="flex shrink-0 items-center gap-3">
-													<span className="text-[12px] font-medium text-slate-500">{doneCount} / {m.lessons.length} lessons</span>
-													<StatusBadge status={m.status} />
+												<div className="flex shrink-0 items-center gap-2">
+													<span className={cn("font-medium text-muted-foreground", isMobile ? "text-[11px]" : "text-[12px]")}>{doneCount}/{m.lessons.length}</span>
+													{!isMobile && <StatusBadge status={m.status} />}
 												</div>
 											</div>
-											<div className="flex flex-wrap items-center gap-4">
+											<div className={cn("flex flex-wrap", isMobile ? "gap-2" : "items-center gap-4")}>
 												{m.lessons.map((lesson, j) => {
 													const locked = m.status === "locked";
 													const realModule = m.real ? realModules.find((rm) => rm.id === m.id) : undefined;
@@ -252,17 +261,21 @@ function LessonMapView() {
 															key={`${m.id}-${j}`}
 															disabled={locked || !lessonSlug}
 															onClick={() => lessonSlug && go(m.slug, lessonSlug)}
-															className={`relative flex h-[54px] min-w-[128px] max-w-[160px] items-center gap-2 rounded-[7px] border px-3 text-left text-[10.5px] font-semibold disabled:cursor-not-allowed ${
-																active ? "border-blue-500 bg-white text-[#111a44] shadow-[0_0_0_2px_rgba(37,99,235,0.1)]"
-																: locked ? "border-slate-200 bg-white text-slate-400"
-																: "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-															}`}
+															className={cn(
+																"relative flex items-center gap-2 rounded-[7px] border px-2.5 text-left font-semibold disabled:cursor-not-allowed",
+																isMobile
+																	? "h-auto min-h-[42px] min-w-[44%] flex-1 basis-[44%] text-[10.5px] py-2"
+																	: "h-[54px] min-w-[128px] max-w-[160px] text-[10.5px] px-3",
+																active ? "border-blue-500 bg-card text-foreground shadow-[0_0_0_2px_rgba(37,99,235,0.1)]"
+																: locked ? "border-border bg-card text-muted-foreground"
+																: "border-border bg-card text-muted-foreground hover:bg-muted",
+															)}
 														>
 															{complete ? <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
-																: locked ? <Lock className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+																: locked ? <Lock className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
 																: <CircleDot className="h-4 w-4 shrink-0 text-blue-500" />}
 															<span className="line-clamp-2">{i + 1}.{j + 1} {lesson}</span>
-															{j < m.lessons.length - 1 && !locked && <span className="absolute top-1/2 -right-4 h-px w-4 bg-emerald-300" />}
+															{!isMobile && j < m.lessons.length - 1 && !locked && <span className="absolute top-1/2 -right-4 h-px w-4 bg-emerald-300" />}
 														</button>
 													);
 												})}
@@ -275,63 +288,64 @@ function LessonMapView() {
 					</div>
 				</section>
 
+
 				{/* Right rail */}
 				<aside className="space-y-4">
-					<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-						<h3 className="mb-3 text-[14px] font-extrabold text-[#111a44]">Your Progress</h3>
+					<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+						<h3 className="mb-3 text-[14px] font-extrabold text-foreground">Your Progress</h3>
 						<div className="flex items-center gap-5">
 							<ProgressRing pct={pct} />
-							<div className="space-y-3 text-[11px] text-slate-500">
+							<div className="space-y-3 text-[11px] text-muted-foreground">
 								<Metric icon={CheckCircle2} value={`${completed}`} label="Lessons Completed" color="text-emerald-500" />
 								<Metric icon={Circle} value={`${totalLessons}`} label="Total Lessons" color="text-blue-500" />
 								<div>
-									<span className="font-bold text-[#111a44]">~ {Math.max(0, totalLessons - completed) * 10}m</span>
+									<span className="font-bold text-foreground">~ {Math.max(0, totalLessons - completed) * 10}m</span>
 									<br /><span>Estimated Time Remaining</span>
 								</div>
 							</div>
 						</div>
 						<div className="mt-4 flex items-center gap-3 rounded-[8px] bg-blue-50/70 px-3 py-3">
 							<Sparkles className="h-5 w-5 text-amber-400" />
-							<p className="text-[11.5px] text-slate-500">
-								<span className="font-extrabold text-[#111a44]">Great progress{firstName ? `, ${firstName}` : ""}!</span>
+							<p className="text-[11.5px] text-muted-foreground">
+								<span className="font-extrabold text-foreground">Great progress{firstName ? `, ${firstName}` : ""}!</span>
 								<br />Keep going — you're building real skills.
 							</p>
 						</div>
 					</div>
 
 					{nextHref && (
-						<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-							<h3 className="mb-4 text-[14px] font-extrabold text-[#111a44]">Next Up</h3>
-							<div className="rounded-[8px] border border-slate-200 p-3">
-								<div className="text-[12.5px] font-extrabold text-[#111a44]">{nextLessonTitle}</div>
-								<p className="mt-1 text-[11px] text-slate-500">Continue where you left off.</p>
+						<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+							<h3 className="mb-4 text-[14px] font-extrabold text-foreground">Next Up</h3>
+							<div className="rounded-[8px] border border-border p-3">
+								<div className="text-[12.5px] font-extrabold text-foreground">{nextLessonTitle}</div>
+								<p className="mt-1 text-[11px] text-muted-foreground">Continue where you left off.</p>
 								<button
 									onClick={() => router.push(nextHref)}
 									className="mt-3 flex h-9 w-full items-center justify-center gap-2 rounded-[5px] bg-blue-600 text-[12px] font-semibold text-white hover:bg-blue-700"
 								>
 									<Play className="h-3.5 w-3.5 fill-current" />Continue Lesson
 								</button>
-								<div className="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
+								<div className="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
 									<Clock className="h-3.5 w-3.5" />Estimated time: ~10 min
 								</div>
 							</div>
 						</div>
 					)}
 
-					<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-						<h3 className="mb-4 text-[14px] font-extrabold text-[#111a44]">Journey Summary</h3>
+					<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+						<h3 className="mb-4 text-[14px] font-extrabold text-foreground">Journey Summary</h3>
 						<ul className="space-y-2.5">
 							{modules.map((m, i) => {
 								const realModule = m.real ? realModules.find((rm) => rm.id === m.id) : undefined;
 								const done = realModule ? completedMap[realModule.id]?.size ?? 0 : (i === 0 ? m.lessons.length : 0);
 								return (
 									<li key={m.id} className="flex items-center justify-between text-[12px]">
-										<span className="truncate pr-2 text-slate-600">{i + 1}. {m.title}</span>
-										<span className="flex shrink-0 items-center gap-2 font-semibold text-slate-500">
+										<span className="truncate pr-2 text-muted-foreground">{i + 1}. {m.title}</span>
+										<span className="flex shrink-0 items-center gap-2 font-semibold text-muted-foreground">
 											{done} / {m.lessons.length}
 											{m.status === "completed" ? <CheckCircle2 className="h-4 w-4 text-emerald-500" />
 												: m.status === "in-progress" ? <CircleDot className="h-4 w-4 text-blue-500" />
-												: <Lock className="h-3.5 w-3.5 text-slate-300" />}
+												: <Lock className="h-3.5 w-3.5 text-muted-foreground/60" />}
 										</span>
 									</li>
 								);
@@ -339,9 +353,9 @@ function LessonMapView() {
 						</ul>
 						<button
 							onClick={() => setViewMode("progress")}
-							className="mt-5 flex h-10 w-full items-center justify-between rounded-[6px] border border-slate-200 px-4 text-[12px] font-semibold text-slate-600 hover:bg-slate-50"
+							className="mt-5 flex h-10 w-full items-center justify-between rounded-[6px] border border-border px-4 text-[12px] font-semibold text-muted-foreground hover:bg-muted"
 						>
-							<span className="flex items-center gap-2"><BarChart3 className="h-4 w-4 text-slate-400" />View Detailed Progress</span>
+							<span className="flex items-center gap-2"><BarChart3 className="h-4 w-4 text-muted-foreground" />View Detailed Progress</span>
 							<ChevronRight className="h-3.5 w-3.5" />
 						</button>
 					</div>
@@ -355,19 +369,19 @@ function LessonMapSkeleton() {
 	return (
 		<div className="w-full p-4">
 			<div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_286px]">
-				<div className="rounded-[10px] border border-slate-200 bg-white p-6 shadow-sm">
-					<div className="h-6 w-40 animate-pulse rounded bg-slate-200" />
-					<div className="mt-2 h-4 w-72 animate-pulse rounded bg-slate-100" />
+				<div className="rounded-[10px] border border-border bg-card p-6 shadow-sm">
+					<div className="h-6 w-40 animate-pulse rounded bg-muted" />
+					<div className="mt-2 h-4 w-72 animate-pulse rounded bg-muted" />
 					<div className="mt-6 space-y-6">
 						{[0, 1, 2, 3].map((i) => (
 							<div key={i} className="flex gap-5">
-								<div className="h-12 w-12 animate-pulse rounded-full bg-slate-200" />
-								<div className="flex-1 rounded-[10px] border border-slate-200 p-4">
-									<div className="h-4 w-48 animate-pulse rounded bg-slate-200" />
-									<div className="mt-2 h-3 w-72 animate-pulse rounded bg-slate-100" />
+								<div className="h-12 w-12 animate-pulse rounded-full bg-muted" />
+								<div className="flex-1 rounded-[10px] border border-border p-4">
+									<div className="h-4 w-48 animate-pulse rounded bg-muted" />
+									<div className="mt-2 h-3 w-72 animate-pulse rounded bg-muted" />
 									<div className="mt-4 flex gap-3">
 										{[0, 1, 2].map((j) => (
-											<div key={j} className="h-[54px] w-[140px] animate-pulse rounded-[7px] bg-slate-100" />
+											<div key={j} className="h-[54px] w-[140px] animate-pulse rounded-[7px] bg-muted" />
 										))}
 									</div>
 								</div>
@@ -377,7 +391,7 @@ function LessonMapSkeleton() {
 				</div>
 				<div className="space-y-4">
 					{[0, 1, 2].map((i) => (
-						<div key={i} className="h-48 animate-pulse rounded-[10px] bg-slate-200/50" />
+						<div key={i} className="h-48 animate-pulse rounded-[10px] bg-muted/50" />
 					))}
 				</div>
 			</div>
@@ -391,14 +405,14 @@ function Legend({ icon: Icon, label, color }: { icon: any; label: string; color:
 function StatusBadge({ status }: { status: Status }) {
 	if (status === "completed") return <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-600">Completed</span>;
 	if (status === "in-progress") return <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-600">In Progress</span>;
-	return <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-500">Locked</span>;
+	return <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">Locked</span>;
 }
 function Metric({ icon: Icon, value, label, color }: { icon: any; value: string; label: string; color: string }) {
 	return (
 		<div className="flex items-center gap-2">
 			<Icon className={`h-4 w-4 ${color}`} />
 			<div>
-				<span className="text-[16px] font-extrabold text-[#111a44]">{value}</span>
+				<span className="text-[16px] font-extrabold text-foreground">{value}</span>
 				<br /><span>{label}</span>
 			</div>
 		</div>
@@ -415,8 +429,8 @@ function ProgressRing({ pct }: { pct: number }) {
 				<circle cx="54" cy="54" r={r} stroke="rgb(37 99 235)" strokeWidth="8" fill="none" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={off} />
 			</svg>
 			<div className="absolute inset-0 flex flex-col items-center justify-center">
-				<span className="text-[24px] font-extrabold text-[#111a44]">{pct}%</span>
-				<span className="text-[11px] font-medium text-slate-500">Overall</span>
+				<span className="text-[24px] font-extrabold text-foreground">{pct}%</span>
+				<span className="text-[11px] font-medium text-muted-foreground">Overall</span>
 			</div>
 		</div>
 	);
@@ -426,7 +440,7 @@ function ProgressRing({ pct }: { pct: number }) {
    MY PROGRESS  — mirrors mockup 3
    ============================================================ */
 
-function ProgressView() {
+function ProgressView({ isMobile: _isMobile = false }: { isMobile?: boolean } = {}) {
 	const router = useRouter();
 	const { allModules, module: currentModule, lang, setViewMode } = usePlayground();
 	const auth = useContext(AuthContext);
@@ -472,7 +486,7 @@ function ProgressView() {
 		{ name: "Consistent", desc: "7 day learning streak", color: "bg-emerald-100 text-emerald-600", Icon: Flame, earned: streak >= 7 },
 		{ name: "Problem Solver", desc: "Solve 10 challenges", color: "bg-violet-100 text-violet-600", Icon: Sparkles, earned: false },
 		{ name: "Quick Learner", desc: "Score 90%+ on 5 quizzes", color: "bg-amber-100 text-amber-600", Icon: Zap, earned: false },
-		{ name: "Nuru Expert", desc: "Complete all advanced lessons", color: "bg-slate-100 text-slate-400", Icon: Shield, earned: false },
+		{ name: "Nuru Expert", desc: "Complete all advanced lessons", color: "bg-muted text-muted-foreground", Icon: Shield, earned: false },
 	];
 	const earnedCount = badges.filter((b) => b.earned).length;
 
@@ -480,8 +494,8 @@ function ProgressView() {
 		<div className="w-full p-4">
 			<div className="mb-5 flex flex-wrap items-end justify-between gap-3">
 				<div>
-					<h1 className="text-[24px] font-extrabold text-[#111a44]">My Progress</h1>
-					<p className="mt-1 text-[13px] text-slate-500">Track your learning journey and achievements</p>
+					<h1 className="text-[24px] font-extrabold text-foreground">My Progress</h1>
+					<p className="mt-1 text-[13px] text-muted-foreground">Track your learning journey and achievements</p>
 				</div>
 				{nextHref && (
 					<button
@@ -495,19 +509,19 @@ function ProgressView() {
 
 			{/* Top metrics */}
 			<div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
-				<TopMetric icon={<BookOpen className="h-4 w-4 text-slate-400" />} label="Lessons Completed" value={`${completed}`} sub={`of ${totalLessons} lessons`} progressPct={pct} />
+				<TopMetric icon={<BookOpen className="h-4 w-4 text-muted-foreground" />} label="Lessons Completed" value={`${completed}`} sub={`of ${totalLessons} lessons`} progressPct={pct} />
 				<TopMetric icon={<Flame className="h-4 w-4 text-orange-500" />} label="Current Streak" value={`${streak}`} sub="days in a row" />
 				<TopMetric icon={<Sparkles className="h-4 w-4 text-blue-500" />} label="Total XP" value={xp.toLocaleString()} sub="XP earned" badge={`+${Math.min(xp, 180)}`} />
 				<TopMetric icon={<Target className="h-4 w-4 text-blue-500" />} label="Accuracy" value="92%" sub="average score" badge="+8%" />
-				<TopMetric icon={<Clock className="h-4 w-4 text-slate-400" />} label="Time Spent" value="6h 45m" sub="this week" />
+				<TopMetric icon={<Clock className="h-4 w-4 text-muted-foreground" />} label="Time Spent" value="6h 45m" sub="this week" />
 			</div>
 
 			{/* Weekly practice + badges */}
 			<div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-				<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+				<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
 					<div className="mb-4 flex items-center justify-between">
-						<h2 className="text-[14px] font-extrabold text-[#111a44]">Weekly Practice</h2>
-						<button className="inline-flex h-7 items-center gap-1 rounded-[6px] border border-slate-200 px-2.5 text-[11px] font-semibold text-slate-600">
+						<h2 className="text-[14px] font-extrabold text-foreground">Weekly Practice</h2>
+						<button className="inline-flex h-7 items-center gap-1 rounded-[6px] border border-border px-2.5 text-[11px] font-semibold text-muted-foreground">
 							This Week <ChevronRight className="h-3 w-3 rotate-90" />
 						</button>
 					</div>
@@ -520,19 +534,19 @@ function ProgressView() {
 										style={{ height: `${Math.max(4, weekHeights[i])}%`, opacity: weekHeights[i] === 0 ? 0.2 : 1 }}
 									/>
 								</div>
-								<div className="text-[11px] text-slate-500">{d}</div>
+								<div className="text-[11px] text-muted-foreground">{d}</div>
 							</div>
 						))}
 					</div>
-					<div className="mt-3 rounded-[8px] bg-slate-50 px-3 py-2 text-[11.5px] text-slate-500">
+					<div className="mt-3 rounded-[8px] bg-muted px-3 py-2 text-[11.5px] text-muted-foreground">
 						<TrendingUp className="mr-1.5 inline h-3.5 w-3.5 text-emerald-500" />
 						Great consistency! Keep up the momentum.
 					</div>
 				</div>
 
-				<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+				<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
 					<div className="mb-4 flex items-center justify-between">
-						<h2 className="text-[14px] font-extrabold text-[#111a44]">Badges Earned</h2>
+						<h2 className="text-[14px] font-extrabold text-foreground">Badges Earned</h2>
 						<button className="text-[11.5px] font-semibold text-blue-600 hover:underline">View all</button>
 					</div>
 					<div className="grid grid-cols-5 gap-3">
@@ -541,14 +555,14 @@ function ProgressView() {
 								<div className={`flex h-14 w-14 items-center justify-center rounded-[12px] ${b.color} ${b.earned ? "" : "opacity-60"}`}>
 									<b.Icon className="h-6 w-6" />
 								</div>
-								<div className="mt-2 text-[11px] font-bold text-[#111a44]">{b.name}</div>
-								<div className="mt-0.5 text-[10px] text-slate-500">{b.desc}</div>
+								<div className="mt-2 text-[11px] font-bold text-foreground">{b.name}</div>
+								<div className="mt-0.5 text-[10px] text-muted-foreground">{b.desc}</div>
 							</div>
 						))}
 					</div>
 					<div className="mt-4 flex items-center gap-3">
-						<span className="text-[11.5px] font-semibold text-slate-600">{earnedCount}/{badges.length} Badges Earned</span>
-						<div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+						<span className="text-[11.5px] font-semibold text-muted-foreground">{earnedCount}/{badges.length} Badges Earned</span>
+						<div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
 							<div className="h-full rounded-full bg-blue-600" style={{ width: `${(earnedCount / badges.length) * 100}%` }} />
 						</div>
 					</div>
@@ -557,36 +571,36 @@ function ProgressView() {
 
 			{/* Course progress / recommended / recent */}
 			<div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-				<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-					<h2 className="mb-3 text-[14px] font-extrabold text-[#111a44]">Current Course Progress</h2>
+				<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+					<h2 className="mb-3 text-[14px] font-extrabold text-foreground">Current Course Progress</h2>
 					{modules[0] && (
-						<div className="rounded-[8px] border border-slate-200 p-3">
+						<div className="rounded-[8px] border border-border p-3">
 							<div className="flex items-start justify-between gap-3">
 								<div className="flex items-start gap-2.5">
 									<div className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-blue-50 text-blue-600">
 										<BookOpen className="h-4 w-4" />
 									</div>
 									<div>
-										<div className="text-[13px] font-extrabold text-[#111a44]">{modules[0].title[lang] || modules[0].title.sw}</div>
-										<div className="text-[11px] text-slate-500">Learn the fundamentals step by step.</div>
+										<div className="text-[13px] font-extrabold text-foreground">{modules[0].title[lang] || modules[0].title.sw}</div>
+										<div className="text-[11px] text-muted-foreground">Learn the fundamentals step by step.</div>
 									</div>
 								</div>
 								<ProgressRing pct={pct} />
 							</div>
-							<div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+							<div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted">
 								<div className="h-full rounded-full bg-blue-600" style={{ width: `${pct}%` }} />
 							</div>
-							<div className="mt-2 text-[11px] text-slate-500">{completed} of {totalLessons} lessons completed</div>
+							<div className="mt-2 text-[11px] text-muted-foreground">{completed} of {totalLessons} lessons completed</div>
 							<ul className="mt-3 space-y-1.5 text-[11.5px]">
 								{modules[0].lessons.slice(0, 6).map((l, i) => {
 									const done = completedMap[modules[0].id]?.has(i);
 									const isNext = !done && i === (modules[0].lessons.findIndex((_, k) => !(completedMap[modules[0].id]?.has(k))));
 									return (
 										<li key={l.id} className="flex items-center justify-between">
-											<span className={`truncate pr-2 ${isNext ? "font-semibold text-blue-600" : "text-slate-600"}`}>
+											<span className={`truncate pr-2 ${isNext ? "font-semibold text-blue-600" : "text-muted-foreground"}`}>
 												{i + 1}. {l.title[lang] || l.title.sw}
 											</span>
-											<span className={`shrink-0 text-[10.5px] font-semibold ${done ? "text-emerald-600" : isNext ? "text-blue-600" : "text-slate-400"}`}>
+											<span className={`shrink-0 text-[10.5px] font-semibold ${done ? "text-emerald-600" : isNext ? "text-blue-600" : "text-muted-foreground"}`}>
 												{done ? "✓ Completed" : isNext ? "In Progress" : "Locked"}
 											</span>
 										</li>
@@ -597,43 +611,43 @@ function ProgressView() {
 					)}
 					<button
 						onClick={() => setViewMode("lesson-map")}
-						className="mt-3 flex h-9 w-full items-center justify-center gap-2 rounded-[6px] border border-slate-200 text-[12px] font-semibold text-slate-600 hover:bg-slate-50"
+						className="mt-3 flex h-9 w-full items-center justify-center gap-2 rounded-[6px] border border-border text-[12px] font-semibold text-muted-foreground hover:bg-muted"
 					>
 						View Course Overview <ChevronRight className="h-3.5 w-3.5" />
 					</button>
 				</div>
 
-				<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
-					<h2 className="mb-3 text-[14px] font-extrabold text-[#111a44]">Recommended Next</h2>
+				<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+					<h2 className="mb-3 text-[14px] font-extrabold text-foreground">Recommended Next</h2>
 					<ul className="space-y-2.5">
 						{nextModule && nextIdx >= 0 ? nextModule.lessons.slice(nextIdx, nextIdx + 3).map((l, i) => (
 							<li key={l.id}>
 								<button
 									onClick={() => { setViewMode("lesson"); router.push(`/${lang}/anza/${nextModule!.slug}/${l.slug}`); }}
-									className="flex w-full items-center justify-between gap-3 rounded-[8px] border border-slate-200 p-3 text-left hover:bg-slate-50"
+									className="flex w-full items-center justify-between gap-3 rounded-[8px] border border-border p-3 text-left hover:bg-muted"
 								>
 									<div className="flex items-start gap-2.5">
 										<div className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-blue-50 text-blue-600">
 											<BookOpen className="h-4 w-4" />
 										</div>
 										<div>
-											<div className="text-[12.5px] font-extrabold text-[#111a44]">{l.title[lang] || l.title.sw}</div>
-											<div className="text-[11px] text-slate-500">{i === 0 ? "15 min · Beginner" : "10 min · Practice"}</div>
+											<div className="text-[12.5px] font-extrabold text-foreground">{l.title[lang] || l.title.sw}</div>
+											<div className="text-[11px] text-muted-foreground">{i === 0 ? "15 min · Beginner" : "10 min · Practice"}</div>
 										</div>
 									</div>
-									<ChevronRight className="h-4 w-4 text-slate-400" />
+									<ChevronRight className="h-4 w-4 text-muted-foreground" />
 								</button>
 							</li>
-						)) : <li className="text-[12px] text-slate-500">Nothing new — you're caught up!</li>}
+						)) : <li className="text-[12px] text-muted-foreground">Nothing new — you're caught up!</li>}
 					</ul>
-					<button className="mt-3 flex h-9 w-full items-center justify-center gap-2 rounded-[6px] border border-slate-200 text-[12px] font-semibold text-slate-600 hover:bg-slate-50">
+					<button className="mt-3 flex h-9 w-full items-center justify-center gap-2 rounded-[6px] border border-border text-[12px] font-semibold text-muted-foreground hover:bg-muted">
 						Browse All Lessons <ChevronRight className="h-3.5 w-3.5" />
 					</button>
 				</div>
 
-				<div className="rounded-[10px] border border-slate-200 bg-white p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+				<div className="rounded-[10px] border border-border bg-card p-5 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
 					<div className="mb-3 flex items-center justify-between">
-						<h2 className="text-[14px] font-extrabold text-[#111a44]">Recent Activity</h2>
+						<h2 className="text-[14px] font-extrabold text-foreground">Recent Activity</h2>
 						<button className="text-[11.5px] font-semibold text-blue-600 hover:underline">View all</button>
 					</div>
 					<ul className="space-y-3 text-[12px]">
@@ -641,13 +655,13 @@ function ProgressView() {
 							<li key={i} className="flex items-start gap-2.5">
 								<CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
 								<div>
-									<div className="font-semibold text-[#111a44]">Completed: Lesson</div>
-									<div className="text-[11px] text-slate-500">+40 XP</div>
+									<div className="font-semibold text-foreground">Completed: Lesson</div>
+									<div className="text-[11px] text-muted-foreground">+40 XP</div>
 								</div>
 							</li>
-						)) : <li className="text-slate-500">No recent activity yet.</li>}
+						)) : <li className="text-muted-foreground">No recent activity yet.</li>}
 					</ul>
-					<button className="mt-3 flex h-9 w-full items-center justify-center gap-2 rounded-[6px] border border-slate-200 text-[12px] font-semibold text-slate-600 hover:bg-slate-50">
+					<button className="mt-3 flex h-9 w-full items-center justify-center gap-2 rounded-[6px] border border-border text-[12px] font-semibold text-muted-foreground hover:bg-muted">
 						View Full Activity <ChevronRight className="h-3.5 w-3.5" />
 					</button>
 				</div>
@@ -656,10 +670,10 @@ function ProgressView() {
 			{/* Bottom banner */}
 			<div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-[10px] border border-blue-200 bg-blue-50/70 px-5 py-4">
 				<div className="flex items-center gap-3">
-					<div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-white shadow-sm">🚀</div>
+					<div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-card shadow-sm">🚀</div>
 					<div>
-						<div className="text-[14px] font-extrabold text-[#111a44]">You're on fire{firstName ? `, ${firstName}` : ""}! 🔥</div>
-						<div className="text-[12px] text-slate-600">Keep up your great work. You're building something amazing.</div>
+						<div className="text-[14px] font-extrabold text-foreground">You're on fire{firstName ? `, ${firstName}` : ""}! 🔥</div>
+						<div className="text-[12px] text-muted-foreground">Keep up your great work. You're building something amazing.</div>
 					</div>
 				</div>
 				{nextHref && (
@@ -681,17 +695,17 @@ function TopMetric({
 	icon: React.ReactNode; label: string; value: string; sub?: string; progressPct?: number; badge?: string;
 }) {
 	return (
-		<div className="rounded-[10px] border border-slate-200 bg-white p-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
+		<div className="rounded-[10px] border border-border bg-card p-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)]">
 			<div className="mb-2 flex items-center justify-between">
-				<div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
+				<div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
 					{icon}<span>{label}</span>
 				</div>
 				{badge && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-600">{badge}</span>}
 			</div>
-			<div className="text-[24px] font-extrabold tracking-tight text-[#111a44]">{value}</div>
-			{sub && <div className="mt-0.5 text-[11px] text-slate-500">{sub}</div>}
+			<div className="text-[24px] font-extrabold tracking-tight text-foreground">{value}</div>
+			{sub && <div className="mt-0.5 text-[11px] text-muted-foreground">{sub}</div>}
 			{typeof progressPct === "number" && (
-				<div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-slate-100">
+				<div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-muted">
 					<div className="h-full rounded-full bg-blue-600" style={{ width: `${progressPct}%` }} />
 				</div>
 			)}
@@ -702,19 +716,19 @@ function TopMetric({
 function ProgressSkeleton() {
 	return (
 		<div className="w-full p-4">
-			<div className="mb-5 h-10 w-64 animate-pulse rounded bg-slate-200" />
+			<div className="mb-5 h-10 w-64 animate-pulse rounded bg-muted" />
 			<div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
 				{[0, 1, 2, 3, 4].map((i) => (
-					<div key={i} className="h-28 animate-pulse rounded-[10px] bg-slate-200/50" />
+					<div key={i} className="h-28 animate-pulse rounded-[10px] bg-muted/50" />
 				))}
 			</div>
 			<div className="mt-4 grid gap-4 lg:grid-cols-2">
-				<div className="h-64 animate-pulse rounded-[10px] bg-slate-200/50" />
-				<div className="h-64 animate-pulse rounded-[10px] bg-slate-200/50" />
+				<div className="h-64 animate-pulse rounded-[10px] bg-muted/50" />
+				<div className="h-64 animate-pulse rounded-[10px] bg-muted/50" />
 			</div>
 			<div className="mt-4 grid gap-4 lg:grid-cols-3">
 				{[0, 1, 2].map((i) => (
-					<div key={i} className="h-72 animate-pulse rounded-[10px] bg-slate-200/50" />
+					<div key={i} className="h-72 animate-pulse rounded-[10px] bg-muted/50" />
 				))}
 			</div>
 		</div>
