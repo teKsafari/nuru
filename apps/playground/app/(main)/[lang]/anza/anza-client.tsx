@@ -319,6 +319,7 @@ export function AnzaClient({ module, allModules, nextModuleSlug, lang, dict }: A
 					onShowSolution: handleShowSolution,
 					onShowHint: handleShowHint,
 					onReset: handleReset,
+					onClearOutput: () => setOutput(""),
 					onNextModule: handleNextModule,
 				}}
 				labels={labels}

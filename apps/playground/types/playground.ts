@@ -102,6 +102,7 @@ export interface PlaygroundProps {
 		onShowSolution?: () => void;
 		onShowHint?: () => void;
 		onReset: () => void;
+		onClearOutput?: () => void;
 		onNextModule?: () => void;
 	};
 	labels: PlaygroundLabels;
