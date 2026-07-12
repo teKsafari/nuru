@@ -1,58 +1,29 @@
-import { getModuleBySlug, getAllModules, getAllModulesWithLessons } from "@/lib/lessons.server";
-import { AnzaClient } from "../../anza-client";
+import { getModuleBySlug } from "@/lib/lessons.server";
 import { notFound } from "next/navigation";
-import { getDictionary, Locale } from "@/app/(main)/[lang]/dictionaries";
-import { Module, Language } from "@/types/playground";
-
-export const dynamic = "force-dynamic";
 
 interface PageProps {
 	params: Promise<{ moduleSlug: string; lessonSlug: string; lang: string }>;
 }
 
+/**
+ * Thin, cheap route marker. The UI is rendered by the module layout; this page
+ * only validates that the lesson slug exists (the module fetch is deduped with
+ * the layout via React.cache) and 404s otherwise. No `force-dynamic`, so
+ * in-module navigation stays a soft segment change with no skeleton flash.
+ */
 export default async function LessonPage({ params }: PageProps) {
-	const { moduleSlug, lessonSlug, lang } = await params;
-	const dict = await getDictionary(lang as Locale);
+	const { moduleSlug, lessonSlug } = await params;
 
-	let module: Module;
+	let module;
 	try {
 		module = await getModuleBySlug(moduleSlug);
-	} catch (error) {
-		console.error(`Error loading module ${moduleSlug}:`, error);
+	} catch {
 		return notFound();
 	}
 
-	const lessonExists = module.lessons.some(s => s.slug === lessonSlug);
-	if (!lessonExists) {
+	if (!module.lessons.some((l) => l.slug === lessonSlug)) {
 		return notFound();
 	}
 
-	let allModules: { id: string; slug: string; title: Record<Language, string> }[] = [];
-	let allModulesFull: Module[] = [];
-	// Fetch independently so a failure in one does NOT empty the sidebar list.
-	await Promise.all([
-		getAllModules()
-			.then((r) => { allModules = r; })
-			.catch((e) => { console.error("getAllModules failed:", e); }),
-		getAllModulesWithLessons()
-			.then((r) => { allModulesFull = r; })
-			.catch((e) => { console.error("getAllModulesWithLessons failed:", e); }),
-	]);
-
-	const currentIndex = allModules.findIndex(l => l.slug === moduleSlug);
-	const nextModuleSlug = currentIndex >= 0 && currentIndex < allModules.length - 1
-		? allModules[currentIndex + 1].slug
-		: undefined;
-
-	return (
-		<AnzaClient
-			module={module}
-			allModules={allModulesFull}
-			lessonSlug={lessonSlug}
-			nextModuleSlug={nextModuleSlug}
-			lang={lang as Locale}
-			dict={dict}
-		/>
-	);
+	return null;
 }
-

@@ -1,4 +1,10 @@
-export default function LessonLoading() {
+/**
+ * Shared 3-column playground loading skeleton (sidebar / lesson content /
+ * editor + output). Used by route-level `loading.tsx` files that still need a
+ * suspense fallback. The anza lesson route intentionally does NOT use this: its
+ * shell lives in a persistent layout, so navigation no longer suspends.
+ */
+export function PlaygroundSkeleton() {
 	return (
 		<div className="h-full w-full bg-background p-3">
 			<div className="grid h-full grid-cols-1 gap-3 md:grid-cols-[20%_38%_42%]">
@@ -69,3 +75,5 @@ export default function LessonLoading() {
 		</div>
 	);
 }
+
+export default PlaygroundSkeleton;

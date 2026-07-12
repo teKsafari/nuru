@@ -32,14 +32,14 @@ import { Button } from "@nuru/ui/components/button";
 import { ScrollArea } from "@/components/playground/scroll-area";
 import { usePlayground } from "./playground-context";
 import { AuthContext } from "@/components/providers/auth-provider";
-import type { Module } from "@/types/playground";
+import type { CurriculumModule } from "@/types/playground";
 import { cn } from "@nuru/ui/lib/utils";
 
 /* ------------ shared completion hook ------------ */
 
 type CompletedMap = Record<string, Set<number>>;
 
-function useCompletedMap(modules: Module[] | undefined) {
+function useCompletedMap(modules: CurriculumModule[] | undefined) {
 	const [completedMap, setCompletedMap] = useState<CompletedMap>({});
 	const [hydrated, setHydrated] = useState(false);
 	useEffect(() => {
@@ -462,7 +462,7 @@ function ProgressView({ isMobile: _isMobile = false }: { isMobile?: boolean } = 
 	} catch {}
 
 	let nextHref = "";
-	let nextModule: Module | null = null;
+	let nextModule: CurriculumModule | null = null;
 	let nextIdx = -1;
 	for (const m of modules) {
 		const done = completedMap[m.id] ?? new Set<number>();

@@ -91,6 +91,7 @@ export default function Page() {
 						setCode("");
 						setOutput("");
 					},
+					onClearOutput: () => setOutput(""),
 				}}
 			/>
 		</div>

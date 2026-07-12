@@ -14,6 +14,7 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 	const {
 		module,
 		state: { output },
+		actions: { onClearOutput },
 		labels,
 		isCurrentLessonCompleted,
 	} = usePlayground();
@@ -67,8 +68,10 @@ export function OutputPanel({ showToolbar = true, isMobile = false }: OutputPane
 				<Copy className="h-3.5 w-3.5" />
 			</button>
 			<button
+				onClick={onClearOutput}
+				disabled={!onClearOutput || !output}
 				aria-label="Clear output"
-				className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+				className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
 			>
 				<Trash2 className="h-3.5 w-3.5" />
 			</button>

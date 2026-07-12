@@ -1,1 +1,1 @@
-export { default } from "../../anza/[moduleSlug]/[lessonSlug]/loading";
+export { PlaygroundSkeleton as default } from "@/components/playground/playground-skeleton";

@@ -13,7 +13,6 @@ import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 import { AuthContext } from "@/components/providers/auth-provider";
 
 interface SiteHeaderProps {
-	modules?: { id: string; slug: string; title: { sw: string; en: string } }[];
 	lang: "en" | "sw";
 	dict: Dictionary;
 }

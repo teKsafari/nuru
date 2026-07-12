@@ -4,26 +4,33 @@ import { useExecutor } from "@/hooks/use-executor";
 import { Playground } from "@/components/playground/playground";
 import { IExecutor } from "@/types/executor";
 import { useTheme } from "@wrksz/themes/client";
-import { Module, Language, PlaygroundLabels, TestResult } from "@/types/playground";
+import { Module, CurriculumModule, Language, PlaygroundLabels, TestResult } from "@/types/playground";
 import type { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 import { Suspense, useState, useEffect, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import confetti from "canvas-confetti";
 import { nuruLanguage } from "@nuru/ui/lib/nuru-syntax";
 
 interface AnzaClientProps {
 	module: Module;
-	allModules?: Module[];
-	lessonSlug: string;
+	allModules?: CurriculumModule[];
 	nextModuleSlug?: string;
 	lang: Language;
 	dict: Dictionary;
 }
 
-export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lang, dict }: AnzaClientProps) {
+export function AnzaClient({ module, allModules, nextModuleSlug, lang, dict }: AnzaClientProps) {
 
 	const { theme} = useTheme();
 	const router = useRouter();
+	// AnzaClient lives in the module layout and persists across in-module lesson
+	// navigation, so the active lesson is derived from the URL rather than a prop.
+	// usePathname stays in sync with both router navigation and history.pushState.
+	const pathname = usePathname();
+	const lessonSlug = useMemo(() => {
+		const segments = pathname.split("/").filter(Boolean);
+		return decodeURIComponent(segments[segments.length - 1] ?? "");
+	}, [pathname]);
 	const currentLessonIndex = useMemo(() => {
 		const index = module.lessons.findIndex((s) => s.slug === lessonSlug);
 		return index !== -1 ? index : 0;
@@ -298,13 +305,21 @@ export function AnzaClient({ module, allModules, lessonSlug, nextModuleSlug, lan
 					isTesting,
 				}}
 				actions={{
-					onLessonChange: (index) => router.push(`/${lang}/anza/${module.slug}/${module.lessons[index].slug}`),
+					// Same-module switch: update the URL via pushState (usePathname picks
+					// it up and re-derives the lesson) with no server round-trip, skeleton,
+					// or subtree remount. Cross-module jumps still use router.push.
+					onLessonChange: (index) => {
+						const target = module.lessons[index];
+						if (!target) return;
+						window.history.pushState(null, "", `/${lang}/anza/${module.slug}/${target.slug}`);
+					},
 					onCodeChange: handleCodeChange,
 					onRun: handleRun,
 					onSubmit: handleSubmit,
 					onShowSolution: handleShowSolution,
 					onShowHint: handleShowHint,
 					onReset: handleReset,
+					onClearOutput: () => setOutput(""),
 					onNextModule: handleNextModule,
 				}}
 				labels={labels}
