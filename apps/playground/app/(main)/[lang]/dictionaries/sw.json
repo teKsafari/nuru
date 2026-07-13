@@ -1,26 +1,89 @@
 {
   "landing": {
-    "title": "Lugha ya kiprogramu ya Kiswahili",
-    "tagline": "Rahisi Kujifunza, Rahisi Kutumia.",
-    "actions": {
-      "anza": "Anza",
-      "mifano": "Pitia Mifano"
+    "title": "Lugha ya Kiprogramu ya Kiswahili",
+    "tagline": "Andika kodi halisi kwa maneno ya Kiswahili. Bila kusakinisha chochote.",
+    "hero": {
+      "badge": "Chanzo huria · Inaendeshwa kwenye kivinjari chako",
+      "demoCode": "// Karibu! Bonyeza Run 👇\nandika(\"Habari, Dunia!\")\n\nkwa i ktk mfululizo(3) {\n    andika(\"Nuru ni rahisi!\")\n}",
+      "ctaStart": "Anza kujifunza",
+      "ctaLessons": "Pitia masomo",
+      "runLabel": "Endesha",
+      "runningLabel": "Inaendesha…",
+      "outputLabel": "Matokeo",
+      "readyLabel": "tayari",
+      "loadingLabel": "inapakia…",
+      "outputPlaceholder": "Bonyeza Endesha ili uone matokeo hapa…"
     },
-    "features": [
-      {
-        "title": "Sintaksia Rahisi 😎",
-        "details": "Sintaksia ya Nuru ni rahisi kujifunza kwa wenye uzoefu na wasio na uzoefu na kutengeneza programu."
-      },
-      {
-        "title": "Maneno Rahisi 🎹",
-        "details": "Andika programu kana kwamba unaandika barua na maneno rahisi kama andika() kuchapisha kitu na jaza() kupata maingizo kutoka kwa watumiaji."
-      },
-      {
-        "title": "Inaendeshwa na Jumuiya 👥",
-        "details": "Nuru inaendeshwa na jamii na sauti yako ni muhimu. Tunahakikisha kushauriana na jamii kabla ya kufanya uamuzi. Njoo ujiunge nasi [Telegram](https://t.me/NuruProgrammingChat)"
-      }
-    ],
-    "contributors": "Wachangiaji"
+    "why": {
+      "title": "Imeundwa ili kujifunzwa",
+      "subtitle": "Nuru inabakiza dhana za kiprogramu na kuondoa maneno magumu.",
+      "features": [
+        {
+          "title": "Sintaksia rahisi",
+          "details": "Sarufi ndogo na thabiti unayoweza kuikumbuka. Lugha nzuri ya kwanza, na ya haraka kuielewa kama tayari unajua kuprogramu."
+        },
+        {
+          "title": "Maneno unayoyajua",
+          "details": "andika() kuchapisha, jaza() kupokea maingizo, kama kwa 'if'. Unasoma programu karibu kama sentensi."
+        },
+        {
+          "title": "Bila usakinishaji",
+          "details": "Lugha nzima inaendeshwa kwenye kivinjari chako kupitia WebAssembly. Fungua tabu uanze kuandika, bila kusakinisha."
+        }
+      ]
+    },
+    "keywords": {
+      "title": "Maneno ya kawaida, kodi halisi",
+      "subtitle": "Kila neno muhimu ni neno la kawaida la Kiswahili.",
+      "items": [
+        { "nuru": "andika", "english": "print" },
+        { "nuru": "jaza", "english": "input" },
+        { "nuru": "kama", "english": "if" },
+        { "nuru": "sivyo", "english": "else" },
+        { "nuru": "kwa", "english": "for" },
+        { "nuru": "wakati", "english": "while" },
+        { "nuru": "unda", "english": "function" },
+        { "nuru": "rudisha", "english": "return" }
+      ]
+    },
+    "learn": {
+      "title": "Njia kutoka sifuri hadi ujasiri",
+      "subtitle": "Masomo shirikishi yanayoendeshwa kwenye kivinjari na kukagua kazi yako unapoendelea.",
+      "cta": "Anza somo la kwanza",
+      "tiers": [
+        {
+          "level": "Mwanzilishi",
+          "name": "Misingi",
+          "blurb": "Kuchapisha, vibadilika, maingizo, na mizunguko na masharti yako ya kwanza."
+        },
+        {
+          "level": "Wa kati",
+          "name": "Programu halisi",
+          "blurb": "Vitendakazi, safu, na mantiki ya kujenga vitu vinavyofanya kazi kweli."
+        },
+        {
+          "level": "Wa juu",
+          "name": "Miradi",
+          "blurb": "Unganisha yote pamoja na ujenge programu kamili kwa Nuru."
+        }
+      ]
+    },
+    "community": {
+      "title": "Imeundwa na jumuiya",
+      "subtitle": "Nuru ni chanzo huria na inaundwa wazi. Sauti yako ni muhimu, na tunashauriana na jamii kabla ya maamuzi makubwa.",
+      "telegram": "Jiunge nasi Telegram",
+      "contributors": "Wachangiaji"
+    },
+    "footer": {
+      "tagline": "Lugha ya kiprogramu ya Kiswahili.",
+      "builtWith": "Imeundwa na ❤️ na teKsafari",
+      "product": "Bidhaa",
+      "communityHeading": "Jumuiya",
+      "playground": "Uwanja",
+      "lessons": "Masomo",
+      "github": "GitHub",
+      "telegram": "Telegram"
+    }
   },
   "header": {
     "home": "Nyumbani",

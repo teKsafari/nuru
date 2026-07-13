@@ -40,6 +40,11 @@
 	--color-success: var(--success);
 	--color-warning: var(--warning);
 
+	/* Brand accents (the flame-logo orange -> cyan). Tokenized so we stop
+	   hardcoding yellow-500 / blue-600 across the landing surfaces. */
+	--color-brand: var(--brand);
+	--color-brand-accent: var(--brand-accent);
+
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
@@ -106,6 +111,19 @@
 	text-wrap: balance;
 }
 
+/* Signature brand gradient (orange -> cyan). `.text-gradient-brand` paints
+   text with it; `.bg-gradient-brand` fills a surface. */
+@utility bg-gradient-brand {
+	background-image: linear-gradient(105deg, var(--brand), var(--brand-accent));
+}
+
+@utility text-gradient-brand {
+	background-image: linear-gradient(105deg, var(--brand), var(--brand-accent));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
 @layer base {
 	html, body {
 		font-family: var(--font-sans);
@@ -146,6 +164,10 @@
 	/* Semantic status colors — light values are darkened so text/icons stay legible on white. */
 	--success: hsl(142 72% 33%);
 	--warning: hsl(38 92% 38%);
+	/* Brand: flame-logo orange (#ff9900) -> cyan (#00b4d8). On light surfaces
+	   the orange is nudged darker so it clears AA as text/on-fill. */
+	--brand: hsl(36 100% 45%);
+	--brand-accent: hsl(192 100% 38%);
 	--border: hsl(214.3 31.8% 88%);
 	--input: hsl(214.3 31.8% 88%);
 	--ring: hsl(222.2 84% 4.9%);
@@ -184,6 +206,9 @@
 	--destructive-foreground: hsl(210 40% 98%);
 	--success: hsl(142 69% 58%);
 	--warning: hsl(43 96% 56%);
+	/* Brand: brighter on dark surfaces so the gradient stays vivid. */
+	--brand: hsl(36 100% 55%);
+	--brand-accent: hsl(192 100% 48%);
 	--border: hsl(217.2 32.6% 17.5%);
 	--input: hsl(217.2 32.6% 17.5%);
 	--ring: hsl(212.7 26.8% 83.9%);

@@ -1,26 +1,89 @@
 {
   "landing": {
-    "title": "Swahili Programming Language",
-    "tagline": "Easy to Learn, Easy to Use.",
-    "actions": {
-      "anza": "Start",
-      "mifano": "Examples"
+    "title": "The Swahili Programming Language",
+    "tagline": "Write real code in plain Swahili words. Nothing to install.",
+    "hero": {
+      "badge": "Open source · Runs in your browser",
+      "demoCode": "// Welcome! Press Run 👇\nandika(\"Habari, Dunia!\")\n\nkwa i ktk mfululizo(3) {\n    andika(\"Nuru ni rahisi!\")\n}",
+      "ctaStart": "Start learning",
+      "ctaLessons": "Browse lessons",
+      "runLabel": "Run",
+      "runningLabel": "Running…",
+      "outputLabel": "Output",
+      "readyLabel": "ready",
+      "loadingLabel": "loading…",
+      "outputPlaceholder": "Press Run to see the output here…"
     },
-    "features": [
-      {
-        "title": "Simple Syntax 😎",
-        "details": "Nuru syntax is easy to learn for both experienced and inexperienced programmers."
-      },
-      {
-        "title": "Easy Words 🎹",
-        "details": "Write programs as if you are writing a letter with simple words like andika() to print something and jaza() to get user input."
-      },
-      {
-        "title": "Community Driven 👥",
-        "details": "Nuru is driven by the community and your voice matters. We ensure to consult the community before making decisions. Come join us on [Telegram](https://t.me/NuruProgrammingChat)"
-      }
-    ],
-    "contributors": "Contributors"
+    "why": {
+      "title": "Built to be learned",
+      "subtitle": "Nuru keeps the ideas of programming and drops the jargon.",
+      "features": [
+        {
+          "title": "Simple syntax",
+          "details": "A small, consistent grammar you can hold in your head. A gentle first language, and a fast one to pick up if you already code."
+        },
+        {
+          "title": "Words you already know",
+          "details": "andika() to print, jaza() to read input, kama for if. You read a program almost like a sentence."
+        },
+        {
+          "title": "Zero setup",
+          "details": "The whole language runs in your browser through WebAssembly. Open a tab and start writing, no install."
+        }
+      ]
+    },
+    "keywords": {
+      "title": "Plain words, real code",
+      "subtitle": "Every keyword is an everyday Swahili word.",
+      "items": [
+        { "nuru": "andika", "english": "print" },
+        { "nuru": "jaza", "english": "input" },
+        { "nuru": "kama", "english": "if" },
+        { "nuru": "sivyo", "english": "else" },
+        { "nuru": "kwa", "english": "for" },
+        { "nuru": "wakati", "english": "while" },
+        { "nuru": "unda", "english": "function" },
+        { "nuru": "rudisha", "english": "return" }
+      ]
+    },
+    "learn": {
+      "title": "A path from zero to confident",
+      "subtitle": "Interactive lessons that run in the browser and check your work as you go.",
+      "cta": "Start the first lesson",
+      "tiers": [
+        {
+          "level": "Beginner",
+          "name": "The basics",
+          "blurb": "Printing, variables, input, and your first loops and conditions."
+        },
+        {
+          "level": "Intermediate",
+          "name": "Real programs",
+          "blurb": "Functions, arrays, and logic to build things that actually do work."
+        },
+        {
+          "level": "Advanced",
+          "name": "Projects",
+          "blurb": "Pull it all together and build complete programs in Nuru."
+        }
+      ]
+    },
+    "community": {
+      "title": "Made by a community",
+      "subtitle": "Nuru is open source and shaped in the open. Your voice matters, and we consult the community before big decisions.",
+      "telegram": "Join us on Telegram",
+      "contributors": "Contributors"
+    },
+    "footer": {
+      "tagline": "The Swahili programming language.",
+      "builtWith": "Built with ❤️ by teKsafari",
+      "product": "Product",
+      "communityHeading": "Community",
+      "playground": "Playground",
+      "lessons": "Lessons",
+      "github": "GitHub",
+      "telegram": "Telegram"
+    }
   },
   "header": {
     "home": "Home",
