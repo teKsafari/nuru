@@ -11,9 +11,17 @@ function getLocale(request: NextRequest) {
 
 	request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
 
-	let languages = new Negotiator({ headers: negotiatorHeaders }).languages();
+	// Negotiator returns "*" when Accept-Language is missing, and Intl rejects it
+	let languages = new Negotiator({ headers: negotiatorHeaders })
+		.languages()
+		.filter((language) => language !== "*");
 
-	return match(languages, locales, defaultLocale); // -> 'en'
+	try {
+		return match(languages, locales, defaultLocale); // -> 'en'
+	} catch {
+		// Malformed Accept-Language tags make Intl throw
+		return defaultLocale;
+	}
 }
 
 export function middleware(request: NextRequest) {
