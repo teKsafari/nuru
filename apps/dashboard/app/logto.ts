@@ -1,5 +1,5 @@
 export const logtoConfig = {
-  endpoint: 'https://id.teksafari.org/',
+  endpoint: 'https://id.teksafari.com/',
   appId: process.env.LOGTO_APP_ID!,
   appSecret: process.env.LOGTO_APP_SECRET!,
   baseUrl: process.env.LOGTO_BASE_URL!,
