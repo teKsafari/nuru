@@ -2,7 +2,7 @@ import { UserScope } from "@logto/next";
 import type { LogtoNextConfig } from "@logto/next";
 
 export const logtoConfig:LogtoNextConfig = {
-  endpoint: 'https://id.teksafari.org/',
+  endpoint: 'https://id.teksafari.com/',
   appId: process.env.LOGTO_APP_ID!,
   appSecret: process.env.LOGTO_APP_SECRET!,
   baseUrl: process.env.LOGTO_BASE_URL!, // Change to your own base URL
