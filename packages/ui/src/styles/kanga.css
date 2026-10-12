@@ -1,0 +1,301 @@
+/*
+ * KANGA — the Nuru design language.
+ *
+ * A kanga cloth has three parts: the pindo (a patterned border), the mji
+ * (the central field) and the jina (a printed Swahili saying). Nuru screens
+ * borrow that structure: patterned edges, one heavy-bordered field of focus,
+ * and a methali where the product speaks to the learner.
+ *
+ * Visual grammar (from neubrutalist learning UIs on Dribbble): cream paper,
+ * ink-black 2px rules, hard offset shadows, flat saturated fills, mono labels.
+ *
+ * Import AFTER tailwindcss in an app's globals.css:
+ *   @import "tailwindcss";
+ *   @import "@nuru/ui/kanga.css";
+ */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+	--font-*: initial;
+	--font-display: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+	--font-sans: var(--font-lexend), "Lexend", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+
+	/* Kanga palette, usable as bg-jua, text-wino, border-pilipili ... */
+	--color-karatasi: var(--karatasi);
+	--color-karatasi-2: var(--karatasi-2);
+	--color-wino: var(--wino);
+	--color-jua: var(--jua);
+	--color-jua-foreground: var(--jua-foreground);
+	--color-pilipili: var(--pilipili);
+	--color-bahari: var(--bahari);
+	--color-mwani: var(--mwani);
+	--color-zambarau: var(--zambarau);
+	--color-chungwa: var(--chungwa);
+	--color-udongo: var(--udongo);
+	--color-mstari: var(--mstari);
+
+	/* shadcn-compatible semantic tokens */
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-success: var(--mwani);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-sidebar: var(--card);
+	--color-sidebar-foreground: var(--foreground);
+	--color-sidebar-border: var(--border);
+	--color-sidebar-accent: var(--accent);
+	--color-sidebar-accent-foreground: var(--accent-foreground);
+	--color-sidebar-primary: var(--primary);
+	--color-sidebar-primary-foreground: var(--primary-foreground);
+	--color-sidebar-ring: var(--ring);
+	--color-chart-1: var(--jua);
+	--color-chart-2: var(--bahari);
+	--color-chart-3: var(--mwani);
+	--color-chart-4: var(--pilipili);
+	--color-chart-5: var(--zambarau);
+
+	--radius-sm: 6px;
+	--radius-md: 10px;
+	--radius-lg: 14px;
+	--radius-xl: 18px;
+
+	/* Hard offset shadows: the kivuli */
+	--shadow-kivuli-sm: 2px 2px 0 0 var(--kivuli);
+	--shadow-kivuli: 4px 4px 0 0 var(--kivuli);
+	--shadow-kivuli-lg: 7px 7px 0 0 var(--kivuli);
+	--shadow-kivuli-jua: 4px 4px 0 0 var(--jua);
+
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+	--animate-marquee: marquee 40s linear infinite;
+	--animate-pulse-jua: pulse-jua 1.6s ease-in-out infinite;
+
+	@keyframes accordion-down {
+		from { height: 0; }
+		to { height: var(--radix-accordion-content-height); }
+	}
+	@keyframes accordion-up {
+		from { height: var(--radix-accordion-content-height); }
+		to { height: 0; }
+	}
+	@keyframes marquee {
+		from { transform: translateX(0); }
+		to { transform: translateX(-50%); }
+	}
+	@keyframes pulse-jua {
+		0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--jua) 70%, transparent); }
+		50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--jua) 0%, transparent); }
+	}
+}
+
+/* MCHANA (day) */
+:root {
+	--karatasi: #fff8e7;      /* paper */
+	--karatasi-2: #fbefd2;    /* paper, one fold deeper */
+	--wino: #15120f;          /* ink */
+	--jua: #ffc93c;           /* Nuru yellow: the sun, the light */
+	--jua-foreground: #15120f;
+	--pilipili: #ff5a4e;      /* chili red */
+	--bahari: #3b7bff;        /* ocean blue */
+	--mwani: #22a565;         /* seaweed green */
+	--zambarau: #9b7bff;      /* purple */
+	--chungwa: #ff9a3c;       /* orange */
+	--udongo: #c8553d;        /* earth / terracotta */
+	--mstari: #15120f;        /* rule colour */
+	--kivuli: #15120f;        /* shadow colour */
+
+	--background: var(--karatasi);
+	--foreground: var(--wino);
+	--card: #fffdf6;
+	--card-foreground: var(--wino);
+	--popover: #fffdf6;
+	--popover-foreground: var(--wino);
+	--primary: var(--wino);
+	--primary-foreground: var(--karatasi);
+	--secondary: var(--karatasi-2);
+	--secondary-foreground: var(--wino);
+	--muted: var(--karatasi-2);
+	--muted-foreground: #6b6257;
+	--accent: var(--jua);
+	--accent-foreground: var(--wino);
+	--destructive: var(--pilipili);
+	--destructive-foreground: var(--wino);
+	--border: var(--mstari);
+	--input: var(--mstari);
+	--ring: var(--bahari);
+
+	--editor-bg: #fffdf6;
+	--terminal-bg: #15120f;
+	--terminal-fg: #fff3d6;
+}
+
+/* USIKU (night) */
+.dark {
+	--karatasi: #15120f;
+	--karatasi-2: #1f1a16;
+	--wino: #fff3d6;
+	--jua: #ffc93c;
+	--jua-foreground: #15120f;
+	--pilipili: #ff6f63;
+	--bahari: #6e9bff;
+	--mwani: #3ccf86;
+	--zambarau: #b39cff;
+	--chungwa: #ffad5c;
+	--udongo: #e07a5f;
+	--mstari: #fff3d6;
+	--kivuli: #000000;
+
+	--background: var(--karatasi);
+	--foreground: var(--wino);
+	--card: #1d1814;
+	--card-foreground: var(--wino);
+	--popover: #1d1814;
+	--popover-foreground: var(--wino);
+	--primary: var(--jua);
+	--primary-foreground: #15120f;
+	--secondary: #2a231d;
+	--secondary-foreground: var(--wino);
+	--muted: #2a231d;
+	--muted-foreground: #b8ab95;
+	--accent: var(--jua);
+	--accent-foreground: #15120f;
+	--destructive: var(--pilipili);
+	--destructive-foreground: #15120f;
+	--border: color-mix(in oklab, var(--mstari) 80%, transparent);
+	--input: color-mix(in oklab, var(--mstari) 80%, transparent);
+	--ring: var(--jua);
+
+	--editor-bg: #1a1612;
+	--terminal-bg: #0d0b09;
+	--terminal-fg: #fff3d6;
+}
+
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-border, currentcolor);
+	}
+	html {
+		-webkit-tap-highlight-color: transparent;
+	}
+	body {
+		background: var(--background);
+		color: var(--foreground);
+		font-family: var(--font-sans);
+		font-feature-settings: "ss01";
+	}
+	h1, h2, h3, h4 {
+		font-family: var(--font-display);
+		letter-spacing: -0.02em;
+	}
+	::selection {
+		background: var(--jua);
+		color: #15120f;
+	}
+	:focus-visible {
+		outline: 3px solid var(--ring);
+		outline-offset: 2px;
+	}
+}
+
+/* ---- Kanga utilities ---- */
+
+/* The mji: a heavy-bordered field with a hard shadow. */
+@utility mji {
+	background: var(--card);
+	color: var(--card-foreground);
+	border: 2px solid var(--mstari);
+	border-radius: var(--radius-lg);
+	box-shadow: 4px 4px 0 0 var(--kivuli);
+}
+
+/* A pressable surface: lifts on hover, sinks on press. */
+@utility bonyeza {
+	transition: transform 120ms ease, box-shadow 120ms ease;
+	&:hover {
+		transform: translate(-1px, -1px);
+		box-shadow: 5px 5px 0 0 var(--kivuli);
+	}
+	&:active {
+		transform: translate(3px, 3px);
+		box-shadow: 0 0 0 0 var(--kivuli);
+	}
+}
+
+/* Mono sticker label, e.g. "HATUA 3 / 12" */
+@utility lebo {
+	font-family: var(--font-mono);
+	font-size: 0.6875rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+/* Highlighter swipe behind a word, like a marker on paper. */
+@utility alama-jua {
+	background: linear-gradient(transparent 12%, var(--jua) 12%, var(--jua) 88%, transparent 88%);
+	color: #15120f;
+	padding-inline: 0.15em;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+}
+
+/*
+ * The pindo: a kanga border band. Triangles over a dotted rule, drawn from
+ * currentColor so `text-jua pindo` or `text-pilipili pindo` recolours it.
+ */
+@utility pindo {
+	height: 14px;
+	background-color: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 14 L7 2 L14 14 Z M14 0 L21 12 L28 0 Z' fill='black'/%3E%3C/svg%3E") repeat-x left center / 28px 14px;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 14 L7 2 L14 14 Z M14 0 L21 12 L28 0 Z' fill='black'/%3E%3C/svg%3E") repeat-x left center / 28px 14px;
+}
+
+/* Dotted variant of the pindo, for quieter edges. */
+@utility pindo-nukta {
+	height: 8px;
+	background-image: radial-gradient(circle, currentColor 2px, transparent 2.5px);
+	background-size: 14px 8px;
+	background-position: left center;
+	background-repeat: repeat-x;
+}
+
+/* Paper grain grid for canvases and empty states. */
+@utility gridi {
+	background-image:
+		linear-gradient(to right, color-mix(in oklab, var(--mstari) 9%, transparent) 1px, transparent 1px),
+		linear-gradient(to bottom, color-mix(in oklab, var(--mstari) 9%, transparent) 1px, transparent 1px);
+	background-size: 24px 24px;
+}
+
+@utility text-balance {
+	text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+	}
+}

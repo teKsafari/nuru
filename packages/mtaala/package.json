@@ -1,0 +1,27 @@
+{
+	"name": "@nuru/mtaala",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Mtaala wa Nuru: the Nuru curriculum as Markdown, plus seeding and verification scripts.",
+	"type": "module",
+	"exports": {
+		"./load": "./scripts/load.ts"
+	},
+	"scripts": {
+		"seed": "tsx scripts/seed.ts",
+		"hakiki": "tsx scripts/hakiki.ts",
+		"test": "tsx scripts/hakiki.ts"
+	},
+	"dependencies": {
+		"@nuru/db": "workspace:*",
+		"@nuru/ui": "workspace:*",
+		"@nuru/wasm": "workspace:*",
+		"drizzle-orm": "^0.45.1",
+		"yaml": "^2.8.2"
+	},
+	"devDependencies": {
+		"@types/node": "^22",
+		"tsx": "^4.21.0",
+		"typescript": "^5"
+	}
+}

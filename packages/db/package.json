@@ -20,6 +20,7 @@
 		"@neondatabase/serverless": "^1.0.2",
 		"@nuru/ui": "workspace:^",
 		"drizzle-orm": "^0.45.1",
+		"postgres": "^3.4.9",
 		"server-only": "^0.0.1"
 	},
 	"devDependencies": {
@@ -27,5 +28,6 @@
 		"drizzle-kit": "^0.31.9",
 		"tsx": "^4.21.0",
 		"yaml": "^2.8.2"
-	}
+	},
+	"type": "module"
 }

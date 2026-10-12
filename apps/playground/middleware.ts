@@ -1,51 +1,34 @@
-import { match } from "@formatjs/intl-localematcher"; // look out for https://github.com/tc39/proposal-intl-localematcher
-import Negotiator from "negotiator";
-
-let locales = ["en", "sw"];
-let defaultLocale = "en";
-
 import { NextResponse, NextRequest } from "next/server";
 
+const locales = ["sw", "en"];
+const defaultLocale = "sw";
+
+// Nuru is Swahili-first. Many learners' phones are set to English, so we do not
+// follow Accept-Language: a visitor sees Swahili until they pick English, and
+// that choice is remembered in the `nuru-lang` cookie.
 function getLocale(request: NextRequest) {
-	const negotiatorHeaders: Record<string, string> = {};
-
-	request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
-
-	// Negotiator returns "*" when Accept-Language is missing, and Intl rejects it
-	let languages = new Negotiator({ headers: negotiatorHeaders })
-		.languages()
-		.filter((language) => language !== "*");
-
-	try {
-		return match(languages, locales, defaultLocale); // -> 'en'
-	} catch {
-		// Malformed Accept-Language tags make Intl throw
-		return defaultLocale;
-	}
+	const chosen = request.cookies.get("nuru-lang")?.value;
+	return chosen && locales.includes(chosen) ? chosen : defaultLocale;
 }
 
 export function middleware(request: NextRequest) {
-	// Check if there is any supported locale in the pathname
 	const { pathname } = request.nextUrl;
-	const pathnameHasLocale = locales.some(
-		(locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
-	);
+	const pathnameLocale = locales.find((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`);
 
-	if (pathnameHasLocale) return;
+	if (pathnameLocale) {
+		const res = NextResponse.next();
+		if (request.cookies.get("nuru-lang")?.value !== pathnameLocale) {
+			res.cookies.set("nuru-lang", pathnameLocale, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" });
+		}
+		return res;
+	}
 
-	// Redirect if there is no locale
-	const locale = getLocale(request);
-	// e.g. incoming request is /anza
-	// The new URL is now /en/anza
-	// TODO: change default locale to sw
-	return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
+	return NextResponse.redirect(new URL(`/${getLocale(request)}${pathname}`, request.url));
 }
 
 export const config = {
 	matcher: [
-		// Skip all internal paths (_next), auth callback, potential api routees, and wasm binary
-		"/((?!_next|callback|api|main\\.wasm).*)",
-		// Optional: only run on root (/) URL
-		// '/'
+		// Skip Next internals, auth callback, API routes and static runtime assets.
+		"/((?!_next|callback|api|nuru/|main\\.wasm|sw\\.js|manifest\\.json|favicon|.*\\.(?:svg|png|jpg|ico|wasm|js|json|webmanifest)$).*)",
 	],
 };

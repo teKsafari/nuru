@@ -12,5 +12,5 @@
 		"esModuleInterop": true,
 		"declaration": true
 	},
-	"include": ["index.ts", "react/**/*.ts"]
+	"include": ["index.ts", "runtime.ts", "react/**/*.ts"]
 }

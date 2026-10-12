@@ -4,21 +4,10 @@ import { Suspense } from "react";
 import { CustomThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
-import { JetBrains_Mono, Noto_Rashi_Hebrew } from "next/font/google";
-
-const jetbrainsMono = JetBrains_Mono({
-	subsets: ["latin"],
-	display: "swap",
-	weight: ["400", "500", "700"],
-	variable: "--font-jetbrains-mono",
-});
-const NotoRashi = Noto_Rashi_Hebrew({
-	subsets: ["latin"],
-	variable: "--font-noto-rashi",
-});
+import { kangaFonts } from "@/lib/fonts";
 
 export const metadata: Metadata = {
-  title: "Nuru Educator Dashboard",
+  title: "Nuru · Chumba cha Walimu",
   description: "Manage lessons and organizations for Nuru",
 };
 
@@ -34,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${jetbrainsMono.variable} ${NotoRashi.variable}`}>
+    <html lang="en" suppressHydrationWarning className={kangaFonts}>
       <body className="antialiased">
         <Suspense>
           <CustomThemeProvider>

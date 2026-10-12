@@ -27,3 +27,5 @@ yarn-error.log*
 next-env.d.ts
 
 main.wasm
+# Nuru runtime, copied from packages/wasm/worker at dev/build time
+/public/nuru/

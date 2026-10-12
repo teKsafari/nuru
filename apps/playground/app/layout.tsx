@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 
 import { Suspense } from "react";
 import { CustomThemeProvider } from "@/components/providers/theme-provider";
-import { cn } from "@nuru/ui/lib/utils";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const viewport: Viewport = {
@@ -13,22 +12,15 @@ export const viewport: Viewport = {
 
 import "./globals.css";
 
-import { JetBrains_Mono, Noto_Rashi_Hebrew } from "next/font/google";
-
-const jetbrainsMono = JetBrains_Mono({
-	subsets: ["latin"],
-	display: "swap",
-	weight: ["400", "500", "700"],
-	variable: "--font-jetbrains-mono",
-});
-const NotoRashi = Noto_Rashi_Hebrew({
-	subsets: ["latin"],
-	variable: "--font-noto-rashi",
-});
+import { kangaFonts } from "@/lib/fonts";
 
 export const metadata: Metadata = {
-	title: "nuru playground",
-	description: "nuru playground",
+	title: {
+		default: "Nuru · Lugha ya kiprogramu ya Kiswahili",
+		template: "%s · Nuru",
+	},
+	description:
+		"Jifunze kuandika programu kwa Kiswahili. Nuru inaendeshwa moja kwa moja kwenye kivinjari chako: hakuna kusakinisha kitu.",
 	generator: "nuru",
 	icons: {
 		icon: [
@@ -45,9 +37,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html
-			lang="en"
+			lang="sw"
 			suppressHydrationWarning
-			className={cn(jetbrainsMono.variable, NotoRashi.variable)}
+			className={kangaFonts}
 		>
 			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -58,7 +50,7 @@ export default function RootLayout({
 					type="image/svg+xml"
 				/>
 				<link rel="apple-touch-icon" href="/favicon.svg" />
-				<meta name="theme-color" content="#00b4d8" />
+				<meta name="theme-color" content="#ffc93c" />
 				<link rel="manifest" href="/manifest.json" />
 			</head>
 			<body className={"flex h-dvh flex-col"}>

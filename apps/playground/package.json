@@ -9,14 +9,16 @@
 	},
 	"scripts": {
 		"dev": "portless run next dev",
-		"prebuild": "cp ../../packages/wasm/main.wasm ./public/main.wasm || echo 'Warning: main.wasm not found, skipping copy.'",
+		"prebuild": "node scripts/copy-runtime.mjs",
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint .",
-		"test": "echo \"Mocktest Playground  🟢 🟢 🟢 🟢\" && exit 0 >> /dev/null",
+		"test": "echo \"Mocktest Playground  \ud83d\udfe2 \ud83d\udfe2 \ud83d\udfe2 \ud83d\udfe2\" && exit 0 >> /dev/null",
 		"db:generate": "pnpm --filter @nuru/db db:generate",
 		"db:push": "pnpm --filter @nuru/db db:push",
-		"db:studio": "pnpm --filter @nuru/db db:studio"
+		"db:studio": "pnpm --filter @nuru/db db:studio",
+		"predev": "node scripts/copy-runtime.mjs",
+		"dev:plain": "next dev -p 3000"
 	},
 	"prettier": {
 		"useTabs": true,
