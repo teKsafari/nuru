@@ -6,7 +6,7 @@ import type { Mfano } from "./mifano.ts";
 
 // tsx loads these .ts files as CommonJS; read the exports either way.
 const load = async (p: string) => {
-	const mod: any = await import(p);
+	const mod = (await import(p)) as { default?: unknown } & Record<string, unknown>;
 	return mod.default ?? mod;
 };
 const { sehemu } = await load("./mifano.ts");

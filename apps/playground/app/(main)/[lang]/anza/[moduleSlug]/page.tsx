@@ -8,16 +8,16 @@ interface PageProps {
 export default async function ModulePage({ params }: PageProps) {
 	const { moduleSlug, lang } = await params;
 	
-	let module;
+	let moduli;
 	try {
-		module = await getModuleBySlug(moduleSlug);
+		moduli = await getModuleBySlug(moduleSlug);
 	} catch (error) {
 		console.error(`Error loading module ${moduleSlug}:`, error);
 		return notFound();
 	}
 
-	if (module.lessons.length > 0) {
-		redirect(`/${lang}/anza/${moduleSlug}/${module.lessons[0].slug}`);
+	if (moduli.lessons.length > 0) {
+		redirect(`/${lang}/anza/${moduleSlug}/${moduli.lessons[0].slug}`);
 	}
 	
 	return notFound();

@@ -35,7 +35,7 @@ export async function getModuleBySlug(slug: string): Promise<Module> {
 		title: moduleResult.title as Record<Language, string>,
 		difficulty: moduleResult.difficulty || undefined,
 		executor: moduleResult.executorType,
-		panels: moduleResult.layoutConfig as any,
+		panels: moduleResult.layoutConfig as Module["panels"],
 		lessons: moduleResult.lessons.map(l => ({
 			id: l.id,
 			slug: l.slug,
@@ -44,7 +44,7 @@ export async function getModuleBySlug(slug: string): Promise<Module> {
 			task: l.task as Record<Language, string> || undefined,
 			initialCode: l.defaultCode || "",
 			solution: l.solution || undefined,
-			tests: l.tests as any,
+			tests: l.tests as Lesson["tests"],
 		})),
 	};
 }
@@ -66,7 +66,7 @@ export async function getAllModulesWithLessons(): Promise<Module[]> {
 		title: m.title as Record<Language, string>,
 		difficulty: m.difficulty || undefined,
 		executor: m.executorType,
-		panels: m.layoutConfig as any,
+		panels: m.layoutConfig as Module["panels"],
 		lessons: m.lessons.map(l => ({
 			id: l.id,
 			slug: l.slug,
@@ -75,7 +75,7 @@ export async function getAllModulesWithLessons(): Promise<Module[]> {
 			task: l.task as Record<Language, string> || undefined,
 			initialCode: l.defaultCode || "",
 			solution: l.solution || undefined,
-			tests: l.tests as any,
+			tests: l.tests as Lesson["tests"],
 		})),
 	}));
 }

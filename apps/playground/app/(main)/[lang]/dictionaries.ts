@@ -31,11 +31,11 @@ const dictionaries = {
 
 function deepMerge<T>(base: T, over: unknown): T {
 	if (Array.isArray(base) || typeof base !== "object" || base === null) return (over ?? base) as T;
-	const out: any = { ...base };
+	const out: Record<string, unknown> = { ...(base as Record<string, unknown>) };
 	for (const [k, v] of Object.entries((over as object) ?? {})) {
 		out[k] = k in out ? deepMerge(out[k], v) : v;
 	}
-	return out;
+	return out as T;
 }
 
 export type Locale = keyof typeof dictionaries;

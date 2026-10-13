@@ -14,16 +14,16 @@ export default async function LessonPage({ params }: PageProps) {
 	const { moduleSlug, lessonSlug, lang } = await params;
 	const dict = await getDictionary(lang as Locale);
 	
-	let module: Module;
+	let moduli: Module;
 	try {
-		module = await getModuleBySlug(moduleSlug);
+		moduli = await getModuleBySlug(moduleSlug);
 	} catch (error) {
 		console.error(`Error loading module ${moduleSlug}:`, error);
 		return notFound();
 	}
 
 	// Verify lesson exists
-	const lessonExists = module.lessons.some(s => s.slug === lessonSlug);
+	const lessonExists = moduli.lessons.some(s => s.slug === lessonSlug);
 	if (!lessonExists) {
 		return notFound();
 	}
@@ -43,7 +43,7 @@ export default async function LessonPage({ params }: PageProps) {
 
 	return (
 		<AnzaClient 
-			module={module} 
+			module={moduli} 
 			lessonSlug={lessonSlug}
 			nextModuleSlug={nextModuleSlug} 
 			lang={lang as Locale} 
