@@ -132,6 +132,12 @@ export const wanafunzi = pgTable("wanafunzi", {
 	logtoId: text("logto_id"),
 	failedAttempts: integer("failed_attempts").default(0).notNull(),
 	lockedUntil: timestamp("locked_until", { withTimezone: true, mode: 'string' }),
+	// How many locks in a row (1m, 5m, 30m). At LOCK_LEVEL_TEACHER the learner
+	// stays locked until a teacher resets their pictures. Cleared on success.
+	lockLevel: integer("lock_level").default(0).notNull(),
+	// Signed into every learner session cookie. Bumping it signs out every device
+	// (teacher reset, pictures newly set). Cookies issued before the column existed count as 0.
+	sessionVersion: integer("session_version").default(0).notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	lastSeenAt: timestamp("last_seen_at", { withTimezone: true, mode: 'string' }),
 }, (table) => [

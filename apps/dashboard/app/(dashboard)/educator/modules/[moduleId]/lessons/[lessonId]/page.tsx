@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
-import { eq } from "drizzle-orm";
-import { db, lessons, modules } from "@/lib/db";
+import { getOwnedLesson } from "@/lib/modules.server";
 import LessonEditor, { type LessonFormValues } from "@/components/editor/lesson-editor";
 import { updateLesson } from "@/app/actions/lessons";
 import { getServerDict } from "@/lib/lang";
@@ -17,13 +16,10 @@ function both(v: unknown) {
 export default async function EditLessonPage({ params }: { params: Promise<{ moduleId: string; lessonId: string }> }) {
 	const { moduleId, lessonId } = await params;
 
-	const [lesson, module, { lang }] = await Promise.all([
-		db.query.lessons.findFirst({ where: eq(lessons.id, lessonId) }),
-		db.query.modules.findFirst({ where: eq(modules.id, moduleId), columns: { title: true } }),
-		getServerDict(),
-	]);
+	const [owned, { lang }] = await Promise.all([getOwnedLesson(moduleId, lessonId), getServerDict()]);
 
-	if (!lesson || !module || lesson.moduleId !== moduleId) notFound();
+	if (!owned) notFound();
+	const { lesson, module } = owned;
 
 	const initialData: LessonFormValues = {
 		title: both(lesson.title),

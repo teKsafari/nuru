@@ -36,9 +36,11 @@
 			"futa": "Clear",
 			"hazilingani": "The pictures do not match. Choose again.",
 			"siSahihi": "Not right. {n} tries left.",
-			"imefungwa": "Too many tries. Wait {n} seconds.",
+			"imefungwa": "Too many tries. Wait {muda}.",
 			"hatua": "Picture {n} / 3",
-			"gridLabel": "Secret pictures"
+			"gridLabel": "Secret pictures",
+			"mudaSekunde": "{n} seconds",
+			"mudaDakika": "{n} minutes"
 		},
 		"makosa": {
 			"msimbo_si_sahihi": "A code has 6 characters, like KJM-7Q4.",
@@ -46,6 +48,8 @@
 			"jina_si_sahihi": "Use 2 to 40 characters for your name.",
 			"jina_limechukuliwa": "Someone in the class already has this name. Add your family initial, e.g. Amina J.",
 			"mwanafunzi_hayupo": "This name is no longer in the class. Ask your teacher.",
+			"imefungwa": "Too many tries. Wait a moment, then try again.",
+			"imefungwa_mwalimu": "Too many wrong tries. Ask your teacher to reset your pictures.",
 			"mtandao": "No connection. Try again.",
 			"jumla": "Something went wrong. Try again."
 		},
@@ -54,6 +58,8 @@
 			"msimbo": "Code",
 			"toka": "Sign out",
 			"tokaMaelezo": "Sharing a phone? Tap Sign out when you finish so a classmate can sign in.",
+			"tokaMtandao": "You are still signed in: no connection. Reconnect, then tap Sign out again.",
+			"tokaFoleni": "You are still signed in: your attempts have not reached your teacher yet. Wait for the connection, then tap Sign out again.",
 			"moduli": "Class lessons",
 			"kamilika": "{n} / {jumla} done",
 			"endelea": "Continue",

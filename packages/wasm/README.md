@@ -56,6 +56,8 @@ Alternatively, run the build script from the package directory:
 npm run build:wasm
 ```
 
+`build:wasm` never edits `core/Nuru`. It copies the submodule to `.build/nuru` (gitignored), applies the patches in `web/patches/` and builds `web/` against that copy. See `web/patches/README.md` for how to add a patch.
+
 ## Usage
 
 This package provides a TypeScript wrapper to initialize and run the Nuru interpreter WebAssembly binary in a browser environment.

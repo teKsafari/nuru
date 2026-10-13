@@ -1,37 +1,101 @@
-// Nuru service worker: keeps the runtime and the pages a learner has visited
-// available without a connection. Hand-written, no build step.
+// Nuru service worker: keeps the runtime and the public pages a learner has
+// visited available without a connection. Hand-written, no build step.
 //
-//   /nuru/* (wasm, worker, wasm_exec)  cache first, refreshed in the background
-//   /_next/static/**, /icons/**, fonts cache first (file names are hashed)
-//   pages (navigations)                network first, cached copy when offline,
-//                                      then a Swahili offline page
+// components/tovuti/sw-register.tsx registers it as /sw.js?b=<build>&r=<runtime>
+// (both stamped by scripts/copy-runtime.mjs). A new deploy is a new script URL,
+// so the browser installs this worker again and activate drops the previous
+// deploy's caches; the runtime cache is kept while the runtime hash is unchanged.
+//
+//   /nuru/*?v=<runtime>  cache first, exact URL (precached as one set in install)
+//   /_next/static/**, /icons/**, fonts  cache first (file names are hashed)
+//   public pages         network first, cached copy when offline, then a
+//                        Swahili offline page. Only the allowlist in PUBLIC_PAGE is
+//                        stored: /darasa and anything per-learner never is.
 //   /api/**, /callback, other origins  never touched
 //
 // Responses are stored and served as the original Response objects, so the
 // COOP/COEP headers that cross-origin isolation (and jaza()) depend on survive.
+//
+// Pages carry the signed-in Logto user in the header, so lib/progress.ts asks
+// for them to be dropped (message "nuru:futa-kurasa") whenever the device's
+// owner changes or a learner signs out.
 
-const VERSION = "nuru-v1";
-const RUNTIME = `${VERSION}-runtime`;
-const STATIC = `${VERSION}-static`;
-const PAGES = `${VERSION}-pages`;
+const params = new URL(self.location.href).searchParams;
+const clean = (v) => (v || "").replace(/[^A-Za-z0-9_-]/g, "");
+const BUILD = clean(params.get("b")) || "0";
+const RUNTIME_VERSION = clean(params.get("r"));
 
-const PRECACHE = ["/nuru/nuru.wasm", "/nuru/wasm_exec.js", "/nuru/nuru-worker.js", "/manifest.json", "/favicon.svg", "/icons/icon-192.png"];
+const RUNTIME = `nuru-runtime-${RUNTIME_VERSION || "0"}`;
+const STATIC = `nuru-${BUILD}-static`;
+const PAGES = `nuru-${BUILD}-pages`;
+const MAX_PAGES = 40;
+const MAX_STATIC = 400;
+
+const v = RUNTIME_VERSION ? `?v=${RUNTIME_VERSION}` : "";
+const PRECACHE_RUNTIME = [`/nuru/nuru.wasm${v}`, `/nuru/wasm_exec.js${v}`, `/nuru/nuru-worker.js${v}`];
+const PRECACHE_STATIC = ["/manifest.json", "/favicon.svg", "/icons/icon-192.png"];
 const PRECACHE_PAGES = ["/sw", "/sw/uwanja"];
+
+// Pages that render the same for every visitor (apart from the header). Never
+// /darasa, which shows the signed-in learner's class and progress.
+const PUBLIC_PAGE = /^\/(?:sw|en)(?:\/(?:uwanja|anza(?:\/[^/]+){0,2}|kamusi(?:\/[^/]+)?|masomo(?:\/[^/]+)?))?\/?$/;
+
+// /_next/static URLs referenced by a page's HTML, including the escaped ones in
+// the RSC payload (\"/_next/static/...\").
+function staticUrls(html) {
+	const out = new Set();
+	for (const m of html.matchAll(/\/_next\/static\/[^"'\s\\<>]+/g)) out.add(m[0]);
+	return [...out];
+}
+
+async function cacheStatic(urls) {
+	const cache = await caches.open(STATIC);
+	await Promise.all(
+		urls.map(async (url) => {
+			try {
+				if (await cache.match(url)) return;
+				const res = await fetch(url, { credentials: "same-origin" });
+				if (cacheable(res)) await cache.put(url, res);
+			} catch {}
+		}),
+	);
+}
 
 self.addEventListener("install", (event) => {
 	event.waitUntil(
 		(async () => {
+			// The runtime goes in as one set or not at all, so a cut-off download can
+			// never pair a new wasm_exec.js with an old wasm.
 			const runtime = await caches.open(RUNTIME);
-			await Promise.all(PRECACHE.map((url) => runtime.add(url).catch(() => {})));
+			const have = await Promise.all(PRECACHE_RUNTIME.map((url) => runtime.match(url)));
+			if (have.some((r) => !r)) {
+				try {
+					const fresh = await Promise.all(
+						PRECACHE_RUNTIME.map(async (url) => {
+							const res = await fetch(url, { credentials: "same-origin", cache: "reload" });
+							if (!cacheable(res)) throw new Error(url);
+							return res;
+						}),
+					);
+					await Promise.all(fresh.map((res, i) => runtime.put(PRECACHE_RUNTIME[i], res)));
+				} catch {}
+			}
+			await cacheStatic(PRECACHE_STATIC);
+			// The offline shell, fetched without cookies so no one's name is stored,
+			// plus every chunk it loads: without them the cached HTML never hydrates.
 			const pages = await caches.open(PAGES);
+			const chunks = [];
 			await Promise.all(
 				PRECACHE_PAGES.map(async (url) => {
 					try {
-						const res = await fetch(url, { credentials: "same-origin" });
-						if (cacheable(res)) await pages.put(url, res);
+						const res = await fetch(url, { credentials: "omit" });
+						if (!cacheable(res)) return;
+						chunks.push(...staticUrls(await res.clone().text()));
+						await pages.put(url, res);
 					} catch {}
 				}),
 			);
+			await cacheStatic([...new Set(chunks)]);
 			await self.skipWaiting();
 		})(),
 	);
@@ -40,15 +104,51 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
 	event.waitUntil(
 		(async () => {
+			const keep = new Set([RUNTIME, STATIC, PAGES]);
 			const keys = await caches.keys();
-			await Promise.all(keys.filter((k) => k.startsWith("nuru-") && !k.startsWith(VERSION)).map((k) => caches.delete(k)));
+			await Promise.all(keys.filter((k) => k.startsWith("nuru-") && !keep.has(k)).map((k) => caches.delete(k)));
 			await self.clients.claim();
 		})(),
 	);
 });
 
+self.addEventListener("message", (event) => {
+	const data = event.data || {};
+	if (data.type === "nuru:futa-kurasa") {
+		event.waitUntil(caches.delete(PAGES));
+	} else if (data.type === "nuru:hifadhi" && Array.isArray(data.urls)) {
+		// Chunks the page loaded before this worker controlled it (sw-register.tsx).
+		const urls = data.urls
+			.filter((u) => typeof u === "string")
+			.map((u) => {
+				try {
+					const url = new URL(u, self.location.origin);
+					return url.origin === self.location.origin && url.pathname.startsWith("/_next/static/") ? url.pathname + url.search : null;
+				} catch {
+					return null;
+				}
+			})
+			.filter(Boolean)
+			.slice(0, 200);
+		event.waitUntil(cacheStatic(urls));
+	}
+});
+
 function cacheable(res) {
 	return res && res.ok && res.type === "basic" && !res.redirected;
+}
+
+async function put(cacheName, req, res, max) {
+	try {
+		const cache = await caches.open(cacheName);
+		await cache.delete(req, { ignoreSearch: false });
+		await cache.put(req, res);
+		// Oldest first: keys() lists entries in insertion order, and a re-put moves to the end.
+		const keys = await cache.keys();
+		for (const k of keys.slice(0, Math.max(0, keys.length - max))) await cache.delete(k);
+	} catch {
+		// Quota reached or storage unavailable: serving the response matters more.
+	}
 }
 
 self.addEventListener("fetch", (event) => {
@@ -63,58 +163,45 @@ self.addEventListener("fetch", (event) => {
 	if (url.searchParams.has("_rsc") || req.headers.get("RSC")) return;
 
 	if (path.startsWith("/nuru/")) {
-		event.respondWith(staleWhileRevalidate(event, req, RUNTIME));
+		event.respondWith(cacheFirst(event, req, RUNTIME, 10));
 		return;
 	}
 	if (path.startsWith("/_next/static/") || path.startsWith("/icons/") || /\.(?:woff2?|ttf|otf)$/.test(path)) {
-		event.respondWith(cacheFirst(req, STATIC));
+		event.respondWith(cacheFirst(event, req, STATIC, MAX_STATIC));
 		return;
 	}
 	if (req.mode === "navigate") {
-		event.respondWith(networkFirstPage(req));
+		event.respondWith(networkFirstPage(event, req));
 	}
 });
 
-async function cacheFirst(req, cacheName) {
+async function cacheFirst(event, req, cacheName, max) {
 	const cache = await caches.open(cacheName);
 	const hit = await cache.match(req);
 	if (hit) return hit;
 	const res = await fetch(req);
-	if (cacheable(res)) cache.put(req, res.clone());
+	if (cacheable(res)) event.waitUntil(put(cacheName, req, res.clone(), max));
 	return res;
 }
 
-// Serve the cached runtime at once; fetch a fresh copy for next time.
-async function staleWhileRevalidate(event, req, cacheName) {
-	const cache = await caches.open(cacheName);
-	const hit = await cache.match(req, { ignoreSearch: true });
-	const refresh = fetch(req)
-		.then((res) => {
-			if (cacheable(res)) cache.put(req, res.clone());
-			return res;
-		})
-		.catch(() => null);
-	if (hit) {
-		event.waitUntil(refresh);
-		return hit;
-	}
-	return (await refresh) || Response.error();
-}
-
-async function networkFirstPage(req) {
-	const cache = await caches.open(PAGES);
+async function networkFirstPage(event, req) {
+	const url = new URL(req.url);
+	// "/" redirects to the learner's language; offline, the Swahili home stands in.
+	const path = url.pathname === "/" ? "/sw" : url.pathname;
 	try {
 		const res = await fetch(req);
-		if (cacheable(res)) cache.put(req, res.clone());
+		if (cacheable(res) && PUBLIC_PAGE.test(path)) event.waitUntil(put(PAGES, path, res.clone(), MAX_PAGES));
 		return res;
 	} catch {
-		const url = new URL(req.url);
-		const hit = (await cache.match(req, { ignoreSearch: true })) || (await cache.match(url.pathname));
+		const cache = await caches.open(PAGES);
+		const hit = PUBLIC_PAGE.test(path) ? await cache.match(path) : null;
 		if (hit) return hit;
-		// A page never visited: fall back to the cached playground or home page.
-		const lang = url.pathname.startsWith("/en") ? "en" : "sw";
-		const fallback = (await cache.match(`/${lang}/uwanja`)) || (await cache.match("/sw/uwanja"));
-		if (fallback && url.pathname.includes("/uwanja")) return fallback;
+		// A page never visited: fall back to the cached playground.
+		const lang = path.startsWith("/en") ? "en" : "sw";
+		if (path.includes("/uwanja")) {
+			const fallback = (await cache.match(`/${lang}/uwanja`)) || (await cache.match("/sw/uwanja"));
+			if (fallback) return fallback;
+		}
 		return offlinePage(lang);
 	}
 }

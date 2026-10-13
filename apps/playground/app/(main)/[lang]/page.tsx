@@ -334,7 +334,7 @@ function ProgressGrid({ t }: { t: { gridTitle: string; gridCode: string; gridLes
 			<div className="flex flex-wrap items-center justify-between gap-2">
 				<p className="font-display text-xl font-extrabold">{t.gridTitle}</p>
 				<span className="lebo rounded-sm border-2 border-mstari bg-karatasi-2 px-2 py-0.5">
-					{t.gridCode}: SIMBA-42
+					{t.gridCode}: KJM-7Q4
 				</span>
 			</div>
 			<div className="mt-5 overflow-x-auto">

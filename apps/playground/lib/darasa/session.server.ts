@@ -29,7 +29,11 @@ function secret() {
 	return DEV_SECRET;
 }
 
-export type LearnerSession = { m: string; d: string; iat: number };
+/**
+ * m: mwanafunzi id, d: darasa id, iat: issued-at (seconds), v: the learner's
+ * sessionVersion when issued. resolveOwner rejects a cookie whose v is behind the row.
+ */
+export type LearnerSession = { m: string; d: string; iat: number; v: number };
 
 const b64 = (s: string) => Buffer.from(s).toString("base64url");
 const sign = (body: string) => createHmac("sha256", secret()).update(body).digest("base64url");
@@ -50,7 +54,10 @@ export function decodeSession(token: string | undefined): LearnerSession | null 
 		const s = JSON.parse(Buffer.from(body, "base64url").toString());
 		if (typeof s.m !== "string" || typeof s.d !== "string" || typeof s.iat !== "number") return null;
 		if (Date.now() / 1000 - s.iat > MAX_AGE) return null;
-		return s;
+		// Cookies issued before session versions existed carry no v: treat them as 0.
+		const v = s.v === undefined ? 0 : s.v;
+		if (typeof v !== "number" || !Number.isInteger(v)) return null;
+		return { m: s.m, d: s.d, iat: s.iat, v };
 	} catch {
 		return null;
 	}

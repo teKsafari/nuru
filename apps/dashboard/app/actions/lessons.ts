@@ -92,7 +92,3 @@ export async function deleteLesson(id: string, moduleId: string) {
 	await db.delete(lessons).where(and(eq(lessons.id, id), eq(lessons.moduleId, moduleId)));
 	revalidatePath(`/educator/modules/${moduleId}`);
 }
-
-export async function getLessonsByModule(moduleId: string) {
-	return await db.select().from(lessons).where(eq(lessons.moduleId, moduleId));
-}

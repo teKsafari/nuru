@@ -33,7 +33,7 @@ import { gradeAll, type Runner } from "@nuru/ui/validation/grader";
 import type { Dictionary } from "@/app/(main)/[lang]/dictionaries";
 import type { Language, Lesson, Module } from "@/types/playground";
 import { useMobileLayout } from "@/hooks/use-mobile";
-import { readLocalProgress, reportProgress } from "@/lib/progress";
+import { currentOwnerKey, readLocalProgress, reportProgress } from "@/lib/progress";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/playground/resizable";
 import { TEST_TIMEOUT_MS, useProgram } from "@/components/runtime/use-program";
 import { OutputTabs, Pane, type OutputTab } from "@/components/runtime/output-tabs";
@@ -59,11 +59,12 @@ const extensions = [nuru];
 /** Which renderers a lesson needs, from the module config and the lesson itself. */
 function renderersFor(module: Module, lesson: Lesson): { kobe: boolean; ubao: boolean } {
 	const type = module.panels?.renderer?.type ?? "";
-	const text = `${lesson.initialCode}\n${lesson.solution ?? ""}`;
+	const text = lesson.initialCode;
 	const tests = lesson.tests ?? [];
+	const uses = lesson.solutionUses;
 	return {
-		kobe: type === "kobe" || /tumia\s+kobe\b/.test(text) || tests.some((t) => t.type === "kobe_picha"),
-		ubao: type === "ubao" || /tumia\s+ubao\b/.test(text) || tests.some((t) => t.type === "ubao_mfuatano"),
+		kobe: type === "kobe" || !!uses?.kobe || /tumia\s+kobe\b/.test(text) || tests.some((t) => t.type === "kobe_picha"),
+		ubao: type === "ubao" || !!uses?.ubao || /tumia\s+ubao\b/.test(text) || tests.some((t) => t.type === "ubao_mfuatano"),
 	};
 }
 
@@ -86,8 +87,13 @@ export function LessonView({ module, lessonSlug, nextModuleSlug, lang, dict }: L
 	const ghost = tests.find((t) => t.type === "kobe_picha")?.expectedOutput;
 	const isDev = process.env.NODE_ENV === "development";
 
-	const codeKey = `nuru-code-${module.id}-${lesson.id}`;
-	const attemptsKey = `nuru-attempts-${lesson.id}`;
+	// Saved code and attempt counts belong to whoever uses this device: on a
+	// shared tablet the next learner must not inherit them. An anonymous
+	// visitor keeps the original, un-namespaced keys.
+	const owner = typeof document === "undefined" ? "" : currentOwnerKey();
+	const ns = owner ? `~${owner}-` : "-";
+	const codeKey = `nuru-code${ns}${module.id}-${lesson.id}`;
+	const attemptsKey = `nuru-attempts${ns}${lesson.id}`;
 
 	const [code, setCode] = useState(lesson.initialCode);
 	const [loaded, setLoaded] = useState(false);
@@ -96,6 +102,7 @@ export function LessonView({ module, lessonSlug, nextModuleSlug, lang, dict }: L
 	const [checking, setChecking] = useState(false);
 	const [attempts, setAttempts] = useState(0);
 	const [hint, setHint] = useState<string | null>(null);
+	const [fetchingSolution, setFetchingSolution] = useState(false);
 	const [mobileTab, setMobileTab] = useState<MobileTab>("somo");
 
 	const outputTabs = useMemo<OutputTab[]>(() => {
@@ -129,7 +136,7 @@ export function LessonView({ module, lessonSlug, nextModuleSlug, lang, dict }: L
 		program.stop();
 		program.clear();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [lesson.id]);
+	}, [lesson.id, codeKey]);
 
 	useEffect(() => {
 		const read = () => setCompleted(new Set(readLocalProgress(module.id).completedLessonIds));
@@ -219,10 +226,11 @@ export function LessonView({ module, lessonSlug, nextModuleSlug, lang, dict }: L
 				passed = r.passed;
 				results = r.results;
 			} else {
-				const r = await runner(src);
-				passed = !r.stderr;
+				// A run that timed out or crashed printed no error of its own, but did not pass.
+				const r = await program.run(src, { timeoutMs: TEST_TIMEOUT_MS, interactive: false });
+				passed = r.status === "ok" && !r.stderr;
 			}
-		} catch (e) {
+		} catch {
 			passed = false;
 		}
 
@@ -255,10 +263,23 @@ export function LessonView({ module, lessonSlug, nextModuleSlug, lang, dict }: L
 		setHint(null);
 	};
 
-	const canShowSolution = !!lesson.solution && (isDev || attempts >= SOLUTION_AFTER);
-	const showSolution = () => {
-		if (lesson.solution) onCodeChange(lesson.solution);
-		setMobileTab("kodi");
+	const canShowSolution = !!lesson.hasSolution && (isDev || attempts >= SOLUTION_AFTER);
+	// The solution is not in the page: it is fetched once the learner unlocks it.
+	const showSolution = async () => {
+		if (fetchingSolution) return;
+		setFetchingSolution(true);
+		try {
+			const res = await fetch(`/api/suluhisho?lesson=${encodeURIComponent(lesson.id)}`, { cache: "no-store" });
+			const data = res.ok ? ((await res.json()) as { solution?: string }) : null;
+			if (!data?.solution) throw new Error(String(res.status));
+			onCodeChange(data.solution);
+			setMobileTab("kodi");
+		} catch {
+			setHint(L.solutionFailed);
+			setMobileTab("somo");
+		} finally {
+			setFetchingSolution(false);
+		}
 	};
 
 	const isDone = completed.has(lesson.id);
@@ -298,9 +319,9 @@ export function LessonView({ module, lessonSlug, nextModuleSlug, lang, dict }: L
 				{L.reset}
 			</Button>
 			{canShowSolution && (
-				<Button variant="ghost" size="sm" onClick={showSolution} data-testid="solution">
+				<Button variant="ghost" size="sm" onClick={showSolution} disabled={fetchingSolution} data-testid="solution">
 					<Eye />
-					{L.solution}
+					{fetchingSolution ? L.solutionLoading : L.solution}
 				</Button>
 			)}
 		</>
@@ -478,12 +499,12 @@ export function LessonView({ module, lessonSlug, nextModuleSlug, lang, dict }: L
 								{L.reset}
 							</DropdownMenuItem>
 							{canShowSolution ? (
-								<DropdownMenuItem onSelect={showSolution} className="gap-3 px-2 py-3 focus:bg-jua focus:text-wino">
+								<DropdownMenuItem onSelect={showSolution} disabled={fetchingSolution} className="gap-3 px-2 py-3 focus:bg-jua focus:text-wino">
 									<Eye />
-									{L.solution}
+									{fetchingSolution ? L.solutionLoading : L.solution}
 								</DropdownMenuItem>
 							) : (
-								lesson.solution && (
+								lesson.hasSolution && (
 									<DropdownMenuItem disabled className="gap-3 px-2 py-3 text-xs">
 										<Eye />
 										{L.solutionLocked}

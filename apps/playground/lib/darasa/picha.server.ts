@@ -22,6 +22,4 @@ export async function verifyPicha(sequence: string[], stored: string) {
 	return timingSafeEqual(expected, got);
 }
 
-/** Wrong attempts allowed before a lock, and how long the lock lasts. */
-export const MAX_ATTEMPTS = 5;
-export const LOCK_MS = 60_000;
+// Attempt limits and lock lengths live in ./limits.ts.

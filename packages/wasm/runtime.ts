@@ -113,13 +113,19 @@ export class NuruRuntime {
 		/** jaza() found no input and could not block: the run will end as "needs-input". */
 		replay?: boolean;
 	} | null = null;
+	/** Bumped by every run(), stop() and dispose(): a run still waiting for the worker checks it. */
+	private gen = 0;
+	/** A run() is waiting for warmUp() and has not posted to the worker yet. */
+	private starting = false;
+	/** Ends the wait of a run() that is still starting. */
+	private cancelStart: (() => void) | null = null;
 
 	constructor(config: RuntimeConfig) {
 		this.config = config;
 	}
 
 	get isRunning() {
-		return this.current !== null;
+		return this.current !== null || this.starting;
 	}
 
 	get interactiveInput() {
@@ -175,7 +181,24 @@ export class NuruRuntime {
 
 	async run(code: string, opts: RunOptions = {}): Promise<RunResult> {
 		if (this.current) this.stop();
-		await this.warmUp();
+		// Claim the run before awaiting, so a second run() or a stop() during the
+		// warm-up supersedes this one instead of both posting to the worker.
+		this.cancelStart?.();
+		const gen = ++this.gen;
+		this.starting = true;
+		const startedAt = performance.now();
+		const cancelled = new Promise<void>((resolve) => {
+			this.cancelStart = resolve;
+		});
+		try {
+			await Promise.race([this.warmUp(), cancelled]);
+		} finally {
+			if (gen === this.gen) {
+				this.starting = false;
+				this.cancelStart = null;
+			}
+		}
+		if (gen !== this.gen) return { status: "stopped", ms: Math.round(performance.now() - startedAt) };
 
 		return new Promise<RunResult>((resolve) => {
 			this.current = { opts, resolve, startedAt: performance.now() };
@@ -207,11 +230,22 @@ export class NuruRuntime {
 
 	/** Stops the running program. The next run() starts a fresh worker. */
 	stop() {
-		this.kill("stopped");
+		this.supersedeStart();
+		// A worker that is still warming up is kept: the next run() needs it.
+		if (this.current) this.kill("stopped");
 	}
 
 	dispose() {
+		this.supersedeStart();
 		this.kill("stopped", false);
+	}
+
+	private supersedeStart() {
+		this.gen++;
+		this.starting = false;
+		const cancel = this.cancelStart;
+		this.cancelStart = null;
+		cancel?.();
 	}
 
 	private kill(status: RunStatus, rewarm = true) {

@@ -1,0 +1,14 @@
+--- a/evaluator/builtins_wasm.go
++++ b/evaluator/builtins_wasm.go
+@@ -44,7 +44,10 @@
+ 				result = jsPromptFunction.Invoke(args[0].Inspect())
+ 			}
+ 
+-			if result.String() == "" || result.String() == "null" {
++			// Only a JS null or undefined means "no answer" (no interactive input,
++			// or the run was stopped). An empty string or the word "null" is a
++			// real answer, the same as on the stdin replay path above.
++			if result.IsNull() || result.IsUndefined() {
+ 				return newError("Nimeshindwa kusoma uliyo yajaza")
+ 			}
+ 

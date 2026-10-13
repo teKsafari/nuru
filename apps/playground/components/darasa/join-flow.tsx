@@ -162,7 +162,9 @@ export function JoinFlow({
 			if (ok) return signedIn();
 			if (data.error === "imefungwa") {
 				setLockSec(data.sekunde ?? 60);
-				return wrong(fmt(t.picha.imefungwa, { n: data.sekunde ?? 60 }));
+				const sec = data.sekunde ?? 60;
+				const muda = sec < 120 ? fmt(t.picha.mudaSekunde, { n: sec }) : fmt(t.picha.mudaDakika, { n: Math.ceil(sec / 60) });
+				return wrong(fmt(t.picha.imefungwa, { muda }));
 			}
 			if (data.error === "picha_si_sahihi") return wrong(fmt(t.picha.siSahihi, { n: data.zimebaki ?? 0 }));
 			return wrong(err(data.error));

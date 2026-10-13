@@ -34,10 +34,6 @@ export async function createModule(data: any) {
 	return { id: moduleId };
 }
 
-export async function getModulesByOrganization(orgId: string) {
-	return await db.select().from(modules).where(eq(modules.organizationId, orgId));
-}
-
 const withLessonSummary = {
 	lessons: { columns: { id: true, tests: true } },
 } as const;
@@ -93,8 +89,14 @@ export async function deleteModule(id: string) {
 	revalidatePath("/educator/modules");
 }
 
+/**
+ * A module with its lessons, for the marketplace. Exported from a "use server"
+ * file, so it guards itself: only public modules, or the caller's own (every
+ * module for a Super Admin). Educator pages use lib/modules.server.ts instead.
+ */
 export async function getModuleWithLessons(id: string) {
-	return await db.query.modules.findFirst({
+	const claims = await requirePermission();
+	const module = await db.query.modules.findFirst({
 		where: eq(modules.id, id),
 		with: {
 			lessons: {
@@ -102,4 +104,7 @@ export async function getModuleWithLessons(id: string) {
 			},
 		},
 	});
+	if (!module) return undefined;
+	if (module.visibility === "public" || module.createdBy === claims.sub || claims.roles?.includes("Super Admin")) return module;
+	return undefined;
 }

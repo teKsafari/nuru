@@ -134,15 +134,15 @@ const moduleDocs: Record<string, Doc[]> = {
 		["PI", "π ≈ 3.14159", "hisabati.PI()"],
 		["sqrt", "kipeuo cha pili", "hisabati.sqrt(16)"],
 		["abs", "thamani kamili", "hisabati.abs(-5)"],
-		["round", "kadiria", "hisabati.round(2.6)"],
+		["round", "kadiria (DESIMALI tu)", "hisabati.round(2.6)"],
 		["floor", "shusha hadi namba kamili", "hisabati.floor(2.9)"],
 		["ceil", "panda hadi namba kamili", "hisabati.ceil(2.1)"],
 		["max", "kubwa zaidi kwenye orodha", "hisabati.max([3, 9, 2])"],
 		["min", "ndogo zaidi kwenye orodha", "hisabati.min([3, 9, 2])"],
 		["random", "namba ya nasibu 0 hadi 1", "hisabati.random()"],
 		["factorial", "n!", "hisabati.factorial(5)"],
-		["sin", "sine (radiani)", "hisabati.sin(0)"],
-		["cos", "cosine (radiani)", "hisabati.cos(0)"],
+		["sin", "sine (radiani, DESIMALI tu)", "hisabati.sin(0.0)"],
+		["cos", "cosine (radiani, DESIMALI tu)", "hisabati.cos(0.0)"],
 	].map(([l, d, i]) => ({ label: l, detail: d, info: i, type: "method" })),
 	muda: [
 		["hasahivi", "muda wa sasa", "muda.hasahivi()"],
@@ -163,11 +163,11 @@ const methodDocs: Doc[] = [
 	["unga", "unganisha orodha kuwa neno", "[\"a\", \"b\"].unga(\", \")"],
 	["chuja", "chuja kwa kitendakazi", "orodha.chuja(unda(x) { rudisha x > 2 })"],
 	["map", "badilisha kila kipengele", "orodha.map(unda(x) { rudisha x * 2 })"],
-	["tafuta", "tafuta nafasi ya kipengele", "orodha.tafuta(3)"],
+	["tafuta", "rudisha kipengele kama kipo, sivyo tupu", "[4, 5].tafuta(5)  // 5"],
 	["herufikubwa", "HERUFI KUBWA", "\"nuru\".herufikubwa()"],
 	["herufindogo", "herufi ndogo", "\"NURU\".herufindogo()"],
 	["gawa", "gawa neno kuwa orodha", "\"a,b,c\".gawa(\",\")"],
-	["panga", "panga maneno kwa {}", "\"Habari {}\".panga(jina)"],
+	["panga", "jaza nafasi {0}, {1} kwa hoja", "\"Habari {0}\".panga(jina)"],
 ].map(([l, d, i]) => ({ label: l, detail: d, info: i, type: "method" }));
 
 function toCompletion(d: Doc, boost = 0): Completion {

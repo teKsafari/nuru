@@ -31,15 +31,11 @@ let interactive = false;
 let startedAt = 0;
 let batch = [];
 let flushTimer = null;
-// The ubao module keeps LED state between runs inside the wasm instance. When a
-// run touched the board, the next run first switches every LED off in silence.
-let usedUbao = false;
-let silent = false;
-let queuedRun = null;
+// After a wasm trap the instance is unusable: report it once and run nothing more.
+let broken = false;
 
 // Batch messages so a tight andika() loop doesn't flood the main thread.
 function send(msg) {
-	if (silent) return;
 	batch.push(msg);
 	if (batch.length >= 200) return flush();
 	if (!flushTimer) flushTimer = setTimeout(flush, 16);
@@ -61,19 +57,12 @@ self.nuruOutputReceiver = (text, isError) => {
 };
 
 self.nuruEvent = (event) => {
-	if (event && event.ch === "ubao") usedUbao = true;
 	send({ type: "event", event: Object.assign({}, event) });
 };
 
+// ubao LED state needs no reset here: main.go clears it at the start of every
+// run, and the host clears the board UI before each run.
 self.nuruDone = () => {
-	if (silent) {
-		silent = false;
-		usedUbao = false;
-		const next = queuedRun;
-		queuedRun = null;
-		if (next) startRun(next);
-		return;
-	}
 	send({ type: "done", ms: Math.round(performance.now() - startedAt) });
 	flush();
 };
@@ -130,37 +119,39 @@ async function init({ wasmURL, execURL, inputBuffer, module }) {
 	go.run(instance);
 }
 
+// Output the program printed before a crash is still in the batch: send it
+// first, because the host terminates the worker as soon as it sees "fatal".
+function fatal(err) {
+	if (broken) return;
+	broken = true;
+	flush();
+	self.postMessage({ type: "fatal", message: String(err && err.message ? err.message : err) });
+}
+
 self.onmessage = (e) => {
 	const msg = e.data;
 	if (msg.type === "init") {
-		init(msg).catch((err) => self.postMessage({ type: "fatal", message: String(err && err.message ? err.message : err) }));
+		init(msg).catch(fatal);
 	} else if (msg.type === "run") {
-		if (usedUbao) {
-			silent = true;
-			queuedRun = msg;
-			try {
-				self.runCode("tumia ubao\nubao.zima_zote()");
-			} catch (err) {
-				silent = false;
-				queuedRun = null;
-				startRun(msg);
-			}
-			return;
-		}
 		startRun(msg);
 	}
 };
 
 function startRun(msg) {
+	if (broken) return;
 	interactive = !!msg.interactive && !!control;
 	startedAt = performance.now();
 	try {
 		self.runCode(msg.code, Array.isArray(msg.stdin) ? msg.stdin : undefined);
 	} catch (err) {
-		self.postMessage({ type: "fatal", message: String(err && err.message ? err.message : err) });
+		fatal(err);
 	}
 }
 
+// Traps that fire later (after muda.lala or ubao.subiri) land here. Returning
+// true keeps the error from also reaching the host's worker.onerror, which could
+// overtake the flushed output and the "fatal" message.
 self.onerror = (err) => {
-	self.postMessage({ type: "fatal", message: String(err && err.message ? err.message : err) });
+	fatal(err);
+	return true;
 };

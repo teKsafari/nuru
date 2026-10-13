@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, FileText, Pencil, Plus, ExternalLink, Cpu } from "lucide-react";
 import { Button } from "@nuru/ui/components/button";
-import { getModuleWithLessons } from "@/app/actions/modules";
+import { getOwnedModuleWithLessons } from "@/lib/modules.server";
 import { getServerDict } from "@/lib/lang";
 import { pick } from "@/lib/dict";
 import { SortableLessonsList } from "@/components/editor/sortable-lessons-list";
@@ -15,7 +15,7 @@ const PLAYGROUND_URL = process.env.PLAYGROUND_URL || "http://localhost:3000";
 
 export default async function ModuleBuilderPage({ params }: { params: Promise<{ moduleId: string }> }) {
 	const { moduleId } = await params;
-	const [module, { t, lang }] = await Promise.all([getModuleWithLessons(moduleId), getServerDict()]);
+	const [module, { t, lang }] = await Promise.all([getOwnedModuleWithLessons(moduleId), getServerDict()]);
 
 	if (!module) notFound();
 

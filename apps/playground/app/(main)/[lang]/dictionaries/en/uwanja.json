@@ -60,6 +60,8 @@
 			"reset": "Start over",
 			"solution": "Show solution",
 			"solutionLocked": "The solution unlocks after 3 tries",
+			"solutionLoading": "Fetching the solution...",
+			"solutionFailed": "Could not fetch the solution. Check your connection, then try again.",
 			"hintFallback": "Read the task again slowly, then compare your code with the example in the lesson.",
 			"prev": "Previous",
 			"next": "Next lesson",

@@ -62,7 +62,7 @@ export async function POST(req: Request) {
 			return NextResponse.json({ error: "jina_limechukuliwa" }, { status: 409 });
 		}
 		const res = NextResponse.json({ ok: true, mwanafunziId: id });
-		setSessionCookies(res, { m: id, d: d.id, iat: Math.floor(Date.now() / 1000) }, { id, jina: displayName, darasa: d.name });
+		setSessionCookies(res, { m: id, d: d.id, iat: Math.floor(Date.now() / 1000), v: 0 }, { id, jina: displayName, darasa: d.name });
 		return res;
 	}
 

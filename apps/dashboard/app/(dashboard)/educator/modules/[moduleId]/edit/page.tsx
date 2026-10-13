@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
-import { getModuleWithLessons, updateModule } from "@/app/actions/modules";
+import { updateModule } from "@/app/actions/modules";
+import { getOwnedModuleWithLessons } from "@/lib/modules.server";
 import ModuleForm, { type ModuleFormInputs } from "@/components/editor/module-form";
 import { getServerDict } from "@/lib/lang";
 
@@ -7,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function EditModulePage({ params }: { params: Promise<{ moduleId: string }> }) {
 	const { moduleId } = await params;
-	const [module, { t }] = await Promise.all([getModuleWithLessons(moduleId), getServerDict()]);
+	const [module, { t }] = await Promise.all([getOwnedModuleWithLessons(moduleId), getServerDict()]);
 
 	if (!module) notFound();
 

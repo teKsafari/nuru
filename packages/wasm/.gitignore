@@ -1,3 +1,5 @@
 # Ignore binary files, if any
 main
 main.exe
+# Patched copy of core/Nuru made by scripts/build-wasm.sh
+.build/

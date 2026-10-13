@@ -45,7 +45,7 @@
         "title": "The whole class on one screen",
         "body": "Open a class in the Teachers' Room and get a join code. Learners sign in with the code, their name and a picture password. No email and no password, even when they share one phone.",
         "steps": [
-          { "title": "Open a class", "body": "You get a short join code, like SIMBA-42." },
+          { "title": "Open a class", "body": "You get a short join code, like KJM-7Q4." },
           { "title": "Learners join", "body": "Code, name and a picture password. That is all." },
           { "title": "Follow progress", "body": "A live grid shows who has finished which lesson." }
         ],

@@ -93,7 +93,12 @@ export function LearnersList({
 							{w.needsPictures && (
 								<span className="lebo rounded-sm border-2 border-mstari bg-chungwa px-1 text-[#15120f]">{s.resetDone}</span>
 							)}
-							{w.lockedUntil && (
+							{w.lockedForTeacher && (
+								<span className="lebo inline-flex items-center gap-1 rounded-sm border-2 border-mstari bg-pilipili px-1 text-[#15120f]">
+									<Lock className="size-3" aria-hidden /> {s.lockedForTeacher}
+								</span>
+							)}
+							{w.lockedUntil && !w.lockedForTeacher && (
 								<span className="lebo inline-flex items-center gap-1 rounded-sm border-2 border-mstari bg-pilipili px-1 text-[#15120f]">
 									<Lock className="size-3" aria-hidden /> {s.locked}
 								</span>

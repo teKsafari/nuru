@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { inArray, sql } from "drizzle-orm";
-import { db, lessons, maendeleo } from "@nuru/db";
+import { and, eq, inArray, sql } from "drizzle-orm";
+import { db, lessons, madarasa, maendeleo, modules } from "@nuru/db";
 
 import { resolveOwner } from "@/lib/darasa/queries.server";
 import { ensureUserRow } from "@/lib/utils/auth.server";
@@ -32,12 +32,21 @@ export async function POST(req: Request) {
 	if (!owner) return NextResponse.json({ ok: true, ignored: true });
 	if (owner.kind === "logto") await ensureUserRow(owner.claims);
 
-	// Trust the database for which module a lesson belongs to; drop unknown lessons.
+	// Trust the database for which module a lesson belongs to. Keep only lessons of
+	// public modules, and for a darasa learner only their darasa's modules (none
+	// assigned means every public module). Everything else is dropped silently.
+	let classModules: Set<string> | null = null;
+	if (owner.kind === "mwanafunzi") {
+		const [d] = await db.select({ moduleIds: madarasa.moduleIds }).from(madarasa).where(eq(madarasa.id, owner.darasaId)).limit(1);
+		const ids = d?.moduleIds ?? [];
+		if (ids.length) classModules = new Set(ids);
+	}
 	const known = await db
 		.select({ id: lessons.id, moduleId: lessons.moduleId })
 		.from(lessons)
-		.where(inArray(lessons.id, [...new Set(items.map((i) => i.lessonId))]));
-	const moduleOf = new Map(known.map((l) => [l.id, l.moduleId]));
+		.innerJoin(modules, eq(modules.id, lessons.moduleId))
+		.where(and(inArray(lessons.id, [...new Set(items.map((i) => i.lessonId))]), eq(modules.visibility, "public")));
+	const moduleOf = new Map(known.filter((l) => !classModules || classModules.has(l.moduleId)).map((l) => [l.id, l.moduleId]));
 
 	let saved = 0;
 	for (const item of items) {

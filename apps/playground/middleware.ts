@@ -23,12 +23,16 @@ export function middleware(request: NextRequest) {
 		return res;
 	}
 
-	return NextResponse.redirect(new URL(`/${getLocale(request)}${pathname}`, request.url));
+	// "/" goes straight to "/sw", not "/sw/" (which Next would redirect once more).
+	const target = new URL(`/${getLocale(request)}${pathname === "/" ? "" : pathname}`, request.url);
+	target.search = request.nextUrl.search;
+	return NextResponse.redirect(target);
 }
 
 export const config = {
 	matcher: [
-		// Skip Next internals, auth callback, API routes and static runtime assets.
-		"/((?!_next|callback|api|nuru/|main\\.wasm|sw\\.js|manifest\\.json|favicon|.*\\.(?:svg|png|jpg|ico|wasm|js|json|webmanifest)$).*)",
+		// Skip Next internals, auth callback, API routes, static runtime assets and the
+		// routes that live outside [lang] (contributors, robots.txt, sitemap.xml).
+		"/((?!_next|callback|api|nuru/|contributors(?:/|$)|main\\.wasm|sw\\.js|manifest\\.json|favicon|robots\\.txt|sitemap\\.xml|.*\\.(?:svg|png|jpg|ico|wasm|js|json|webmanifest|txt|xml)$).*)",
 	],
 };

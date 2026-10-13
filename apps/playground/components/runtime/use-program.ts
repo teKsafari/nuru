@@ -36,6 +36,14 @@ export interface RunVisibleOptions {
 /** Test runs are killed after this long. */
 export const TEST_TIMEOUT_MS = 5000;
 
+const timeoutLine = (ms: number) => `Muda umekwisha baada ya sekunde ${ms / 1000}.`;
+
+/** Shown when the worker could not start (wasm failed to load, or crashed while loading). */
+function startFailure(e: unknown): string {
+	const why = e instanceof Error ? e.message : String(e ?? "");
+	return `Kosa: Nuru imeshindwa kuanza${why ? ` (${why})` : ""}. Angalia mtandao wako, kisha bonyeza Endesha tena au pakia ukurasa upya.`;
+}
+
 const MAX_LINES = 4000;
 
 /**
@@ -132,29 +140,45 @@ export function useProgram() {
 			for (;;) {
 				let outCount = 0;
 				let evCount = 0;
-				const res = await rt.run(code, {
-					stdin: answers.length ? answers.slice() : undefined,
-					interactive: opts.interactive ?? true,
-					timeoutMs: opts.timeoutMs ?? 0,
-					onOutput: (text, isError) => {
-						if (token !== runToken.current) return;
-						outCount++;
-						if (outCount <= skipOut) return;
-						(isError ? stderr : stdout).push(text);
-						append(text, isError ? "err" : "out");
-					},
-					onEvent: (e) => {
-						if (token !== runToken.current) return;
-						evCount++;
-						if (evCount <= skipEv) return;
-						events.push(e);
-						routeEvent(e);
-					},
-					onInputRequest: (p) => {
-						if (token !== runToken.current) return;
-						askFor(p);
-					},
-				});
+				let res: Awaited<ReturnType<typeof rt.run>>;
+				try {
+					res = await rt.run(code, {
+						stdin: answers.length ? answers.slice() : undefined,
+						interactive: opts.interactive ?? true,
+						timeoutMs: opts.timeoutMs ?? 0,
+						onOutput: (text, isError) => {
+							if (token !== runToken.current) return;
+							outCount++;
+							if (outCount <= skipOut) return;
+							(isError ? stderr : stdout).push(text);
+							append(text, isError ? "err" : "out");
+						},
+						onEvent: (e) => {
+							if (token !== runToken.current) return;
+							evCount++;
+							if (evCount <= skipEv) return;
+							events.push(e);
+							routeEvent(e);
+						},
+						onInputRequest: (p) => {
+							if (token !== runToken.current) return;
+							askFor(p);
+						},
+					});
+				} catch (e) {
+					// The worker failed to start. Without this the page would stay in
+					// "running" with a Stop button that has nothing to stop.
+					const text = startFailure(e);
+					stderr.push(text);
+					if (token === runToken.current) {
+						append(text, "err");
+						setPhase("idle");
+						setPrompt(null);
+						promptRef.current = null;
+						setSummary({ status: "crashed", ms: Math.round(totalMs), hadError: true });
+					}
+					return { stdout: stdout.join("\n").trim(), stderr: stderr.join("\n"), events, status: "crashed" };
+				}
 				totalMs += Math.max(0, res.ms - waited.current);
 				waited.current = 0;
 				if (token !== runToken.current) {
@@ -186,6 +210,9 @@ export function useProgram() {
 				setPrompt(null);
 				promptRef.current = null;
 				setSummary({ status: res.status, ms: Math.round(totalMs), timeoutMs: opts.timeoutMs, hadError: stderr.length > 0 });
+				// The terminal summary already says the run timed out; the grader
+				// reads it from stderr and status.
+				if (res.status === "timeout" && opts.timeoutMs) stderr.push(timeoutLine(opts.timeoutMs));
 				return { stdout: stdout.join("\n").trim(), stderr: stderr.join("\n"), events, status: res.status };
 			}
 		},
@@ -228,14 +255,20 @@ export function useProgram() {
 			const out: string[] = [];
 			const err: string[] = [];
 			const events: NuruEvent[] = [];
-			const res = await rt.run(code, {
-				stdin,
-				interactive: false,
-				timeoutMs: TEST_TIMEOUT_MS,
-				onOutput: (text, isError) => (isError ? err : out).push(text),
-				onEvent: (e) => events.push(e),
-			});
-			if (res.status === "timeout") err.push(`Muda umekwisha baada ya sekunde ${TEST_TIMEOUT_MS / 1000}.`);
+			let res: Awaited<ReturnType<typeof rt.run>>;
+			try {
+				res = await rt.run(code, {
+					stdin,
+					interactive: false,
+					timeoutMs: TEST_TIMEOUT_MS,
+					onOutput: (text, isError) => (isError ? err : out).push(text),
+					onEvent: (e) => events.push(e),
+				});
+			} catch (e) {
+				err.push(startFailure(e));
+				return { stdout: out.join("\n").trim(), stderr: err.join("\n"), events, status: "crashed" };
+			}
+			if (res.status === "timeout") err.push(timeoutLine(TEST_TIMEOUT_MS));
 			return { stdout: out.join("\n").trim(), stderr: err.join("\n"), events, status: res.status };
 		},
 		[runtime],

@@ -7,6 +7,22 @@ export interface RunCapture {
 	stdout: string; // non-error lines joined by \n, trimmed
 	stderr: string;
 	events: Array<Record<string, any>>;
+	/** How the run ended ("ok", "timeout", "crashed", "stopped", ...). Absent means "ok". */
+	status?: string;
+}
+
+/** Output from a run that was killed or crashed is partial: no output-based test may pass on it. */
+export function runFailure(r: RunCapture): string | undefined {
+	switch (r.status) {
+		case "timeout":
+			return "Programu imechukua muda mrefu mno na imesimamishwa. Huenda kuna kitanzi kisichoisha, au hesabu nzito kupita kiasi.";
+		case "crashed":
+			return r.stderr || "Programu imesimama ghafla kabla ya kumaliza.";
+		case "stopped":
+			return "Programu ilisimamishwa kabla ya kumaliza.";
+		default:
+			return undefined;
+	}
 }
 
 export interface GradeResult {
@@ -120,14 +136,93 @@ export function ubaoSignature(events: Array<Record<string, any>>): string {
 	return ubaoSequence(events).join(" ");
 }
 
+// ---- match_code: look at code, not at comments or text ----
+
+/**
+ * Blanks out comments (// and /* *\/) and records where string literals sit,
+ * following Nuru's lexer: "..." and '...' strings, with \" and \\ escapes.
+ * Comment characters become spaces (newlines stay), so offsets and line
+ * structure are unchanged. `strings` holds [start, end) of each literal's
+ * content, between the quotes.
+ */
+export function scanNuru(code: string): { stripped: string; strings: Array<[number, number]> } {
+	const out = code.split("");
+	const strings: Array<[number, number]> = [];
+	const n = code.length;
+	let i = 0;
+	while (i < n) {
+		const c = code[i];
+		const next = code[i + 1];
+		if (c === "/" && next === "/") {
+			while (i < n && code[i] !== "\n") out[i++] = " ";
+		} else if (c === "/" && next === "*") {
+			out[i++] = " ";
+			out[i++] = " ";
+			while (i < n && !(code[i] === "*" && code[i + 1] === "/")) {
+				if (code[i] !== "\n") out[i] = " ";
+				i++;
+			}
+			if (i < n) {
+				out[i++] = " ";
+				out[i++] = " ";
+			}
+		} else if (c === '"' || c === "'") {
+			const start = ++i;
+			while (i < n && code[i] !== c) {
+				// Nuru escapes only \" and \\ (plus \n \r \t); \' ends a '...' string.
+				if (code[i] === "\\" && (code[i + 1] === '"' || code[i + 1] === "\\")) i++;
+				i++;
+			}
+			strings.push([start, Math.min(i, n)]);
+			i++;
+		} else {
+			i++;
+		}
+	}
+	return { stripped: out.join(""), strings };
+}
+
+/**
+ * A match_code pattern must match the code itself: comments are removed, and a
+ * match that starts inside a string literal does not count. Patterns may still
+ * name string contents, e.g. `ubao\.rangi\(2, "njano"\)`, because that match
+ * starts outside the string.
+ *
+ * Two kinds of pattern are about that syntax itself, and keep it:
+ *   - a pattern containing comment markers (// or /*), as in the lesson on
+ *     maoni, is matched against the raw source;
+ *   - a pattern containing an escaped backslash (\\n), which only exists
+ *     inside strings, may match inside a string literal.
+ */
+export function matchesCode(re: RegExp, code: string): boolean {
+	if (/\/\/|\/\\\*|\\\/\\\/|\\\/\\\*/.test(re.source)) {
+		re.lastIndex = 0;
+		return re.test(code);
+	}
+	const aboutEscapes = re.source.includes("\\\\");
+	const { stripped, strings } = scanNuru(code);
+	const flags = re.flags.includes("g") ? re.flags : re.flags + "g";
+	const g = new RegExp(re.source, flags);
+	const inString = (at: number) => strings.some(([a, b]) => at >= a && at < b);
+	for (let m = g.exec(stripped); m; m = g.exec(stripped)) {
+		if (aboutEscapes || !inString(m.index)) return true;
+		if (m[0].length === 0) g.lastIndex++;
+		if (g.lastIndex > stripped.length) break;
+	}
+	return false;
+}
+
 // ---- the grader ----
 
 export async function gradeTest(test: TestCaseV1, code: string, plain: RunCapture, run: Runner): Promise<GradeResult> {
+	// Output-based tests never pass on what a killed or crashed run left behind.
+	const plainFailure = test.type === "match_output" || test.type === "exact_output" || test.type === "kobe_picha" || test.type === "ubao_mfuatano" ? runFailure(plain) : undefined;
+	if (plainFailure) return { passed: false, actualOutput: plain.stdout, error: plainFailure };
 	switch (test.type) {
 		case "match_code": {
 			const re = safeRegex(test.pattern, test.flags);
 			if (!re) return { passed: false, error: "Regex ya jaribio si sahihi" };
-			return { passed: re.test(code) };
+			return { passed: matchesCode(re, code) };
 		}
 		case "match_output": {
 			const re = safeRegex(test.pattern, test.flags);
@@ -139,10 +234,11 @@ export async function gradeTest(test: TestCaseV1, code: string, plain: RunCaptur
 		case "io": {
 			const stdin = (test.input ?? "").split("\n");
 			const r = await run(code, stdin);
+			const failure = runFailure(r);
 			return {
-				passed: norm(r.stdout) === norm(test.expectedOutput ?? ""),
+				passed: !failure && norm(r.stdout) === norm(test.expectedOutput ?? ""),
 				actualOutput: r.stdout,
-				error: r.stderr || undefined,
+				error: failure ?? (r.stderr || undefined),
 			};
 		}
 		case "kobe_picha": {

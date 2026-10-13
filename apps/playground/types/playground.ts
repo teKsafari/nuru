@@ -8,7 +8,10 @@ export interface Lesson {
 	title: Record<Language, string>;
 	description: Record<Language, string>;
 	initialCode: string;
-	solution?: string;
+	/** The reference solution stays on the server; fetch it from /api/suluhisho once unlocked. */
+	hasSolution?: boolean;
+	/** Simulators the reference solution uses, so the right panels open. */
+	solutionUses?: { kobe: boolean; ubao: boolean };
 	task?: Record<Language, string>;
 	tests?: TestCase[];
 }

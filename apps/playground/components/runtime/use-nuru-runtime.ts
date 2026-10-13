@@ -3,13 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { NuruRuntime } from "@nuru/wasm/runtime";
 
+import { RUNTIME_URLS } from "@/lib/runtime-version";
+
 export type RuntimeState = "loading" | "ready" | "error";
 
-const CONFIG = {
-	workerURL: "/nuru/nuru-worker.js",
-	wasmURL: "/nuru/nuru.wasm",
-	execURL: "/nuru/wasm_exec.js",
-};
+// Versioned by content hash, see lib/runtime-version.ts.
+const CONFIG = RUNTIME_URLS;
 
 /**
  * Owns one NuruRuntime (one Web Worker) for the lifetime of the page.

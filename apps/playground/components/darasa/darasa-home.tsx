@@ -70,7 +70,7 @@ export function DarasaHome({ data, dict, lang }: { data: MimiResponse; dict: Dic
 							<p className="truncate font-display text-lg leading-tight font-bold">{me.displayName}</p>
 							<p className="lebo text-muted-foreground">{fmt(t.kamilika, { n: done, jumla: total })}</p>
 						</div>
-						{!me.viaLogto && <TokaButton label={t.toka} className="h-11 shrink-0" />}
+						{!me.viaLogto && <TokaButton label={t.toka} makosa={{ mtandao: t.tokaMtandao, foleni: t.tokaFoleni }} className="h-11 shrink-0" />}
 					</div>
 				</div>
 			</header>
@@ -168,7 +168,7 @@ export function DarasaHome({ data, dict, lang }: { data: MimiResponse; dict: Dic
 					<aside className="mt-10 flex flex-col items-start gap-4 rounded-lg border-2 border-dashed border-mstari p-5 sm:flex-row sm:items-center">
 						<Smartphone className="size-8 shrink-0" aria-hidden />
 						<p className="flex-1 text-foreground/80">{t.tokaMaelezo}</p>
-						<TokaButton label={t.toka} className="h-12 px-6" />
+						<TokaButton label={t.toka} makosa={{ mtandao: t.tokaMtandao, foleni: t.tokaFoleni }} className="h-12 px-6" />
 					</aside>
 				)}
 			</div>

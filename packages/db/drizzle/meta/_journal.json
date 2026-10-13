@@ -36,6 +36,13 @@
       "when": 1791860436164,
       "tag": "0005_darasa",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791909991210,
+      "tag": "0006_darasa_lock_session",
+      "breakpoints": true
     }
   ]
 }

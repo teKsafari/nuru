@@ -11,6 +11,9 @@ import { requireEducator } from "@/lib/permissions";
 // Darasa (classroom) actions for teachers. Every action checks the caller is an
 // Educator or Super Admin, and that the darasa is theirs (Super Admin sees all).
 
+// Mirrors LOCK_LEVEL_TEACHER in apps/playground/lib/darasa/limits.ts.
+const LOCK_LEVEL_TEACHER = 4;
+
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O, no 1/I
 
 function newCode() {
@@ -38,6 +41,38 @@ async function ownedDarasa(darasaId: string) {
 	if (!d) throw new Error("Darasa halipo");
 	if (!me.isSuperAdmin && d.teacherLogtoId !== me.sub) throw new Error("Forbidden: si darasa lako");
 	return { d, me };
+}
+
+/**
+ * Lessons a darasa studies: lessons of its public assigned modules, or of every
+ * public module when none are assigned. Teachers see progress only for these, so
+ * a Logto learner's self-study and other classes stay private.
+ */
+async function darasaLessonIds(moduleIds: string[]) {
+	const rows = await db
+		.select({ id: lessons.id })
+		.from(lessons)
+		.innerJoin(modules, eq(modules.id, lessons.moduleId))
+		.where(
+			moduleIds.length
+				? and(inArray(modules.id, moduleIds), eq(modules.visibility, "public"))
+				: eq(modules.visibility, "public"),
+		);
+	return rows.map((r) => r.id);
+}
+
+/** Keep only ids of public modules, in the order given. */
+async function publicModuleIds(ids: string[]) {
+	if (!ids.length) return [];
+	const valid = new Set(
+		(
+			await db
+				.select({ id: modules.id })
+				.from(modules)
+				.where(and(inArray(modules.id, ids), eq(modules.visibility, "public")))
+		).map((m) => m.id),
+	);
+	return ids.filter((id) => valid.has(id));
 }
 
 async function ownedMwanafunzi(mwanafunziId: string) {
@@ -70,7 +105,11 @@ export async function listMadarasa(): Promise<DarasaSummary[]> {
 			passed: sql<number>`(
 				select count(*)::int from ${maendeleo} m
 				join ${wanafunzi} w on (m.mwanafunzi_id = w.id or (w.logto_id is not null and m.logto_id = w.logto_id))
-				where w.darasa_id = "madarasa"."id" and m.passed
+				join ${lessons} l on l.id = m.lesson_id
+				join ${modules} mo on mo.id = l.module_id
+				where w.darasa_id = "madarasa"."id" and m.passed and mo.visibility = 'public'
+					and (jsonb_array_length("madarasa"."module_ids") = 0
+						or mo.id in (select jsonb_array_elements_text("madarasa"."module_ids")))
 			)`,
 		})
 		.from(madarasa)
@@ -120,18 +159,7 @@ export async function createDarasa(input: { name: string; moduleIds: string[] })
 	if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Ombi si sahihi" };
 	await ensureTeacherRow(me.claims);
 
-	// Keep only public module ids, in the order given.
-	const valid = parsed.data.moduleIds.length
-		? new Set(
-				(
-					await db
-						.select({ id: modules.id })
-						.from(modules)
-						.where(and(inArray(modules.id, parsed.data.moduleIds), eq(modules.visibility, "public")))
-				).map((m) => m.id),
-			)
-		: new Set<string>();
-	const moduleIds = parsed.data.moduleIds.filter((id) => valid.has(id));
+	const moduleIds = await publicModuleIds(parsed.data.moduleIds);
 
 	const id = crypto.randomUUID();
 	for (let attempt = 0; attempt < 8; attempt++) {
@@ -151,7 +179,7 @@ export async function createDarasa(input: { name: string; moduleIds: string[] })
 
 export async function updateDarasaModules(darasaId: string, moduleIds: string[]) {
 	await ownedDarasa(darasaId);
-	const ids = z.array(z.string().min(1)).max(50).parse(moduleIds);
+	const ids = await publicModuleIds(z.array(z.string().min(1)).max(50).parse(moduleIds));
 	await db.update(madarasa).set({ moduleIds: ids }).where(eq(madarasa.id, darasaId));
 	revalidatePath(`/educator/madarasa/${darasaId}`);
 }
@@ -202,7 +230,8 @@ export async function resetMwanafunziPicha(mwanafunziId: string) {
 	const { d } = await ownedMwanafunzi(mwanafunziId);
 	await db
 		.update(wanafunzi)
-		.set({ pictureHash: null, failedAttempts: 0, lockedUntil: null })
+		// Bumping sessionVersion signs the learner out on every device.
+		.set({ pictureHash: null, failedAttempts: 0, lockLevel: 0, lockedUntil: null, sessionVersion: sql`${wanafunzi.sessionVersion} + 1` })
 		.where(eq(wanafunzi.id, mwanafunziId));
 	revalidatePath(`/educator/madarasa/${d.id}`);
 }
@@ -221,6 +250,8 @@ export type GridLearner = {
 	viaLogto: boolean;
 	needsPictures: boolean;
 	lockedUntil: string | null;
+	/** Locked after too many wrong tries; only a picture reset lets them in again. */
+	lockedForTeacher: boolean;
 	createdAt: string;
 	lastSeenAt: string | null;
 };
@@ -253,13 +284,20 @@ export async function getDarasaDetail(darasaId: string): Promise<DarasaDetail> {
 	if (moduleIds.length) mods.sort((a, b) => moduleIds.indexOf(a.id) - moduleIds.indexOf(b.id));
 
 	const cells: DarasaDetail["cells"] = {};
-	if (learners.length) {
+	// Only lessons this class studies: never a Logto learner's other work.
+	const classLessonIds = mods.flatMap((m) => m.lessons.map((l) => l.id));
+	if (learners.length && classLessonIds.length) {
 		const ids = learners.map((w) => w.id);
 		const logtoIds = learners.map((w) => w.logtoId).filter((x): x is string => !!x);
 		const rows = await db
 			.select()
 			.from(maendeleo)
-			.where(logtoIds.length ? or(inArray(maendeleo.mwanafunziId, ids), inArray(maendeleo.logtoId, logtoIds)) : inArray(maendeleo.mwanafunziId, ids));
+			.where(
+				and(
+					inArray(maendeleo.lessonId, classLessonIds),
+					logtoIds.length ? or(inArray(maendeleo.mwanafunziId, ids), inArray(maendeleo.logtoId, logtoIds)) : inArray(maendeleo.mwanafunziId, ids),
+				),
+			);
 		const byLogto = new Map(learners.filter((w) => w.logtoId).map((w) => [w.logtoId!, w.id]));
 		for (const r of rows) {
 			const wid = r.mwanafunziId ?? (r.logtoId ? byLogto.get(r.logtoId) : undefined);
@@ -291,6 +329,7 @@ export async function getDarasaDetail(darasaId: string): Promise<DarasaDetail> {
 			viaLogto: !!w.logtoId,
 			needsPictures: !w.logtoId && !w.pictureHash,
 			lockedUntil: w.lockedUntil && new Date(w.lockedUntil) > new Date() ? w.lockedUntil : null,
+			lockedForTeacher: w.lockLevel >= LOCK_LEVEL_TEACHER,
 			createdAt: w.createdAt,
 			lastSeenAt: w.lastSeenAt,
 		})),
@@ -301,7 +340,9 @@ export async function getDarasaDetail(darasaId: string): Promise<DarasaDetail> {
 
 /** The learner's last submitted code for one lesson, for the read-only viewer. */
 export async function getLastCode(mwanafunziId: string, lessonId: string) {
-	const { w } = await ownedMwanafunzi(mwanafunziId);
+	const { w, d } = await ownedMwanafunzi(mwanafunziId);
+	// Only a lesson this class studies; anything else could be a Logto learner's private work.
+	if (!(await darasaLessonIds(d.moduleIds ?? [])).includes(lessonId)) return null;
 	const [row] = await db
 		.select({ lastCode: maendeleo.lastCode, attempts: maendeleo.attempts, passed: maendeleo.passed, updatedAt: maendeleo.updatedAt })
 		.from(maendeleo)

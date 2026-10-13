@@ -34,12 +34,18 @@ export async function resolveOwner(): Promise<Owner> {
 	const s = await readLearnerSession();
 	if (s) {
 		const [w] = await db
-			.select({ id: wanafunzi.id, darasaId: wanafunzi.darasaId, archivedAt: madarasa.archivedAt })
+			.select({
+				id: wanafunzi.id,
+				darasaId: wanafunzi.darasaId,
+				sessionVersion: wanafunzi.sessionVersion,
+				archivedAt: madarasa.archivedAt,
+			})
 			.from(wanafunzi)
 			.innerJoin(madarasa, eq(madarasa.id, wanafunzi.darasaId))
 			.where(eq(wanafunzi.id, s.m))
 			.limit(1);
-		if (w && !w.archivedAt) return { kind: "mwanafunzi", mwanafunziId: w.id, darasaId: w.darasaId };
+		// A teacher reset or newly set pictures bump sessionVersion, which signs out older cookies.
+		if (w && !w.archivedAt && w.darasaId === s.d && w.sessionVersion === s.v) return { kind: "mwanafunzi", mwanafunziId: w.id, darasaId: w.darasaId };
 	}
 	const { isAuthenticated, claims } = await getAuth();
 	if (isAuthenticated && claims?.sub) return { kind: "logto", logtoId: claims.sub, claims };

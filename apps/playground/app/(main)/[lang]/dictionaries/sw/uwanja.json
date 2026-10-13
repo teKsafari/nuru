@@ -60,6 +60,8 @@
 			"reset": "Anza upya",
 			"solution": "Onyesha jibu",
 			"solutionLocked": "Jibu litafunguka baada ya kujaribu mara 3",
+			"solutionLoading": "Inaleta jibu...",
+			"solutionFailed": "Imeshindikana kuleta jibu. Angalia mtandao wako, kisha ujaribu tena.",
 			"hintFallback": "Soma kazi tena polepole, kisha linganisha kodi yako na mfano ulio kwenye somo.",
 			"prev": "Iliyotangulia",
 			"next": "Somo linalofuata",
