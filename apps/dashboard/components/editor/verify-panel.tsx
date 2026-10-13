@@ -31,9 +31,9 @@ function Banner({ tone, icon, title, note }: { tone: "ok" | "bad" | "warn"; icon
 			role="status"
 			className={cn(
 				"flex gap-3 rounded-md border-2 border-mstari p-3",
-				tone === "ok" && "bg-[color-mix(in_oklab,var(--mwani)_18%,var(--card))]",
-				tone === "bad" && "bg-[color-mix(in_oklab,var(--pilipili)_16%,var(--card))]",
-				tone === "warn" && "bg-[color-mix(in_oklab,var(--chungwa)_22%,var(--card))]",
+				tone === "ok" && "bg-tint-mwani",
+				tone === "bad" && "bg-tint-pilipili",
+				tone === "warn" && "bg-tint-chungwa",
 			)}
 		>
 			<span className={cn("mt-0.5 shrink-0 [&_svg]:size-5", tone === "ok" && "text-mwani", tone === "bad" && "text-pilipili", tone === "warn" && "text-chungwa")}>{icon}</span>
@@ -104,9 +104,9 @@ export function VerifyPanel({
 					{outcome.tests.length === 0 ? (
 						<Banner tone="warn" icon={<AlertTriangle />} title={v.noTests} />
 					) : outcome.solution.passed ? (
-						<Banner tone="ok" icon={<CircleCheck />} title={v.solutionPasses} note={t.app.methaliSuccess} />
+						<Banner tone="ok" icon={<CircleCheck />} title={v.solutionPasses} />
 					) : (
-						<Banner tone="bad" icon={<CircleX />} title={v.solutionFails} note={t.app.methaliFail} />
+						<Banner tone="bad" icon={<CircleX />} title={v.solutionFails} />
 					)}
 					{outcome.starter &&
 						(outcome.starter.passed ? (

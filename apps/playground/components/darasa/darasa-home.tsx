@@ -134,7 +134,7 @@ export function DarasaHome({ data, dict, lang }: { data: MimiResponse; dict: Dic
 														passed.has(l.id)
 															? "bg-mwani text-white"
 															: attempted.has(l.id)
-																? "bg-chungwa/60 text-wino"
+																? "bg-chungwa text-[#15120f]"
 																: "bg-card text-foreground/70",
 														l.id === next?.id && "ring-3 ring-jua ring-offset-1 ring-offset-card",
 													)}

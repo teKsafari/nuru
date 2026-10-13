@@ -36,7 +36,7 @@ export default async function MadarasaPage() {
 			<div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_24rem]">
 				<section aria-label={s.title}>
 					{madarasa.length === 0 ? (
-						<EmptyState icon={<School />} title={s.empty} body={s.emptyBody} methali={t.app.methaliEmpty} />
+						<EmptyState icon={<School />} title={s.empty} body={s.emptyBody} />
 					) : (
 						<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 							{madarasa.map((d, i) => (

@@ -35,6 +35,15 @@
 	--color-chungwa: var(--chungwa);
 	--color-udongo: var(--udongo);
 	--color-mstari: var(--mstari);
+	/* Tinted surfaces. Never tint by mixing a hue into --card at runtime: over the
+	   warm Usiku card that turns yellow into mustard and red into rust. */
+	--color-tint-jua: var(--tint-jua);
+	--color-tint-mwani: var(--tint-mwani);
+	--color-tint-pilipili: var(--tint-pilipili);
+	--color-tint-bahari: var(--tint-bahari);
+	--color-tint-chungwa: var(--tint-chungwa);
+	--color-tint-zambarau: var(--tint-zambarau);
+	--color-tint-udongo: var(--tint-udongo);
 
 	/* shadcn-compatible semantic tokens */
 	--color-background: var(--background);
@@ -144,6 +153,15 @@
 	--editor-bg: #fffdf6;
 	--terminal-bg: #15120f;
 	--terminal-fg: #fff3d6;
+
+	--tint-jua: #fff0bd;
+	--tint-mwani: #ddf3e6;
+	--tint-pilipili: #ffe2de;
+	--tint-bahari: #e1eaff;
+	--tint-chungwa: #ffe7cf;
+	--tint-zambarau: #ece5ff;
+	--tint-udongo: #f6e1da;
+	--kazi-edge: var(--mstari);
 }
 
 /* USIKU (night) */
@@ -185,6 +203,16 @@
 	--editor-bg: #1a1612;
 	--terminal-bg: #0d0b09;
 	--terminal-fg: #fff3d6;
+
+	/* In Usiku the yellow lives in edges and stickers, never in a surface fill. */
+	--tint-jua: var(--card);
+	--tint-mwani: #12251b;
+	--tint-pilipili: #2b1513;
+	--tint-bahari: #131b2e;
+	--tint-chungwa: #2a1c10;
+	--tint-zambarau: #1d1730;
+	--tint-udongo: #2a1814;
+	--kazi-edge: var(--jua);
 }
 
 @layer base {
@@ -225,6 +253,15 @@
 	background: var(--card);
 	color: var(--card-foreground);
 	border: 2px solid var(--mstari);
+	border-radius: var(--radius-lg);
+	box-shadow: 4px 4px 0 0 var(--kivuli);
+}
+
+/* The task card ("Kazi yako"): pale sun by day, a sun-edged card by night. */
+@utility kazi {
+	background: var(--tint-jua);
+	color: var(--card-foreground);
+	border: 2px solid var(--kazi-edge);
 	border-radius: var(--radius-lg);
 	box-shadow: 4px 4px 0 0 var(--kivuli);
 }

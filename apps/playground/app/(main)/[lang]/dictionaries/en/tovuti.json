@@ -12,7 +12,12 @@
       "reach": "From kindergarten to bibi's house.",
       "ctaStart": "Start Learning",
       "ctaUwanja": "Open Uwanja",
-      "facts": ["Free", "Nothing to install", "Works on phones", "Even offline"],
+      "facts": [
+        "Free",
+        "Nothing to install",
+        "Works on phones",
+        "Even offline"
+      ],
       "card": {
         "run": "Endesha",
         "output": "Output",
@@ -45,9 +50,18 @@
         "title": "The whole class on one screen",
         "body": "Open a class in the Teachers' Room and get a join code. Learners sign in with the code, their name and a picture password. No email and no password, even when they share one phone.",
         "steps": [
-          { "title": "Open a class", "body": "You get a short join code, like KJM-7Q4." },
-          { "title": "Learners join", "body": "Code, name and a picture password. That is all." },
-          { "title": "Follow progress", "body": "A live grid shows who has finished which lesson." }
+          {
+            "title": "Open a class",
+            "body": "You get a short join code, like KJM-7Q4."
+          },
+          {
+            "title": "Learners join",
+            "body": "Code, name and a picture password. That is all."
+          },
+          {
+            "title": "Follow progress",
+            "body": "A live grid shows who has finished which lesson."
+          }
         ],
         "cta": "Open the Teachers' Room",
         "learner": "I have a class code",
@@ -58,17 +72,17 @@
         "legendTrying": "Trying",
         "legendNotYet": "Not yet"
       },
-      "methali": {
-        "lebo": "Proverb",
-        "text": "Mwanzo wa ngoma ni lele.",
-        "meaning": "The dance begins with the opening chant: every big thing starts small. The first lesson takes five minutes."
-      },
       "contributors": {
         "lebo": "Community",
         "title": "Built by a community",
         "body": "Nuru is open source. These people wrote its code, docs and lessons. You are welcome to join them.",
         "all": "See all contributors",
         "join": "Join us on Telegram"
+      },
+      "mwisho": {
+        "lebo": "Start today",
+        "text": "The first lesson takes five minutes.",
+        "meaning": "Nothing to install, no account needed. Open it and start."
       }
     },
     "footer": {
@@ -110,7 +124,7 @@
       "start": "Start the journey",
       "continue": "Continue",
       "upNext": "Up next",
-      "allDone": "You finished the whole journey. Haba na haba hujaza kibaba: little by little fills the measure.",
+      "allDone": "You finished the whole journey.",
       "savedHere": "Your progress is saved on this device.",
       "lessonDone": "done",
       "lessonTodo": "not yet",

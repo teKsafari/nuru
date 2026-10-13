@@ -70,10 +70,6 @@
 			"completed": "Completed",
 			"successTitle": "Well done!",
 			"successText": "You finished this lesson.",
-			"methaliSuccess": "Haba na haba hujaza kibaba",
-			"methaliSuccessGloss": "Little by little, the measure fills.",
-			"methaliFail": "Kuteleza si kuanguka",
-			"methaliFailGloss": "A slip is not a fall.",
 			"failText": "{passed} of {total} tests passed. Fix your code and try again.",
 			"testsTitle": "Tests",
 			"testsEmpty": "Press Submit to have your code checked.",
@@ -98,7 +94,8 @@
 				"kobe_picha": "Kobe drawing",
 				"ubao_mfuatano": "LED sequence"
 			},
-			"tryIt": "Try it"
+			"tryIt": "Try it",
+			"failTitle": "Not yet."
 		}
 	}
 }

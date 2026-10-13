@@ -363,7 +363,7 @@ export function JoinFlow({
 					id="darasa-kosa"
 					role="alert"
 					className={cn(
-						"mt-4 rounded-md border-2 border-mstari bg-pilipili/15 px-3 py-2 text-sm font-semibold",
+						"mt-4 rounded-md border-2 border-mstari bg-tint-pilipili px-3 py-2 text-sm font-semibold",
 						(!error || lockSec > 0) && "hidden",
 					)}
 				>

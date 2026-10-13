@@ -15,14 +15,13 @@ export function PageHead({ eyebrow, title, lead, actions, className }: { eyebrow
 	);
 }
 
-/** Empty state on graph paper, carrying the "first step" methali. */
-export function EmptyState({ icon, title, body, methali, action }: { icon: ReactNode; title: ReactNode; body?: ReactNode; methali?: string; action?: ReactNode }) {
+/** Empty state on graph paper. */
+export function EmptyState({ icon, title, body, action }: { icon: ReactNode; title: ReactNode; body?: ReactNode; action?: ReactNode }) {
 	return (
 		<div className="gridi flex flex-col items-center rounded-lg border-2 border-dashed border-mstari px-6 py-14 text-center">
 			<div className="mji mb-5 flex size-16 items-center justify-center bg-jua text-[#15120f] [&_svg]:size-8">{icon}</div>
 			<h3 className="font-display text-xl font-bold">{title}</h3>
 			{body && <p className="mt-2 max-w-sm text-muted-foreground">{body}</p>}
-			{methali && <p className="mt-4 text-sm italic text-muted-foreground">&ldquo;{methali}&rdquo;</p>}
 			{action && <div className="mt-6">{action}</div>}
 		</div>
 	);

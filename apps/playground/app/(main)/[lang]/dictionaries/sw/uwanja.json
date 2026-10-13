@@ -70,10 +70,6 @@
 			"completed": "Umekamilisha",
 			"successTitle": "Hongera!",
 			"successText": "Umekamilisha somo hili.",
-			"methaliSuccess": "Haba na haba hujaza kibaba",
-			"methaliSuccessGloss": "",
-			"methaliFail": "Kuteleza si kuanguka",
-			"methaliFailGloss": "",
 			"failText": "Majaribio {passed} kati ya {total} yamefaulu. Rekebisha kodi yako kisha ujaribu tena.",
 			"testsTitle": "Majaribio",
 			"testsEmpty": "Bonyeza Wasilisha ili kodi yako ikaguliwe.",
@@ -98,7 +94,8 @@
 				"kobe_picha": "Picha ya kobe",
 				"ubao_mfuatano": "Mfuatano wa taa"
 			},
-			"tryIt": "Jaribu"
+			"tryIt": "Jaribu",
+			"failTitle": "Bado kidogo."
 		}
 	}
 }

@@ -33,7 +33,7 @@ export function ModulePicker({
 							onClick={() => onChange(on ? value.filter((id) => id !== m.id) : [...value, m.id])}
 							className={cn(
 								"flex min-h-12 w-full items-center gap-3 rounded-md border-2 border-mstari px-3 py-2 text-left transition-[transform,box-shadow] duration-100",
-								on ? "bg-jua/40 shadow-kivuli-sm" : "bg-card hover:bg-karatasi-2",
+								on ? "bg-tint-jua shadow-kivuli-sm dark:border-jua" : "bg-card hover:bg-karatasi-2",
 							)}
 						>
 							<span

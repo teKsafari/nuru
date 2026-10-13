@@ -72,7 +72,7 @@ export const LessonPreview = memo(function LessonPreview({
 			</Markdown>
 
 			{task.trim() && (
-				<section className="mji relative mt-8 bg-[color-mix(in_oklab,var(--jua)_22%,var(--card))] p-5 pt-6">
+				<section className="kazi relative mt-8 p-5 pt-6">
 					<span className="lebo absolute -top-3 left-4 inline-flex items-center gap-1.5 rounded-sm border-2 border-mstari bg-jua px-2 py-0.5 text-[#15120f]">
 						<Target className="size-3.5" />
 						{labels.task}

@@ -120,13 +120,13 @@ export const PICHA_MAJINA: Record<PichaId, string> = {
 
 /** Flat tile colour behind each picture, so learners can also remember by colour. */
 export const PICHA_RANGI: Record<PichaId, string> = {
-	simba: "bg-jua/30",
-	tembo: "bg-bahari/20",
-	twiga: "bg-chungwa/25",
-	pundamilia: "bg-zambarau/25",
-	kuku: "bg-pilipili/20",
-	samaki: "bg-bahari/25",
-	embe: "bg-mwani/20",
-	nazi: "bg-udongo/20",
-	ndizi: "bg-jua/40",
+	simba: "bg-tint-jua",
+	tembo: "bg-tint-bahari",
+	twiga: "bg-tint-chungwa",
+	pundamilia: "bg-tint-zambarau",
+	kuku: "bg-tint-pilipili",
+	samaki: "bg-tint-bahari",
+	embe: "bg-tint-mwani",
+	nazi: "bg-tint-udongo",
+	ndizi: "bg-tint-jua",
 };

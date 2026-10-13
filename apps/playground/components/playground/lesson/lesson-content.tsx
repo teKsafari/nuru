@@ -9,7 +9,8 @@ import { parseHighlights } from "@/lib/utils/highlights";
 import { uwanjaHref } from "@/lib/share";
 
 // The +++highlight+++ convention marks the part of an example the learner should look at.
-const HIGHLIGHT_CLASS = "bg-jua/45 rounded-[3px] px-0.5 text-[#15120f] font-semibold";
+// Solid sun mark; its ink beats the syntax colours of the tokens inside it.
+const HIGHLIGHT_CLASS = "bg-jua rounded-[3px] px-0.5 font-semibold text-[#15120f] [&_*]:text-[#15120f]!";
 const extensions = [nuru];
 
 function CodeBlock({ source, lang, theme, tryLabel }: { source: string; lang: string; theme: "light" | "dark"; tryLabel: string }) {
@@ -82,7 +83,7 @@ export const LessonContent = memo(function LessonContent({ description, task, hi
 			</Markdown>
 
 			{task && (
-				<section className="mji relative mt-8 bg-[color-mix(in_oklab,var(--jua)_22%,var(--card))] p-5 pt-6" data-testid="task">
+				<section className="kazi relative mt-8 p-5 pt-6" data-testid="task">
 					<span className="lebo absolute -top-3 left-4 inline-flex items-center gap-1.5 rounded-sm border-2 border-mstari bg-jua px-2 py-0.5 text-wino">
 						<Target className="size-3.5" />
 						{labels.task}
@@ -103,7 +104,7 @@ export const LessonContent = memo(function LessonContent({ description, task, hi
 			)}
 
 			{hint && (
-				<section className="relative mt-7 rounded-lg border-2 border-dashed border-bahari bg-[color-mix(in_oklab,var(--bahari)_10%,var(--card))] p-4 pt-5" data-testid="hint">
+				<section className="relative mt-7 rounded-lg border-2 border-dashed border-bahari bg-tint-bahari p-4 pt-5" data-testid="hint">
 					<span className="lebo absolute -top-3 left-4 inline-flex items-center gap-1.5 rounded-sm border-2 border-mstari bg-bahari px-2 py-0.5 text-white">
 						<Lightbulb className="size-3.5" />
 						{labels.hint}

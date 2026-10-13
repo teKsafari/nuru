@@ -9,12 +9,9 @@ const sw = {
 	app: {
 		name: "Chumba cha Walimu",
 		tagline: "Nuru kwa walimu",
-		methaliEmpty: "Mwanzo wa ngoma ni lele",
-		methaliSuccess: "Haba na haba hujaza kibaba",
-		methaliFail: "Kuteleza si kuanguka",
 	},
 	nav: {
-		menu: "Menyu",
+		menu: "Menu",
 		moduli: "Moduli",
 		madarasa: "Madarasa",
 		soko: "Soko",
@@ -229,9 +226,6 @@ const en: Dict = {
 	app: {
 		name: "Teachers' Room",
 		tagline: "Nuru for teachers",
-		methaliEmpty: "Mwanzo wa ngoma ni lele",
-		methaliSuccess: "Haba na haba hujaza kibaba",
-		methaliFail: "Kuteleza si kuanguka",
 	},
 	nav: {
 		menu: "Menu",

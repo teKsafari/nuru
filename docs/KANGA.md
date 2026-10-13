@@ -12,7 +12,7 @@ Two sources shaped it.
   - the **mji**, the central field;
   - the **jina**, a printed Swahili saying.
 
-  Nuru screens use the same structure: patterned edges, one heavy-bordered field of focus, and a methali where the product speaks to the learner.
+  Nuru screens use the first two: patterned edges and one heavy-bordered field of focus.
 
 ## Vocabulary
 
@@ -48,13 +48,7 @@ Modes are **Mchana** (day, default) and **Usiku** (night, `.dark`).
    - UI copy is written in Swahili, then translated, never the other way round.
    - Nuru keywords are never translated in code samples or UI labels.
    - Technical loanwords keep their Swahili form (`kitendakazi`, `kibadilika`, `orodha`).
-6. **The methali is the voice.** Feedback moments carry a proverb. Use only genuine Swahili methali, never proverbs translated from other languages:
-
-   | Moment | Methali |
-   |---|---|
-   | Success | *Haba na haba hujaza kibaba* (little by little fills the measure) |
-   | Failure | *Kuteleza si kuanguka* (to slip is not to fall) |
-   | Empty state | *Mwanzo wa ngoma ni lele* (the dance begins with the opening chant) |
+6. **Feedback is plain and specific.** Tell the learner what passed, what failed and what to do next, in short Swahili. No proverbs or slogans in functional UI: a learner fixing a bug needs the failing test, not a saying.
 
 7. **Motion is short and physical** (100 to 150ms). Everything respects `prefers-reduced-motion`.
 8. **Phones come first.** Targets are 44px or larger. Layouts must work at 360px wide, because most learners share an Android phone.

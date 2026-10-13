@@ -196,7 +196,7 @@ export function TestCard({
 				</div>
 
 				{result && !result.passed && (result.actualOutput || result.error) && (
-					<div className="rounded-md border-2 border-dashed border-pilipili bg-[color-mix(in_oklab,var(--pilipili)_8%,var(--card))] p-2">
+					<div className="rounded-md border-2 border-dashed border-pilipili bg-tint-pilipili p-2">
 						<p className="lebo mb-1 text-pilipili">{t.verify.got}</p>
 						<pre className="max-h-32 overflow-auto whitespace-pre-wrap font-mono text-xs">{result.actualOutput || result.error}</pre>
 					</div>

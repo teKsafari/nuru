@@ -32,7 +32,6 @@ export default async function EducatorModulesPage() {
 					icon={<BookOpen />}
 					title={t.modules.empty}
 					body={t.modules.emptyBody}
-					methali={t.app.methaliEmpty}
 					action={
 						<Button asChild variant="outline">
 							<Link href="/educator/modules/create">

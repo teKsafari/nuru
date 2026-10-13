@@ -89,7 +89,6 @@ export default async function Home() {
 								</div>
 							))}
 						</div>
-						<div className="border-t-2 border-mstari px-4 py-2 text-sm italic text-muted-foreground">&ldquo;{t.app.methaliSuccess}&rdquo;</div>
 					</div>
 				</section>
 
@@ -128,8 +127,7 @@ export default async function Home() {
 			</main>
 
 			<footer className="border-t-2 border-mstari">
-				<div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 text-sm text-muted-foreground sm:px-8">
-					<p className="italic">&ldquo;{t.app.methaliEmpty}&rdquo;</p>
+				<div className="mx-auto flex max-w-6xl flex-wrap items-center justify-end gap-3 px-4 py-4 text-sm text-muted-foreground sm:px-8">
 					<p className="lebo">teKsafari · Nuru</p>
 				</div>
 				<div className="pindo-nukta mb-2 text-udongo" aria-hidden />

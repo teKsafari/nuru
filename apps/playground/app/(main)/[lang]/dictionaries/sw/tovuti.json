@@ -12,7 +12,12 @@
       "reach": "Kuanzia chekechea hadi nyumbani kwa bibi.",
       "ctaStart": "Anza Kujifunza",
       "ctaUwanja": "Fungua Uwanja",
-      "facts": ["Bure", "Hakuna kusakinisha", "Inafanya kazi kwenye simu", "Hata bila intaneti"],
+      "facts": [
+        "Bure",
+        "Hakuna kusakinisha",
+        "Inafanya kazi kwenye simu",
+        "Hata bila intaneti"
+      ],
       "card": {
         "run": "Endesha",
         "output": "Matokeo",
@@ -45,9 +50,18 @@
         "title": "Darasa zima kwenye skrini moja",
         "body": "Fungua darasa kwenye Chumba cha Walimu na upate msimbo wa kujiunga. Wanafunzi wanaingia kwa msimbo, jina lao na picha ya siri. Hakuna barua pepe wala nenosiri, hata wanaposhirikiana simu moja.",
         "steps": [
-          { "title": "Fungua darasa", "body": "Unapata msimbo mfupi wa kujiunga, kama KJM-7Q4." },
-          { "title": "Wanafunzi wanajiunga", "body": "Msimbo, jina na picha ya siri. Inatosha." },
-          { "title": "Fuatilia maendeleo", "body": "Gridi inaonyesha nani amemaliza somo gani, papo hapo." }
+          {
+            "title": "Fungua darasa",
+            "body": "Unapata msimbo mfupi wa kujiunga, kama KJM-7Q4."
+          },
+          {
+            "title": "Wanafunzi wanajiunga",
+            "body": "Msimbo, jina na picha ya siri. Inatosha."
+          },
+          {
+            "title": "Fuatilia maendeleo",
+            "body": "Gridi inaonyesha nani amemaliza somo gani, papo hapo."
+          }
         ],
         "cta": "Fungua Chumba cha Walimu",
         "learner": "Nina msimbo wa darasa",
@@ -58,17 +72,17 @@
         "legendTrying": "Anajaribu",
         "legendNotYet": "Bado"
       },
-      "methali": {
-        "lebo": "Methali",
-        "text": "Mwanzo wa ngoma ni lele.",
-        "meaning": "Ngoma huanza kwa lele: kila jambo kubwa huanza kidogo. Somo la kwanza linachukua dakika tano. Anza leo."
-      },
       "contributors": {
         "lebo": "Jumuiya",
         "title": "Imejengwa na jumuiya",
         "body": "Nuru ni programu huria. Watu hawa wameandika kodi, nyaraka na masomo yake. Wewe pia unakaribishwa.",
         "all": "Ona wachangiaji wote",
         "join": "Jiunge nasi Telegram"
+      },
+      "mwisho": {
+        "lebo": "Anza leo",
+        "text": "Somo la kwanza linachukua dakika tano.",
+        "meaning": "Hakuna cha kusakinisha, hakuna akaunti. Fungua na uanze."
       }
     },
     "footer": {
@@ -110,7 +124,7 @@
       "start": "Anza safari",
       "continue": "Endelea",
       "upNext": "Somo linalofuata",
-      "allDone": "Umemaliza safari yote. Haba na haba hujaza kibaba.",
+      "allDone": "Umemaliza safari yote.",
       "savedHere": "Maendeleo yako yanahifadhiwa kwenye kifaa hiki.",
       "lessonDone": "limekamilika",
       "lessonTodo": "bado",

@@ -100,7 +100,7 @@ function KipandeView({ k, lang, t }: { k: Kipande; lang: Lang; t: KamusiLabels }
 			);
 		case "dokezo":
 			return (
-				<div className="flex max-w-3xl gap-3 rounded-lg border-2 border-mstari bg-jua/25 p-3.5 pr-4 dark:bg-jua/10">
+				<div className="flex max-w-3xl gap-3 rounded-lg border-2 border-mstari bg-tint-jua p-3.5 pr-4">
 					<Lightbulb className="mt-0.5 size-5 shrink-0" aria-hidden />
 					<p className="leading-relaxed">
 						<span className="sr-only">{t.tip}: </span>

@@ -166,7 +166,7 @@ export function DarasaRoom({ initial, modules }: { initial: DarasaDetail; module
 				</div>
 				<GridLegend s={s} />
 				{detail.wanafunzi.length === 0 ? (
-					<EmptyState icon={<Users />} title={s.noLearners} body={s.noLearnersBody} methali={t.app.methaliEmpty} />
+					<EmptyState icon={<Users />} title={s.noLearners} body={s.noLearnersBody} />
 				) : (
 					<ProgressGrid detail={detail} lang={lang} s={s} onOpen={setTarget} />
 				)}

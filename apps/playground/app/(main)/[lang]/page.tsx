@@ -199,15 +199,15 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 				</div>
 			</section>
 
-			{/* Methali */}
+			{/* Closing call to action */}
 			<section className="bg-jua text-wino">
 				<div className="pindo text-[#15120f]" aria-hidden />
 				<div className="mx-auto max-w-4xl px-5 py-14 text-center sm:px-8 md:py-20">
-					<p className="lebo">{t.methali.lebo}</p>
+					<p className="lebo">{t.mwisho.lebo}</p>
 					<blockquote className="mt-4 font-display text-[clamp(2rem,5.5vw,3.75rem)] leading-[1.02] font-extrabold tracking-[-0.03em] text-balance">
-						<p lang="sw">&ldquo;{t.methali.text}&rdquo;</p>
+						<p>{t.mwisho.text}</p>
 					</blockquote>
-					<p className="mx-auto mt-5 max-w-xl text-lg font-medium text-wino/80">{t.methali.meaning}</p>
+					<p className="mx-auto mt-5 max-w-xl text-lg font-medium text-wino/80">{t.mwisho.meaning}</p>
 					<Button asChild size="lg" variant="ink" className="mt-8">
 						<Link href={`/${lang}/anza`}>
 							{t.ctaStart}

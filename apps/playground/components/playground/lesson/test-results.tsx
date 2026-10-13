@@ -23,10 +23,7 @@ export interface ResultsLabels {
 	checking: string;
 	successTitle: string;
 	successText: string;
-	methaliSuccess: string;
-	methaliSuccessGloss: string;
-	methaliFail: string;
-	methaliFailGloss: string;
+	failTitle: string;
 	failText: string;
 	testTypes: Record<string, string>;
 }
@@ -67,12 +64,6 @@ export function TestResults({ tests, verdict, checking, labels, nextLabel, onNex
 					<div className="flex flex-col items-start gap-3 p-5">
 						<h3 className="font-display text-3xl font-extrabold">{labels.successTitle}</h3>
 						<p className="text-sm text-muted-foreground">{labels.successText}</p>
-						<blockquote className="mt-1">
-							<p className="font-display text-xl font-bold italic">
-								<span className="alama-jua">{labels.methaliSuccess}</span>
-							</p>
-							{labels.methaliSuccessGloss && <p className="mt-1 text-sm text-muted-foreground">{labels.methaliSuccessGloss}</p>}
-						</blockquote>
 						{onNext && (
 							<Button size="lg" onClick={onNext} className="mt-2 h-14 w-full px-8 text-lg sm:w-auto" data-testid="next-lesson">
 								{nextLabel}
@@ -85,10 +76,9 @@ export function TestResults({ tests, verdict, checking, labels, nextLabel, onNex
 			)}
 
 			{!checking && verdict && !verdict.passed && (
-				<div className="mb-5 rounded-lg border-2 border-mstari bg-[color-mix(in_oklab,var(--pilipili)_14%,var(--card))] p-4 shadow-kivuli-sm" data-testid="failure">
-					<p className="font-display text-lg font-bold italic">{labels.methaliFail}</p>
-					{labels.methaliFailGloss && <p className="text-sm text-muted-foreground">{labels.methaliFailGloss}</p>}
-					<p className="mt-2 text-sm">{fill(labels.failText, { passed: passedCount, total: tests.length })}</p>
+				<div className="mb-5 rounded-lg border-2 border-mstari bg-tint-pilipili p-4 shadow-kivuli-sm" data-testid="failure">
+					<p className="font-display text-lg font-bold">{labels.failTitle}</p>
+					<p className="mt-1 text-sm">{fill(labels.failText, { passed: passedCount, total: tests.length })}</p>
 				</div>
 			)}
 
@@ -116,7 +106,7 @@ export function TestResults({ tests, verdict, checking, labels, nextLabel, onNex
 							data-passed={r ? (r.passed ? "1" : "0") : ""}
 							className={cn(
 								"rounded-lg border-2 border-mstari bg-card p-3",
-								r?.passed && "bg-[color-mix(in_oklab,var(--mwani)_10%,var(--card))]",
+								r?.passed && "bg-tint-mwani",
 							)}
 						>
 							<div className="flex flex-wrap items-center gap-2">

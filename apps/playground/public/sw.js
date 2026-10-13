@@ -228,7 +228,6 @@ small{display:block;margin-top:20px;color:#6b6257;font-style:italic}
 			: "This page is not saved on your device yet. Uwanja and the pages you opened before still work without internet."
 	}</p>
 <a href="/${lang}/uwanja">${sw ? "Fungua Uwanja" : "Open Uwanja"}</a><a class="pili" href="javascript:location.reload()">${sw ? "Jaribu tena" : "Try again"}</a>
-<small>Kuteleza si kuanguka.</small>
 </main></body></html>`;
 	return new Response(html, {
 		status: 503,

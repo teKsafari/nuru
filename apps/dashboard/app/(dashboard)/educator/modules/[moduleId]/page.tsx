@@ -62,7 +62,6 @@ export default async function ModuleBuilderPage({ params }: { params: Promise<{ 
 							icon={<FileText />}
 							title={t.modules.noLessons}
 							body={t.modules.noLessonsBody}
-							methali={t.app.methaliEmpty}
 							action={
 								<Button asChild variant="outline">
 									<Link href={`/educator/modules/${module.id}/lessons/create`}>

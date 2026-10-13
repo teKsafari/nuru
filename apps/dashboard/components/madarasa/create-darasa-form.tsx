@@ -61,7 +61,7 @@ export function CreateDarasaForm({ modules }: { modules: AssignableModule[] }) {
 			</fieldset>
 
 			{error && (
-				<p role="alert" className="mt-4 rounded-md border-2 border-mstari bg-pilipili/15 px-3 py-2 text-sm font-semibold">
+				<p role="alert" className="mt-4 rounded-md border-2 border-mstari bg-tint-pilipili px-3 py-2 text-sm font-semibold">
 					{error}
 				</p>
 			)}
