@@ -48,13 +48,13 @@ Modes are **Mchana** (day, default) and **Usiku** (night, `.dark`).
    - UI copy is written in Swahili, then translated, never the other way round.
    - Nuru keywords are never translated in code samples or UI labels.
    - Technical loanwords keep their Swahili form (`kitendakazi`, `kibadilika`, `orodha`).
-6. **The methali is the voice.** Feedback moments carry a proverb:
+6. **The methali is the voice.** Feedback moments carry a proverb. Use only genuine Swahili methali, never proverbs translated from other languages:
 
    | Moment | Methali |
    |---|---|
-   | Success | *Haba na haba hujaza kibaba* |
-   | Failure | *Kuteleza si kuanguka* |
-   | Empty state | *Safari ya maili elfu huanza na hatua moja* |
+   | Success | *Haba na haba hujaza kibaba* (little by little fills the measure) |
+   | Failure | *Kuteleza si kuanguka* (to slip is not to fall) |
+   | Empty state | *Mwanzo wa ngoma ni lele* (the dance begins with the opening chant) |
 
 7. **Motion is short and physical** (100 to 150ms). Everything respects `prefers-reduced-motion`.
 8. **Phones come first.** Targets are 44px or larger. Layouts must work at 360px wide, because most learners share an Android phone.
