@@ -12,14 +12,11 @@
 		"node"
 	],
 	"scripts": {
-		"update-core": "git submodule update --remote deps/nuru",
+		"update-core": "git submodule update --remote core/Nuru",
 		"test": "node --test test/*.test.mjs",
 		"build:wasm": "bash scripts/build-wasm.sh",
 		"build": "tsc",
-		"dev:wasm": "air",
-		"dev:ts": "tsc --watch",
-		"dev:serve": "node scripts/serve.js",
-		"dev": "turbo run dev:wasm dev:ts dev:serve",
+		"dev": "tsc --watch",
 		"prepublishOnly": "pnpm run build:wasm && pnpm run build",
 		"build:wasm:legacy": "cd core/Nuru && GOOS=js GOARCH=wasm tinygo build -o ../../main.wasm"
 	},

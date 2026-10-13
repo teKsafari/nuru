@@ -1,41 +1,55 @@
-![Nuru Monorepo Banner](./mawio.jpeg)
+![Nuru](./mawio.jpeg)
 
-# Nuru Monorepo
+# Nuru
 
-## Mission
+**Lugha ya kwanza ya kiprogramu ya Kiswahili, kwenye kivinjari chochote.**
+The first Swahili programming language, running in any browser.
 
-Our goal is to make Nuru accessible to everyone, everywhere. By compiling the core Nuru interpreter to WebAssembly (WASM), we enable:
-- **Interactive Learning**: Run Nuru code directly in your browser.
-- **Zero-Install Setup**: No need to install Go or command-line tools to get started.
-- **Cross-Platform Compatibility**: Use Nuru on any device with a modern web browser.
+teKsafari describes Nuru as the language that "changes where the learner starts. It removes the translation layer between thought and expression." This repository is the platform that carries that promise from a single phone to a whole classroom:
+
+- **Masomo**: 66 guided lessons in 8 modules, every one auto-graded. Each reference solution is executed against its tests on every check.
+- **Uwanja**: a free playground with an interactive terminal (`jaza()` really waits for you), a **Kobe** turtle-graphics canvas and an **Ubao** virtual electronics board. Programs share as a link, ready for WhatsApp.
+- **Kamusi**: a Swahili-first language reference. Every example is runnable and verified.
+- **Darasa**: classrooms for shared devices. A teacher opens a class and gets a join code. Learners sign in with code, name and a picture password, no email needed. The teacher watches a live progress grid.
+- **Chumba cha Walimu**: the teachers' dashboard. It holds classes, a bilingual lesson editor, and in-browser verification of lessons.
+
+Swahili is the default everywhere. English is a translation.
+
+Read [docs/MAONO.md](./docs/MAONO.md) for the product vision and [docs/KANGA.md](./docs/KANGA.md) for the design language.
+
+## Layout
+
+| Path | What it is |
+|---|---|
+| `apps/playground` | Learner app (Next.js 15): landing page, lessons, Uwanja, Kamusi, Darasa, API routes. |
+| `apps/dashboard` | Teachers' app (Next.js 15): modules, lesson editor, madarasa. |
+| `packages/wasm` | `@nuru/wasm`, the interpreter. `core/Nuru` (upstream submodule, untouched), `web/` (Go entrypoint adding the `kobe` and `ubao` modules), `worker/` (TinyGo build + Web Worker host), `runtime.ts` (browser client), `node/` (Node runner for tests and tools). |
+| `packages/ui` | `@nuru/ui`: Kanga tokens (`kanga.css`), components, the Nuru editor grammar with Swahili autocomplete, and the shared lesson grader. |
+| `packages/db` | `@nuru/db`: Drizzle schema and migrations (Neon in production, any Postgres locally). |
+| `packages/mtaala` | `@nuru/mtaala`: the curriculum as Markdown, plus `hakiki` (verify) and `seed`. |
+
+## Quick start
+
+```bash
+pnpm install
+docker run -d --name nuru-pg -p 5432:5432 -e POSTGRES_PASSWORD=dev -e POSTGRES_DB=nuru postgres:17
+export DATABASE_URL=postgres://postgres:dev@localhost:5432/nuru   # also put it in apps/*/.env.local
+pnpm --filter @nuru/db db:migrate
+pnpm --filter @nuru/mtaala seed
+pnpm dev
+```
+
+Set `NURU_DEV_AUTH=1` in `apps/dashboard/.env.local` to sign in to the dashboard locally as a fake teacher, because Logto cannot redirect to a dev machine. The bypass is ignored in production builds.
+
+More detail: [contributing/getting-started.md](./contributing/getting-started.md).
+
+## Checks
+
+```bash
+pnpm --filter @nuru/wasm test        # interpreter runtime: jaza, kobe, ubao, timeouts
+pnpm --filter @nuru/mtaala hakiki    # every lesson: solution passes, starter code does not
+```
 
 ---
 
-## Project Structure
-
-This repository is optimized as a monorepo utilizing **pnpm workspaces** and **Turborepo** for clean, scalable module federation. For an overview of our monorepo architecture, please refer to [MONOREPO.md](./MONOREPO.md).
-
-### Applications (`/apps`)
-
-- **[`playground`](./apps/playground)**: The primary **Nuru Playground**. An interactive, modern Next.js 15 application that lets users write, execute, and learn Nuru interactively in Swahili and English.
-- **[`dashboard`](./apps/dashboard)**: The **Educator Dashboard**. A Next.js 15 administrative interface for educators to create, organize, and manage localized lessons and learning modules.
-
-### Packages (`/packages`)
-
-- **[`@nuru/wasm`](./packages/wasm)**: The core compilation layer. Features the Nuru interpreter written in Go, compiled to WASM via TinyGo, paired with a type-safe TypeScript/React bridge.
-- **[`@nuru/db`](./packages/db)**: The centralized data layer using Drizzle ORM to manage Postgres schemas and relationships for users, modules, and lessons.
-- **[`@nuru/ui`](./packages/ui)**: The shared design system and Tailwind CSS 4 components, keeping user interface design seamless and uniform across all our apps.
-
----
-
-## Getting Started
-
-Whether you want to set up the development environment, contribute code, or author interactive lesson content, we have detailed guidelines prepared:
-
-1. **[Getting Started Locally](./contributing/getting-started.md)**: Setup prerequisites (Node.js 22, pnpm, Go, TinyGo) and start the local monorepo development pipeline.
-2. **[Contributing Lessons](./contributing/lessons.md)**: A complete, step-by-step guide to writing and structuring interactive Nuru programming lessons in Swahili and English.
-3. **[Contributing Code](./contributing/code.md)**: Standards, architecture conventions, and the Pull Request workflow for coding contributions.
-
----
-
-*Powered by [NuruProgramming](https://github.com/NuruProgramming).*
+*Imeundwa na [teKsafari](https://teksafari.org). Nuru lugha: [NuruProgramming](https://github.com/NuruProgramming).*

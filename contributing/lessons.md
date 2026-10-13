@@ -1,4 +1,4 @@
-**Note:** Lessons are no longer written as local Markdown files. The platform is entirely database-driven. The content dir is still maintained for testing reasons.
+**Two ways to author lessons.** The core curriculum lives as Markdown in [`packages/mtaala`](../packages/mtaala/README.md). It is reviewed in pull requests, verified with `pnpm --filter @nuru/mtaala hakiki` and loaded with `pnpm --filter @nuru/mtaala seed`. Teachers' own modules are written in the dashboard editor below. Its **Hakiki** panel runs the same checks in the browser.
 
 ## Authoring Workflow via the Dashboard
 
@@ -8,9 +8,9 @@ To author or edit lessons, you will use the **Educator Dashboard** (`apps/dashbo
    Follow the [Getting Started](./getting-started.md) guide to spin up the monorepo locally (`turbo run dev`).
     <!-- Make sure your database is running and seeded. -->
 2. **Access the Dashboard**:
-   Navigate to `http://nuru-dashboard.localhost:3941` and log in. You must have a "Super Admin" role assigned via Logto to see existing lessons.
+   Navigate to `http://nuru-dashboard.localhost:3941` and log in. You need the "Educator" or "Super Admin" role in Logto. Locally, set `NURU_DEV_AUTH=1` instead.
 3. **The Editor Interface**:
-   The dashboard provides a rich-text editor powered by **Tiptap**
+   The dashboard provides a rich-text editor with Kiswahili and English side by side, a live preview, and the Hakiki panel
 
 ## Data Structure & Localization
 
@@ -43,6 +43,8 @@ Keep the following in mind:
 - **Tests**: The playground evaluates the user's code using an array of `tests`. These tests define how the code is validated. Test types include:
 - `io`: Evaluates the user's code by feeding it specific input and asserting the output.
 - `exact_output` / `match_output`: Asserts that the code's output exactly matches a string or passes a Regex pattern.
-- `match_code`: Validates the user's raw code string against a Regex pattern (e.g., ensuring they used a `while` loop).
+- `match_code`: Validates the user's raw code string against a Regex pattern (e.g., ensuring they used a `wakati` loop).
+- `kobe_picha`: The learner's kobe drawing must match the reference drawing. Any path that draws the same picture passes.
+- `ubao_mfuatano`: The LED board must go through the same sequence of states as the reference solution.
 
 4. **Custom Highlighting**: The playground's custom `CodeEditor` supports syntax highlighting. You can use specific markdown notations (like `+++highlight+++`) to draw attention to critical parts of the code snippets in your explanations.

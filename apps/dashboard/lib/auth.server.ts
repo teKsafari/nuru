@@ -6,6 +6,7 @@ import { db, users } from "@nuru/db";
 
 import { logtoConfig } from "@/app/logto";
 import { AuthSession, AuthContextType } from "@/types/auth";
+import { unstable_rethrow } from "next/navigation";
 
 // Every server read of the Logto session goes through getAuth() so local
 // development can bypass Logto (it cannot redirect to a dev machine).
@@ -55,6 +56,8 @@ export async function getAuth(opts?: { fetchUserInfo?: boolean }): Promise<AuthR
 		const { isAuthenticated, claims } = await getLogtoContext(logtoConfig, opts);
 		return { isAuthenticated, claims: claims ?? null };
 	} catch (e) {
+		// Let Next see its own control-flow errors (dynamic rendering, redirects).
+		unstable_rethrow(e);
 		console.warn("[auth] getLogtoContext failed:", e instanceof Error ? e.message : e);
 		return { isAuthenticated: false, claims: null };
 	}
