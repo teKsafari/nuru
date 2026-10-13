@@ -21,6 +21,12 @@ if [ -z "$GOROOT_125" ]; then
 fi
 
 cd web
-PATH="$GOROOT_125/bin:$PATH" GOTOOLCHAIN=local "$TINYGO" build -target wasm -no-debug -opt=2 -o ../worker/nuru.wasm .
+# Programs run on a goroutine. TinyGo's default 64KB goroutine stack overflows
+# after a few levels of Nuru recursion (n * f(n - 1) crashed at depth 3).
+# 1MB allows about 200 nested Nuru calls. Bigger stacks cost GC pauses: the
+# collector scans the whole stack, and 4MB gave multi-second pauses. Keep -opt=2: with
+# -opt=z a runaway recursion corrupts the heap instead of crashing, and every
+# later run in that worker fails with "Neno Halifahamiki: andika".
+PATH="$GOROOT_125/bin:$PATH" GOTOOLCHAIN=local "$TINYGO" build -target wasm -no-debug -opt=2 -stack-size=1MB -o ../worker/nuru.wasm .
 cp "$(dirname "$TINYGO")/../targets/wasm_exec.js" ../worker/wasm_exec.js
 ls -la ../worker/nuru.wasm

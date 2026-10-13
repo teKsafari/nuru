@@ -1,8 +1,7 @@
-import { getLogtoContext } from "@logto/next/server-actions";
-import { logtoConfig } from "@/app/logto";
+import { getAuth } from "@/lib/auth.server";
 
 export async function requirePermission(requiredScope?: string) {
-	const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
+	const { isAuthenticated, claims } = await getAuth();
 
 	if (!isAuthenticated || !claims) {
 		throw new Error("Unauthorized: Please sign in");
@@ -30,6 +29,10 @@ export async function requirePermission(requiredScope?: string) {
         if (claims.roles?.includes('Educator')) {
             isAuthorized = true;
         }
+    } else if (requiredScope === 'manage:darasa' || requiredScope === 'Educator') {
+        if (claims.roles?.includes('Educator')) {
+            isAuthorized = true;
+        }
     }
 
 	if (!isAuthorized) {
@@ -49,4 +52,10 @@ export function verifyOwnership(resourceOwnerId: string, currentUserSub: string,
     }
 
     return true;
+}
+
+/** Educator or Super Admin. Returns the caller's sub and whether they see every class. */
+export async function requireEducator() {
+    const claims = await requirePermission('manage:darasa');
+    return { sub: claims.sub, isSuperAdmin: !!claims.roles?.includes('Super Admin'), claims };
 }

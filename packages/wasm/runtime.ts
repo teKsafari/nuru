@@ -62,6 +62,39 @@ type WorkerMsg =
 
 const INPUT_BYTES = 64 * 1024;
 
+// The interpreter's stack holds about 200 nested Nuru calls. Past that the wasm
+// traps with an engine message that means nothing to a learner.
+export function explainCrash(message: string): string {
+	if (/unreachable|out of bounds|stack|recursion/i.test(message)) {
+		return "Kosa: programu imeishiwa nafasi. Mara nyingi hii ni kitendakazi kinachojiita bila kufika mwisho, au kujirudia kwa kina zaidi ya hatua 200. Hakikisha kina sharti la kusimama (kama n == 0 { rudisha ... }).";
+	}
+	return `Kosa la ndani: ${message}`;
+}
+
+const modules = new Map<string, Promise<WebAssembly.Module | null>>();
+
+/** Compiles the interpreter once per page. Resolves null if the browser can't (the worker then fetches it). */
+function compiledModule(url: string): Promise<WebAssembly.Module | null> {
+	let p = modules.get(url);
+	if (!p) {
+		p = (async () => {
+			try {
+				const res = await fetch(url);
+				if (!res.ok) return null;
+				const viaStreaming = typeof WebAssembly.compileStreaming === "function" && res.headers.get("content-type")?.includes("application/wasm");
+				return viaStreaming ? await WebAssembly.compileStreaming(res) : await WebAssembly.compile(await res.arrayBuffer());
+			} catch {
+				return null;
+			}
+		})();
+		p.then((m) => {
+			if (!m) modules.delete(url);
+		});
+		modules.set(url, p);
+	}
+	return p;
+}
+
 export function canBlockForInput(): boolean {
 	return typeof SharedArrayBuffer !== "undefined" && (globalThis as any).crossOriginIsolated === true;
 }
@@ -77,6 +110,8 @@ export class NuruRuntime {
 		startedAt: number;
 		timer?: ReturnType<typeof setTimeout>;
 		pendingPrompt?: string;
+		/** jaza() found no input and could not block: the run will end as "needs-input". */
+		replay?: boolean;
 	} | null = null;
 
 	constructor(config: RuntimeConfig) {
@@ -101,6 +136,8 @@ export class NuruRuntime {
 
 		const worker = new Worker(this.config.workerURL);
 		this.worker = worker;
+		const wasmURL = new URL(this.config.wasmURL, location.href).href;
+		const inputBuffer = this.inputBuffer;
 
 		this.ready = new Promise<void>((resolve, reject) => {
 			worker.onmessage = (e: MessageEvent<WorkerMsg>) => {
@@ -112,18 +149,27 @@ export class NuruRuntime {
 			worker.onerror = (e) => {
 				if (!this.current) return reject(new Error(e.message || "Nuru worker failed to start"));
 				e.preventDefault();
+				this.current.opts.onOutput?.(explainCrash(e.message || ""), true);
+				this.reset();
 				this.finish("crashed");
 			};
+			// Every fresh worker (after Stop or a timeout) reuses the compiled module,
+			// so restarting costs an instantiate, not a download and compile.
+			compiledModule(wasmURL).then((module) => {
+				if (this.worker !== worker) return reject(new Error("Nuru worker was replaced"));
+				worker.postMessage({
+					type: "init",
+					wasmURL,
+					execURL: new URL(this.config.execURL, location.href).href,
+					inputBuffer,
+					module,
+				});
+			});
 		});
 
-		worker.postMessage({
-			type: "init",
-			wasmURL: new URL(this.config.wasmURL, location.href).href,
-			execURL: new URL(this.config.execURL, location.href).href,
-			inputBuffer: this.inputBuffer,
+		this.ready.catch(() => {
+			if (this.worker === worker) this.reset();
 		});
-
-		this.ready.catch(() => this.reset());
 		return this.ready;
 	}
 
@@ -165,13 +211,15 @@ export class NuruRuntime {
 	}
 
 	dispose() {
-		this.kill("stopped");
+		this.kill("stopped", false);
 	}
 
-	private kill(status: RunStatus) {
+	private kill(status: RunStatus, rewarm = true) {
 		const wasRunning = this.current !== null;
 		this.reset();
 		if (wasRunning) this.finish(status);
+		// Have a fresh worker ready before the learner presses Endesha again.
+		if (wasRunning && rewarm) this.warmUp().catch(() => {});
 	}
 
 	private reset() {
@@ -190,25 +238,40 @@ export class NuruRuntime {
 		if (!cur) return;
 		switch (msg.type) {
 			case "out":
+				// After a non-blocking jaza() the only output left is the interpreter
+				// complaining that it got no answer. The host re-runs with stdin instead.
+				if (cur.replay) break;
 				cur.opts.onOutput?.(msg.text, msg.isError);
 				break;
 			case "event":
+				if (cur.replay) break;
 				cur.opts.onEvent?.(msg.event);
 				break;
 			case "input":
+				if (cur.replay) break;
 				cur.pendingPrompt = msg.prompt;
-				if (msg.blocking) cur.opts.onInputRequest?.(msg.prompt);
+				if (msg.blocking) {
+					cur.opts.onInputRequest?.(msg.prompt);
+				} else {
+					// jaza() could not wait. The interpreter would carry on with a
+					// failed answer (and may loop forever), so end the run here; the
+					// host re-runs it with the answer as stdin.
+					cur.replay = true;
+					this.reset();
+					this.finish("needs-input", msg.prompt);
+					this.warmUp().catch(() => {});
+				}
 				break;
 			case "done":
 				// A non-blocking jaza() returned null; the program then failed on purpose.
-				if (cur.pendingPrompt !== undefined && !this.inputBuffer) {
+				if (cur.replay) {
 					this.finish("needs-input", cur.pendingPrompt);
 				} else {
 					this.finish("ok");
 				}
 				break;
 			case "fatal":
-				cur.opts.onOutput?.(msg.message, true);
+				cur.opts.onOutput?.(explainCrash(msg.message), true);
 				this.reset();
 				this.finish("crashed");
 				break;

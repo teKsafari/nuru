@@ -1,42 +1,41 @@
 {
-  "landing": {
-    "title": "Swahili Programming Language",
-    "tagline": "Easy to Learn, Easy to Use.",
-    "actions": {
-      "anza": "Start",
-      "mifano": "Examples"
-    },
-    "features": [
-      {
-        "title": "Simple Syntax 😎",
-        "details": "Nuru syntax is easy to learn for both experienced and inexperienced programmers."
-      },
-      {
-        "title": "Easy Words 🎹",
-        "details": "Write programs as if you are writing a letter with simple words like andika() to print something and jaza() to get user input."
-      },
-      {
-        "title": "Community Driven 👥",
-        "details": "Nuru is driven by the community and your voice matters. We ensure to consult the community before making decisions. Come join us on [Telegram](https://t.me/NuruProgrammingChat)"
-      }
-    ],
-    "contributors": "Contributors"
-  },
   "header": {
     "home": "Home",
-    "anza": "Start Learning",
-    "masomo": "Lessons"
+    "masomo": "Lessons",
+    "anza": "Start",
+    "uwanja": "Uwanja",
+    "kamusi": "Kamusi",
+    "darasa": "Darasa",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "theme": "Theme",
+    "mchana": "Day",
+    "usiku": "Night",
+    "toUsiku": "Switch to night mode",
+    "toMchana": "Switch to day mode",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "account": "Your account",
+    "user": "User",
+    "skip": "Skip to content",
+    "mainNav": "Main pages"
   },
   "mobileMenu": {
-    "home": "Home",
-    "anza": "Start Learning",
-    "subtitle": "Learn, Create and Discover",
-    "navigation": "Navigation",
-    "resources": "Resources",
-    "builtWith": "Built with ❤️ by teKsafari"
+    "navigation": "Pages",
+    "modules": "Lesson modules",
+    "builtWith": "Made by teKsafari",
+    "lessonsDone": "done",
+    "hint": {
+      "masomo": "Map of your journey",
+      "anza": "The first lesson",
+      "uwanja": "Write and run code",
+      "kamusi": "Every word in Nuru",
+      "darasa": "Join your class"
+    }
   },
   "lessonsDrawer": {
-    "title": "Learn with Nuru"
+    "title": "Lesson modules"
   },
   "playground": {
     "hint": "Hint: Check the task description and try to match your code with the provided examples.",

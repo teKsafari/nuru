@@ -29,6 +29,9 @@ importers:
       '@nuru/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@nuru/wasm':
+        specifier: workspace:*
+        version: link:../../packages/wasm
       '@portabletext/editor':
         specifier: ^6.6.4
         version: 6.6.4(@types/react@19.2.14)(react@19.2.4)(supports-color@7.2.0)
@@ -68,6 +71,9 @@ importers:
       react-hook-form:
         specifier: ^7.54.1
         version: 7.69.0(react@19.2.4)
+      react-markdown:
+        specifier: ^9.1.0
+        version: 9.1.0(@types/react@19.2.14)(react@19.2.4)(supports-color@7.2.0)
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0

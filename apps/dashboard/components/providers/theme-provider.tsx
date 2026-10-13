@@ -9,7 +9,7 @@ export function CustomThemeProvider({ children }: CustomThemeProviderProps) {
 	return (
 		<NextThemesProvider
 			attribute="class"
-			defaultTheme="dark"
+			defaultTheme="light"
 			storageKey="nuru-theme"
 			enableSystem
 		>

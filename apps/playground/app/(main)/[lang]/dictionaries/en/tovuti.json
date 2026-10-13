@@ -1,1 +1,120 @@
-{ "tovuti": {} }
+{
+  "tovuti": {
+    "meta": {
+      "title": "Nuru · The first Swahili programming language",
+      "description": "Learn to program in Swahili. Draw with kobe, light up the ubao board, and run code in your browser with nothing to install."
+    },
+    "landing": {
+      "eyebrow": "The first Swahili programming language",
+      "titleBefore": "Write code in the language",
+      "titleHighlight": "you think in.",
+      "lead": "Nuru is a programming language written in Swahili. You no longer translate an idea into English before you can write it down: you type `kama`, `wakati` and `andika`, words you already know.",
+      "reach": "From kindergarten to bibi's house.",
+      "ctaStart": "Start Learning",
+      "ctaUwanja": "Open Uwanja",
+      "facts": ["Free", "Nothing to install", "Works on phones", "Even offline"],
+      "card": {
+        "run": "Endesha",
+        "output": "Output",
+        "label": "A Nuru program being typed and run"
+      },
+      "marquee": "Nuru keywords",
+      "kanga": {
+        "lebo": "What you can do",
+        "title": "Three things to try today",
+        "items": [
+          {
+            "title": "Write in Swahili",
+            "body": "Variables, decisions, loops and functions in words you know. Even the error messages speak Swahili.",
+            "cta": "Start the first lesson"
+          },
+          {
+            "title": "Draw with Kobe",
+            "body": "Steer the turtle with `mbele` and `kulia` and it draws shapes, stars and flowers on the canvas.",
+            "cta": "Draw now"
+          },
+          {
+            "title": "Light up Ubao",
+            "body": "A simulated electronics board with 8 lights, a buzzer and a screen. Write hardware programs before you hold a real kit.",
+            "cta": "Light it up"
+          }
+        ]
+      },
+      "walimu": {
+        "lebo": "For Teachers",
+        "title": "The whole class on one screen",
+        "body": "Open a class in the Teachers' Room and get a join code. Learners sign in with the code, their name and a picture password. No email and no password, even when they share one phone.",
+        "steps": [
+          { "title": "Open a class", "body": "You get a short join code, like SIMBA-42." },
+          { "title": "Learners join", "body": "Code, name and a picture password. That is all." },
+          { "title": "Follow progress", "body": "A live grid shows who has finished which lesson." }
+        ],
+        "cta": "Open the Teachers' Room",
+        "learner": "I have a class code",
+        "gridTitle": "Class 5B",
+        "gridCode": "Code",
+        "gridLessons": "Lessons",
+        "legendDone": "Finished",
+        "legendTrying": "Trying",
+        "legendNotYet": "Not yet"
+      },
+      "methali": {
+        "lebo": "Proverb",
+        "text": "Safari ya maili elfu huanza na hatua moja.",
+        "meaning": "A journey of a thousand miles begins with one step. The first lesson takes five minutes."
+      },
+      "contributors": {
+        "lebo": "Community",
+        "title": "Built by a community",
+        "body": "Nuru is open source. These people wrote its code, docs and lessons. You are welcome to join them.",
+        "all": "See all contributors",
+        "join": "Join us on Telegram"
+      }
+    },
+    "footer": {
+      "tagline": "The first Swahili programming language.",
+      "madeBy": "Made by",
+      "learn": "Learn",
+      "community": "Community",
+      "teachers": "Teachers",
+      "teachersRoom": "Teachers' Room",
+      "openSource": "Nuru is open source. The code lives on GitHub."
+    },
+    "kamusi": {
+      "metaTitle": "Kamusi",
+      "metaDescription": "The complete Nuru language reference: variables, data types, decisions, loops, functions, modules and common errors, each with an example you can run.",
+      "lebo": "Language reference",
+      "title": "Kamusi ya Nuru",
+      "lead": "Every keyword, function and module in Nuru, each with an example you can run. The code stays in Swahili, as you will write it. Every example has been checked against the real Nuru.",
+      "contents": "Contents",
+      "try": "Jaribu",
+      "tryLabel": "Open this example in Uwanja",
+      "output": "Output",
+      "sampleOutput": "Output (sample)",
+      "input": "If you type",
+      "drawsOnCanvas": "Watch the kobe canvas",
+      "drawsOnBoard": "Watch the board",
+      "noOutput": "No printed output",
+      "tip": "Tip",
+      "top": "Back to top"
+    },
+    "ramani": {
+      "metaTitle": "Lessons",
+      "lebo": "Lesson map",
+      "title": "Your Journey",
+      "lead": "Each module is a stop on the journey. Finish its lessons, then move on.",
+      "module": "Module",
+      "lessons": "lessons",
+      "of": "of",
+      "done": "Completed",
+      "start": "Start the journey",
+      "continue": "Continue",
+      "upNext": "Up next",
+      "allDone": "You finished the whole journey. Haba na haba hujaza kibaba: little by little fills the measure.",
+      "savedHere": "Your progress is saved on this device.",
+      "lessonDone": "done",
+      "lessonTodo": "not yet",
+      "openModule": "Open module"
+    }
+  }
+}

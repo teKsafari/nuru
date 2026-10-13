@@ -1,1 +1,72 @@
-{ "darasa": {} }
+{
+	"darasa": {
+		"metaTitle": "Class",
+		"metaDescription": "Join your Nuru class with your teacher's code, your name and your secret pictures.",
+		"lebo": "Darasa",
+		"jiunge": {
+			"title": "Join a class",
+			"lead": "Your teacher has a class code. Type it here.",
+			"msimboLabel": "Class code",
+			"endelea": "Continue",
+			"kamaLogto": "Join as {jina}",
+			"kamaLogtoMaelezo": "You are signed in with your account, so you skip the secret pictures.",
+			"au": "or",
+			"nyuma": "Back",
+			"pichaBadala": "Use a name and pictures"
+		},
+		"jina": {
+			"title": "Who are you?",
+			"lead": "Tap your name.",
+			"mpya": "I am new here",
+			"mpyaTitle": "Type your name",
+			"mpyaLead": "Use the name your teacher and classmates know you by.",
+			"label": "Your name",
+			"placeholder": "e.g. Amina J.",
+			"hakunaBado": "Nobody has joined yet. Be the first."
+		},
+		"picha": {
+			"chaguaTitle": "Choose 3 secret pictures",
+			"chaguaLead": "Tap three pictures, one after another. Remember the order: it is your key.",
+			"thibitishaTitle": "Tap your pictures again",
+			"thibitishaLead": "The same three pictures, in the same order.",
+			"ingiaTitle": "Welcome back, {jina}",
+			"ingiaLead": "Tap your 3 secret pictures.",
+			"wekaUpyaTitle": "Choose new pictures, {jina}",
+			"wekaUpyaLead": "Your teacher cleared your old pictures. Pick 3 new ones and remember them.",
+			"futa": "Clear",
+			"hazilingani": "The pictures do not match. Choose again.",
+			"siSahihi": "Not right. {n} tries left.",
+			"imefungwa": "Too many tries. Wait {n} seconds.",
+			"hatua": "Picture {n} / 3",
+			"gridLabel": "Secret pictures"
+		},
+		"makosa": {
+			"msimbo_si_sahihi": "A code has 6 characters, like KJM-7Q4.",
+			"darasa_halipo": "No class has this code. Ask your teacher again.",
+			"jina_si_sahihi": "Use 2 to 40 characters for your name.",
+			"jina_limechukuliwa": "Someone in the class already has this name. Add your family initial, e.g. Amina J.",
+			"mwanafunzi_hayupo": "This name is no longer in the class. Ask your teacher.",
+			"mtandao": "No connection. Try again.",
+			"jumla": "Something went wrong. Try again."
+		},
+		"nyumbani": {
+			"mwalimu": "Teacher",
+			"msimbo": "Code",
+			"toka": "Sign out",
+			"tokaMaelezo": "Sharing a phone? Tap Sign out when you finish so a classmate can sign in.",
+			"moduli": "Class lessons",
+			"kamilika": "{n} / {jumla} done",
+			"endelea": "Continue",
+			"anza": "Start",
+			"imekamilika": "Done",
+			"rudia": "Review",
+			"hongera": "Haba na haba hujaza kibaba: little by little fills the measure.",
+			"hakuna": "Your teacher has not assigned lessons yet.",
+			"jumlaYako": "Your progress",
+			"masomo": "lessons"
+		},
+		"beji": {
+			"label": "Signed in as {jina}, class {darasa}"
+		}
+	}
+}

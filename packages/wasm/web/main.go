@@ -36,6 +36,7 @@ func run(code string) {
 	}()
 
 	resetKobe()
+	hali = [idadiYaTaa + 1]bool{} // every run starts with all ubao LEDs off
 
 	l := lexer.New(code)
 	p := parser.New(l)
@@ -50,9 +51,11 @@ func run(code string) {
 	}
 
 	env := object.NewEnvironment()
+	// A script's final value is not output (unlike the REPL): only a runtime
+	// error that ended the program is reported.
 	evaluated := evaluator.Eval(program, env)
-	if evaluated != nil && evaluated.Type() != object.NULL_OBJ {
-		emitOutput(evaluated.Inspect(), evaluated.Type() == object.ERROR_OBJ)
+	if evaluated != nil && evaluated.Type() == object.ERROR_OBJ {
+		emitOutput(evaluated.Inspect(), true)
 	}
 }
 

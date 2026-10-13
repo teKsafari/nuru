@@ -1,25 +1,48 @@
 ---
-title: "4. Vibadilika (Variables)"
-task: "Tengeneza vibadilika viwili: `mwanzo = 10` na `mwisho = 20`, kisha andika jumla yao."
+title: "Vibadilika (Variables)"
+task: "Tengeneza kibadilika `maembe` chenye thamani `500` na `machungwa` chenye thamani `300`. Kisha andika jumla yao."
 initialCode: |
-  fanya mwanzo = 
-  mwisho = 
+  // Bei sokoni (shilingi)
+  fanya maembe =
+  fanya machungwa =
   andika()
-solution: "fanya mwanzo = 10\nmwisho = 20\nandika(mwanzo + mwisho)"
+solution: |
+  // Bei sokoni (shilingi)
+  fanya maembe = 500
+  fanya machungwa = 300
+  andika(maembe + machungwa)
+tests:
+  - type: match_code
+    pattern: 'fanya\s+maembe\s*=\s*500'
+    message: "Tengeneza kibadilika maembe chenye thamani 500."
+  - type: match_code
+    pattern: 'fanya\s+machungwa\s*=\s*300'
+    message: "Tengeneza kibadilika machungwa chenye thamani 300."
+  - type: match_code
+    pattern: 'andika\([^)]*maembe\s*\+\s*machungwa|andika\([^)]*machungwa\s*\+\s*maembe'
+    message: "Andika jumla kwa kutumia majina ya vibadilika, kama andika(maembe + machungwa)."
+  - type: exact_output
+    message: "Jumla inapaswa kuwa 800."
 ---
-Kibadilika ni kama sanduku ambalo unatumia kuhifadhi taarifa. Unakipa sanduku hilo jina ili uweze kulitumia baadaye.
+Kibadilika ni kama kikapu chenye jina. Unaweka thamani ndani yake, kisha unaitumia baadaye kwa kutaja jina la kikapu.
 
-Tunatumia alama ya `=` kumpa kibadilika thamani. Unaweza kutumia neno `fanya` kuanzisha kibadilika kipya kwa mara ya kwanza.
+Unatengeneza kibadilika kipya kwa neno `fanya` na alama `=`:
 
-### Sheria za majina:
-- Lazima lianze na herufi.
-- Lisianze na namba.
-- Herufi kubwa na ndogo ni tofauti (`jina` ni tofauti na `Jina`).
-
-### Mfano:
 ```nuru
-fanya mwanzo = +++10+++
-mwisho = +++20+++
-andika(+++mwanzo + mwisho+++)
+fanya +++nanasi+++ = 1500
+fanya +++ndizi+++ = 200
+andika(nanasi + ndizi)
 ```
 
+Programu hii inaandika `1700`. Ukibadilisha bei ya nanasi, unabadilisha mstari mmoja tu na jumla inajirekebisha.
+
+Baadaye unaweza kumpa kibadilika thamani mpya bila `fanya`:
+
+```nuru
+nanasi = 1200
+```
+
+### Kanuni za majina
+- Anza na herufi, si namba: `bei1` ni sawa, `1bei` si sawa.
+- Tumia `_` badala ya nafasi: `bei_ya_embe`.
+- Herufi kubwa na ndogo ni tofauti: `Bei` na `bei` ni vibadilika viwili.

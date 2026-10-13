@@ -31,7 +31,8 @@ async function main() {
 			difficulty: mod.difficulty,
 			executorType: "nuru-wasm",
 			visibility: "public",
-			layoutConfig: mod.layoutConfig,
+			// modules has no description column, so the module blurb rides along in layoutConfig.
+			layoutConfig: mod.description ? { ...mod.layoutConfig, description: mod.description } : mod.layoutConfig,
 			order: mod.order,
 			organizationId: ORG_ID,
 			createdBy: SYSTEM_USER,

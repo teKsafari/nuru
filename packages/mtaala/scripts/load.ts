@@ -24,6 +24,8 @@ export interface CurriculumLesson {
 	stdin?: string[];
 	tests?: TestCaseV1[];
 	file: string;
+	/** Whether an en/ translation file exists for this lesson. */
+	hasEnglish: boolean;
 }
 
 export interface CurriculumModule {
@@ -54,7 +56,7 @@ export function loadCurriculum(dir = MODULI_DIR): CurriculumModule[] {
 
 	for (const modDir of fs.readdirSync(dir).sort()) {
 		const full = path.join(dir, modDir);
-		if (!fs.statSync(full).isDirectory()) continue;
+		if (!fs.statSync(full).isDirectory() || !fs.existsSync(path.join(full, "index.md"))) continue;
 		const { order, slug } = splitName(modDir);
 		const index = parse(path.join(full, "index.md"));
 
@@ -62,7 +64,8 @@ export function loadCurriculum(dir = MODULI_DIR): CurriculumModule[] {
 		const enDir = path.join(full, "en");
 		const lessons: CurriculumLesson[] = [];
 
-		for (const name of fs.readdirSync(swDir).filter((f) => f.endsWith(".md")).sort()) {
+		const swNames = fs.existsSync(swDir) ? fs.readdirSync(swDir) : [];
+		for (const name of swNames.filter((f) => f.endsWith(".md")).sort()) {
 			const sw = parse(path.join(swDir, name));
 			const enPath = path.join(enDir, name);
 			const en = fs.existsSync(enPath) ? parse(enPath) : { data: {}, body: "" };
@@ -81,6 +84,7 @@ export function loadCurriculum(dir = MODULI_DIR): CurriculumModule[] {
 				stdin: sw.data.stdin === undefined ? undefined : String(sw.data.stdin).split("\n"),
 				tests: sw.data.tests,
 				file: path.relative(dir, path.join(swDir, name)),
+				hasEnglish: fs.existsSync(enPath),
 			});
 		}
 

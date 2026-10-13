@@ -1,20 +1,30 @@
 ---
-title: "3. Maoni (Comments)"
-task: "Ongeza maoni ya mstari mmoja juu ya amri ya `andika()` inayofuata."
+title: "Maoni (Comments)"
+task: "Ongeza maoni ya mstari mmoja juu ya `andika()` yanayoeleza programu hii inafanya nini."
 initialCode: |
-  
-  andika("Maoni hayataonekana!")
-solution: "// Hii ni programu yangu\nandika(\"Maoni hayataonekana!\")"
+  andika("Maoni hayaonekani kwenye matokeo!")
+solution: |
+  // Programu hii inaandika ujumbe mmoja
+  andika("Maoni hayaonekani kwenye matokeo!")
+tests:
+  - type: match_code
+    pattern: '^\s*(//|/\*)\s*\S'
+    flags: m
+    message: "Ongeza maoni yanayoanza na // juu ya andika()."
+  - type: exact_output
+    message: "Usibadilishe maandishi ya andika(). Ongeza maoni tu."
 ---
-Maoni ni mistari ya maandishi ambayo mfasiri wa Nuru anairuka. Yanatumika kutoa maelezo kwa binadamu wanaosoma msimbo wako.
+Maoni ni maandishi kwa ajili ya binadamu anayesoma kodi yako. Kompyuta inayaruka kabisa.
 
-### Aina za Maoni:
-1. **Mstari mmoja**: Tumia `//`. Kila kitu baada ya alama hii kitarukwa.
-2. **Mistari mingi**: Tumia `/*` kuanza na `*/` kumaliza.
+Unaweza kuandika maoni kwa njia mbili:
 
-### Mfano:
 ```nuru
-+++// Hii ni programu yangu+++
-andika("Maoni hayataonekana!")
++++// Maoni ya mstari mmoja yanaanza na mikwaju miwili+++
+
++++/* Maoni ya mistari mingi
+   yanaanza na /* na kuishia na */+++
+
+andika("Habari") +++// Maoni yanaweza kukaa mwisho wa mstari pia+++
 ```
 
+Andika maoni yanayoeleza **kwa nini** umefanya kitu. Rafiki yako (au wewe mwenyewe wiki ijayo) atakushukuru.

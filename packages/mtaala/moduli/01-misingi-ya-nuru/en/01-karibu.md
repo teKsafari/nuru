@@ -1,19 +1,17 @@
 ---
-title: "1. Welcome to Nuru!"
-task: "Click the 'Run' button (the white one with the play icon) to see the results of this program in the 'Output' section."
-initialCode: |
-  // Huu ni mwanzo wa safari yako!
-  andika()
-solution: "andika(\"Habari Nuru!\")"
+title: "Welcome to Nuru!"
+task: "Put any greeting inside `andika()`, for example `andika(\"Habari Nuru!\")`, then press **Run**."
 ---
-Nuru is a programming language designed specifically for Swahili speakers. It allows you to write code using words you already know instead of just English.
+Welcome! **Nuru** is a programming language that uses Swahili words. You write `andika` where other languages use `print`, and `kama` where they use `if`.
 
-Our goal is to break the language barrier in the tech world. In this tutorial, you will learn all the basics of programming step by step.
+A program is a list of instructions for the computer. The computer carries them out one after another, from top to bottom.
 
-A program is a series of commands you give to the computer. Let's start by seeing how a program works!
+The first instruction you will learn is `andika()`. It shows text on the screen:
 
-### Your first line:
 ```nuru
-// Huu ni mwanzo wa safari yako!
 andika(+++"Habari Nuru!"+++)
 ```
+
+Text must sit inside double quotes `" "`. Without quotes, the computer thinks it is the name of something else.
+
+A line that starts with `//` is a comment. The computer skips it. More on comments later.

@@ -1,101 +1,125 @@
-import { getModuleWithLessons } from "@/app/actions/modules";
-import { deleteLesson } from "@/app/actions/lessons";
-import { Button } from "@nuru/ui/components/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@nuru/ui/components/card";
-import { Badge } from "@nuru/ui/components/badge";
 import Link from "next/link";
-import { PlusCircle, FileText, Settings, ArrowLeft, Trash2 } from "lucide-react";
 import { notFound } from "next/navigation";
+import { ArrowLeft, FileText, Pencil, Plus, ExternalLink, Cpu } from "lucide-react";
+import { Button } from "@nuru/ui/components/button";
+import { getModuleWithLessons } from "@/app/actions/modules";
+import { getServerDict } from "@/lib/lang";
+import { pick } from "@/lib/dict";
 import { SortableLessonsList } from "@/components/editor/sortable-lessons-list";
+import { PageHead, EmptyState } from "@/components/kanga/page-head";
+import { DifficultySticker, VisibilitySticker } from "@/components/kanga/stickers";
 
 export const dynamic = "force-dynamic";
 
+const PLAYGROUND_URL = process.env.PLAYGROUND_URL || "http://localhost:3000";
+
 export default async function ModuleBuilderPage({ params }: { params: Promise<{ moduleId: string }> }) {
-    const { moduleId } = await params;
-	const module = await getModuleWithLessons(moduleId);
+	const { moduleId } = await params;
+	const [module, { t, lang }] = await Promise.all([getModuleWithLessons(moduleId), getServerDict()]);
 
-	if (!module) {
-		notFound();
-	}
+	if (!module) notFound();
 
-	const title = typeof module.title === 'string' ? module.title : (module.title as any).en;
+	const title = pick(module.title, lang);
+	const other = pick(module.title, lang === "sw" ? "en" : "sw");
+	const testCount = module.lessons.reduce((n, l) => n + (Array.isArray(l.tests) ? l.tests.length : 0), 0);
 
 	return (
 		<div className="space-y-8 pb-12">
-            <div className="flex items-center gap-4">
-                <Link href="/educator/modules">
-                    <Button variant="ghost" size="icon" className="rounded-xl border bg-white dark:bg-slate-900 shadow-sm">
-                        <ArrowLeft className="h-4 w-4" />
-                    </Button>
-                </Link>
-                <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight flex items-center gap-3">
-                        {title}
-                        <Badge variant={module.visibility === 'public' ? 'secondary' : 'outline'} className="rounded-full px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider capitalize">
-                            {module.visibility}
-                        </Badge>
-                    </h1>
-                    <p className="text-slate-500 dark:text-slate-400">Course Builder & Syllabus</p>
-                </div>
-            </div>
+			<Link href="/educator/modules" className="lebo inline-flex min-h-10 items-center gap-1.5 text-muted-foreground hover:text-foreground">
+				<ArrowLeft className="size-4" />
+				{t.modules.back}
+			</Link>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Lessons Syllabus</h2>
-                        <Link href={`/educator/modules/${module.id}/lessons/create`}>
-                            <Button size="sm" variant="secondary" className="gap-2 rounded-lg font-bold shadow-sm border border-slate-200 dark:border-slate-800">
-                                <PlusCircle className="h-4 w-4" /> Add Lesson
-                            </Button>
-                        </Link>
-                    </div>
+			<PageHead
+				eyebrow={
+					<span className="flex flex-wrap items-center gap-2">
+						<DifficultySticker value={module.difficulty} t={t} />
+						<VisibilitySticker value={module.visibility} t={t} />
+					</span>
+				}
+				title={title}
+				lead={other !== title ? other : undefined}
+				actions={
+					<Button asChild size="lg">
+						<Link href={`/educator/modules/${module.id}/lessons/create`}>
+							<Plus />
+							{t.modules.addLesson}
+						</Link>
+					</Button>
+				}
+			/>
 
-                    {module.lessons.length === 0 ? (
-                        <Card className="flex flex-col items-center justify-center p-16 text-center border-dashed border-2 rounded-3xl bg-slate-50/50 dark:bg-slate-900/50">
-                            <div className="bg-primary/10 rounded-2xl p-5 mb-5">
-                                <FileText className="h-10 w-10 text-primary" />
-                            </div>
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">No lessons yet</h3>
-                            <p className="text-slate-500 dark:text-slate-400 max-w-sm mt-2 mb-6">
-                                This module is empty. Add lessons to build out your curriculum.
-                            </p>
-                            <Link href={`/educator/modules/${module.id}/lessons/create`}>
-                                <Button variant="outline" className="rounded-xl px-6">Create First Lesson</Button>
-                            </Link>
-                        </Card>
-                    ) : (
-                        <SortableLessonsList lessons={module.lessons} moduleId={module.id} />
-                    )}
-                </div>
+			<div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+				<section className="space-y-4 lg:col-span-2">
+					<div className="flex items-baseline justify-between">
+						<h2 className="font-display text-xl font-bold">{t.modules.syllabus}</h2>
+						<span className="lebo text-muted-foreground">
+							{module.lessons.length} {t.modules.lessons} · {testCount} {t.modules.tests}
+						</span>
+					</div>
+					{module.lessons.length === 0 ? (
+						<EmptyState
+							icon={<FileText />}
+							title={t.modules.noLessons}
+							body={t.modules.noLessonsBody}
+							methali={t.app.methaliEmpty}
+							action={
+								<Button asChild variant="outline">
+									<Link href={`/educator/modules/${module.id}/lessons/create`}>
+										<Plus />
+										{t.modules.addLesson}
+									</Link>
+								</Button>
+							}
+						/>
+					) : (
+						<SortableLessonsList lessons={module.lessons} moduleId={module.id} />
+					)}
+				</section>
 
-                <div className="space-y-6">
-                    <Card className="rounded-3xl border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-                        <CardHeader className="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800 py-3 px-5">
-                            <CardTitle className="text-sm font-bold flex items-center justify-between">
-                                <span className="flex items-center gap-2 text-slate-900 dark:text-white">
-                                    <Settings className="h-4 w-4 text-slate-400" /> Module Settings
-                                </span>
-                                <Link href={`/educator/modules/${module.id}/edit`}>
-                                    <Button variant="ghost" size="sm" className="h-7 px-2 rounded-lg text-[10px] font-bold">Edit</Button>
-                                </Link>
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 p-5">
-                            <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">Difficulty Level</p>
-                                <Badge variant="outline" className="capitalize rounded-lg px-2.5 py-0.5 text-xs font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700">{module.difficulty}</Badge>
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">Runtime Environment</p>
-                                <div className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300">
-                                    <div className="w-2 h-2 rounded-full bg-primary" />
-                                    {module.executorType}
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
+				<aside className="space-y-6">
+					<div className="mji overflow-hidden">
+						<div className="flex items-center justify-between border-b-2 border-mstari bg-karatasi-2 px-4 py-2">
+							<h2 className="lebo">{t.modules.settings}</h2>
+							<Button asChild variant="ghost" size="sm">
+								<Link href={`/educator/modules/${module.id}/edit`}>
+									<Pencil />
+									{t.modules.edit}
+								</Link>
+							</Button>
+						</div>
+						<dl className="divide-y-2 divide-dashed divide-mstari/20 px-4">
+							<div className="flex items-center justify-between gap-4 py-3">
+								<dt className="text-sm text-muted-foreground">{t.modules.difficulty}</dt>
+								<dd>
+									<DifficultySticker value={module.difficulty} t={t} />
+								</dd>
+							</div>
+							<div className="flex items-center justify-between gap-4 py-3">
+								<dt className="text-sm text-muted-foreground">{t.modules.visibility}</dt>
+								<dd>
+									<VisibilitySticker value={module.visibility} t={t} />
+								</dd>
+							</div>
+							<div className="flex items-center justify-between gap-4 py-3">
+								<dt className="text-sm text-muted-foreground">{t.modules.runtime}</dt>
+								<dd className="inline-flex items-center gap-1.5 font-mono text-sm font-semibold">
+									<Cpu className="size-4" aria-hidden />
+									{module.executorType}
+								</dd>
+							</div>
+						</dl>
+					</div>
+					{module.lessons.length > 0 && (
+						<Button asChild variant="outline" className="w-full">
+							<a href={`${PLAYGROUND_URL}/${lang}/anza/${module.slug}`} target="_blank" rel="noopener">
+								<ExternalLink />
+								{t.modules.openInPlayground}
+							</a>
+						</Button>
+					)}
+				</aside>
+			</div>
 		</div>
 	);
 }

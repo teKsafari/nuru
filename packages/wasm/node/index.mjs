@@ -20,7 +20,7 @@ export function createNodeRunner({
 	let queue = Promise.resolve();
 
 	function spawn() {
-		worker = new Worker(path.join(here, "worker-thread.cjs"), { workerData: { wasmPath, execPath } });
+		worker = new Worker(path.join(here, "worker-thread.cjs"), { workerData: { wasmPath, execPath }, resourceLimits: { stackSizeMb: Number(process.env.NURU_STACK_MB || 4) } });
 		ready = new Promise((resolve, reject) => {
 			worker.once("message", (m) => (m.type === "ready" ? resolve() : reject(m)));
 			worker.once("error", reject);

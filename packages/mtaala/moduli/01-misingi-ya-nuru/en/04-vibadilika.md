@@ -1,25 +1,26 @@
 ---
-title: "4. Variables"
-task: "Create two variables: `mwanzo = 10` and `mwisho = 20`, then print their sum."
-initialCode: |
-  fanya mwanzo = 
-  mwisho = 
-  andika()
-solution: "fanya mwanzo = 10\nmwisho = 20\nandika(mwanzo + mwisho)"
+title: "Variables"
+task: "Create a variable `maembe` with the value `500` and `machungwa` with the value `300`. Then print their total."
 ---
-A variable is like a box that you use to store information. You give that box a name so you can use it later.
+A variable is like a basket with a name. You put a value in it, then use that value later by saying the basket's name.
 
-We use the `=` sign to assign a value to a variable. You can use the word `fanya` to initialize a new variable for the first time.
+You create a new variable with the word `fanya` and the `=` sign:
 
-### Naming rules:
-- It must start with a letter.
-- It must not start with a number.
-- Case sensitivity matters (`name` is different from `Name`).
-
-### Example:
 ```nuru
-fanya mwanzo = +++10+++
-mwisho = +++20+++
-andika(+++mwanzo + mwisho+++)
+fanya +++nanasi+++ = 1500
+fanya +++ndizi+++ = 200
+andika(nanasi + ndizi)
 ```
 
+This program prints `1700`. If the price of pineapples (`nanasi`) changes, you edit one line and the total updates itself.
+
+Later you can give a variable a new value without `fanya`:
+
+```nuru
+nanasi = 1200
+```
+
+### Naming rules
+- Start with a letter, not a number: `bei1` works, `1bei` does not.
+- Use `_` instead of spaces: `bei_ya_embe`.
+- Upper and lower case differ: `Bei` and `bei` are two different variables.

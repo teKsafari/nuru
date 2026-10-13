@@ -4,20 +4,29 @@ import { db, modules, lessons } from "@/lib/db";
 import { eq, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { requirePermission, verifyOwnership } from "@/lib/permissions";
+import { slugify } from "@/lib/slug";
+
+type LocalizedInput = { sw: string; en?: string };
+
+function localized(v: LocalizedInput | string) {
+	if (typeof v === "string") return { sw: v, en: v };
+	const sw = v.sw.trim();
+	return { sw, en: v.en?.trim() || sw };
+}
 
 export async function createModule(data: any) {
 	const claims = await requirePermission("create:lesson");
 	const moduleId = crypto.randomUUID();
-	const slug = data.title.en.toLowerCase().replace(/ /g, "-");
+	const title = localized(data.title);
 
 	await db.insert(modules).values({
 		id: moduleId,
-		slug,
-		title: data.title,
+		slug: slugify(title.sw),
+		title,
 		difficulty: data.difficulty,
 		executorType: data.executorType || "nuru-wasm",
 		visibility: data.visibility || "private",
-		layoutConfig: data.layoutConfig,
+		layoutConfig: data.layoutConfig ?? { terminal: true },
 		createdBy: claims.sub,
 	});
 
@@ -29,21 +38,27 @@ export async function getModulesByOrganization(orgId: string) {
 	return await db.select().from(modules).where(eq(modules.organizationId, orgId));
 }
 
+const withLessonSummary = {
+	lessons: { columns: { id: true, tests: true } },
+} as const;
+
 export async function getAllPublicModules() {
-	return await db.select().from(modules).where(eq(modules.visibility, "public"));
+	return await db.query.modules.findMany({
+		where: eq(modules.visibility, "public"),
+		orderBy: [asc(modules.order), asc(modules.createdAt)],
+		with: withLessonSummary,
+	});
 }
 
+/** The caller's modules (every module for a Super Admin), with lesson ids and tests for counts. */
 export async function getEducatorModules() {
 	const claims = await requirePermission();
-
-	if (claims.roles?.includes("Super Admin")) {
-		console.log("includes superr")
-		const modulesData=await db.select().from(modules);
-		console.log({modulesData});
-		return modulesData
-	}
-
-	return await db.select().from(modules).where(eq(modules.createdBy, claims.sub));
+	const isSuper = claims.roles?.includes("Super Admin");
+	return await db.query.modules.findMany({
+		where: isSuper ? undefined : eq(modules.createdBy, claims.sub),
+		orderBy: [asc(modules.order), asc(modules.createdAt)],
+		with: withLessonSummary,
+	});
 }
 
 export async function updateModule(id: string, data: any) {
@@ -56,7 +71,7 @@ export async function updateModule(id: string, data: any) {
 	await db
 		.update(modules)
 		.set({
-			title: data.title,
+			title: localized(data.title),
 			difficulty: data.difficulty,
 			executorType: data.executorType,
 			visibility: data.visibility,

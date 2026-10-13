@@ -1,1 +1,72 @@
-{ "darasa": {} }
+{
+	"darasa": {
+		"metaTitle": "Darasa",
+		"metaDescription": "Jiunge na darasa lako la Nuru kwa msimbo wa mwalimu, jina lako na picha zako za siri.",
+		"lebo": "Darasa",
+		"jiunge": {
+			"title": "Jiunge na darasa",
+			"lead": "Mwalimu wako ana msimbo wa darasa. Uandike hapa.",
+			"msimboLabel": "Msimbo wa darasa",
+			"endelea": "Endelea",
+			"kamaLogto": "Jiunge kama {jina}",
+			"kamaLogtoMaelezo": "Umeingia kwa akaunti yako. Huhitaji picha za siri.",
+			"au": "au",
+			"nyuma": "Rudi",
+			"pichaBadala": "Tumia jina na picha"
+		},
+		"jina": {
+			"title": "Wewe ni nani?",
+			"lead": "Gusa jina lako.",
+			"mpya": "Mimi ni mgeni hapa",
+			"mpyaTitle": "Andika jina lako",
+			"mpyaLead": "Tumia jina ambalo mwalimu na wenzako wanalijua.",
+			"label": "Jina lako",
+			"placeholder": "mf. Amina J.",
+			"hakunaBado": "Bado hakuna mwanafunzi. Kuwa wa kwanza."
+		},
+		"picha": {
+			"chaguaTitle": "Chagua picha 3 za siri",
+			"chaguaLead": "Gusa picha tatu, moja baada ya nyingine. Kumbuka mpangilio: huu ndio ufunguo wako.",
+			"thibitishaTitle": "Gusa tena picha zako",
+			"thibitishaLead": "Picha zile zile tatu, kwa mpangilio ule ule.",
+			"ingiaTitle": "Karibu tena, {jina}",
+			"ingiaLead": "Gusa picha zako 3 za siri.",
+			"wekaUpyaTitle": "Chagua picha mpya, {jina}",
+			"wekaUpyaLead": "Mwalimu amefuta picha zako za zamani. Chagua picha 3 mpya na uzikumbuke.",
+			"futa": "Futa",
+			"hazilingani": "Picha hazilingani. Chagua upya.",
+			"siSahihi": "Si sahihi. Umebakiza majaribio {n}.",
+			"imefungwa": "Umejaribu mara nyingi. Subiri sekunde {n}.",
+			"hatua": "Picha {n} / 3",
+			"gridLabel": "Picha za siri"
+		},
+		"makosa": {
+			"msimbo_si_sahihi": "Msimbo una herufi 6, kama KJM-7Q4.",
+			"darasa_halipo": "Hakuna darasa lenye msimbo huu. Muulize mwalimu tena.",
+			"jina_si_sahihi": "Jina liwe na herufi 2 hadi 40.",
+			"jina_limechukuliwa": "Jina hili lipo tayari darasani. Ongeza herufi ya jina la ukoo, mf. Amina J.",
+			"mwanafunzi_hayupo": "Jina hili halipo tena darasani. Muulize mwalimu.",
+			"mtandao": "Hakuna mtandao. Jaribu tena.",
+			"jumla": "Kuna tatizo. Jaribu tena."
+		},
+		"nyumbani": {
+			"mwalimu": "Mwalimu",
+			"msimbo": "Msimbo",
+			"toka": "Toka",
+			"tokaMaelezo": "Unatumia simu ya pamoja? Bonyeza Toka ukimaliza, ili mwenzako aingie.",
+			"moduli": "Masomo ya darasa",
+			"kamilika": "{n} / {jumla} yamekamilika",
+			"endelea": "Endelea",
+			"anza": "Anza",
+			"imekamilika": "Imekamilika",
+			"rudia": "Rudia",
+			"hongera": "Haba na haba hujaza kibaba.",
+			"hakuna": "Mwalimu bado hajaweka masomo. Safari ya maili elfu huanza na hatua moja.",
+			"jumlaYako": "Maendeleo yako",
+			"masomo": "masomo"
+		},
+		"beji": {
+			"label": "Umeingia kama {jina}, darasa {darasa}"
+		}
+	}
+}

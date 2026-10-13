@@ -1,24 +1,19 @@
 ---
-title: "11. While Loops (wakati)"
-task: "Write a `wakati` loop that starts with `n = 5` and decreases down to `1` (n = n - 1)."
-initialCode: |
-  n = 5
-   {
-      andika(n)
-      
-  }
-solution: "n = 5\nwakati (n > 0) {\n    andika(n)\n    n = n - 1\n}"
+title: "The wakati Loop"
+task: "Kick-off is near! Use a `wakati` loop to count down from `5` to `1`, then print `Mpira umeanza!`."
 ---
-A `wakati` loop continues to repeat as long as a certain condition is true.
+`wakati` (while) repeats its work **as long as** a condition is true. Before every round, the computer checks the condition again.
 
-**Warning**: Make sure that condition will eventually become false, otherwise the program will loop forever!
-
-### Task:
 ```nuru
-n = 5
-+++wakati (n > 0)+++ {
-    andika(n)
-    +++n = n - 1+++
+fanya maji = 0
+
++++wakati (maji < 3)+++ {
+    andika("Naweka ndoo ya maji")
+    +++maji = maji + 1+++
 }
+andika("Pipa limejaa!")
 ```
 
+The line `maji = maji + 1` matters a lot. Without it, `maji` stays 0 forever and the loop never stops. If that happens, press the **Stop** button.
+
+Use `kwa` when you know the number of rounds in advance. Use `wakati` when you are waiting for something to happen.

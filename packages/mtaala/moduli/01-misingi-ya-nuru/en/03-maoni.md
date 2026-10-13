@@ -1,20 +1,18 @@
 ---
-title: "3. Comments"
-task: "Add a single-line comment above the following `andika()` command."
-initialCode: |
-  
-  andika("Maoni hayataonekana!")
-solution: "// Hii ni programu yangu\nandika(\"Maoni hayataonekana!\")"
+title: "Comments"
+task: "Add a one-line comment above `andika()` that explains what this program does."
 ---
-Comments are lines of text that the Nuru interpreter ignores. They are used to provide explanations for humans reading your code.
+Comments are notes for the person reading your code. The computer skips them completely.
 
-### Types of Comments:
-1. **Single line**: Use `//`. Everything after this symbol will be ignored.
-2. **Multi-line**: Use `/*` to start and `*/` to end.
+You can write comments in two ways:
 
-### Example:
 ```nuru
-+++// Hii ni programu yangu+++
-andika("Maoni hayataonekana!")
++++// A one-line comment starts with two slashes+++
+
++++/* A multi-line comment
+   starts with /* and ends with */+++
+
+andika("Habari") +++// A comment can also sit at the end of a line+++
 ```
 
+Use comments to explain **why** you did something. Your friend (or you, next week) will thank you.

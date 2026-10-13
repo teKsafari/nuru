@@ -1,42 +1,41 @@
 {
-  "landing": {
-    "title": "Lugha ya kiprogramu ya Kiswahili",
-    "tagline": "Rahisi Kujifunza, Rahisi Kutumia.",
-    "actions": {
-      "anza": "Anza",
-      "mifano": "Pitia Mifano"
-    },
-    "features": [
-      {
-        "title": "Sintaksia Rahisi 😎",
-        "details": "Sintaksia ya Nuru ni rahisi kujifunza kwa wenye uzoefu na wasio na uzoefu na kutengeneza programu."
-      },
-      {
-        "title": "Maneno Rahisi 🎹",
-        "details": "Andika programu kana kwamba unaandika barua na maneno rahisi kama andika() kuchapisha kitu na jaza() kupata maingizo kutoka kwa watumiaji."
-      },
-      {
-        "title": "Inaendeshwa na Jumuiya 👥",
-        "details": "Nuru inaendeshwa na jamii na sauti yako ni muhimu. Tunahakikisha kushauriana na jamii kabla ya kufanya uamuzi. Njoo ujiunge nasi [Telegram](https://t.me/NuruProgrammingChat)"
-      }
-    ],
-    "contributors": "Wachangiaji"
-  },
   "header": {
     "home": "Nyumbani",
-    "anza": "Anza Kujifunza",
-    "masomo": "Masomo"
+    "masomo": "Masomo",
+    "anza": "Anza",
+    "uwanja": "Uwanja",
+    "kamusi": "Kamusi",
+    "darasa": "Darasa",
+    "menu": "Menyu",
+    "closeMenu": "Funga menyu",
+    "language": "Lugha",
+    "theme": "Mandhari",
+    "mchana": "Mchana",
+    "usiku": "Usiku",
+    "toUsiku": "Badili kwenda Usiku",
+    "toMchana": "Badili kwenda Mchana",
+    "signIn": "Ingia",
+    "signOut": "Toka",
+    "account": "Akaunti yako",
+    "user": "Mtumiaji",
+    "skip": "Ruka hadi maudhui",
+    "mainNav": "Kurasa kuu"
   },
   "mobileMenu": {
-    "home": "Nyumbani",
-    "anza": "Anza Kujifunza",
-    "subtitle": "Jifunze, Unda na Vumbua",
-    "navigation": "Kuelekeza",
-    "resources": "Rasilimali",
-    "builtWith": "Imeundwa na ❤️ na teKsafari"
+    "navigation": "Kurasa",
+    "modules": "Moduli za masomo",
+    "builtWith": "Imeundwa na teKsafari",
+    "lessonsDone": "yamekamilika",
+    "hint": {
+      "masomo": "Ramani ya safari yako",
+      "anza": "Somo la kwanza",
+      "uwanja": "Andika na uendeshe kodi",
+      "kamusi": "Maneno yote ya Nuru",
+      "darasa": "Jiunge na darasa lako"
+    }
   },
   "lessonsDrawer": {
-    "title": "Jifunze na Nuru"
+    "title": "Moduli za masomo"
   },
   "playground": {
     "hint": "Dokezo: Angalia maelezo ya kazi na ujaribu kulinganisha kodi yako na mifano iliyotolewa.",

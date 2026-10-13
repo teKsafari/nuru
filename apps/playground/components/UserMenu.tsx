@@ -20,11 +20,14 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@nuru/ui/components/dropdown-menu";
-import { User, Sprout, UserCogIcon, LogOutIcon } from "lucide-react";
+import { User, Sprout, UserCogIcon, LogOutIcon, LogInIcon } from "lucide-react";
 import { SiGithub } from "@icons-pack/react-simple-icons";
-import Link from "next/link";
 
-export default function UserMenu() {
+type UserMenuLabels = { signIn: string; signOut: string; account: string; user: string };
+
+const defaultLabels: UserMenuLabels = { signIn: "Ingia", signOut: "Toka", account: "Akaunti yako", user: "Mtumiaji" };
+
+export default function UserMenu({ labels = defaultLabels }: { labels?: UserMenuLabels }) {
 	const { isAuthenticated, claims } = useContext(AuthContext);
 
 	const [postAuthRedirectUri, setRedirectUri] = useState("");
@@ -41,9 +44,14 @@ export default function UserMenu() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+				<Button
+					variant="ghost"
+					size="icon"
+					aria-label={isAuthenticated && claims ? claims.name : labels.user}
+					className="size-9 overflow-hidden rounded-full border-2 border-mstari bg-card p-0 hover:bg-karatasi-2"
+				>
 					{isAuthenticated && claims ? (
-						<Avatar className="h-8 w-8">
+						<Avatar className="size-full">
 							<AvatarImage src={claims.picture || undefined} />
 							<AvatarFallback>
 								{claims.name
@@ -53,11 +61,11 @@ export default function UserMenu() {
 							</AvatarFallback>
 						</Avatar>
 					) : (
-						<User className="text-muted-foreground h-5 w-5" />
+						<User className="size-[18px]" aria-hidden />
 					)}
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-48 rounded-xl p-2">
+			<DropdownMenuContent align="end" className="w-56 rounded-lg border-2 border-mstari bg-card p-1.5 shadow-kivuli">
 				{isAuthenticated && claims ? (
 					<>
 						<DropdownMenuLabel className="flex flex-col">
@@ -69,7 +77,7 @@ export default function UserMenu() {
 
 				<DropdownMenuItem asChild className="mb-1 rounded-lg">
 					<a
-						href="https://github.com/nuruprogramming"
+						href="https://github.com/NuruProgramming"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="flex cursor-pointer items-center gap-2 py-2"
@@ -85,7 +93,7 @@ export default function UserMenu() {
 						rel="noopener noreferrer"
 						className="flex cursor-pointer items-center gap-2 py-2"
 					>
-						<Sprout className="h-4 w-4 text-[#00b4d8]" />
+						<Sprout className="h-4 w-4 text-mwani" />
 						<span>teKsafari</span>
 					</a>
 				</DropdownMenuItem>
@@ -94,12 +102,12 @@ export default function UserMenu() {
 
 				{isAuthenticated ? (
 					<>
-						<Link href={"https://id.teksafari.org/account/security"}>
-							<DropdownMenuItem>
+						<DropdownMenuItem asChild className="rounded-md">
+							<a href="https://id.teksafari.org/account/security" target="_blank" rel="noopener noreferrer" className="flex cursor-pointer items-center gap-2 py-2">
 								<UserCogIcon size={16} />
-								Account Settings
-							</DropdownMenuItem>
-						</Link>
+								{labels.account}
+							</a>
+						</DropdownMenuItem>
 						<form action={signOutAction}>
 							<input
 								type="text"
@@ -114,7 +122,7 @@ export default function UserMenu() {
 								variant="ghost"
 							>
 								<LogOutIcon size={16} />
-								Sign out
+								{labels.signOut}
 							</Button>
 						</form>
 					</>
@@ -132,7 +140,8 @@ export default function UserMenu() {
 							type="submit"
 							variant="ghost"
 						>
-							Sign in
+							<LogInIcon size={16} />
+							{labels.signIn}
 						</Button>
 					</form>
 				)}

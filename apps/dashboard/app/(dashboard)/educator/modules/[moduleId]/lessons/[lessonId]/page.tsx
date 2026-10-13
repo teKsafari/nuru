@@ -1,70 +1,43 @@
+import { notFound } from "next/navigation";
+import { eq } from "drizzle-orm";
 import { db, lessons, modules } from "@/lib/db";
-import { eq, and } from "drizzle-orm";
-import { notFound, redirect } from "next/navigation";
-import LessonEditor, { type LessonFormInputs } from "@/components/editor/lesson-editor";
+import LessonEditor, { type LessonFormValues } from "@/components/editor/lesson-editor";
 import { updateLesson } from "@/app/actions/lessons";
-import { Button } from "@nuru/ui/components/button";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { getServerDict } from "@/lib/lang";
+import { pick } from "@/lib/dict";
 
 export const dynamic = "force-dynamic";
 
-export default async function EditLessonPage({ 
-    params 
-}: { 
-    params: Promise<{ moduleId: string, lessonId: string }> 
-}) {
-    const { moduleId, lessonId } = await params;
+function both(v: unknown) {
+	if (typeof v === "string") return { sw: v, en: v };
+	const o = (v ?? {}) as { sw?: string; en?: string };
+	return { sw: o.sw ?? "", en: o.en ?? "" };
+}
 
-    const lesson = await db.query.lessons.findFirst({
-        where: eq(lessons.id, lessonId),
-    });
+export default async function EditLessonPage({ params }: { params: Promise<{ moduleId: string; lessonId: string }> }) {
+	const { moduleId, lessonId } = await params;
 
-    if (!lesson || lesson.moduleId !== moduleId) {
-        notFound();
-    }
+	const [lesson, module, { lang }] = await Promise.all([
+		db.query.lessons.findFirst({ where: eq(lessons.id, lessonId) }),
+		db.query.modules.findFirst({ where: eq(modules.id, moduleId), columns: { title: true } }),
+		getServerDict(),
+	]);
 
-    const initialData: LessonFormInputs = {
-        title: typeof lesson.title === 'string' ? lesson.title : (lesson.title as any).en,
-        description: typeof lesson.description === 'string' ? lesson.description : (lesson.description as any).en,
-        task: typeof lesson.task === 'string' ? lesson.task : (lesson.task as any).en,
-        defaultCodeTemplate: lesson.defaultCode || "",
-        testCases: lesson.tests as any || [],
-    };
+	if (!lesson || !module || lesson.moduleId !== moduleId) notFound();
 
-    async function updateAction(data: LessonFormInputs) {
-        "use server";
-        
-        await updateLesson(lessonId, moduleId, {
-            title: { en: data.title, sw: data.title },
-            description: { en: data.description, sw: data.description },
-            task: { en: data.task, sw: data.task },
-            defaultCode: data.defaultCodeTemplate,
-            tests: data.testCases,
-        });
+	const initialData: LessonFormValues = {
+		title: both(lesson.title),
+		description: both(lesson.description),
+		task: both(lesson.task),
+		defaultCode: lesson.defaultCode ?? "",
+		solution: lesson.solution ?? "",
+		tests: (lesson.tests as LessonFormValues["tests"]) ?? [],
+	};
 
-        redirect(`/educator/modules/${moduleId}`);
-    }
+	async function updateAction(data: LessonFormValues) {
+		"use server";
+		await updateLesson(lessonId, moduleId, data);
+	}
 
-    return (
-        <div className="container mx-auto py-10 space-y-6">
-            <div className="flex items-center gap-4">
-                <Link href={`/educator/modules/${moduleId}`}>
-                    <Button variant="outline" size="icon">
-                        <ArrowLeft className="h-4 w-4" />
-                    </Button>
-                </Link>
-                <div>
-                    <h1 className="text-3xl font-bold">Edit Lesson</h1>
-                    <p className="text-muted-foreground">Modify lesson content, tasks, and test cases.</p>
-                </div>
-            </div>
-
-            <LessonEditor 
-                onSubmit={updateAction} 
-                initialData={initialData} 
-                isUpdate={true} 
-            />
-        </div>
-    );
+	return <LessonEditor onSubmit={updateAction} initialData={initialData} isUpdate backHref={`/educator/modules/${moduleId}`} moduleTitle={pick(module.title, lang)} />;
 }

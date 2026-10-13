@@ -1,35 +1,31 @@
 ---
-title: "7. Conditionals (kama/else if/sivyo)"
-task: "Change `alama = 40` and see if the program tells you \"You failed\"."
-initialCode: |
-  alama = 
-  kama ( ) {
-      andika("Umefaulu!")
-  } sivyo {
-      andika("Umefeli, jaribu tena.")
-  }
-solution: "alama = 40\nkama (alama >= 50) {\n    andika(\"Umefaulu!\")\n} sivyo {\n    andika(\"Umefeli, jaribu tena.\")\n}"
+title: "Decisions (kama, au kama, sivyo)"
+task: "Finish the results program: for 80 or more print `Daraja A`, for 50 or more print `Umefaulu`, otherwise print `Jaribu tena`. Use `kama`, `au kama` and `sivyo`."
 ---
-A program can make decisions based on certain conditions using `kama`.
+A good program makes decisions. With `kama` (if), you tell the computer: "if this is true, do this".
 
-### Structure:
-```s
-kama (condition) {
-    // do this if condition is true
-} au kama (other_condition) {
-    // do this if first condition is false and this one is true
-} sivyo {
-    // do this if all above are false
-}
-```
-
-### Task:
 ```nuru
-alama = +++60+++
-kama (+++alama >= 50+++) {
-    andika("Umefaulu!")
+fanya mvua = kweli
+
+kama (mvua) {
+    andika("Beba mwavuli")
 } sivyo {
-    andika("Umefeli, jaribu tena.")
+    andika("Vaa kofia")
 }
 ```
 
+When you need more than two paths, add `au kama` (else if). The computer checks the conditions from the top. It runs the first one that is true and skips all the others. `sivyo` (else) runs when none are true.
+
+```nuru
+fanya saa = 15
+
+kama (saa < 12) {
+    andika("Habari za asubuhi")
+} +++au kama (saa < 16) {
+    andika("Habari za mchana")
+}+++ sivyo {
+    andika("Habari za jioni")
+}
+```
+
+Once you finish, try changing `alama` to 90 or 30 and watch the output change.

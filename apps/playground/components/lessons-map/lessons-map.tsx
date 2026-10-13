@@ -1,247 +1,202 @@
 "use client";
 
-import React, { useMemo } from "react";
 import Link from "next/link";
-import { Module, Lesson, Language } from "@/types/playground";
-import { Dictionary } from "@/app/(main)/[lang]/dictionaries";
-import { cn } from "@nuru/ui/lib/utils";
-import { 
-    Check, 
-    Play, 
-    Lock,
-    BookOpen,
-    Trophy,
-    ArrowRight,
-    Zap
-} from "lucide-react";
+import { ArrowRight, Check, ChevronDown, Flag, Sparkles } from "lucide-react";
 
-interface LessonsMapProps {
-	modules: Module[];
-	lang: Language;
-	dict: Dictionary;
+import type { Dictionary } from "@/app/(main)/[lang]/dictionaries";
+import { Badge } from "@nuru/ui/components/badge";
+import { Button } from "@nuru/ui/components/button";
+import { cn } from "@nuru/ui/lib/utils";
+import { moduleHref, rangiYaModuli } from "./rangi";
+import { useLocalProgress } from "./progress-hook";
+
+type Lang = "sw" | "en";
+
+export interface RamaniModule {
+	id: string;
+	slug: string;
+	title: Record<Lang, string>;
+	difficulty?: string;
+	lessons: { id: string; slug: string; title: Record<Lang, string> }[];
 }
 
-export function LessonsMap({ modules, lang, dict }: LessonsMapProps) {
-	// Flatten lessons to easily calculate global indices and progress
-    const allLessons = useMemo(() => {
-        return modules.flatMap((module, moduleIdx) => 
-            module.lessons.map((lesson, lessonIdx) => ({
-                ...lesson,
-                moduleId: module.id,
-                moduleSlug: module.slug,
-                moduleTitle: module.title[lang] || module.title.sw,
-                moduleIdx,
-                lessonIdx
-            }))
-        ).map((lesson, i) => ({ ...lesson, globalIndex: i }));
-    }, [modules, lang]);
+const DIFFICULTY_BADGE: Record<string, "success" | "info" | "purple"> = {
+	mwanzilishi: "success",
+	"wa kati": "info",
+	"wa juu": "purple",
+};
 
-    const totalLessons = allLessons.length;
-    // Mock progress: First 3 lessons completed, 4th active
-    const completedLessonsCount = 3; 
-    const currentActiveGlobalIndex = completedLessonsCount;
+// Safari Yako: the curriculum as a journey. Each module is a stop on an ink
+// path; its lessons are dots that fill in as this device completes them.
+export function LessonsMap({ modules, lang, dict }: { modules: RamaniModule[]; lang: Lang; dict: Dictionary }) {
+	const t = dict.tovuti.ramani;
+	const progress = useLocalProgress(modules.map((m) => m.id));
 
-    const progressPercentage = totalLessons > 0 
-        ? Math.round((completedLessonsCount / totalLessons) * 100) 
-        : 0;
+	const isDone = (moduleId: string, lessonId: string) => progress?.[moduleId]?.has(lessonId) ?? false;
+	const total = modules.reduce((n, m) => n + m.lessons.length, 0);
+	const done = modules.reduce((n, m) => n + m.lessons.filter((l) => isDone(m.id, l.id)).length, 0);
+	const percent = total ? Math.round((done / total) * 100) : 0;
 
-    const activeLesson = allLessons[currentActiveGlobalIndex] || allLessons[allLessons.length - 1];
+	// The next lesson: the first one not yet completed, in curriculum order.
+	let next: { module: RamaniModule; lesson: RamaniModule["lessons"][number]; index: number } | null = null;
+	for (const [index, module] of modules.entries()) {
+		const lesson = module.lessons.find((l) => !isDone(module.id, l.id));
+		if (lesson) {
+			next = { module, lesson, index };
+			break;
+		}
+	}
 
 	return (
-		<div className="flex flex-col gap-10 w-full max-w-3xl mx-auto pb-24 px-4 sm:px-0">
-            
-            {/* Global Progress Header */}
-            <div className="flex flex-col gap-6 rounded-3xl bg-card border border-border p-6 sm:p-8 shadow-sm relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-full h-1.5 bg-muted">
-                    <div 
-                        className="h-full bg-primary relative transition-all duration-1000 ease-out"
-                        style={{ width: `${progressPercentage}%` }}
-                    />
-                </div>
-                
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
-                    <div className="flex items-center gap-5">
-                        <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-muted text-foreground relative z-10">
-                            <Trophy className="h-6 w-6 sm:h-7 sm:w-7 opacity-80" />
-                        </div>
-                        <div>
-                            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-                                {dict.map.journey}
-                            </h2>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground mt-0.5">
-                                {completedLessonsCount} / {totalLessons} {dict.map.completedCount}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex items-baseline gap-1">
-                        <span className="text-3xl sm:text-4xl font-black text-foreground tracking-tighter">
-                            {progressPercentage}
-                        </span>
-                        <span className="text-lg font-bold text-muted-foreground">%</span>
-                    </div>
-                </div>
+		<div className="flex flex-col gap-12">
+			{/* Summary and the one thing to do next */}
+			<section className="mji overflow-hidden" aria-label={t.title}>
+				<div className="grid gap-6 p-5 sm:p-7 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
+					<div className="flex items-baseline gap-1">
+						<span className="font-display text-6xl leading-none font-extrabold tracking-[-0.04em] tabular-nums">{progress ? percent : "–"}</span>
+						<span className="font-display text-2xl font-bold text-muted-foreground">%</span>
+					</div>
+					<div className="min-w-0">
+						<p className="font-semibold">
+							{progress ? done : "–"} {t.of} {total} {t.lessons}
+						</p>
+						<div className="mt-2 h-4 overflow-hidden rounded-sm border-2 border-mstari bg-karatasi-2" aria-hidden>
+							<div className="h-full bg-mwani transition-[width] duration-500" style={{ width: `${percent}%` }} />
+						</div>
+						<p className="mt-2 text-sm text-muted-foreground">{t.savedHere}</p>
+					</div>
+				</div>
+				<div className="border-t-2 border-mstari bg-karatasi-2 p-4 sm:px-7">
+					{next ? (
+						<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+							<div className="min-w-0">
+								<p className="lebo text-muted-foreground">{t.upNext}</p>
+								<p className="truncate font-display text-xl font-bold">
+									{next.lesson.title[lang] || next.lesson.title.sw}
+									<span className="ml-2 text-base font-medium text-muted-foreground">· {next.module.title[lang] || next.module.title.sw}</span>
+								</p>
+							</div>
+							<Button asChild size="lg" className="shrink-0">
+								<Link href={`${moduleHref(lang, next.module.slug)}/${next.lesson.slug}`}>
+									{done === 0 ? t.start : t.continue}
+									<ArrowRight aria-hidden />
+								</Link>
+							</Button>
+						</div>
+					) : (
+						<p className="flex items-center gap-2 font-display text-lg font-bold">
+							<Sparkles className="size-5 text-jua" aria-hidden />
+							{t.allDone}
+						</p>
+					)}
+				</div>
+			</section>
 
-                {/* Recommended Next Lesson Card */}
-                {activeLesson && (
-                    <Link 
-                        href={`/${lang}/anza/${activeLesson.moduleSlug}/${activeLesson.slug}`}
-                        className="flex items-center justify-between gap-4 rounded-2xl bg-card border border-primary/20 p-4 sm:p-5 hover:border-primary/40 hover:bg-primary/5 transition-all shadow-sm group/rec"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                                <Zap className="h-5 w-5 fill-current" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-0.5">
-                                    {dict.map.continue}
-                                </p>
-                                <h3 className="text-sm sm:text-base font-bold text-foreground">
-                                    {activeLesson.moduleTitle}: {activeLesson.title[lang] || activeLesson.title.sw}
-                                </h3>
-                            </div>
-                        </div>
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary group-hover/rec:bg-primary group-hover/rec:text-primary-foreground transition-colors">
-                            <ArrowRight className="h-4 w-4" />
-                        </div>
-                    </Link>
-                )}
-            </div>
+			{/* The path */}
+			<div className="relative">
+				<div className="absolute top-6 bottom-6 left-[1.4rem] w-0 border-l-[3px] border-dashed border-mstari/50 sm:left-[1.9rem]" aria-hidden />
+				<ol className="relative flex flex-col gap-8">
+				{modules.map((module, index) => {
+					const rangi = rangiYaModuli(index);
+					const moduleDone = module.lessons.filter((l) => isDone(module.id, l.id)).length;
+					const complete = progress !== null && moduleDone === module.lessons.length && module.lessons.length > 0;
+					const difficulty = module.difficulty ?? "";
+					const difficultyLabel = dict.difficulty[difficulty as keyof typeof dict.difficulty] ?? difficulty;
+					const title = module.title[lang] || module.title.sw;
 
-			<div className="flex flex-col gap-10">
-                {modules.map((module, moduleIdx) => {
-                    const moduleTitle = module.title[lang] || module.title.sw;
-                    const difficultyKey = module.difficulty || "wa kati"; 
-                    const difficultyLabel = dict.difficulty[difficultyKey as keyof typeof dict.difficulty] || difficultyKey;
+					return (
+						<li key={module.id} className={cn("relative flex gap-3 sm:gap-5", index % 2 === 1 && "md:pl-16")}>
+							<div
+								className={cn(
+									"relative z-10 flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-mstari font-display text-xl font-extrabold shadow-kivuli-sm sm:size-16 sm:text-2xl",
+									rangi.bg,
+									rangi.fg,
+								)}
+								aria-hidden
+							>
+								{complete ? <Check className="size-6 stroke-[3]" /> : index + 1}
+							</div>
 
-                    const moduleStartGlobalIndex = allLessons.find(s => s.moduleId === module.id)?.globalIndex || 0;
-                    const moduleCompletedCount = module.lessons.filter((_, i) => (moduleStartGlobalIndex + i) < completedLessonsCount).length;
+							<article className="mji min-w-0 flex-1 overflow-hidden">
+								<div className={cn("pindo", rangi.text)} aria-hidden />
+								<div className="p-4 pt-3 sm:p-6 sm:pt-4">
+									<div className="flex flex-wrap items-center gap-2">
+										<span className="lebo text-muted-foreground">
+											{t.module} {index + 1}
+										</span>
+										{difficulty && (
+											<Badge variant={DIFFICULTY_BADGE[difficulty] ?? "secondary"} className="-rotate-2">
+												{difficultyLabel}
+											</Badge>
+										)}
+										{complete && (
+											<Badge variant="default" className="rotate-1">
+												<Flag className="size-3" aria-hidden />
+												{t.done}
+											</Badge>
+										)}
+									</div>
+									<h2 className="mt-2 font-display text-2xl leading-tight font-extrabold sm:text-3xl">
+										<Link href={moduleHref(lang, module.slug)} className="hover:underline hover:decoration-jua hover:decoration-4 hover:underline-offset-4">
+											{title}
+										</Link>
+									</h2>
+									<p className="mt-1 text-sm text-muted-foreground">
+										{progress ? moduleDone : "–"} {t.of} {module.lessons.length} {t.lessons}
+									</p>
 
-                    return (
-                        <section 
-                            key={module.id} 
-                            className="flex flex-col gap-4"
-                        >
-                            {/* Module Header - Muted & Structured */}
-                            <div className="flex items-center justify-between gap-4 sticky top-[4rem] z-20 bg-background/95 backdrop-blur-md py-4 border-b border-border/50">
-                                <div className="flex items-center gap-4 flex-1 min-w-0">
-                                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl bg-muted text-foreground/70">
-                                        <BookOpen className="h-5 w-5 sm:h-6 sm:w-6" />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                                                {dict.lessonPanel.lessons} {moduleIdx + 1}
-                                            </span>
-                                            <span className="h-1 w-1 rounded-full bg-border" />
-                                            <span className="text-[10px] font-medium text-muted-foreground capitalize">
-                                                {difficultyLabel}
-                                            </span>
-                                        </div>
-                                        <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-tight truncate">
-                                            {moduleTitle}
-                                        </h2>
-                                    </div>
-                                </div>
-                                <div className="hidden sm:flex flex-col items-end gap-1.5 shrink-0">
-                                     <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                                        {moduleCompletedCount} / {module.lessons.length}
-                                    </span>
-                                    <div className="flex h-1 w-16 bg-muted rounded-full overflow-hidden">
-                                        <div 
-                                            className="h-full bg-foreground/30 transition-all duration-1000 ease-out" 
-                                            style={{ width: `${(moduleCompletedCount / module.lessons.length) * 100}%` }} 
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+									<ul className="mt-4 flex flex-wrap gap-2" aria-label={`${title}: ${t.lessons}`}>
+										{module.lessons.map((lesson, li) => {
+											const lessonDone = isDone(module.id, lesson.id);
+											const isNext = next?.lesson.id === lesson.id;
+											const lessonTitle = lesson.title[lang] || lesson.title.sw;
+											return (
+												<li key={lesson.id}>
+													<Link
+														href={`${moduleHref(lang, module.slug)}/${lesson.slug}`}
+														title={lessonTitle}
+														aria-label={`${li + 1}. ${lessonTitle} (${lessonDone ? t.lessonDone : t.lessonTodo})`}
+														className={cn(
+															"flex size-10 items-center justify-center rounded-full border-2 font-mono text-[13px] font-bold transition-transform duration-100 hover:-translate-y-0.5 sm:size-9",
+															lessonDone
+																? cn("border-mstari", rangi.bg, rangi.fg)
+																: isNext
+																	? "animate-pulse-jua border-mstari bg-wino text-karatasi"
+																	: "border-dashed border-mstari/50 bg-card text-foreground/70",
+														)}
+													>
+														{lessonDone ? <Check className="size-4 stroke-[3]" aria-hidden /> : li + 1}
+													</Link>
+												</li>
+											);
+										})}
+									</ul>
 
-                            {/* Module Lessons Timeline - Clean & Focused */}
-                            <div className="relative pl-4 sm:pl-5 ml-5 sm:ml-6 flex flex-col gap-2 pb-4">
-                                {/* Single subtle thread line */}
-                                <div className="absolute left-[-1px] top-6 bottom-6 w-px bg-border" />
-
-                                {module.lessons.map((lesson, lessonIdx) => {
-                                    const globalIndex = moduleStartGlobalIndex + lessonIdx;
-                                    const isCompleted = globalIndex < currentActiveGlobalIndex;
-                                    const isActive = globalIndex === currentActiveGlobalIndex;
-                                    const isLocked = globalIndex > currentActiveGlobalIndex;
-
-                                    const lessonTitle = lesson.title[lang] || lesson.title.sw;
-                                    const href = `/${lang}/anza/${module.slug}/${lesson.slug}`;
-
-                                    return (
-                                        <div key={lesson.id} className="relative">
-                                            <Link
-                                                href={isLocked ? "#" : href}
-                                                className={cn(
-                                                    "group relative flex items-center gap-4 sm:gap-5 p-3 sm:p-4 rounded-xl transition-all duration-200",
-                                                    isActive ? "bg-card border border-primary/20 shadow-sm" :
-                                                    isLocked ? "cursor-not-allowed opacity-50 border border-transparent" : 
-                                                    "hover:bg-muted/30 cursor-pointer border border-transparent"
-                                                )}
-                                                aria-disabled={isLocked}
-                                            >
-                                                {/* Timeline Node */}
-                                                <div className="relative z-10 flex shrink-0 items-center justify-center -ml-8 sm:-ml-10 w-8 h-8 sm:w-10 sm:h-10">
-                                                    <div className={cn(
-                                                        "relative flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full transition-all duration-200",
-                                                        isActive ? "bg-primary text-primary-foreground shadow-sm scale-110" :
-                                                        isCompleted ? "bg-muted text-muted-foreground" :
-                                                        "bg-background border border-border text-muted-foreground/40"
-                                                    )}>
-                                                        {isActive ? (
-                                                            <Play className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-current ml-0.5" />
-                                                        ) : isCompleted ? (
-                                                            <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4 stroke-[3]" />
-                                                        ) : (
-                                                            <Lock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                {/* Lesson Content */}
-                                                <div className="flex min-w-0 flex-1 flex-col">
-                                                    <div className="flex items-center gap-2 mb-0.5">
-                                                        <span className={cn(
-                                                            "font-mono text-[10px] font-bold uppercase",
-                                                            isActive ? "text-primary" : "text-muted-foreground"
-                                                        )}>
-                                                            {String(moduleIdx + 1).padStart(2, '0')}.{String(lessonIdx + 1).padStart(2, '0')}
-                                                        </span>
-                                                        {isActive && (
-                                                            <span className="inline-flex rounded-full bg-primary/10 px-1.5 py-0.5 text-[8px] font-bold uppercase text-primary tracking-wider">
-                                                                Sasa
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <h3 className={cn(
-                                                        "truncate text-sm sm:text-base font-semibold transition-colors duration-200",
-                                                        isActive ? "text-foreground" :
-                                                        isLocked ? "text-muted-foreground" :
-                                                        "text-foreground group-hover:text-foreground/80"
-                                                    )}>
-                                                        {lessonTitle}
-                                                    </h3>
-                                                </div>
-
-                                                {/* Action Arrow */}
-                                                <div className="flex shrink-0 items-center justify-center">
-                                                    {!isLocked && (
-                                                        <ArrowRight className={cn(
-                                                            "h-4 w-4 transition-transform duration-200 group-hover:translate-x-1",
-                                                            isActive ? "text-primary" : "text-muted-foreground opacity-0 group-hover:opacity-100"
-                                                        )} />
-                                                    )}
-                                                </div>
-                                            </Link>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </section>
-                    );
-                })}
-            </div>
+									<details className="group mt-4">
+										<summary className="flex cursor-pointer list-none items-center gap-1 text-sm font-semibold text-foreground/75 hover:text-foreground [&::-webkit-details-marker]:hidden">
+											<ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden />
+											<span className="first-letter:uppercase">{t.lessons}</span>
+										</summary>
+										<ol className="mt-2 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+											{module.lessons.map((lesson, li) => (
+												<li key={lesson.id}>
+													<Link href={`${moduleHref(lang, module.slug)}/${lesson.slug}`} className="flex items-baseline gap-2 py-1 hover:underline">
+														<span className="font-mono text-xs text-muted-foreground">{String(li + 1).padStart(2, "0")}</span>
+														<span className={cn(isDone(module.id, lesson.id) && "text-muted-foreground line-through decoration-mwani decoration-2")}>
+															{lesson.title[lang] || lesson.title.sw}
+														</span>
+													</Link>
+												</li>
+											))}
+										</ol>
+									</details>
+								</div>
+							</article>
+						</li>
+					);
+				})}
+			</ol>
+			</div>
 		</div>
 	);
 }

@@ -1,24 +1,24 @@
 ---
-title: "9. Lists (Arrays)"
-task: "Create an array of `colors` with \"red\" and \"green\", add \"blue\" using `sukuma`, then print the number of colors."
-initialCode: |
-  rangi = 
-  rangi.
-  andika(rangi.)
-solution: "rangi = [\"nyekundu\", \"kijani\"]\nrangi.sukuma(\"bluu\")\nandika(rangi.idadi())"
+title: "Arrays (orodha)"
+task: "Create an array `matunda` holding `\"embe\"` and `\"ndizi\"`. Add `\"nanasi\"` with `sukuma()`, then print the whole array and the number of fruits."
 ---
-An array is a collection of many things in a single box. These things are placed inside square brackets `[ ]`.
+An array (`orodha`) keeps many items inside one variable. You write it with square brackets `[ ]` and separate the items with commas:
 
-### Key Facts:
-- The first position is **0**.
-- The second position is **1**, and so on.
-- `idadi()` gives you the number of items.
-- `sukuma(item)` adds an item to the end.
-
-### Task:
 ```nuru
-rangi = +++["nyekundu", "kijani"]+++
-rangi.+++sukuma("bluu")+++
-andika(rangi.+++idadi()+++)
+fanya timu = ["Simba", "Yanga", "Azam"]
+andika(timu[0]) // Simba
+andika(timu[2]) // Azam
 ```
 
+Each item has a position. The first position is **0**, not 1.
+
+### Array methods
+
+- `orodha.idadi()` returns the number of items.
+- `orodha.sukuma(kitu)` adds an item at the end.
+
+```nuru
+fanya timu = ["Simba", "Yanga"]
+timu.+++sukuma("Azam")+++
+andika(timu.+++idadi()+++) // 3
+```

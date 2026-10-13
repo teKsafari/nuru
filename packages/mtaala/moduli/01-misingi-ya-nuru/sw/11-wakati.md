@@ -1,24 +1,36 @@
 ---
-title: "11. Vitanzi vya Wakati (While)"
-task: "Andika kitanzi cha `wakati` kinachoanza na `n = 5` na kupungua mpaka `1` (n = n - 1)."
+title: "Kitanzi cha wakati"
+task: "Mechi inakaribia kuanza! Tumia kitanzi cha `wakati` kuhesabu kurudi nyuma kutoka `5` hadi `1`, kisha andika `Mpira umeanza!`."
 initialCode: |
-  n = 5
-   {
+  fanya n = 5
+
+  andika("Mpira umeanza!")
+solution: |
+  fanya n = 5
+  wakati (n > 0) {
       andika(n)
-      
+      n = n - 1
   }
-solution: "n = 5\nwakati (n > 0) {\n    andika(n)\n    n = n - 1\n}"
+  andika("Mpira umeanza!")
+tests:
+  - type: match_code
+    pattern: 'wakati\s*\('
+    message: "Tumia kitanzi cha wakati."
+  - type: exact_output
+    message: "Programu iandike 5, 4, 3, 2, 1 kila moja mstari wake, kisha Mpira umeanza!"
 ---
-Kitanzi cha `wakati` kinaendelea kurudia mradi tu hali fulani iwe kweli.
+`wakati` inarudia kazi **muda wote** sharti likiwa kweli. Kabla ya kila mzunguko, kompyuta inaangalia sharti tena.
 
-**Onyo**: Hakikisha hali hiyo itakuja kuwa sikweli wakati fulani, vinginevyo programu itajirudia milele!
-
-### Zoezi:
 ```nuru
-n = 5
-+++wakati (n > 0)+++ {
-    andika(n)
-    +++n = n - 1+++
+fanya maji = 0
+
++++wakati (maji < 3)+++ {
+    andika("Naweka ndoo ya maji")
+    +++maji = maji + 1+++
 }
+andika("Pipa limejaa!")
 ```
 
+Mstari `maji = maji + 1` ni muhimu sana. Bila huo, `maji` itabaki 0 milele na kitanzi hakitasimama. Kama hilo likitokea, bonyeza kitufe cha **Simamisha**.
+
+Tumia `kwa` unapojua idadi ya mizunguko mapema. Tumia `wakati` unaposubiri jambo fulani litokee.

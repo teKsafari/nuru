@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, jsonb, uuid, foreignKey } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, integer, jsonb, uuid, foreignKey, boolean, index, uniqueIndex, check } from "drizzle-orm/pg-core";
 import { sql, relations } from "drizzle-orm";
 import type { TestCaseV1 } from "@nuru/ui/validation/test-cases";
 
@@ -91,4 +91,119 @@ export const lessonsRelations = relations(lessons, ({ one }) => ({
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
 	modules: many(modules),
+}));
+
+// --- Darasa: classrooms ---
+// A teacher (a Logto user) opens a darasa and shares its join code. Learners
+// (wanafunzi) join with the code, a display name and a picture password, so
+// shared devices work without email. Progress (maendeleo) belongs either to a
+// mwanafunzi or to a signed-in Logto user.
+
+export const madarasa = pgTable("madarasa", {
+	id: text("id").primaryKey().notNull(),
+	name: text("name").notNull(),
+	code: text("code").unique().notNull(),
+	teacherLogtoId: text("teacher_logto_id").notNull(),
+	organizationId: text("organization_id"),
+	moduleIds: jsonb("module_ids").$type<string[]>().default(sql`'[]'::jsonb`).notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	archivedAt: timestamp("archived_at", { withTimezone: true, mode: 'string' }),
+}, (table) => [
+	foreignKey({
+		columns: [table.teacherLogtoId],
+		foreignColumns: [users.logtoId],
+		name: "madarasa_teacher_logto_id_users_logto_id_fk"
+	}).onDelete("cascade"),
+	foreignKey({
+		columns: [table.organizationId],
+		foreignColumns: [organizations.id],
+		name: "madarasa_organization_id_organizations_id_fk"
+	}).onDelete("set null"),
+	index("madarasa_teacher_idx").on(table.teacherLogtoId),
+]);
+
+export const wanafunzi = pgTable("wanafunzi", {
+	id: text("id").primaryKey().notNull(),
+	darasaId: text("darasa_id").notNull(),
+	displayName: text("display_name").notNull(),
+	// scrypt hash of the picture sequence, "salt:hash" in hex. Null after a teacher reset:
+	// the learner sets new pictures on their next sign-in.
+	pictureHash: text("picture_hash"),
+	logtoId: text("logto_id"),
+	failedAttempts: integer("failed_attempts").default(0).notNull(),
+	lockedUntil: timestamp("locked_until", { withTimezone: true, mode: 'string' }),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	lastSeenAt: timestamp("last_seen_at", { withTimezone: true, mode: 'string' }),
+}, (table) => [
+	foreignKey({
+		columns: [table.darasaId],
+		foreignColumns: [madarasa.id],
+		name: "wanafunzi_darasa_id_madarasa_id_fk"
+	}).onDelete("cascade"),
+	foreignKey({
+		columns: [table.logtoId],
+		foreignColumns: [users.logtoId],
+		name: "wanafunzi_logto_id_users_logto_id_fk"
+	}).onDelete("set null"),
+	uniqueIndex("wanafunzi_darasa_name_uq").on(table.darasaId, table.displayName),
+	uniqueIndex("wanafunzi_darasa_logto_uq").on(table.darasaId, table.logtoId),
+]);
+
+export const maendeleo = pgTable("maendeleo", {
+	id: text("id").primaryKey().notNull(),
+	mwanafunziId: text("mwanafunzi_id"),
+	logtoId: text("logto_id"),
+	lessonId: text("lesson_id").notNull(),
+	moduleId: text("module_id").notNull(),
+	passed: boolean("passed").default(false).notNull(),
+	attempts: integer("attempts").default(0).notNull(),
+	lastCode: text("last_code"),
+	firstPassedAt: timestamp("first_passed_at", { withTimezone: true, mode: 'string' }),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+		columns: [table.mwanafunziId],
+		foreignColumns: [wanafunzi.id],
+		name: "maendeleo_mwanafunzi_id_wanafunzi_id_fk"
+	}).onDelete("cascade"),
+	foreignKey({
+		columns: [table.logtoId],
+		foreignColumns: [users.logtoId],
+		name: "maendeleo_logto_id_users_logto_id_fk"
+	}).onDelete("cascade"),
+	foreignKey({
+		columns: [table.lessonId],
+		foreignColumns: [lessons.id],
+		name: "maendeleo_lesson_id_lessons_id_fk"
+	}).onDelete("cascade"),
+	uniqueIndex("maendeleo_mwanafunzi_lesson_uq").on(table.mwanafunziId, table.lessonId),
+	uniqueIndex("maendeleo_logto_lesson_uq").on(table.logtoId, table.lessonId),
+	check("maendeleo_owner_ck", sql`${table.mwanafunziId} IS NOT NULL OR ${table.logtoId} IS NOT NULL`),
+]);
+
+export const madarasaRelations = relations(madarasa, ({ many, one }) => ({
+	wanafunzi: many(wanafunzi),
+	teacher: one(users, {
+		fields: [madarasa.teacherLogtoId],
+		references: [users.logtoId],
+	}),
+}));
+
+export const wanafunziRelations = relations(wanafunzi, ({ one, many }) => ({
+	darasa: one(madarasa, {
+		fields: [wanafunzi.darasaId],
+		references: [madarasa.id],
+	}),
+	maendeleo: many(maendeleo),
+}));
+
+export const maendeleoRelations = relations(maendeleo, ({ one }) => ({
+	mwanafunzi: one(wanafunzi, {
+		fields: [maendeleo.mwanafunziId],
+		references: [wanafunzi.id],
+	}),
+	lesson: one(lessons, {
+		fields: [maendeleo.lessonId],
+		references: [lessons.id],
+	}),
 }));

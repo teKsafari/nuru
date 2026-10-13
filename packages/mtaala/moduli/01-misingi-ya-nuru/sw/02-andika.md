@@ -1,27 +1,42 @@
 ---
-title: "2. Kutoa Matokeo (andika)"
-task: "Tumia `andika()` kuchapisha jina lako na mji unaoishi katika mistari miwili tofauti ukitumia `/n`."
+title: "Kuandika Matokeo (andika)"
+task: "Tumia `andika()` mara moja tu kuandika mistari miwili: `Jina langu ni ...` na `Naishi ...`. Tenganisha mistari kwa `\\n`."
 initialCode: |
   andika()
+solution: |
+  andika("Jina langu ni Amani\nNaishi Dodoma")
 tests:
   - type: match_output
-    pattern: "jina langu ni .+"
+    pattern: 'jina langu ni \S+'
     flags: i
-    message: "Lazima ujumuishe 'Jina langu ni [jina lako]'"
+    message: "Mstari wa kwanza uwe 'Jina langu ni' ikifuatiwa na jina lako."
   - type: match_output
-    pattern: "naishi .+"
+    pattern: '\n\s*naishi \S+'
     flags: i
-    message: "Lazima ujumuishe 'Naishi [mji wako]'"
+    message: "Mstari wa pili uanze na 'Naishi' ikifuatiwa na mji wako."
+  - type: match_code
+    pattern: '\\n'
+    message: "Tumia \\n ndani ya maandishi kuanzisha mstari mpya."
 ---
-Kitendakazi cha `andika()` kinatumika kutoa taarifa au matokeo kwenye skrini. Ni njia yetu kuu ya kuzungumza na mtumiaji.
+`andika()` ndiyo njia kuu ya programu yako kuongea na wewe. Unaweza kuandika maneno, namba, au vyote kwa pamoja:
 
-### Sifa za andika():
-1. Inachukua kitu chochote (namba, maandishi, n.k.) na kukichapisha.
-2. Unaweza kuandika vitu vingi kwa pamoja ukivigawa kwa mkwaju (comma `,`).
-3. Kwa maandishi (tungo), lazima uyaweke ndani ya alama za nukuu `" "`.
-
-### Mfano:
 ```nuru
-andika(+++"Jina langu ni Amani /n Naishi Dar es Salaam"+++)
+andika("Bei ya embe ni", 500)
 ```
 
+Ukitenganisha vitu kwa koma `,`, Nuru inaweka nafasi kati yao. Mfano huu unaandika `Bei ya embe ni 500`.
+
+### Mstari mpya
+
+Ndani ya maandishi, alama `\n` maana yake ni "anza mstari mpya". Ni backslash `\` na herufi `n`, si `/n`.
+
+```nuru
+andika("Simba+++\n+++Yanga")
+```
+
+Matokeo yake ni:
+
+```text
+Simba
+Yanga
+```

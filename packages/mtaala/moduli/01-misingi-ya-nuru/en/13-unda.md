@@ -1,39 +1,22 @@
 ---
-title: "13. Functions"
-task: "Create a function `jumla` that takes `a` and `b` and returns their sum."
-initialCode: |
-  fanya jumla = unda(a, b) {
-      // Andika kodi yako hapa
-  }
-  
-  andika(jumla(5, 7))
-solution: |
-  fanya jumla = unda(a, b) {
-      rudisha a + b
-  }
-  
-  andika(jumla(5, 7))
+title: "Functions (unda)"
+task: "Finish the function `jumla` so that it returns the sum of `a` and `b` using `rudisha`."
 ---
-Functions are pieces of code that you can call at any time. We use the word `unda` to create a function.
+A function is a named piece of code. You write it once, then call it whenever you need it.
 
-### Why use functions?
-1. To simplify repetitive tasks.
-2. To make code cleaner.
+You create a function with the word `unda`. The names inside the brackets are **arguments** (`hoja`): values you hand to the function each time you call it.
 
-### Example:
 ```nuru
-fanya square = +++unda(n)+++ {
+fanya mraba = +++unda(n)+++ {
     +++rudisha n * n+++
 }
 
-andika(square(5))  // 25
-andika(square(10)) // 100
+andika(mraba(5))  // 25
+andika(mraba(12)) // 144
 ```
 
-**Your Task:** Create a function `jumla` that takes two numbers `a` and `b` and returns their sum.
+`rudisha` (return) ends the function and hands the answer back to whoever called it. You can print that answer, store it in a variable, or use it in another calculation.
 
-```nuru
-fanya jumla = unda(a, b) {
-    +++rudisha a + b+++
-}
-```
+### Why functions?
+1. You avoid writing the same code many times.
+2. Each function has a name that says what it does, so your code is easier to read.

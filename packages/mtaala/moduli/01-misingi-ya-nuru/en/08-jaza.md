@@ -1,19 +1,16 @@
 ---
-title: "8. Getting Input (jaza)"
-task: "Use `jaza()` to ask the user for their favorite food, then print it."
-initialCode: |
-  chakula = 
-  andika()
-solution: "chakula = jaza(\"Wali\")\nandika(chakula)"
+title: "Getting Input (jaza)"
+task: "Use `jaza()` to ask the user for their favourite food. Then print `Chakula ninachopenda ni` followed by their answer."
 ---
-The `jaza()` function allows you to get information from the user. The computer will pause and wait until the user types something.
+So far your programs have done all the talking. `jaza()` lets the user answer back.
 
-**Important**: The value returned by `jaza()` is always a **String** (text).
+`jaza()` shows a question, waits for the user to type an answer and press Enter, then returns that answer:
 
-### Task:
 ```nuru
-chakula = +++jaza("Wali")+++
-andika(+++chakula+++)
+fanya jina = +++jaza("Jina lako ni nani? ")+++
+andika("Karibu,", jina)
 ```
 
-If you want a number, you will have to convert it (we'll learn this later).
+When you run this program, the terminal asks for your name. Type an answer and press Enter.
+
+**Important:** `jaza()` always returns **text** (a `NENO`), even when the user types a number. You will see why that matters in the lesson on converting types.

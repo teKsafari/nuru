@@ -1,105 +1,96 @@
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { Card } from "@nuru/ui/components/card";
-import { Button } from "@nuru/ui/components/button";
-import { GripVertical, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { reorderLessons, deleteLesson } from "@/app/actions/lessons";
+import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
+import { GripVertical, Pencil, FlaskConical, KeyRound } from "lucide-react";
+import { Button } from "@nuru/ui/components/button";
 import { cn } from "@nuru/ui/lib/utils";
+import { reorderLessons, deleteLesson } from "@/app/actions/lessons";
+import { useDict } from "@/components/providers/lang-provider";
+import { ConfirmDelete } from "@/components/kanga/confirm-delete";
+import { pick } from "@/lib/dict";
 
-export function SortableLessonsList({ 
-    lessons: initialLessons, 
-    moduleId 
-}: { 
-    lessons: any[], 
-    moduleId: string 
-}) {
-    // Sort initial lessons by order
-    const sortedInitial = [...initialLessons].sort((a, b) => (a.order || 0) - (b.order || 0));
-    const [lessons, setLessons] = useState(sortedInitial);
-    const [isPending, startTransition] = useTransition();
+type LessonRow = { id: string; title: unknown; order: number | null; tests: unknown; solution: string | null };
 
-    // Sync state if initialLessons change (e.g. after a delete)
-    useEffect(() => {
-        setLessons([...initialLessons].sort((a, b) => (a.order || 0) - (b.order || 0)));
-    }, [initialLessons]);
+export function SortableLessonsList({ lessons: initialLessons, moduleId }: { lessons: LessonRow[]; moduleId: string }) {
+	const { t, lang } = useDict();
+	const sortOrder = (rows: LessonRow[]) => [...rows].sort((a, b) => (a.order || 0) - (b.order || 0));
+	const [lessons, setLessons] = useState(() => sortOrder(initialLessons));
+	const [isPending, startTransition] = useTransition();
 
-    const handleDragEnd = (result: any) => {
-        if (!result.destination) return;
+	useEffect(() => {
+		setLessons(sortOrder(initialLessons));
+	}, [initialLessons]);
 
-        const items = Array.from(lessons);
-        const [reorderedItem] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, reorderedItem);
+	const handleDragEnd = (result: DropResult) => {
+		if (!result.destination || result.destination.index === result.source.index) return;
+		const items = Array.from(lessons);
+		const [moved] = items.splice(result.source.index, 1);
+		items.splice(result.destination.index, 0, moved);
+		setLessons(items);
+		startTransition(async () => {
+			await reorderLessons(moduleId, items.map((item) => item.id));
+		});
+	};
 
-        // Optimistic update
-        setLessons(items);
-
-        // Sync with server
-        startTransition(async () => {
-            const orderedIds = items.map((item) => item.id);
-            await reorderLessons(moduleId, orderedIds);
-        });
-    };
-
-    return (
-        <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="lessons">
-                {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-3">
-                        {lessons.map((lesson, index) => (
-                            <Draggable key={lesson.id} draggableId={lesson.id} index={index}>
-                                {(provided, snapshot) => (
-                                    <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        className={cn(
-                                            snapshot.isDragging ? "opacity-90 scale-[1.02] shadow-lg z-50" : "",
-                                            "relative transition-all"
-                                        )}
-                                    >
-                                        <Card className="group flex items-center justify-between p-3 px-5 rounded-2xl border-slate-200 dark:border-slate-800 hover:border-primary/50 hover:shadow-md transition-all bg-white dark:bg-slate-900">
-                                            <div className="flex items-center gap-4">
-                                                <div 
-                                                    {...provided.dragHandleProps} 
-                                                    className="cursor-grab hover:text-primary transition-colors text-slate-400 -ml-2 p-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800"
-                                                >
-                                                    <GripVertical className="h-5 w-5" />
-                                                </div>
-                                                <div className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs">
-                                                    {index + 1}
-                                                </div>
-                                                <div>
-                                                    <h4 className="font-bold text-slate-900 dark:text-white">
-                                                        {typeof lesson.title === 'string' ? lesson.title : lesson.title?.en}
-                                                    </h4>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Link href={`/educator/modules/${moduleId}/lessons/${lesson.id}`}>
-                                                    <Button variant="ghost" size="sm" className="rounded-lg font-bold">Edit</Button>
-                                                </Link>
-                                                <form action={deleteLesson.bind(null, lesson.id, moduleId)}>
-                                                    <Button type="submit" variant="ghost" size="sm" className="text-slate-400 hover:text-destructive hover:bg-destructive/10 rounded-lg px-2">
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </form>
-                                            </div>
-                                        </Card>
-                                    </div>
-                                )}
-                            </Draggable>
-                        ))}
-                        {provided.placeholder}
-                        {isPending && (
-                            <div className="flex justify-center pt-2">
-                                <p className="text-xs font-semibold text-slate-400 animate-pulse">Saving order...</p>
-                            </div>
-                        )}
-                    </div>
-                )}
-            </Droppable>
-        </DragDropContext>
-    );
+	return (
+		<DragDropContext onDragEnd={handleDragEnd}>
+			<Droppable droppableId="lessons">
+				{(provided) => (
+					<ol {...provided.droppableProps} ref={provided.innerRef} className="space-y-3">
+						{lessons.map((lesson, index) => {
+							const tests = Array.isArray(lesson.tests) ? lesson.tests.length : 0;
+							const title = pick(lesson.title, lang);
+							return (
+								<Draggable key={lesson.id} draggableId={lesson.id} index={index}>
+									{(drag, snapshot) => (
+										<li ref={drag.innerRef} {...drag.draggableProps} className={cn("relative", snapshot.isDragging && "z-50")}>
+											<div
+												className={cn(
+													"flex items-center gap-2 rounded-lg border-2 border-mstari bg-card py-2 pr-2 pl-1 sm:gap-3",
+													snapshot.isDragging ? "shadow-kivuli-lg -rotate-1" : "shadow-kivuli-sm",
+												)}
+											>
+												<span {...drag.dragHandleProps} aria-label={t.modules.dragHint} title={t.modules.dragHint} className="flex h-10 w-7 shrink-0 cursor-grab items-center justify-center text-muted-foreground hover:text-foreground">
+													<GripVertical className="size-5" />
+												</span>
+												<span className="flex size-9 shrink-0 items-center justify-center rounded-md border-2 border-mstari bg-jua font-display text-sm font-bold text-[#15120f]">{index + 1}</span>
+												<div className="min-w-0 flex-1">
+													<Link href={`/educator/modules/${moduleId}/lessons/${lesson.id}`} className="block truncate font-semibold hover:underline hover:decoration-jua hover:decoration-2 hover:underline-offset-4">
+														{title.replace(/^\d+\.\s*/, "")}
+													</Link>
+													<div className="mt-0.5 flex items-center gap-3 text-xs text-muted-foreground">
+														<span className={cn("inline-flex items-center gap-1", tests === 0 && "text-pilipili")}>
+															<FlaskConical className="size-3.5" aria-hidden />
+															{tests} {t.modules.tests}
+														</span>
+														{lesson.solution && (
+															<span className="inline-flex items-center gap-1">
+																<KeyRound className="size-3.5" aria-hidden />
+																{t.editor.solution}
+															</span>
+														)}
+													</div>
+												</div>
+												<Button asChild variant="outline" size="sm" className="h-10 sm:h-9">
+													<Link href={`/educator/modules/${moduleId}/lessons/${lesson.id}`} aria-label={`${t.modules.edit}: ${title}`}>
+														<Pencil />
+														<span className="hidden sm:inline">{t.modules.edit}</span>
+													</Link>
+												</Button>
+												<ConfirmDelete action={deleteLesson.bind(null, lesson.id, moduleId)} label={t.modules.delete} confirmLabel={t.modules.confirmDelete} />
+											</div>
+										</li>
+									)}
+								</Draggable>
+							);
+						})}
+						{provided.placeholder}
+						{isPending && <p className="lebo animate-pulse pt-1 text-center text-muted-foreground">{t.modules.savingOrder}</p>}
+					</ol>
+				)}
+			</Droppable>
+		</DragDropContext>
+	);
 }

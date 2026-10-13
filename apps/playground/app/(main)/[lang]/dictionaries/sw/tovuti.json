@@ -1,1 +1,120 @@
-{ "tovuti": {} }
+{
+  "tovuti": {
+    "meta": {
+      "title": "Nuru · Lugha ya kwanza ya kiprogramu ya Kiswahili",
+      "description": "Jifunze kuandika programu kwa Kiswahili. Chora na kobe, washa taa kwenye ubao, na endesha kodi kwenye kivinjari bila kusakinisha kitu."
+    },
+    "landing": {
+      "eyebrow": "Lugha ya kwanza ya kiprogramu ya Kiswahili",
+      "titleBefore": "Unachowaza ndicho",
+      "titleHighlight": "unachoandika.",
+      "lead": "Nuru ni lugha ya kiprogramu inayoandikwa kwa Kiswahili. Hutahitaji tena kutafsiri wazo lako kwa Kiingereza kabla ya kuliandika: unaandika `kama`, `wakati` na `andika`, maneno unayoyajua tayari.",
+      "reach": "Kuanzia chekechea hadi nyumbani kwa bibi.",
+      "ctaStart": "Anza Kujifunza",
+      "ctaUwanja": "Fungua Uwanja",
+      "facts": ["Bure", "Hakuna kusakinisha", "Inafanya kazi kwenye simu", "Hata bila intaneti"],
+      "card": {
+        "run": "Endesha",
+        "output": "Matokeo",
+        "label": "Mfano wa programu ya Nuru ikiandikwa na kuendeshwa"
+      },
+      "marquee": "Maneno ya Nuru",
+      "kanga": {
+        "lebo": "Unachoweza kufanya",
+        "title": "Mambo matatu ya kujaribu leo",
+        "items": [
+          {
+            "title": "Andika kwa Kiswahili",
+            "body": "Vibadilika, maamuzi, vitanzi na vitendakazi kwa maneno unayoyafahamu. Hata makosa yanaelezwa kwa Kiswahili.",
+            "cta": "Anza somo la kwanza"
+          },
+          {
+            "title": "Chora na Kobe",
+            "body": "Mwongoze kobe kwa `mbele` na `kulia`, naye atachora maumbo, nyota na maua kwenye turubai.",
+            "cta": "Chora sasa"
+          },
+          {
+            "title": "Washa Taa na Ubao",
+            "body": "Bodi ya elektroniki ya kuigiza yenye taa 8, kengele na skrini. Andika programu ya vifaa kabla hujashika kifaa halisi.",
+            "cta": "Washa taa"
+          }
+        ]
+      },
+      "walimu": {
+        "lebo": "Kwa Walimu",
+        "title": "Darasa zima kwenye skrini moja",
+        "body": "Fungua darasa kwenye Chumba cha Walimu na upate msimbo wa kujiunga. Wanafunzi wanaingia kwa msimbo, jina lao na picha ya siri. Hakuna barua pepe wala nenosiri, hata wanaposhirikiana simu moja.",
+        "steps": [
+          { "title": "Fungua darasa", "body": "Unapata msimbo mfupi wa kujiunga, kama SIMBA-42." },
+          { "title": "Wanafunzi wanajiunga", "body": "Msimbo, jina na picha ya siri. Inatosha." },
+          { "title": "Fuatilia maendeleo", "body": "Gridi inaonyesha nani amemaliza somo gani, papo hapo." }
+        ],
+        "cta": "Fungua Chumba cha Walimu",
+        "learner": "Nina msimbo wa darasa",
+        "gridTitle": "Darasa la 5B",
+        "gridCode": "Msimbo",
+        "gridLessons": "Masomo",
+        "legendDone": "Amemaliza",
+        "legendTrying": "Anajaribu",
+        "legendNotYet": "Bado"
+      },
+      "methali": {
+        "lebo": "Methali",
+        "text": "Safari ya maili elfu huanza na hatua moja.",
+        "meaning": "Somo la kwanza linachukua dakika tano. Anza leo."
+      },
+      "contributors": {
+        "lebo": "Jumuiya",
+        "title": "Imejengwa na jumuiya",
+        "body": "Nuru ni programu huria. Watu hawa wameandika kodi, nyaraka na masomo yake. Wewe pia unakaribishwa.",
+        "all": "Ona wachangiaji wote",
+        "join": "Jiunge nasi Telegram"
+      }
+    },
+    "footer": {
+      "tagline": "Lugha ya kwanza ya kiprogramu ya Kiswahili.",
+      "madeBy": "Imeundwa na",
+      "learn": "Jifunze",
+      "community": "Jumuiya",
+      "teachers": "Walimu",
+      "teachersRoom": "Chumba cha Walimu",
+      "openSource": "Nuru ni programu huria. Kodi yake iko GitHub."
+    },
+    "kamusi": {
+      "metaTitle": "Kamusi",
+      "metaDescription": "Rejea kamili ya lugha ya Nuru kwa Kiswahili: vibadilika, aina za data, maamuzi, vitanzi, vitendakazi, moduli na makosa ya kawaida, kila mmoja na mfano unaoweza kujaribu.",
+      "lebo": "Rejea ya lugha",
+      "title": "Kamusi ya Nuru",
+      "lead": "Kila neno, kila kitendakazi na kila moduli ya Nuru, pamoja na mfano unaoweza kuuendesha. Mifano yote imekaguliwa kwenye Nuru halisi.",
+      "contents": "Yaliyomo",
+      "try": "Jaribu",
+      "tryLabel": "Fungua mfano huu Uwanjani",
+      "output": "Matokeo",
+      "sampleOutput": "Matokeo (mfano)",
+      "input": "Ukiandika",
+      "drawsOnCanvas": "Angalia turubai ya kobe",
+      "drawsOnBoard": "Angalia ubao",
+      "noOutput": "Hakuna maandishi",
+      "tip": "Dokezo",
+      "top": "Rudi juu"
+    },
+    "ramani": {
+      "metaTitle": "Masomo",
+      "lebo": "Ramani ya masomo",
+      "title": "Safari Yako",
+      "lead": "Kila moduli ni kituo kwenye safari. Kamilisha masomo yake, kisha songa mbele.",
+      "module": "Moduli",
+      "lessons": "masomo",
+      "of": "kati ya",
+      "done": "Imekamilika",
+      "start": "Anza safari",
+      "continue": "Endelea",
+      "upNext": "Somo linalofuata",
+      "allDone": "Umemaliza safari yote. Haba na haba hujaza kibaba.",
+      "savedHere": "Maendeleo yako yanahifadhiwa kwenye kifaa hiki.",
+      "lessonDone": "limekamilika",
+      "lessonTodo": "bado",
+      "openModule": "Fungua moduli"
+    }
+  }
+}

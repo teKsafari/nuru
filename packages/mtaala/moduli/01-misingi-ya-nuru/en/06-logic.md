@@ -1,22 +1,26 @@
 ---
-title: "6. Comparisons and Logic"
-task: "Compare if `50` is greater than `20` **AND** `10` is equal to `10`."
-initialCode: |
-  andika()
-solution: "andika(50 > 20 && 10 == 10)"
+title: "Comparison and Logic"
+task: "Amina scored `hisabati = 75` and `kiswahili = 48`. Print two lines: first whether she passed **both** subjects (`&&`), then whether she passed **at least one** (`||`). The pass mark is 50."
 ---
-When you want to compare values, you use these operators:
+When you compare two values, the answer is `kweli` (true) or `sikweli` (false).
 
-### Comparison Operators:
-- `==` (Equal), `!=` (Not equal), `>` (Greater), `<` (Less), `>=` (Greater or equal), `<=` (Less or equal).
+- `==` equal to: `5 == 5` is `kweli`
+- `!=` not equal to: `5 != 5` is `sikweli`
+- `>` greater than: `8 > 3` is `kweli`
+- `<` less than: `8 < 3` is `sikweli`
+- `>=` greater than or equal to: `50 >= 50` is `kweli`
+- `<=` less than or equal to: `49 <= 50` is `kweli`
 
-### Logic Operators:
-- `&&` (**And**): True if both are true.
-- `||` (**Or**): True if at least one is true.
-- `!` (**Not**): Inverts `kweli` to `sikweli`.
+Remember: a single `=` stores a value in a variable. A double `==` compares.
 
-### Task:
+### Combining conditions
+
+- `&&` (and): true if **all** conditions are true.
+- `||` (or): true if **at least one** is true.
+- `!` (not): turns `kweli` into `sikweli`.
+
 ```nuru
-andika(+++50 > 20 && 10 == 10+++)
+fanya umri = 14
+fanya ana_tiketi = kweli
+andika(umri >= 12 +++&&+++ ana_tiketi) // kweli: they can enter the stadium
 ```
-

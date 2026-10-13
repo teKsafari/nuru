@@ -1,129 +1,106 @@
-import { getModuleWithLessons } from "@/app/actions/modules";
-import { Button } from "@nuru/ui/components/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@nuru/ui/components/card";
-import { Badge } from "@nuru/ui/components/badge";
 import Link from "next/link";
-import { Play, ArrowLeft, BookOpen, Clock, FileText } from "lucide-react";
 import { notFound } from "next/navigation";
+import { ArrowLeft, BookOpen, Clock, Cpu, FlaskConical, Play } from "lucide-react";
+import { Button } from "@nuru/ui/components/button";
+import { getModuleWithLessons } from "@/app/actions/modules";
+import { getServerDict } from "@/lib/lang";
+import { difficultyKey, pick } from "@/lib/dict";
+import { PageHead } from "@/components/kanga/page-head";
+import { DifficultySticker } from "@/components/kanga/stickers";
 
 export const dynamic = "force-dynamic";
 
+const PLAYGROUND_URL = process.env.PLAYGROUND_URL || "http://localhost:3000";
+
 export default async function MarketplaceModulePage({ params }: { params: Promise<{ moduleId: string }> }) {
-    const { moduleId } = await params;
-	const module = await getModuleWithLessons(moduleId);
+	const { moduleId } = await params;
+	const [module, { t, lang }] = await Promise.all([getModuleWithLessons(moduleId), getServerDict()]);
 
-	if (!module) {
-		notFound();
-	}
+	if (!module || module.visibility !== "public") notFound();
 
-	const title = typeof module.title === 'string' ? module.title : (module.title as any).en;
-
-    // Determine playground URL based on environment or fallback to relative/localhost for dev
-    const playgroundUrl = process.env.PLAYGROUND_URL || "http://localhost:3001";
+	const title = pick(module.title, lang);
+	const other = pick(module.title, lang === "sw" ? "en" : "sw");
+	const startHref = `${PLAYGROUND_URL}/${lang}/anza/${module.slug}`;
+	const testCount = module.lessons.reduce((n, l) => n + (Array.isArray(l.tests) ? l.tests.length : 0), 0);
 
 	return (
-		<div className="container mx-auto py-10 space-y-8 max-w-4xl">
-            <div className="flex items-center gap-4">
-                <Link href="/marketplace">
-                    <Button variant="outline" size="icon">
-                        <ArrowLeft className="h-4 w-4" />
-                    </Button>
-                </Link>
-                <div className="flex-1">
-                    <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30">
-                        {module.difficulty}
-                    </Badge>
-                    <h1 className="text-3xl font-bold flex items-center gap-3">
-                        {title}
-                    </h1>
-                </div>
-                <Button size="lg" className="gap-2" asChild>
-                    <a href={`${playgroundUrl}/playground?module=${module.id}`} target="_blank" rel="noopener noreferrer">
-                        <Play className="h-5 w-5 fill-current" /> Start Module
-                    </a>
-                </Button>
-            </div>
+		<div className="space-y-8 pb-12">
+			<Link href="/marketplace" className="lebo inline-flex min-h-10 items-center gap-1.5 text-muted-foreground hover:text-foreground">
+				<ArrowLeft className="size-4" />
+				{t.soko.back}
+			</Link>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="md:col-span-2 space-y-8">
-                    <section>
-                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                            <BookOpen className="h-5 w-5 text-muted-foreground" />
-                            About this Module
-                        </h2>
-                        <div className="prose dark:prose-invert">
-                            <p className="text-lg text-muted-foreground">
-                                This interactive programming module is designed for {module.difficulty} learners.
-                                It uses the {module.executorType} executor to provide a hands-on learning experience.
-                            </p>
-                        </div>
-                    </section>
+			<PageHead
+				eyebrow={<DifficultySticker value={module.difficulty} t={t} />}
+				title={title}
+				lead={other !== title ? other : undefined}
+				actions={
+					module.lessons.length > 0 && (
+						<Button asChild size="lg">
+							<a href={startHref} target="_blank" rel="noopener">
+								<Play className="fill-current" />
+								{t.soko.start}
+							</a>
+						</Button>
+					)
+				}
+			/>
 
-                    <section>
-                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                            <FileText className="h-5 w-5 text-muted-foreground" />
-                            Syllabus
-                        </h2>
-                        
-                        {module.lessons.length === 0 ? (
-                            <p className="text-muted-foreground italic">No lessons have been added to this module yet.</p>
-                        ) : (
-                            <div className="space-y-4">
-                                {module.lessons.map((lesson, index) => (
-                                    <Card key={lesson.id} className="overflow-hidden">
-                                        <div className="flex items-start p-4 gap-4">
-                                            <div className="bg-primary/10 text-primary w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 mt-0.5">
-                                                {index + 1}
-                                            </div>
-                                            <div>
-                                                <h4 className="font-semibold text-lg mb-1">
-                                                    {typeof lesson.title === 'string' ? lesson.title : (lesson.title as any).en}
-                                                </h4>
-                                                <p className="text-muted-foreground line-clamp-2 text-sm">
-                                                    Learn and practice core concepts through interactive tasks.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                ))}
-                            </div>
-                        )}
-                    </section>
-                </div>
+			<div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+				<div className="space-y-8 lg:col-span-2">
+					<section className="mji p-5">
+						<h2 className="mb-2 font-display text-xl font-bold">{t.soko.about}</h2>
+						<p className="text-muted-foreground">{t.soko.aboutBody.replace("{level}", t.difficulty[difficultyKey(module.difficulty)])}</p>
+					</section>
 
-                <div>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Module Details</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex justify-between items-center py-2 border-b">
-                                <span className="text-muted-foreground text-sm flex items-center gap-2">
-                                    <BookOpen className="h-4 w-4" /> Lessons
-                                </span>
-                                <span className="font-semibold">{module.lessons.length}</span>
-                            </div>
-                            <div className="flex justify-between items-center py-2 border-b">
-                                <span className="text-muted-foreground text-sm flex items-center gap-2">
-                                    <Clock className="h-4 w-4" /> Est. Time
-                                </span>
-                                <span className="font-semibold">~{module.lessons.length * 15} mins</span>
-                            </div>
-                            <div className="flex justify-between items-center py-2 border-b">
-                                <span className="text-muted-foreground text-sm">Executor</span>
-                                <Badge variant="secondary">{module.executorType}</Badge>
-                            </div>
-                            <div className="pt-4">
-                                <Button className="w-full gap-2" asChild>
-                                    <a href={`${playgroundUrl}/playground?module=${module.id}`} target="_blank" rel="noopener noreferrer">
-                                        <Play className="h-4 w-4 fill-current" /> Start Learning
-                                    </a>
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
+					<section>
+						<h2 className="mb-4 font-display text-xl font-bold">{t.soko.syllabus}</h2>
+						{module.lessons.length === 0 ? (
+							<p className="text-muted-foreground italic">{t.soko.noLessons}</p>
+						) : (
+							<ol className="space-y-3">
+								{module.lessons.map((lesson, index) => {
+									const desc = pick(lesson.task ?? lesson.description, lang);
+									return (
+										<li key={lesson.id} className="flex items-start gap-3 rounded-lg border-2 border-mstari bg-card p-3 shadow-kivuli-sm">
+											<span className="flex size-9 shrink-0 items-center justify-center rounded-md border-2 border-mstari bg-jua font-display text-sm font-bold text-[#15120f]">{index + 1}</span>
+											<div className="min-w-0">
+												<h3 className="font-semibold">{pick(lesson.title, lang).replace(/^\d+\.\s*/, "")}</h3>
+												{desc && <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">{desc.replace(/[`*#]/g, "")}</p>}
+											</div>
+										</li>
+									);
+								})}
+							</ol>
+						)}
+					</section>
+				</div>
+
+				<aside>
+					<div className="mji overflow-hidden lg:sticky lg:top-6">
+						<h2 className="lebo border-b-2 border-mstari bg-karatasi-2 px-4 py-2.5">{t.soko.details2}</h2>
+						<dl className="divide-y-2 divide-dashed divide-mstari/20 px-4">
+							{[
+								[BookOpen, t.soko.syllabus, String(module.lessons.length)],
+								[FlaskConical, t.editor.testsLabel, String(testCount)],
+								[Clock, t.soko.time, `~${module.lessons.length * 15} ${t.soko.minutes}`],
+								[Cpu, t.modules.runtime, module.executorType],
+							].map(([Icon, label, value]) => {
+								const I = Icon as typeof BookOpen;
+								return (
+									<div key={label as string} className="flex items-center justify-between gap-4 py-3">
+										<dt className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+											<I className="size-4" aria-hidden />
+											{label as string}
+										</dt>
+										<dd className="font-mono text-sm font-semibold">{value as string}</dd>
+									</div>
+								);
+							})}
+						</dl>
+					</div>
+				</aside>
+			</div>
 		</div>
 	);
 }
