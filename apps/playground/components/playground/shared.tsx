@@ -86,7 +86,7 @@ export function fill(template: string, values: Record<string, string | number>) 
 export function LayoutPending() {
 	return (
 		<div className="h-full min-h-0 bg-karatasi p-3 md:p-4" aria-busy="true">
-			<div className="mji gridi h-full" />
+			<div className="kadi gridi h-full" />
 		</div>
 	);
 }

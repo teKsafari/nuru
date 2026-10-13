@@ -3,12 +3,12 @@ import type { ReactNode } from "react";
 import { Button } from "@nuru/ui/components/button";
 import { getAuth } from "@/lib/auth.server";
 import { getServerDict } from "@/lib/lang";
-import { PageHead } from "@/components/kanga/page-head";
+import { PageHead } from "@/components/shared/page-head";
 import { LangToggle, ThemeToggle } from "@/components/layout/toggles";
 
 function Panel({ icon, title, body, children }: { icon: ReactNode; title: string; body: string; children: ReactNode }) {
 	return (
-		<section className="mji flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
+		<section className="kadi flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
 			<span className="flex size-12 shrink-0 items-center justify-center rounded-md border-2 border-mstari bg-jua text-[#15120f] [&_svg]:size-6">{icon}</span>
 			<div className="min-w-0 flex-1">
 				<h2 className="font-display text-lg font-bold">{title}</h2>
@@ -33,7 +33,7 @@ export default async function SettingsPage() {
 				<Panel icon={<Palette />} title={t.settings.themeTitle} body={t.settings.themeBody}>
 					<ThemeToggle withLabel />
 				</Panel>
-				<section className="mji overflow-hidden">
+				<section className="kadi overflow-hidden">
 					<div className="flex items-center gap-4 p-5">
 						<span className="flex size-12 shrink-0 items-center justify-center rounded-md border-2 border-mstari bg-bahari text-white [&_svg]:size-6">
 							<UserRound />

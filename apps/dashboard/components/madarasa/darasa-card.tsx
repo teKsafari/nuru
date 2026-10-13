@@ -10,7 +10,7 @@ export function DarasaCard({ d, index, s, showTeacher }: { d: DarasaSummary; ind
 	return (
 		<Link
 			href={`/educator/madarasa/${d.id}`}
-			className={cn("mji bonyeza group flex flex-col overflow-hidden", d.archivedAt && "opacity-70")}
+			className={cn("kadi bonyeza group flex flex-col overflow-hidden", d.archivedAt && "opacity-70")}
 		>
 			<div className={cn("h-3 border-b-2 border-mstari", d.archivedAt ? "bg-karatasi-2" : ACCENTS[index % ACCENTS.length])} aria-hidden />
 			<div className="flex flex-1 flex-col p-5">

@@ -20,7 +20,7 @@ function ResizablePanel({ ...props }: React.ComponentProps<typeof ResizablePrimi
 	return <ResizablePrimitive.Panel data-slot="resizable-panel" {...props} />;
 }
 
-/** Kanga splitter: a 2px ink rule with a grip you can grab. */
+/** Splitter: a 2px ink rule with a grip you can grab. */
 function ResizableHandle({
 	withHandle,
 	className,

@@ -1,18 +1,10 @@
-# Kanga: the Nuru design language
+# Nuru design language
 
-Tokens and utilities live in `packages/ui/src/styles/kanga.css`. Both apps import it.
+Tokens and utilities live in `packages/ui/src/styles/nuru.css`. Both apps import it.
 
 ## Where it comes from
 
-Two sources shaped it.
-
-- **Dribbble research.** Neubrutalist learning products (for example "Shaytoon" by Viola Kazemi) pair an off-white paper ground with black 2px rules, hard offset shadows, flat saturated fills and mono labels. Kids read them fast, and they render crisply on cheap Android screens where soft gradients turn to mud.
-- **The kanga cloth.** Every kanga printed in East Africa has three parts:
-  - the **pindo**, a patterned border;
-  - the **mji**, the central field;
-  - the **jina**, a printed Swahili saying.
-
-  Nuru screens use the first two: patterned edges and one heavy-bordered field of focus.
+Dribbble research on neubrutalist learning products (for example "Shaytoon" by Viola Kazemi). They pair an off-white paper ground with black 2px rules, hard offset shadows, flat saturated fills and mono labels. Kids read them fast, and they render crisply on cheap Android screens where soft gradients turn to mud.
 
 ## Vocabulary
 
@@ -22,11 +14,10 @@ Two sources shaped it.
 | `text-wino` | ink | text, rules, shadows |
 | `bg-jua` | sun | Nuru yellow `#ffc93c`. Primary action, highlights. One per view |
 | `pilipili`, `bahari`, `mwani`, `zambarau`, `chungwa`, `udongo` | chili, ocean, seaweed, purple, orange, earth | category fills: errors, info, success, modules |
-| `mji` | the central field | card: 2px ink border, 14px radius, 4px hard shadow |
+| `kadi` | card | card: 2px ink border, 14px radius, 4px hard shadow |
 | `bonyeza` | press | pressable surface: lifts on hover, sinks on press |
 | `lebo` | label | mono uppercase sticker text: `HATUA 3 / 12` |
 | `alama-jua` | sun mark | highlighter swipe behind a key word |
-| `pindo` / `pindo-nukta` | border | kanga border band of triangles or dots, coloured with `text-*` |
 | `gridi` | grid | graph-paper ground for canvases and empty states |
 | `shadow-kivuli(-sm/-lg)` | shadow | hard offset shadow |
 

@@ -1,17 +1,12 @@
 /*
- * KANGA — the Nuru design language.
- *
- * A kanga cloth has three parts: the pindo (a patterned border), the mji
- * (the central field) and the jina (a printed Swahili saying). Nuru screens
- * borrow that structure: patterned edges, one heavy-bordered field of focus,
- * and a methali where the product speaks to the learner.
+ * Nuru design tokens and utilities.
  *
  * Visual grammar (from neubrutalist learning UIs on Dribbble): cream paper,
  * ink-black 2px rules, hard offset shadows, flat saturated fills, mono labels.
  *
  * Import AFTER tailwindcss in an app's globals.css:
  *   @import "tailwindcss";
- *   @import "@nuru/ui/kanga.css";
+ *   @import "@nuru/ui/nuru.css";
  */
 
 @custom-variant dark (&:is(.dark *));
@@ -22,7 +17,7 @@
 	--font-sans: var(--font-lexend), "Lexend", ui-sans-serif, system-ui, sans-serif;
 	--font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
 
-	/* Kanga palette, usable as bg-jua, text-wino, border-pilipili ... */
+	/* Palette, usable as bg-jua, text-wino, border-pilipili ... */
 	--color-karatasi: var(--karatasi);
 	--color-karatasi-2: var(--karatasi-2);
 	--color-wino: var(--wino);
@@ -93,7 +88,6 @@
 
 	--animate-accordion-down: accordion-down 0.2s ease-out;
 	--animate-accordion-up: accordion-up 0.2s ease-out;
-	--animate-marquee: marquee 40s linear infinite;
 	--animate-pulse-jua: pulse-jua 1.6s ease-in-out infinite;
 
 	@keyframes accordion-down {
@@ -103,10 +97,6 @@
 	@keyframes accordion-up {
 		from { height: var(--radix-accordion-content-height); }
 		to { height: 0; }
-	}
-	@keyframes marquee {
-		from { transform: translateX(0); }
-		to { transform: translateX(-50%); }
 	}
 	@keyframes pulse-jua {
 		0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--jua) 70%, transparent); }
@@ -246,10 +236,10 @@
 	}
 }
 
-/* ---- Kanga utilities ---- */
+/* ---- Utilities ---- */
 
-/* The mji: a heavy-bordered field with a hard shadow. */
-@utility mji {
+/* A card: heavy border and a hard shadow. */
+@utility kadi {
 	background: var(--card);
 	color: var(--card-foreground);
 	border: 2px solid var(--mstari);
@@ -295,26 +285,6 @@
 	padding-inline: 0.15em;
 	box-decoration-break: clone;
 	-webkit-box-decoration-break: clone;
-}
-
-/*
- * The pindo: a kanga border band. Triangles over a dotted rule, drawn from
- * currentColor so `text-jua pindo` or `text-pilipili pindo` recolours it.
- */
-@utility pindo {
-	height: 14px;
-	background-color: currentColor;
-	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 14 L7 2 L14 14 Z M14 0 L21 12 L28 0 Z' fill='black'/%3E%3C/svg%3E") repeat-x left center / 28px 14px;
-	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 14 L7 2 L14 14 Z M14 0 L21 12 L28 0 Z' fill='black'/%3E%3C/svg%3E") repeat-x left center / 28px 14px;
-}
-
-/* Dotted variant of the pindo, for quieter edges. */
-@utility pindo-nukta {
-	height: 8px;
-	background-image: radial-gradient(circle, currentColor 2px, transparent 2.5px);
-	background-size: 14px 8px;
-	background-position: left center;
-	background-repeat: repeat-x;
 }
 
 /* Paper grain grid for canvases and empty states. */

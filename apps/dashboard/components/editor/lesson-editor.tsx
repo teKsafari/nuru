@@ -44,7 +44,7 @@ export function emptyLesson(): LessonFormValues {
 
 function Section({ n, title, help, children, action }: { n: string; title: string; help?: string; children: ReactNode; action?: ReactNode }) {
 	return (
-		<section className="mji overflow-hidden">
+		<section className="kadi overflow-hidden">
 			<header className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b-2 border-mstari bg-karatasi-2 px-4 py-2.5">
 				<span className="lebo flex size-7 items-center justify-center rounded-sm border-2 border-mstari bg-card">{n}</span>
 				<h2 className="font-display text-lg font-bold">{title}</h2>
@@ -510,7 +510,7 @@ export default function LessonEditor({
 
 				{/* Side panel: preview and Hakiki */}
 				<aside className={cn("min-w-0", mobileView !== "panel" && "hidden lg:block")}>
-					<div className="mji overflow-hidden lg:sticky lg:top-24">
+					<div className="kadi overflow-hidden lg:sticky lg:top-24">
 						<div className="hidden grid-cols-2 border-b-2 border-mstari lg:grid" role="tablist">
 							{(
 								[

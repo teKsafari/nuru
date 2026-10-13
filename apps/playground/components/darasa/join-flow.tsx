@@ -201,7 +201,7 @@ export function JoinFlow({
 				</div>
 			)}
 
-			<div className="mji p-5 sm:p-7">
+			<div className="kadi p-5 sm:p-7">
 				{step.s === "msimbo" && (
 					<form onSubmit={lookUp} noValidate>
 						<h1 ref={headingRef} tabIndex={-1} className={heading}>

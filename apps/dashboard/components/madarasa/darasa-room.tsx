@@ -17,7 +17,7 @@ import {
 	type DarasaDetail,
 } from "@/app/actions/madarasa";
 import { useDict } from "@/components/providers/lang-provider";
-import { PageHead, EmptyState } from "@/components/kanga/page-head";
+import { PageHead, EmptyState } from "@/components/shared/page-head";
 import { CodeDialog, type CodeTarget } from "./code-dialog";
 import { JoinCode } from "./join-code";
 import { LearnersList, ArmedButton } from "./learners-list";
@@ -261,7 +261,7 @@ export function DarasaRoom({ initial, modules }: { initial: DarasaDetail; module
 
 function Stat({ label, value, hint, tone }: { label: string; value: number | string; hint?: string; tone: string }) {
 	return (
-		<div className="mji flex flex-col justify-between gap-2 overflow-hidden p-0">
+		<div className="kadi flex flex-col justify-between gap-2 overflow-hidden p-0">
 			<div className={cn("border-b-2 border-mstari px-3 py-1.5 sm:px-4", tone)}>
 				<p className="lebo leading-tight [overflow-wrap:anywhere]">{label}</p>
 			</div>

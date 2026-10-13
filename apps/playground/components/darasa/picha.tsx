@@ -1,6 +1,6 @@
 import type { PichaId } from "@/lib/darasa/shared";
 
-// The nine picture-password pictures. Flat Kanga drawings: ink outlines, one
+// The nine picture-password pictures. Flat drawings: ink outlines, one
 // saturated fill each, so they read on a cheap phone in sunlight.
 
 const S = { stroke: "#15120f", strokeWidth: 2.5, strokeLinejoin: "round" as const, strokeLinecap: "round" as const };

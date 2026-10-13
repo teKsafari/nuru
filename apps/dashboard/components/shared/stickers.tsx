@@ -39,6 +39,6 @@ export function VisibilitySticker({ value, t, className }: { value: string; t: D
 	);
 }
 
-/** Module accent colours, cycled by position so a grid of cards reads like kanga prints. */
+/** Module accent colours, cycled by position. */
 export const MODULE_ACCENTS = ["text-jua", "text-bahari", "text-mwani", "text-zambarau", "text-chungwa", "text-udongo"];
 export const MODULE_FILLS = ["bg-jua", "bg-bahari", "bg-mwani", "bg-zambarau", "bg-chungwa", "bg-udongo"];

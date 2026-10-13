@@ -3,8 +3,8 @@ import { Plus, BookOpen } from "lucide-react";
 import { Button } from "@nuru/ui/components/button";
 import { getEducatorModules, deleteModule } from "@/app/actions/modules";
 import { getServerDict } from "@/lib/lang";
-import { PageHead, EmptyState } from "@/components/kanga/page-head";
-import { ConfirmDelete } from "@/components/kanga/confirm-delete";
+import { PageHead, EmptyState } from "@/components/shared/page-head";
+import { ConfirmDelete } from "@/components/shared/confirm-delete";
 import { ModuleCard } from "@/components/modules/module-card";
 
 export const dynamic = "force-dynamic";

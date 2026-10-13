@@ -5,8 +5,8 @@ import { Button } from "@nuru/ui/components/button";
 import { getModuleWithLessons } from "@/app/actions/modules";
 import { getServerDict } from "@/lib/lang";
 import { difficultyKey, pick } from "@/lib/dict";
-import { PageHead } from "@/components/kanga/page-head";
-import { DifficultySticker } from "@/components/kanga/stickers";
+import { PageHead } from "@/components/shared/page-head";
+import { DifficultySticker } from "@/components/shared/stickers";
 
 export const dynamic = "force-dynamic";
 
@@ -48,7 +48,7 @@ export default async function MarketplaceModulePage({ params }: { params: Promis
 
 			<div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
 				<div className="space-y-8 lg:col-span-2">
-					<section className="mji p-5">
+					<section className="kadi p-5">
 						<h2 className="mb-2 font-display text-xl font-bold">{t.soko.about}</h2>
 						<p className="text-muted-foreground">{t.soko.aboutBody.replace("{level}", t.difficulty[difficultyKey(module.difficulty)])}</p>
 					</section>
@@ -77,7 +77,7 @@ export default async function MarketplaceModulePage({ params }: { params: Promis
 				</div>
 
 				<aside>
-					<div className="mji overflow-hidden lg:sticky lg:top-6">
+					<div className="kadi overflow-hidden lg:sticky lg:top-6">
 						<h2 className="lebo border-b-2 border-mstari bg-karatasi-2 px-4 py-2.5">{t.soko.details2}</h2>
 						<dl className="divide-y-2 divide-dashed divide-mstari/20 px-4">
 							{[

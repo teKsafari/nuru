@@ -5,7 +5,7 @@ import { Button } from "@nuru/ui/components/button";
 import { listAssignableModules, listMadarasa } from "@/app/actions/madarasa";
 import { getServerDict } from "@/lib/lang";
 import { requireEducator } from "@/lib/permissions";
-import { PageHead, EmptyState } from "@/components/kanga/page-head";
+import { PageHead, EmptyState } from "@/components/shared/page-head";
 import { CreateDarasaForm } from "@/components/madarasa/create-darasa-form";
 import { DarasaCard } from "@/components/madarasa/darasa-card";
 import { madarasaStrings } from "@/components/madarasa/strings";

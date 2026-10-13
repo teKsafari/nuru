@@ -24,7 +24,6 @@ export default async function Home() {
 
 	return (
 		<div className="flex min-h-dvh flex-col bg-karatasi">
-			<div className="pindo text-jua" aria-hidden />
 			<header className="mx-auto flex w-full max-w-6xl items-center gap-3 px-4 py-4 sm:px-8">
 				<Link href="/" className="mr-auto flex items-center gap-2.5">
 					<AppLogo size={36} />
@@ -70,7 +69,7 @@ export default async function Home() {
 					</div>
 
 					{/* A little classroom board: the progress grid a teacher will see */}
-					<div className="mji relative hidden overflow-hidden sm:block" aria-hidden>
+					<div className="kadi relative hidden overflow-hidden sm:block" aria-hidden>
 						<div className="flex items-center justify-between border-b-2 border-mstari bg-karatasi-2 px-4 py-2">
 							<span className="lebo">Darasa la 5B · NURU-7K2Q</span>
 							<span className="lebo text-muted-foreground">12 / 14</span>
@@ -113,11 +112,11 @@ export default async function Home() {
 							return (
 								<li key={s.n}>
 									{isEducator ? (
-										<Link href={s.href} className="mji bonyeza block h-full p-5">
+										<Link href={s.href} className="kadi bonyeza block h-full p-5">
 											{body}
 										</Link>
 									) : (
-										<div className="mji h-full p-5">{body}</div>
+										<div className="kadi h-full p-5">{body}</div>
 									)}
 								</li>
 							);
@@ -130,7 +129,6 @@ export default async function Home() {
 				<div className="mx-auto flex max-w-6xl flex-wrap items-center justify-end gap-3 px-4 py-4 text-sm text-muted-foreground sm:px-8">
 					<p className="lebo">teKsafari · Nuru</p>
 				</div>
-				<div className="pindo-nukta mb-2 text-udongo" aria-hidden />
 			</footer>
 		</div>
 	);

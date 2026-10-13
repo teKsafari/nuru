@@ -59,8 +59,7 @@ export function TestResults({ tests, verdict, checking, labels, nextLabel, onNex
 			)}
 
 			{!checking && verdict?.passed && (
-				<div className="mji mb-5 overflow-hidden" data-testid="success">
-					<div className="pindo text-jua" aria-hidden />
+				<div className="kadi mb-5 overflow-hidden" data-testid="success">
 					<div className="flex flex-col items-start gap-3 p-5">
 						<h3 className="font-display text-3xl font-extrabold">{labels.successTitle}</h3>
 						<p className="text-sm text-muted-foreground">{labels.successText}</p>
@@ -71,7 +70,6 @@ export function TestResults({ tests, verdict, checking, labels, nextLabel, onNex
 							</Button>
 						)}
 					</div>
-					<div className="pindo text-mwani" aria-hidden />
 				</div>
 			)}
 

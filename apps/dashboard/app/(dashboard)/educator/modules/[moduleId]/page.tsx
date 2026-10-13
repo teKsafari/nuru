@@ -6,8 +6,8 @@ import { getOwnedModuleWithLessons } from "@/lib/modules.server";
 import { getServerDict } from "@/lib/lang";
 import { pick } from "@/lib/dict";
 import { SortableLessonsList } from "@/components/editor/sortable-lessons-list";
-import { PageHead, EmptyState } from "@/components/kanga/page-head";
-import { DifficultySticker, VisibilitySticker } from "@/components/kanga/stickers";
+import { PageHead, EmptyState } from "@/components/shared/page-head";
+import { DifficultySticker, VisibilitySticker } from "@/components/shared/stickers";
 
 export const dynamic = "force-dynamic";
 
@@ -77,7 +77,7 @@ export default async function ModuleBuilderPage({ params }: { params: Promise<{ 
 				</section>
 
 				<aside className="space-y-6">
-					<div className="mji overflow-hidden">
+					<div className="kadi overflow-hidden">
 						<div className="flex items-center justify-between border-b-2 border-mstari bg-karatasi-2 px-4 py-2">
 							<h2 className="lebo">{t.modules.settings}</h2>
 							<Button asChild variant="ghost" size="sm">

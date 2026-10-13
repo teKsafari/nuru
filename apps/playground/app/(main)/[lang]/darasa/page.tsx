@@ -35,7 +35,6 @@ export default async function DarasaPage({
 
 	return (
 		<main className="gridi flex-1 overflow-x-hidden overflow-y-auto bg-karatasi">
-			<div className="pindo text-jua" aria-hidden />
 			<div className="px-4 py-8 sm:px-8 sm:py-14">
 				<JoinFlow dict={dict.darasa} logtoName={logtoName} initialCode={msimbo} />
 			</div>

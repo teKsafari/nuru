@@ -42,7 +42,6 @@ export function SiteFooter({ lang, dict }: { lang: string; dict: Dictionary }) {
 
 	return (
 		<footer className="bg-[#15120f] text-[#fff3d6]">
-			<div className="pindo text-jua" aria-hidden />
 			<div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.4fr_repeat(3,1fr)]">
 				<div>
 					<Link href={`/${lang}`} className="inline-flex items-center gap-2.5">

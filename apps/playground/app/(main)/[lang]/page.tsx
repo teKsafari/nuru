@@ -13,19 +13,6 @@ import { Inline } from "@/components/tovuti/inline";
 import { NuruCode } from "@/components/tovuti/nuru-code";
 import { GITHUB_URL, SiteFooter, TELEGRAM_URL, dashboardUrl } from "@/components/tovuti/footer";
 
-const KEYWORDS: [string, { sw: string; en: string }][] = [
-	["fanya", { sw: "tengeneza", en: "let" }],
-	["unda", { sw: "kitendakazi", en: "function" }],
-	["kama", { sw: "ikiwa", en: "if" }],
-	["sivyo", { sw: "vinginevyo", en: "else" }],
-	["wakati", { sw: "maadamu", en: "while" }],
-	["kwa", { sw: "kwa kila", en: "for" }],
-	["rudisha", { sw: "jibu", en: "return" }],
-	["andika", { sw: "chapisha", en: "print" }],
-	["jaza", { sw: "uliza", en: "input" }],
-	["tumia", { sw: "leta moduli", en: "import" }],
-];
-
 const ANDIKA_CODE = `fanya umri = 15\n\nkama (umri >= 13) {\n    andika("Karibu Nuru!")\n}`;
 const KOBE_CODE = `tumia kobe\n\nkobe.rangi("nyekundu")\nkobe.rangi_ya_ndani("njano")\nkobe.nenda(-100, 30)\nkobe.anza_kujaza()\nkwa i ktk mfululizo(5) {\n    kobe.mbele(200)\n    kobe.kulia(144)\n}\nkobe.maliza_kujaza()`;
 const UBAO_CODE = `tumia ubao\n\nubao.skrini("Habari Dunia")\nkwa i ktk mfululizo(1, 9) {\n    ubao.washa(i)\n    ubao.subiri(150)\n}\nubao.kengele(880, 300)`;
@@ -48,7 +35,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 	const t = dict.tovuti.landing;
 	const featureIcons = [Feather, Turtle, Lightbulb];
 	const featureHrefs = [`/${lang}/anza`, uwanjaHref(lang, KOBE_CODE, "kobe"), uwanjaHref(lang, UBAO_CODE, "ubao")];
-	const featureColours = ["text-jua", "text-mwani", "text-zambarau"];
 	const featureFills = ["bg-jua text-wino", "bg-mwani text-white", "bg-zambarau text-wino"];
 
 	return (
@@ -90,7 +76,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 					</div>
 
 					<div className="relative mx-auto w-full max-w-[34rem] lg:mx-0">
-						<HeroSun className="absolute -top-14 -right-10 hidden size-44 sm:block lg:-top-16 lg:-right-14 lg:size-52" />
 						<div className="relative lg:rotate-[1.2deg]">
 							<CodeCard programs={heroPrograms} labels={t.card} />
 						</div>
@@ -98,45 +83,17 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 				</div>
 			</section>
 
-			{/* Marquee of keywords */}
-			<section aria-label={t.marquee} className="overflow-hidden border-b-2 border-mstari bg-[#15120f] py-5 text-[#fff3d6]">
-				<ul className="sr-only">
-					{KEYWORDS.map(([word, gloss]) => (
-						<li key={word}>
-							{word}: {gloss[lang]}
-						</li>
-					))}
-				</ul>
-				<div className="flex w-max animate-marquee motion-reduce:animate-none" aria-hidden>
-					{[0, 1].map((copy) => (
-						<div key={copy} className="flex shrink-0 items-center">
-							{KEYWORDS.map(([word, gloss]) => (
-								<div key={word} className="flex items-center">
-									<span className="flex items-baseline gap-3 px-6 sm:px-8">
-										<span className="font-display text-4xl font-extrabold tracking-[-0.03em] sm:text-6xl">{word}</span>
-										<span className="lebo text-jua">{gloss[lang]}</span>
-									</span>
-									<svg viewBox="0 0 14 14" className="size-3.5 text-jua" aria-hidden>
-										<path d="M0 14 L7 2 L14 14 Z" fill="currentColor" />
-									</svg>
-								</div>
-							))}
-						</div>
-					))}
-				</div>
-			</section>
 
-			{/* Kanga: three features */}
+			{/* Three features */}
 			<section className="relative bg-karatasi-2">
 				<div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-					<p className="lebo text-muted-foreground">{t.kanga.lebo}</p>
-					<h2 className="mt-2 max-w-2xl font-display text-4xl leading-[1.02] font-extrabold sm:text-5xl">{t.kanga.title}</h2>
+					<p className="lebo text-muted-foreground">{t.vipengele.lebo}</p>
+					<h2 className="mt-2 max-w-2xl font-display text-4xl leading-[1.02] font-extrabold sm:text-5xl">{t.vipengele.title}</h2>
 					<div className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-3">
-						{t.kanga.items.map((item, i) => {
+						{t.vipengele.items.map((item, i) => {
 							const Icon = featureIcons[i];
 							return (
-								<Link key={item.title} href={featureHrefs[i]} className="mji bonyeza group flex flex-col overflow-hidden">
-									<div className={cn("pindo", featureColours[i])} aria-hidden />
+								<Link key={item.title} href={featureHrefs[i]} className="kadi bonyeza group flex flex-col overflow-hidden">
 									<div className="flex flex-1 flex-col p-5 pt-4">
 										<div className="flex items-center gap-3">
 											<span className={cn("flex size-11 items-center justify-center rounded-md border-2 border-mstari", featureFills[i])}>
@@ -201,7 +158,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
 			{/* Closing call to action */}
 			<section className="bg-jua text-wino">
-				<div className="pindo text-[#15120f]" aria-hidden />
 				<div className="mx-auto max-w-4xl px-5 py-14 text-center sm:px-8 md:py-20">
 					<p className="lebo">{t.mwisho.lebo}</p>
 					<blockquote className="mt-4 font-display text-[clamp(2rem,5.5vw,3.75rem)] leading-[1.02] font-extrabold tracking-[-0.03em] text-balance">
@@ -215,7 +171,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 						</Link>
 					</Button>
 				</div>
-				<div className="pindo rotate-180 text-[#15120f]" aria-hidden />
 			</section>
 
 			{/* Contributors */}
@@ -263,19 +218,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
 			<SiteFooter lang={lang} dict={dict} />
 		</main>
-	);
-}
-
-function HeroSun({ className }: { className?: string }) {
-	return (
-		<svg viewBox="0 0 32 32" className={cn("animate-[spin_60s_linear_infinite] motion-reduce:animate-none", className)} aria-hidden>
-			<g stroke="#15120f" strokeWidth="0.7" strokeLinejoin="round" fill="#ffc93c">
-				{[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
-					<path key={deg} d="M14.4 6.6 L16 1.2 L17.6 6.6 Z" transform={`rotate(${deg} 16 16)`} />
-				))}
-				<circle cx="16" cy="16" r="8.2" />
-			</g>
-		</svg>
 	);
 }
 
@@ -330,7 +272,7 @@ function UbaoVisual() {
 function ProgressGrid({ t }: { t: { gridTitle: string; gridCode: string; gridLessons: string; legendDone: string; legendTrying: string; legendNotYet: string } }) {
 	const fill = ["bg-transparent", "bg-jua", "bg-mwani"];
 	return (
-		<div className="mji p-4 sm:p-6 lg:rotate-[-0.8deg]" aria-hidden>
+		<div className="kadi p-4 sm:p-6 lg:rotate-[-0.8deg]" aria-hidden>
 			<div className="flex flex-wrap items-center justify-between gap-2">
 				<p className="font-display text-xl font-extrabold">{t.gridTitle}</p>
 				<span className="lebo rounded-sm border-2 border-mstari bg-karatasi-2 px-2 py-0.5">

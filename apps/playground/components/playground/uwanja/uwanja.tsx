@@ -342,7 +342,7 @@ export function Uwanja({ labels, lang }: { labels: UwanjaLabels; lang: "sw" | "e
 				</div>
 			</div>
 			<div className="min-h-0 flex-1 px-4 pb-4 lg:px-6 lg:pb-6">
-				<div className="mji h-full overflow-hidden">
+				<div className="kadi h-full overflow-hidden">
 					<ResizablePanelGroup direction="horizontal" autoSaveId="nuru-uwanja">
 						<ResizablePanel defaultSize={52} minSize={28}>
 							{editor}

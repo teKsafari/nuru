@@ -348,7 +348,6 @@ export function LessonView({ module, lessonSlug, nextModuleSlug, lang, dict }: L
 
 	const lessonPanel = (
 		<div className="flex h-full min-h-0 flex-col bg-card">
-			<div className="pindo shrink-0 text-jua" aria-hidden />
 			<div className="min-h-0 flex-1 overflow-y-auto">
 				<article className="mx-auto max-w-[68ch] px-5 pt-5 pb-10 sm:px-7">
 					<nav className="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
@@ -526,11 +525,11 @@ export function LessonView({ module, lessonSlug, nextModuleSlug, lang, dict }: L
 		<div className="h-full min-h-0 bg-karatasi pt-3 pr-4 pb-4 pl-3 lg:pt-4 lg:pr-5 lg:pb-5 lg:pl-4">
 			<ResizablePanelGroup direction="horizontal" autoSaveId="nuru-somo" className="gap-0">
 				<ResizablePanel defaultSize={42} minSize={26}>
-					<div className="mji mr-2 h-full overflow-hidden">{lessonPanel}</div>
+					<div className="kadi mr-2 h-full overflow-hidden">{lessonPanel}</div>
 				</ResizablePanel>
 				<ResizableHandle withHandle className="bg-transparent data-[resize-handle-state=hover]:bg-transparent data-[resize-handle-state=drag]:bg-transparent" />
 				<ResizablePanel defaultSize={58} minSize={34}>
-					<div className="mji ml-2 h-full overflow-hidden">
+					<div className="kadi ml-2 h-full overflow-hidden">
 						<ResizablePanelGroup direction="vertical" autoSaveId={visual ? "nuru-somo-kulia-picha" : "nuru-somo-kulia"}>
 							<ResizablePanel defaultSize={visual ? 40 : 55} minSize={20}>
 								{editor}

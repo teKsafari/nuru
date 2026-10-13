@@ -1,6 +1,6 @@
 import { Bricolage_Grotesque, Lexend, JetBrains_Mono } from "next/font/google";
 
-// Kanga type stack. Display: Bricolage Grotesque. Body: Lexend, designed to
+// Type stack. Display: Bricolage Grotesque. Body: Lexend, designed to
 // reduce visual stress for new readers. Code: JetBrains Mono.
 const bricolage = Bricolage_Grotesque({
 	subsets: ["latin"],
@@ -21,4 +21,4 @@ const jetbrainsMono = JetBrains_Mono({
 	variable: "--font-jetbrains-mono",
 });
 
-export const kangaFonts = [bricolage.variable, lexend.variable, jetbrainsMono.variable].join(" ");
+export const appFonts = [bricolage.variable, lexend.variable, jetbrainsMono.variable].join(" ");

@@ -8,7 +8,7 @@ import { Button } from "@nuru/ui/components/button";
 import { cn } from "@nuru/ui/lib/utils";
 import { reorderLessons, deleteLesson } from "@/app/actions/lessons";
 import { useDict } from "@/components/providers/lang-provider";
-import { ConfirmDelete } from "@/components/kanga/confirm-delete";
+import { ConfirmDelete } from "@/components/shared/confirm-delete";
 import { pick } from "@/lib/dict";
 
 type LessonRow = { id: string; title: unknown; order: number | null; tests: unknown; solution: string | null };

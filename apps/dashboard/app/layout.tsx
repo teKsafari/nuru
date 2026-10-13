@@ -5,7 +5,7 @@ import { CustomThemeProvider } from "@/components/providers/theme-provider";
 import { LangProvider } from "@/components/providers/lang-provider";
 import "./globals.css";
 
-import { kangaFonts } from "@/lib/fonts";
+import { appFonts } from "@/lib/fonts";
 import { getLang } from "@/lib/lang";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default async function RootLayout({
 }>) {
 	const lang = await getLang();
 	return (
-		<html lang={lang} suppressHydrationWarning className={kangaFonts}>
+		<html lang={lang} suppressHydrationWarning className={appFonts}>
 			<body className="antialiased">
 				<Suspense>
 					<CustomThemeProvider>

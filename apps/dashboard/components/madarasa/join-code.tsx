@@ -37,7 +37,7 @@ export function JoinCode({ darasaId, code, name, s, archived }: { darasaId: stri
 	}, [projector]);
 
 	return (
-		<section aria-label={s.code} className="mji flex flex-col overflow-hidden">
+		<section aria-label={s.code} className="kadi flex flex-col overflow-hidden">
 			<div className="flex items-center justify-between gap-3 border-b-2 border-mstari bg-jua px-5 py-2.5 text-[#15120f]">
 				<h2 className="lebo">{s.code}</h2>
 				<span className="lebo hidden truncate sm:inline">
@@ -102,7 +102,6 @@ export function JoinCode({ darasaId, code, name, s, archived }: { darasaId: stri
 					aria-label={s.projector}
 					className="fixed inset-0 z-[100] flex flex-col bg-jua text-[#15120f]"
 				>
-					<div className="pindo text-[#15120f]" aria-hidden />
 					<div className="flex items-center justify-between gap-4 px-8 pt-6">
 						<p className="font-display text-[clamp(1.5rem,3vw,2.75rem)] font-extrabold tracking-tight">{name}</p>
 						<button
@@ -136,7 +135,6 @@ export function JoinCode({ darasaId, code, name, s, archived }: { darasaId: stri
 							{s.projectorStep3}
 						</p>
 					</div>
-					<div className="pindo text-[#15120f]" aria-hidden />
 				</div>
 			)}
 		</section>

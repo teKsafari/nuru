@@ -68,7 +68,7 @@ export function tokenize(code: string): Token[] {
 	return out;
 }
 
-// Same palette as the Kanga editor themes in code-editor.tsx (Mchana / Usiku).
+// Same palette as the editor themes in code-editor.tsx (Mchana / Usiku).
 export const tokenClass: Record<TokenKind, string> = {
 	kw: "font-bold text-[#c8553d] dark:text-[#ffc93c]",
 	atom: "font-semibold text-[#b4530a] dark:text-[#ff9a3c]",

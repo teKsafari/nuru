@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "#lib/utils"
 
-// Kanga stickers: small, bordered, mono, flat colour.
+// Stickers: small, bordered, mono, flat colour.
 const badgeVariants = cva(
   "inline-flex items-center gap-1 rounded-sm border-2 border-mstari px-2 py-0.5 font-mono text-[0.6875rem] font-bold uppercase tracking-wider",
   {

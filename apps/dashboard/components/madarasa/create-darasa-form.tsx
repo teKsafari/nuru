@@ -22,7 +22,7 @@ export function CreateDarasaForm({ modules }: { modules: AssignableModule[] }) {
 	return (
 		<form
 			id="fungua"
-			className="mji scroll-mt-24 p-5 sm:p-6"
+			className="kadi scroll-mt-24 p-5 sm:p-6"
 			onSubmit={(e) => {
 				e.preventDefault();
 				setError(null);

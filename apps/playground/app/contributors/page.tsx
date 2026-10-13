@@ -111,7 +111,6 @@ export default function ContributorsPage() {
 
 	return (
 		<div className="relative flex h-dvh w-full flex-col items-center justify-center overflow-hidden bg-karatasi">
-			<div className="pindo absolute inset-x-0 top-0 text-jua" aria-hidden />
 			<header className="relative z-10 mb-6 px-5 text-center sm:mb-10">
 				<Link href="/" className="inline-flex items-center gap-2">
 					<AppLogo size={30} />
@@ -142,9 +141,6 @@ export default function ContributorsPage() {
 					<MarqueeRow contributors={row3} direction="left" speed={28} />
 				)}
 			</div>
-
-			<div className="pindo absolute inset-x-0 bottom-0 rotate-180 text-jua" aria-hidden />
-
 			{/* Keyframes */}
 			<style jsx global>{`
 				@keyframes marquee-left {

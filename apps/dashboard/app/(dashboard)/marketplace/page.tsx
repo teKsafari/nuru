@@ -1,7 +1,7 @@
 import { Store } from "lucide-react";
 import { getAllPublicModules } from "@/app/actions/modules";
 import { getServerDict } from "@/lib/lang";
-import { PageHead, EmptyState } from "@/components/kanga/page-head";
+import { PageHead, EmptyState } from "@/components/shared/page-head";
 import { ModuleCard } from "@/components/modules/module-card";
 
 export const dynamic = "force-dynamic";

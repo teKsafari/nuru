@@ -62,7 +62,7 @@ export function DarasaHome({ data, dict, lang }: { data: MimiResponse; dict: Dic
 						)}
 					</div>
 
-					<div className="mji flex items-center gap-3 p-3 md:min-w-72">
+					<div className="kadi flex items-center gap-3 p-3 md:min-w-72">
 						<span className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-mstari bg-jua font-display text-xl font-extrabold text-wino">
 							{me.displayName.slice(0, 1).toUpperCase()}
 						</span>
@@ -74,10 +74,8 @@ export function DarasaHome({ data, dict, lang }: { data: MimiResponse; dict: Dic
 					</div>
 				</div>
 			</header>
-			<div className="pindo text-jua" aria-hidden />
-
 			<div className="mx-auto max-w-5xl px-4 py-8 sm:px-8 md:py-12">
-				<section aria-labelledby="jumla-yako" className="mji mb-8 p-5 sm:p-6">
+				<section aria-labelledby="jumla-yako" className="kadi mb-8 p-5 sm:p-6">
 					<div className="flex flex-wrap items-end justify-between gap-3">
 						<h2 id="jumla-yako" className="lebo">
 							{t.jumlaYako}
@@ -106,7 +104,7 @@ export function DarasaHome({ data, dict, lang }: { data: MimiResponse; dict: Dic
 							const target = next ?? m.lessons[0];
 							const href = target ? `/${lang}/anza/${m.slug}/${target.slug}` : `/${lang}/anza/${m.slug}`;
 							return (
-								<li key={m.id} className="mji flex min-w-0 flex-col p-5">
+								<li key={m.id} className="kadi flex min-w-0 flex-col p-5">
 									<div className="flex items-start gap-3">
 										<span
 											className={cn(

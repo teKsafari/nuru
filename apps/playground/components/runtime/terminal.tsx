@@ -38,7 +38,7 @@ export function fill(template: string, values: Record<string, string | number>) 
 	return template.replace(/\{(\w+)\}/g, (_, k) => String(values[k] ?? ""));
 }
 
-/** Kanga terminal: ink ground, cream mono text, chili errors, inline jaza() input. */
+/** Terminal: ink ground, cream mono text, chili errors, inline jaza() input. */
 export function Terminal({ lines, phase, prompt, summary, runtimeState, onAnswer, labels, className, children }: TerminalProps) {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);

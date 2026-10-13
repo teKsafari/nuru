@@ -7,8 +7,8 @@ interface AppLogoProps {
 	outline?: "ink" | "current";
 }
 
-// The Nuru sun: a jua disc ringed with eight kanga-border triangles, outlined
-// in ink like a sticker. Nuru means light.
+// The Nuru sun: a jua disc with eight short rays, outlined in ink.
+// Nuru means light.
 export const SUN_RAYS = [0, 45, 90, 135, 180, 225, 270, 315];
 
 export function AppLogo({ size = 32, className = "", outline = "ink" }: AppLogoProps) {
@@ -25,13 +25,13 @@ export function AppLogo({ size = 32, className = "", outline = "ink" }: AppLogoP
 			aria-label="Nuru"
 			style={{ display: "block" }}
 		>
-			<g stroke={stroke} strokeWidth="1.4" strokeLinejoin="round" fill="#ffc93c">
+			<g stroke={stroke} strokeWidth="2.2" strokeLinecap="round">
 				{SUN_RAYS.map((deg) => (
-					<path key={deg} d="M12.9 7 L16 0.9 L19.1 7 Z" transform={`rotate(${deg} 16 16)`} />
+					<line key={deg} x1="16" y1="2.2" x2="16" y2="5.4" transform={`rotate(${deg} 16 16)`} />
 				))}
-				<circle cx="16" cy="16" r="7.2" />
 			</g>
-			<path d="M12.5 15.4 a3.6 3.6 0 0 1 3.5 -3.2" stroke={stroke} strokeWidth="1.4" strokeLinecap="round" />
+			<circle cx="16" cy="16" r="7.6" fill="#ffc93c" stroke={stroke} strokeWidth="1.4" />
+			<path d="M12.3 15.4 a3.8 3.8 0 0 1 3.7 -3.4" stroke={stroke} strokeWidth="1.4" strokeLinecap="round" />
 		</svg>
 	);
 }

@@ -7,7 +7,7 @@ import { ServiceWorkerRegister } from "@/components/tovuti/sw-register";
 
 import "./globals.css";
 
-import { kangaFonts } from "@/lib/fonts";
+import { appFonts } from "@/lib/fonts";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nuruprogramming.org";
 
@@ -65,7 +65,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="sw" suppressHydrationWarning className={kangaFonts}>
+		<html lang="sw" suppressHydrationWarning className={appFonts}>
 			<body className="flex h-dvh flex-col">
 				<noscript>
 					<div

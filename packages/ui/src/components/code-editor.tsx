@@ -19,7 +19,7 @@ interface CodeEditorProps {
 	className?: string;
 }
 
-// Kanga editor themes. Keywords carry the weight (they are the Swahili the
+// Editor themes. Keywords carry the weight (they are the Swahili the
 // learner is learning), strings are green like growing things, numbers blue.
 const defaultDarkTheme = createTheme({
 	theme: "dark",

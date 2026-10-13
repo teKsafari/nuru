@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "@nuru/ui/kanga.css";
+@import "@nuru/ui/nuru.css";
 
 @source '../**/*.{js,ts,jsx,tsx,mdx}';
 @source '../../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}';

@@ -17,7 +17,7 @@ interface SiteHeaderProps {
 	dict: Dictionary;
 }
 
-// Kanga header: paper ground, a 2px ink rule, one row 56px tall so the lesson
+// Header: paper ground, a 2px ink rule, one row 56px tall so the lesson
 // and Uwanja apps below keep their height.
 export function SiteHeader({ modules = [], lang, dict }: SiteHeaderProps) {
 	const nav = useNavItems(lang, dict);

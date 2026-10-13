@@ -149,7 +149,7 @@ function MfanoView({ m, kichwa, lang, t }: { m: Mfano; kichwa?: L; lang: Lang; t
 	const output = m.matokeo;
 	const isError = (line: string) => line.startsWith("Kosa") || line.startsWith("Kuna makosa") || line.startsWith("\t");
 	return (
-		<figure className="mji overflow-hidden shadow-kivuli-sm">
+		<figure className="kadi overflow-hidden shadow-kivuli-sm">
 			<div className="flex items-center justify-between gap-3 border-b-2 border-mstari bg-karatasi-2 py-1.5 pr-1.5 pl-3.5">
 				<figcaption className="lebo truncate text-foreground/75">{kichwa ? kichwa[lang] : "Mfano"}</figcaption>
 				<a

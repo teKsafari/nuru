@@ -15,7 +15,7 @@ teKsafari describes Nuru as the language that "changes where the learner starts.
 
 Swahili is the default everywhere. English is a translation.
 
-Read [docs/MAONO.md](./docs/MAONO.md) for the product vision and [docs/KANGA.md](./docs/KANGA.md) for the design language.
+Read [docs/MAONO.md](./docs/MAONO.md) for the product vision and [docs/DESIGN.md](./docs/DESIGN.md) for the design language.
 
 ## Layout
 
@@ -24,7 +24,7 @@ Read [docs/MAONO.md](./docs/MAONO.md) for the product vision and [docs/KANGA.md]
 | `apps/playground` | Learner app (Next.js 15): landing page, lessons, Uwanja, Kamusi, Darasa, API routes. |
 | `apps/dashboard` | Teachers' app (Next.js 15): modules, lesson editor, madarasa. |
 | `packages/wasm` | `@nuru/wasm`, the interpreter. `core/Nuru` (upstream submodule, untouched), `web/` (Go entrypoint adding the `kobe` and `ubao` modules), `worker/` (TinyGo build + Web Worker host), `runtime.ts` (browser client), `node/` (Node runner for tests and tools). |
-| `packages/ui` | `@nuru/ui`: Kanga tokens (`kanga.css`), components, the Nuru editor grammar with Swahili autocomplete, and the shared lesson grader. |
+| `packages/ui` | `@nuru/ui`: design tokens (`nuru.css`), components, the Nuru editor grammar with Swahili autocomplete, and the shared lesson grader. |
 | `packages/db` | `@nuru/db`: Drizzle schema and migrations (Neon in production, any Postgres locally). |
 | `packages/mtaala` | `@nuru/mtaala`: the curriculum as Markdown, plus `hakiki` (verify) and `seed`. |
 

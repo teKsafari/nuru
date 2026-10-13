@@ -50,7 +50,7 @@ export function LessonsMap({ modules, lang, dict }: { modules: RamaniModule[]; l
 	return (
 		<div className="flex flex-col gap-12">
 			{/* Summary and the one thing to do next */}
-			<section className="mji overflow-hidden" aria-label={t.title}>
+			<section className="kadi overflow-hidden" aria-label={t.title}>
 				<div className="grid gap-6 p-5 sm:p-7 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
 					<div className="flex items-baseline gap-1">
 						<span className="font-display text-6xl leading-none font-extrabold tracking-[-0.04em] tabular-nums">{progress ? percent : "–"}</span>
@@ -117,8 +117,7 @@ export function LessonsMap({ modules, lang, dict }: { modules: RamaniModule[]; l
 								{complete ? <Check className="size-6 stroke-[3]" /> : index + 1}
 							</div>
 
-							<article className="mji min-w-0 flex-1 overflow-hidden">
-								<div className={cn("pindo", rangi.text)} aria-hidden />
+							<article className="kadi min-w-0 flex-1 overflow-hidden">
 								<div className="p-4 pt-3 sm:p-6 sm:pt-4">
 									<div className="flex flex-wrap items-center gap-2">
 										<span className="lebo text-muted-foreground">

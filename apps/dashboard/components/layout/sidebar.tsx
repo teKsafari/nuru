@@ -9,14 +9,12 @@ import { useDict } from "@/components/providers/lang-provider";
 import { NAV, isActive, navLabels } from "./nav";
 import { LangToggle, ThemeToggle } from "./toggles";
 
-// The sidebar is a strip of ink cloth in both modes, edged with a jua pindo.
 export function Sidebar() {
 	const pathname = usePathname();
 	const { t, lang } = useDict();
 
 	return (
 		<aside className="relative hidden h-full w-64 shrink-0 flex-col border-r-2 border-mstari bg-[#15120f] text-[#fff3d6] lg:flex">
-			<div className="pindo text-jua" aria-hidden />
 			<Link href="/" className="flex items-center gap-3 px-5 pt-5 pb-6">
 				<AppLogo size={36} />
 				<span className="flex flex-col leading-none">
@@ -58,7 +56,6 @@ export function Sidebar() {
 				</div>
 				<UserMenu tone="ink" />
 			</div>
-			<div className="pindo-nukta mb-3 text-jua" aria-hidden />
 		</aside>
 	);
 }

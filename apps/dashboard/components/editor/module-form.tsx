@@ -10,7 +10,7 @@ import { Input } from "@nuru/ui/components/input";
 import { Button } from "@nuru/ui/components/button";
 import { useDict } from "@/components/providers/lang-provider";
 import { difficultyKey } from "@/lib/dict";
-import { DifficultySticker, VisibilitySticker } from "@/components/kanga/stickers";
+import { DifficultySticker, VisibilitySticker } from "@/components/shared/stickers";
 
 export type ModuleFormInputs = {
 	title: { sw: string; en: string };
@@ -52,8 +52,7 @@ export default function ModuleForm({
 				<ArrowLeft className="size-4" />
 				{backLabel ?? t.modules.back}
 			</Link>
-			<div className="mji overflow-hidden">
-				<div className="pindo text-jua" aria-hidden />
+			<div className="kadi overflow-hidden">
 				<div className="space-y-6 p-5 sm:p-7">
 					<h1 className="font-display text-3xl font-extrabold">{isUpdate ? t.moduleForm.editTitle : t.moduleForm.createTitle}</h1>
 
