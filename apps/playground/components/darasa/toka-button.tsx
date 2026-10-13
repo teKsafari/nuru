@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2, LogOut } from "lucide-react";
 
 import { Button, type ButtonProps } from "@nuru/ui/components/button";
@@ -37,7 +36,6 @@ export function TokaButton({
 	redirectTo,
 	...props
 }: ButtonProps & { label: string; makosa: { mtandao: string; foleni: string }; redirectTo?: string }) {
-	const router = useRouter();
 	const [busy, setBusy] = useState(false);
 	const [kosa, setKosa] = useState<string | null>(null);
 	return (
@@ -51,9 +49,13 @@ export function TokaButton({
 					setKosa(null);
 					const r = await tokaDarasa();
 					if (r.ok) {
-						if (redirectTo) router.push(redirectTo);
-						router.refresh();
-					} else setKosa(makosa[r.sababu]);
+						// A full page load, not router.refresh(): on a shared device nothing of
+						// the previous learner may survive in memory, and a soft refresh was
+						// seen to keep rendering the old class home.
+						window.location.assign(redirectTo ?? window.location.pathname);
+						return;
+					}
+					setKosa(makosa[r.sababu]);
 					setBusy(false);
 				}}
 			>
